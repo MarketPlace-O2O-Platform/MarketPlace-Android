@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import dev.kichan.marketplace.model.Event
+import dev.kichan.marketplace.model.data.event.Event
 
 @Composable
 fun EventCard(event: Event) {
