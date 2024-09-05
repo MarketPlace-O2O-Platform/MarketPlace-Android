@@ -1,33 +1,14 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.ui.page
 
-import android.graphics.drawable.Icon
-import android.graphics.drawable.VectorDrawable
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.ui.theme.Gray_3
-import dev.kichan.marketplace.ui.theme.Gray_6
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import androidx.navigation.compose.currentBackStackEntryAsState
+import dev.kichan.marketplace.ui.Page
 
 @Composable
 fun MainPage(navController: NavController) {

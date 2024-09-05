@@ -1,4 +1,4 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.ui
 
 enum class Page {
     Main,

@@ -1,4 +1,4 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +31,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.Event
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable

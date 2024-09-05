@@ -1,4 +1,4 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.model
 
 data class Event(
     val marketName : String,

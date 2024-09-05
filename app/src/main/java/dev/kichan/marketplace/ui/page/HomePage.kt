@@ -1,4 +1,4 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.ui.page
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +25,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import dev.kichan.marketplace.ui.theme.EventCard
+import dev.kichan.marketplace.MoreViewTitle
+import dev.kichan.marketplace.model.Event
+import dev.kichan.marketplace.ui.component.DayOfWeekSelector
+import dev.kichan.marketplace.ui.component.EventBanner
+import dev.kichan.marketplace.ui.component.EventBox
+import dev.kichan.marketplace.ui.component.IconAppBar
+import dev.kichan.marketplace.ui.component.EventCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable

@@ -1,4 +1,4 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,6 +9,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.kichan.marketplace.ui.page.CategoryPage
+import dev.kichan.marketplace.ui.page.HomePage
+import dev.kichan.marketplace.ui.page.MapPage
+import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 class MainActivity : ComponentActivity() {

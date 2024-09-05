@@ -1,4 +1,4 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

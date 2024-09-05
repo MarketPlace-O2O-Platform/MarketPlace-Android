@@ -1,6 +1,5 @@
-package dev.kichan.marketplace
+package dev.kichan.marketplace.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,8 +16,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.kichan.marketplace.ui.theme.Gray_1
-import dev.kichan.marketplace.ui.theme.Gray_6
 import dev.kichan.marketplace.ui.theme.Gray_9
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
