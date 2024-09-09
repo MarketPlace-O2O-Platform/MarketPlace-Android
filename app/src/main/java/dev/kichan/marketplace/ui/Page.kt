@@ -1,7 +1,7 @@
 package dev.kichan.marketplace.ui
 
 enum class Page {
-    Main,
+    Main, LocalApiTestPage,
 
     Home, Category, Map, My,
 }
