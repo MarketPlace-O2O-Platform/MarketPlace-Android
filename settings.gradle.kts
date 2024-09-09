@@ -15,6 +15,8 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
+        maven { url = uri("https://devrepo.kakao.com/nexus/repository/kakaomap-releases/") }
+        maven { url = java.net.URI("https://devrepo.kakao.com/nexus/content/groups/public/") }
         mavenCentral()
     }
 }
