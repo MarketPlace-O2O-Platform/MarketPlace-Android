@@ -1,12 +1,11 @@
 package dev.kichan.marketplace.ui.component
 
+import android.R
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -15,14 +14,18 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import java.lang.Exception
+
 
 @Composable
 fun KakaoMap(
     modifier: Modifier = Modifier,
-    latitude: Float,
-    longitude: Float
+    position : LatLng,
+    marker : List<LatLng> = listOf()
 ) {
     val context = LocalContext.current
     val mapView = remember { MapView(context) }
@@ -42,7 +45,15 @@ fun KakaoMap(
                     },
                     object : KakaoMapReadyCallback() {
                         override fun onMapReady(kakaoMap: KakaoMap) { // 지도가 추가됐을 때
+                            kakaoMap.moveCamera(
+                                CameraUpdateFactory.newCenterPosition(position)
+                            )
 
+                            marker.forEach {
+                                val options = LabelOptions.from(it)
+                                val layer = kakaoMap.labelManager!!.layer
+                                val label = layer!!.addLabel(options)
+                            }
                         }
                     }
                 )
@@ -54,7 +65,11 @@ fun KakaoMap(
 @Preview
 @Composable
 private fun KakaoMapPreview() {
+    val inu = LatLng.from(
+        37.376651978907326,
+        126.63425891507083,
+    )
     MarketPlaceTheme {
-        KakaoMap(latitude = 0.0f, longitude = 0.0f)
+        KakaoMap(position = inu)
     }
 }
