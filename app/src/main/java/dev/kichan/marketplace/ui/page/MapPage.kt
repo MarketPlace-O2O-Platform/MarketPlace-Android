@@ -1,6 +1,8 @@
 package dev.kichan.marketplace.ui.page
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -8,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -70,18 +74,36 @@ fun MapPage() {
         }
     }
 
-
     val inu = LatLng.from(
         37.376651978907326,
         126.63425891507083,
     )
-    KakaoMap(position = inu, marker = placeDate?.documents?.map { LatLng.from(it.y.toDouble(), it.x.toDouble()) } ?: listOf())
 
-    Button(onClick = { getData() }) {
-        Text(text = "가져오기")
+    Box {
+        KakaoMap(position = inu, marker = placeDate?.documents?.map { LatLng.from(it.y.toDouble(), it.x.toDouble()) } ?: listOf(inu))
+
+        Row(
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            Button(onClick = {
+                page -= 1
+                getData()
+            }) {
+                Text(text = "이전 페이지")
+            }
+
+            Button(onClick = { getData() }) {
+                Text(text = "데이터 로드")
+            }
+
+            Button(onClick = {
+                page += 1
+                getData()
+            }) {
+                Text(text = "다음 페이지")
+            }
+        }
     }
-
-    Text(text = placeDate?.documents?.map { LatLng.from(it.x.toDouble(), it.y.toDouble()) }.toString())
 }
 
 @Preview(showBackground = true)

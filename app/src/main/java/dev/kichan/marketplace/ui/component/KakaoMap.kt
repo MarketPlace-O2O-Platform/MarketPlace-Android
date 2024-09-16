@@ -1,11 +1,17 @@
 package dev.kichan.marketplace.ui.component
 
-import android.R
 import android.util.Log
+import android.view.ViewGroup
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -18,21 +24,28 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 
 @Composable
 fun KakaoMap(
     modifier: Modifier = Modifier,
-    position : LatLng,
-    marker : List<LatLng> = listOf()
+    position: LatLng,
+    marker: List<LatLng> = listOf()
 ) {
     val context = LocalContext.current
     val mapView = remember { MapView(context) }
 
+    var kakaoMapState by remember { mutableStateOf<KakaoMap?>(null) }
     AndroidView(
         modifier = modifier.fillMaxSize(),
         factory = {
+            mapView.parent?.let { parent ->
+//                Log.d("marker")
+                (parent as ViewGroup).removeView(mapView)
+            }
+
             mapView.apply {
                 this.start(
                     object : MapLifeCycleCallback() {
@@ -45,21 +58,35 @@ fun KakaoMap(
                     },
                     object : KakaoMapReadyCallback() {
                         override fun onMapReady(kakaoMap: KakaoMap) { // 지도가 추가됐을 때
+                            kakaoMapState = kakaoMap
                             kakaoMap.moveCamera(
                                 CameraUpdateFactory.newCenterPosition(position)
                             )
 
-                            marker.forEach {
-                                val options = LabelOptions.from(it)
-                                val layer = kakaoMap.labelManager!!.layer
-                                val label = layer!!.addLabel(options)
-                            }
+                            addMarkers(kakaoMap, marker)
                         }
                     }
                 )
             }
+        },
+        update = { view ->
+            kakaoMapState?.let {
+                addMarkers(it, marker)
+            }
         }
     )
+}
+
+fun addMarkers(kakaoMap: KakaoMap, markers: List<LatLng>) {
+    kakaoMap.labelManager?.clearAll()
+    markers.forEach { marker ->
+        val style = kakaoMap.labelManager?.addLabelStyles(
+            LabelStyles.from(LabelStyle.from(R.drawable.image)),
+        )
+        val options = LabelOptions.from(marker).setStyles(style)
+        val layer = kakaoMap.labelManager?.layer
+        layer?.addLabel(options)
+    }
 }
 
 @Preview
