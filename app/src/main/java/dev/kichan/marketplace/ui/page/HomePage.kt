@@ -112,7 +112,7 @@ fun HomePage(navController: NavController) {
                 )
             }
             item {
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(16 .dp))
                 PopularityEvent()
             }
 

@@ -1,11 +1,16 @@
 package dev.kichan.marketplace.ui.page
 
+import LargeCategory
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -19,6 +24,8 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun PopularEventPage(navController: NavController) {
+    var selectedCategory by remember { mutableStateOf(LargeCategory.Food) }
+
     Scaffold(
         topBar = {
             NavAppBar(title = "요즘 많이 찾는 제휴 이벤트") {
@@ -27,7 +34,7 @@ fun PopularEventPage(navController: NavController) {
         }
     ) {
         Column(Modifier.padding(it)) {
-            CategoryTap(selectedCategory = LargeCategory.Food, onSelected = {})
+            CategoryTap(selectedCategory = selectedCategory, onSelected = { selectedCategory = it })
             LazyColumn {
                 items(50) {
                     EventListItem(
