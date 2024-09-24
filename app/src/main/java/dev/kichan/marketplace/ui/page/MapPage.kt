@@ -102,7 +102,6 @@ fun MapPage(navController: NavController) {
         }
     }
 
-
     val inu = LatLng.from(
         37.376651978907326,
         126.63425891507083,
