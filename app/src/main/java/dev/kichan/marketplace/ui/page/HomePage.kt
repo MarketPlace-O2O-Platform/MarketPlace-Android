@@ -13,21 +13,14 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
@@ -54,12 +47,11 @@ import dev.kichan.marketplace.MoreViewTitle
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
-import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.DayOfWeekSelector
 import dev.kichan.marketplace.ui.component.EventBanner
 import dev.kichan.marketplace.ui.component.EventBox
-import dev.kichan.marketplace.ui.component.IconAppBar
 import dev.kichan.marketplace.ui.component.EventCard
+import dev.kichan.marketplace.ui.component.PagerIndicator
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -127,15 +119,33 @@ fun HomePage(navController: NavController) {
 
 @Composable
 fun CouponBanner(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(9 / 5.8f) // 배너 이미지 비율
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.banner),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+    val bannerList = listOf(
+        R.drawable.banner,
+        R.drawable.banner,
+        R.drawable.banner,
+        R.drawable.banner,
+        R.drawable.banner,
+    )
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { bannerList.size })
+
+    Box {
+        HorizontalPager(state = pagerState) {
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .aspectRatio(9 / 5.8f) // 배너 이미지 비율
+            ) {
+                Image(
+                    painter = painterResource(id = bannerList[it]),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
+        PagerIndicator(
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp),
+            pagerState = pagerState,
         )
     }
 }
