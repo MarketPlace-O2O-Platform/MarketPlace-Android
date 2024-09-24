@@ -6,10 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.page.MainPage
+import dev.kichan.marketplace.ui.page.PopularEventPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +34,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp() {
-    MainPage()
+//    MainPage()
+    PopularEventPage(navController = rememberNavController())
 }
 
 
