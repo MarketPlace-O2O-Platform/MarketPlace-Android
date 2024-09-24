@@ -100,6 +100,7 @@ fun MapPage() {
         }
     }
 
+
     val inu = LatLng.from(
         37.376651978907326,
         126.63425891507083,
@@ -108,7 +109,9 @@ fun MapPage() {
     ModalBottomSheetLayout(
         sheetState = sheetState, // 바텀 시트 상태
         sheetContent = {
-            SheetContent() // 바텀 시트의 내용물
+            SheetContent(
+                modifier = Modifier.fillMaxHeight(0.8f)
+            ) // 바텀 시트의 내용물
         },
         sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp), // 바텀시트 둥근 모양
         sheetBackgroundColor = Color(0xffFAFAFA), // 바텀시트 배경 색
@@ -120,15 +123,17 @@ fun MapPage() {
             mapPosition = inu,
             placeDate = placeDate,
             sheetState = sheetState,
-            sheetScope = sheetScope
+            sheetScope = sheetScope,
+            onOpenBottomSheet = { sheetScope.launch { sheetState.show() } }
         )
     }
 }
 
 @Composable
-fun SheetContent() {
+fun SheetContent(modifier: Modifier = Modifier) {
     LazyColumn(
         contentPadding = PaddingValues(vertical = 8.dp, horizontal = 20.dp),
+        modifier = modifier
     ) {
         item {
             Box(
@@ -192,7 +197,8 @@ fun SheetBack(
     mapPosition: LatLng,
     placeDate: KakaoLocal<Place>?,
     sheetState: ModalBottomSheetState,
-    sheetScope: CoroutineScope
+    sheetScope: CoroutineScope,
+    onOpenBottomSheet : () -> Unit
 ) {
     var selectedCategory by remember { mutableStateOf(LargeCategory.Food) }
 
@@ -205,7 +211,14 @@ fun SheetBack(
                         it.y.toDouble(),
                         it.x.toDouble()
                     )
-                } ?: listOf())
+                } ?: listOf(
+                    LatLng.from(
+                        37.376651978907326,
+                        126.63425891507083,
+                    )
+                ),
+                onMarketClick = onOpenBottomSheet
+            )
 
             CategoryTap(
                 modifier = Modifier

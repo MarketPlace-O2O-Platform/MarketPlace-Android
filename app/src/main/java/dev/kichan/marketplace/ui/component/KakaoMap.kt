@@ -32,7 +32,8 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 fun KakaoMap(
     modifier: Modifier = Modifier,
     position: LatLng,
-    marker: List<LatLng> = listOf()
+    marker: List<LatLng> = listOf(),
+    onMarketClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val mapView = remember { MapView(context) }
@@ -63,7 +64,7 @@ fun KakaoMap(
                                 CameraUpdateFactory.newCenterPosition(position)
                             )
 
-                            addMarkers(kakaoMap, marker)
+                            addMarkers(kakaoMap, marker, onMarketClick)
                         }
                     }
                 )
@@ -71,21 +72,21 @@ fun KakaoMap(
         },
         update = { view ->
             kakaoMapState?.let {
-                addMarkers(it, marker)
+                addMarkers(it, marker, onMarketClick)
             }
         }
     )
 }
 
-fun addMarkers(kakaoMap: KakaoMap, markers: List<LatLng>) {
+fun addMarkers(kakaoMap: KakaoMap, markers: List<LatLng>, onMarketClick: () -> Unit) {
     kakaoMap.labelManager?.clearAll()
     markers.forEach { marker ->
         val style = kakaoMap.labelManager?.addLabelStyles(
             LabelStyles.from(LabelStyle.from(R.drawable.image)),
         )
-        val options = LabelOptions.from(marker).setStyles(style)
+        val options = LabelOptions.from(marker).setStyles(style).setClickable(true)
         val layer = kakaoMap.labelManager?.layer
-        layer?.addLabel(options)
+        val lable = layer?.addLabel(options)
     }
 }
 
