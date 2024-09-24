@@ -8,14 +8,14 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun CategoryPage(navController: NavController) {
-    Text(text = "CategoryPage")
+fun LikePage(navController: NavController) {
+    Text(text = "LikePage")
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CategoryPagePreview() {
+fun LikePagePreview() {
     MarketPlaceTheme {
-        CategoryPage(rememberNavController())
+        LikePage(rememberNavController())
     }
 }
