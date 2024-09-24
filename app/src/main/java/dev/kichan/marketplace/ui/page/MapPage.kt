@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.kakao.vectormap.LatLng
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.coupon.Coupon
@@ -50,7 +52,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 @Composable
-fun MapPage() {
+fun MapPage(navController: NavController) {
     var placeDate by remember { mutableStateOf<KakaoLocal<Place>?>(null) }
     var addressData by remember { mutableStateOf<List<Address?>>(listOf()) }
     var loadtime by remember { mutableStateOf(0L) }
@@ -265,6 +267,6 @@ fun SheetBack(
 @Composable
 fun MapPagePreview() {
     MarketPlaceTheme {
-        MapPage()
+        MapPage(rememberNavController())
     }
 }

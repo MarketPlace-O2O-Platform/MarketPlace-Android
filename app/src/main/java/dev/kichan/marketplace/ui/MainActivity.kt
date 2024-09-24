@@ -20,6 +20,7 @@ import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import com.kakao.sdk.common.util.Utility
+import dev.kichan.marketplace.ui.page.MainPage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,28 +43,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp() {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = Page.Map.name,
-    ) {
-        composable(Page.Main.name) {
-            HomePage(navController)
-        }
-        composable(Page.Category.name) {
-            CategoryPage(navController)
-        }
-        composable(Page.LocalApiTestPage.name) {
-            LocalApiTestPage(navController)
-        }
-        composable(Page.Map.name) {
-            MapPage()
-        }
-        composable(Page.My.name) {
-            MyPage(navController)
-        }
-    }
+    MainPage()
 }
 
 
