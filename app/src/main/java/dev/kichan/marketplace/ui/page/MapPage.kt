@@ -203,42 +203,41 @@ fun SheetBack(
 ) {
     var selectedCategory by remember { mutableStateOf(LargeCategory.Food) }
 
-    Scaffold {
-        Box(modifier = Modifier.padding(it)) {
-            KakaoMap(
-                position = mapPosition,
-                marker = placeDate?.documents?.map {
-                    LatLng.from(
-                        it.y.toDouble(),
-                        it.x.toDouble()
-                    )
-                } ?: listOf(
-                    LatLng.from(
-                        37.376651978907326,
-                        126.63425891507083,
-                    )
-                ),
-                onMarketClick = onOpenBottomSheet
-            )
+    Box {
+        KakaoMap(
+            position = mapPosition,
+            marker = placeDate?.documents?.map {
+                LatLng.from(
+                    it.y.toDouble(),
+                    it.x.toDouble()
+                )
+            } ?: listOf(
+                LatLng.from(
+                    37.376651978907326,
+                    126.63425891507083,
+                )
+            ),
+            onMarketClick = onOpenBottomSheet
+        )
 
-            CategoryTap(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter),
-                selectedCategory = selectedCategory,
-                onSelected = { selectedCategory = it }
-            )
+        CategoryTap(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.TopCenter),
+            selectedCategory = selectedCategory,
+            onSelected = { selectedCategory = it }
+        )
 
-            Row(
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Button(onClick = { sheetScope.launch { sheetState.show() } }) {
-                    Text(text = "열기")
-                }
+        Row(
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            Button(onClick = { sheetScope.launch { sheetState.show() } }) {
+                Text(text = "열기")
+            }
 
-                Button(onClick = { sheetScope.launch { sheetState.show() } }) {
-                    Text(text = "열기")
-                }
+            Button(onClick = { sheetScope.launch { sheetState.show() } }) {
+                Text(text = "열기")
+            }
 //                Button(onClick = {
 //                    page -= 1
 //                    getData()
@@ -256,7 +255,6 @@ fun SheetBack(
 //                }) {
 //                    Text(text = "다음 페이지")
 //                }
-            }
         }
     }
 }

@@ -42,14 +42,17 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
             .clip(bottomNavShape) // 둥근 모서리 설정
             .border(width = 1.dp, color = Color(0xffe1e1e1), shape = bottomNavShape)
     ) {
-        pageList.mapIndexed { index, page ->
+        pageList.mapIndexed { index, item ->
+            val page = item.first
+            val icon = item.second
+
             BottomNavigationItem(
-                icon = { Icon(page.second, contentDescription = page.first.name) },
-                label = { Text(page.first.name) },
+                icon = { Icon(icon, contentDescription = page.name) },
+                label = { Text(page.name.uppercase() ) }, // 문자열.uppercase() : 문자열을 대문자로 바꿈
                 selected = selectedIndex.value == index,
                 onClick = {
                     selectedIndex.value = index
-                    navController.navigate(page.first.name)
+                    navController.navigate(page.name)
                 },
                 selectedContentColor = selectedContentColor,
                 unselectedContentColor = unselectedContentColor,
