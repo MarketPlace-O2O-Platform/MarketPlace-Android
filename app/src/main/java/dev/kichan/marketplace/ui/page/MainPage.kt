@@ -38,9 +38,9 @@ fun MainPage() {
     ) {
         NavHost(navController = navController, startDestination = Page.Home.name, modifier = Modifier.padding(it)) {
             composable(Page.Home.name) { HomePage(navController = navController) }
-            composable(Page.Category.name) { CategoryPage(navController = navController) }
-            composable(Page.Map.name) { MapPage(navController = navController) }
-            composable(Page.My.name) { MyPage(navController = navController) }
+//            composable(Page.Category.name) { CategoryPage(navController = navController) }
+//            composable(Page.Map.name) { MapPage(navController = navController) }
+//            composable(Page.My.name) { MyPage(navController = navController) }
         }
     }
 }
