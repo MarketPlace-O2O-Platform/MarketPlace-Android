@@ -47,6 +47,7 @@ import dev.kichan.marketplace.MoreViewTitle
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.DayOfWeekSelector
 import dev.kichan.marketplace.ui.component.EventBanner
 import dev.kichan.marketplace.ui.component.EventBox
@@ -104,6 +105,13 @@ fun HomePage(navController: NavController) {
 
             // 요즘 많이 찾는 제휴 이벤트
             item {
+                MoreViewTitle(
+                    Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
+                    "요즘 많이 찾는 제휴 이벤트",
+                    { navController.navigate(Page.PopularEvent.name) }
+                )
+            }
+            item {
                 Spacer(modifier = Modifier.height(50.dp))
                 PopularityEvent()
             }
@@ -144,7 +152,9 @@ fun CouponBanner(modifier: Modifier = Modifier) {
         }
 
         PagerIndicator(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp),
             pagerState = pagerState,
         )
     }
@@ -196,13 +206,7 @@ fun CategorySelector() {
 
 @Composable
 fun PopularityEvent(modifier: Modifier = Modifier) {
-    Column() {
-        MoreViewTitle(
-            Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
-            "요즘 많이 찾는 제휴 이벤트",
-            {}
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+    Column {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)

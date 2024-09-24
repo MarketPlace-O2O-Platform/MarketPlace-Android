@@ -21,35 +21,6 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun MainPage() {
-    val items = listOf(
-        Page.Home to Icons.Filled.Home,
-        Page.Like to Icons.Filled.ShoppingCart,
-        Page.Map to Icons.Filled.Place,
-        Page.My to Icons.Filled.Person,
-    )
-
-    val navController = rememberNavController()
-
-    Scaffold(
-        bottomBar = { BottomNavigationBar(navController = navController, pageList = items) }
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = Page.Home.name,
-            modifier = Modifier.padding(it),
-            enterTransition = {
-                EnterTransition.None
-            },
-            exitTransition = {
-                ExitTransition.None
-            }
-        ) {
-            composable(Page.Home.name) { HomePage(navController = navController) }
-            composable(Page.Like.name) { LikePage(navController = navController) }
-            composable(Page.Map.name) { MapPage(navController = navController) }
-            composable(Page.My.name) { MyPage(navController = navController) }
-        }
-    }
 }
 
 @Preview(showBackground = true)

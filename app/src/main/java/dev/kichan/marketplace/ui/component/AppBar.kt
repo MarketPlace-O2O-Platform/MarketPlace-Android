@@ -69,7 +69,7 @@ fun NavAppBar(title: String, onBack: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            modifier = Modifier.align(Alignment.CenterStart),
+            modifier = Modifier.align(Alignment.CenterStart).clickable { onBack() },
             imageVector = Icons.Default.KeyboardArrowLeft,
             contentDescription = null,
             tint = Color(0xff545454),

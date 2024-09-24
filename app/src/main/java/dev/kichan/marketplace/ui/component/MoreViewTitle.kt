@@ -1,5 +1,6 @@
 package dev.kichan.marketplace
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +42,8 @@ fun MoreViewTitle(modifier: Modifier = Modifier, title: String, onMoreClick: () 
             )
         )
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { onMoreClick() }
         ) {
             Text(
                 text = "더보기",
@@ -56,7 +58,7 @@ fun MoreViewTitle(modifier: Modifier = Modifier, title: String, onMoreClick: () 
             Icon(
                 Icons.Default.KeyboardArrowRight,
                 contentDescription = null,
-                tint = Color(0xff7D7D7D)
+                tint = Color(0xff7D7D7D),
             )
         }
     }
