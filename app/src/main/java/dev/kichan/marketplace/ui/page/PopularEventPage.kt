@@ -34,7 +34,6 @@ fun PopularEventPage(navController: NavController, category: String) {
     ) {
         Column(Modifier.padding(it)) {
             CategoryTap(selectedCategory = selectedCategory, onSelected = { selectedCategory = it })
-            Text(text = selectedCategory.toString())
             LazyColumn {
                 items(50) {
                     EventListItem(

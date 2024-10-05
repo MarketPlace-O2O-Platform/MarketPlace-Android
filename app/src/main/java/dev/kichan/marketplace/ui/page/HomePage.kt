@@ -1,8 +1,10 @@
 package dev.kichan.marketplace.ui.page
 
+import LargeCategory
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -100,7 +102,7 @@ fun HomePage(navController: NavController) {
             // 카테고리 섹션
             item {
                 Spacer(modifier = Modifier.height(50.dp))
-                CategorySelector()
+                CategorySelector(navController)
             }
 
             // 요즘 많이 찾는 제휴 이벤트
@@ -112,7 +114,7 @@ fun HomePage(navController: NavController) {
                 )
             }
             item {
-                Spacer(modifier = Modifier.height(16 .dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 PopularityEvent()
             }
 
@@ -161,8 +163,9 @@ fun CouponBanner(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CategorySelector() {
-    val categories = listOf("전체보기", "음식", "주점", "카페", "뷰티", "놀이", "기타", "클래스")
+fun CategorySelector(navController: NavController) {
+//    val categories = listOf("전체보기", "음식", "주점", "카페", "뷰티", "놀이", "기타", "클래스")
+    val categories = LargeCategory.entries
 
     Column(
         Modifier
@@ -187,7 +190,10 @@ fun CategorySelector() {
             ) {
                 rowItems.forEach { category ->
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally // 버튼과 텍스트를 가운데 정렬
+                        horizontalAlignment = Alignment.CenterHorizontally, // 버튼과 텍스트를 가운데 정렬
+                        modifier = Modifier.clickable {
+                            navController.navigate("${Page.PopularEvent.name}/${category.name}")
+                        }
                     ) {
                         Box(
                             Modifier
@@ -195,7 +201,7 @@ fun CategorySelector() {
                                 .background(Color.LightGray, shape = CircleShape)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = category)
+                        Text(text = category.nameKo)
                     }
                 }
             }
