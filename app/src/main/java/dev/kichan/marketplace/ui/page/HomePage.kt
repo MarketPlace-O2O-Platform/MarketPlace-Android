@@ -87,8 +87,8 @@ fun HomePage(navController: NavController) {
         }
 
         LazyColumn {
+            // 쿠폰 배너 바로 상단바 아래에 위치
             item {
-                // 쿠폰 배너 바로 상단바 아래에 위치
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -108,7 +108,7 @@ fun HomePage(navController: NavController) {
                 MoreViewTitle(
                     Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
                     "요즘 많이 찾는 제휴 이벤트",
-                    { navController.navigate(Page.PopularEvent.name) }
+                    { navController.navigate("${Page.PopularEvent.name}/${LargeCategory.Food.name}") }
                 )
             }
             item {
