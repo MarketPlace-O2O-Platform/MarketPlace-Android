@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +22,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun PopularEventPage(navController: NavController, category: String) {
-    var selectedCategory by remember { mutableStateOf(LargeCategory.getCategory(category)) }
+    var selectedCategory by remember { mutableStateOf(LargeCategory.findByNameKo(category)) }
 
     Scaffold(
         topBar = {
