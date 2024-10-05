@@ -91,7 +91,7 @@ fun CurationCard(
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(2.dp)
+                    .height(1.dp)
                     .background(Color(0xffF3F0F0))
             )
 
