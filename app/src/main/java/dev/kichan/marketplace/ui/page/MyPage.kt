@@ -37,6 +37,9 @@ import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 
+
+
+//MyPage
 @Composable
 fun MyPage(navController: NavController) {
     Scaffold(
