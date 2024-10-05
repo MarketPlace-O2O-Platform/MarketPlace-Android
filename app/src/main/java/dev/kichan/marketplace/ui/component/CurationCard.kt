@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,15 +99,24 @@ fun CurationCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // todo : 버튼 수정
             Button(
                 modifier = Modifier
                     .fillMaxWidth(),
                 onClick = {},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xffe5f3ff),
+                    contentColor = Color(0xff3da2ff),
+                    disabledContainerColor = Color(0xfff4f4f4),
+                    disabledContentColor = Color(0xffc2c6c9),
+                ),
+                shape = RoundedCornerShape(4.dp),
+                enabled = true,
             ) {
                 Text(
                     text = "360% 달성",
-                    color = Color.White,
+                    color = Color(0xff3da2ff),
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp
                 )
             }
         }
