@@ -12,6 +12,9 @@ fun MyPage(navController: NavController) {
     Text(text = "MyPage")
 }
 
+//test commit!!!!!!!!!
+
+
 @Preview(showBackground = true)
 @Composable
 fun MyPagePreview() {
