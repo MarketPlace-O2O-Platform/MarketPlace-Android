@@ -12,7 +12,7 @@ fun MyPage(navController: NavController) {
     Text(text = "MyPage")
 }
 
-//test commit!!!!!!!!!
+//test commit!!!!!!!!!!!
 
 
 @Preview(showBackground = true)
