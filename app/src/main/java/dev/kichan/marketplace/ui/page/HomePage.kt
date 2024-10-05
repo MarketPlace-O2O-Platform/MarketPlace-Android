@@ -105,17 +105,12 @@ fun HomePage(navController: NavController) {
                 CategorySelector(navController)
             }
 
-            // 요즘 많이 찾는 제휴 이벤트
+            // Top 20 인기 페이지"
             item {
-                MoreViewTitle(
-                    Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
-                    "요즘 많이 찾는 제휴 이벤트",
-                    { navController.navigate("${Page.PopularEvent.name}/${LargeCategory.Food.name}") }
-                )
             }
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                PopularityEvent()
+                PopularityEvent(navController)
             }
 
             // 최신 제휴 이벤트
@@ -164,7 +159,6 @@ fun CouponBanner(modifier: Modifier = Modifier) {
 
 @Composable
 fun CategorySelector(navController: NavController) {
-//    val categories = listOf("전체보기", "음식", "주점", "카페", "뷰티", "놀이", "기타", "클래스")
     val categories = LargeCategory.entries
 
     Column(
@@ -211,8 +205,13 @@ fun CategorySelector(navController: NavController) {
 }
 
 @Composable
-fun PopularityEvent(modifier: Modifier = Modifier) {
+fun PopularityEvent(navController: NavController, modifier: Modifier = Modifier) {
     Column {
+        MoreViewTitle(
+            Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
+            "Top 20 인기 페이지"
+        ) { navController.navigate("${Page.PopularEvent.name}/${LargeCategory.Food.name}") }
+        Spacer(modifier = Modifier.height(16.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
@@ -231,7 +230,6 @@ fun PopularityEvent(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DeadlineEvent(modifier: Modifier = Modifier) {
     val sampleEvent = Event(
@@ -282,7 +280,7 @@ fun RecentEvent(modifier: Modifier = Modifier) {
     Column {
         MoreViewTitle(
             Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
-            "최신 제휴 이벤트",
+            "이번달 신규 이벤트",
             {}
         )
         Spacer(modifier = Modifier.height(16.dp))
