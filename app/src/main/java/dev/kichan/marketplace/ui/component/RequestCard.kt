@@ -8,10 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,7 +34,8 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Preview(showBackground = true)
 @Composable
-fun CurationCard(
+fun RequestCard(
+    //todo: 나중에 더 좋은 이름으로 변경
     modifier: Modifier = Modifier,
 ) {
     Column(

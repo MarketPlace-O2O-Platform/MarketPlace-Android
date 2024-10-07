@@ -7,25 +7,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
-import dev.kichan.marketplace.ui.component.CurationCard
+import dev.kichan.marketplace.ui.component.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -126,7 +121,7 @@ fun LikePage(navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(10) {
-                    CurationCard(
+                    RequestCard(
                         modifier = Modifier.width(284.dp),
                     )
                 }
@@ -169,9 +164,9 @@ fun LikePage(navController: NavController) {
             Column {
                 for (i in 1..10) {
                     Row {
-                        CurationCard(modifier = Modifier.weight(1.0f))
+                        RequestCard(modifier = Modifier.weight(1.0f))
                         Spacer(modifier = Modifier.width(4.dp))
-                        CurationCard(modifier = Modifier.weight(1.0f))
+                        RequestCard(modifier = Modifier.weight(1.0f))
                     }
                     Spacer(modifier = Modifier.height(20.dp))
                 }
