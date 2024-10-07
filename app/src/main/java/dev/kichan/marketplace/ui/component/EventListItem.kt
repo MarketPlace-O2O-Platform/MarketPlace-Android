@@ -1,5 +1,7 @@
 package dev.kichan.marketplace.ui.component
 
+import Carbon_bookmark
+import Mdi_coupon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,7 +52,6 @@ fun EventListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(20.dp)
     ) {
         Box(
             modifier = Modifier
@@ -63,32 +64,22 @@ fun EventListItem(
                 modifier = Modifier.fillMaxSize()
             )
 
-            // 파란색 카테고리 라벨 추가
-            Box(
-                modifier = Modifier
-                    .offset(x = (-5).dp, y = (-5).dp)
-                    .background(Color(0xff108CFF))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                    .align(Alignment.TopStart)
-            ) {
-                Text(
-                    text = category,
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                )
-            }
-
-            Icon(
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier
-                    .size(28.dp)
-                    .padding(bottom = 8.dp, end = 8.dp)
-                    .align(Alignment.BottomEnd)
-                    .clickable { /* todo: 좋아요 기능 추가 */ }
-            )
+            //todo: 이거 만드느라 진짜 힘들었음
+//            // 파란색 카테고리 라벨 추가
+//            Box(
+//                modifier = Modifier
+//                    .offset(x = (-5).dp, y = (-5).dp)
+//                    .background(Color(0xff108CFF))
+//                    .padding(horizontal = 8.dp, vertical = 4.dp)
+//                    .align(Alignment.TopStart)
+//            ) {
+//                Text(
+//                    text = category,
+//                    style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
+//                    fontSize = 12.sp,
+//                    modifier = Modifier
+//                )
+//            }
         }
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -99,12 +90,23 @@ fun EventListItem(
                 .weight(1f)
                 .align(Alignment.CenterVertically)
         ) {
-            Text(
-                text = title,
-                fontFamily = PretendardFamily,
-                fontSize = 16.sp,
-                fontWeight = FontWeight(600),
-            )
+            Row {
+                Text(
+                    text = title,
+                    fontFamily = PretendardFamily,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(600),
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = Carbon_bookmark,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .padding(bottom = 8.dp, end = 8.dp)
+                        .clickable { /* todo: 좋아요 기능 추가 */ }
+                )
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = couponDescription,
@@ -137,21 +139,21 @@ fun EventListItem(
                 }
 
                 // 좋아요
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Favorite,
-                        contentDescription = "좋아요",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = likes.toString(),
-                        style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
-                    )
-                }
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Outlined.Favorite,
+//                        contentDescription = "좋아요",
+//                        tint = Color.Gray,
+//                        modifier = Modifier.size(16.dp)
+//                    )
+//                    Spacer(modifier = Modifier.width(4.dp))
+//                    Text(
+//                        text = likes.toString(),
+//                        style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
+//                    )
+//                }
             }
         }
     }
