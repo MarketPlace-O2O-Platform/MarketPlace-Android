@@ -36,6 +36,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 @Composable
 fun RequestCard(
     //todo: 나중에 더 좋은 이름으로 변경
+    //todo: state 추가
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,8 +84,19 @@ fun RequestCard(
                     Text(text = "36")
                 }
 
-                // 모집 정보
-                Text(text = "공간 마감 제휴 컨텐츠 중", fontSize = 12.sp, color = Color.Gray)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // 모집 정보
+                    Text(text = "공간 마감", fontSize = 12.sp, color = Color.Gray)
+                    Text(
+                        text = "제휴 컨텐츠 중",
+                        fontSize = 12.sp,
+                        color = Color(0xff383838),
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(7.dp))

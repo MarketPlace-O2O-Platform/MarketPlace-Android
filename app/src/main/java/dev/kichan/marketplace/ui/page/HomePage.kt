@@ -210,7 +210,10 @@ fun PopularityEvent(navController: NavController, modifier: Modifier = Modifier)
         MoreViewTitle(
             Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
             "Top 20 인기 페이지"
-        ) { navController.navigate("${Page.PopularEvent.name}/${LargeCategory.Food.name}") }
+        ) {
+            navController.navigate("${Page.PopularEvent.name}/${LargeCategory.All.name}")
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
