@@ -1,12 +1,17 @@
-
 enum class LargeCategory(
-    val nameKo : String,
-){
+    val nameKo: String,
+) {
+    All("전체보기"),
     Food("음식"),
-    Bar("주점"),
-    Cafe("카페"),
-    Beauty("뷰티"),
-    Game("놀이"),
-    Rest("기타"),
-    Class("클래스"),
+    Dessert("디저트"),
+    Sports("스포츠"),
+    Beauty("미용"),
+    Hospital("병원"),
+    Education("교육"),
+    Rest("기타");
+
+    companion object {
+        fun findByNameKo(key: String): LargeCategory =
+            runCatching { valueOf(key) }.getOrElse { Rest }
+    }
 }

@@ -77,7 +77,11 @@ fun MyApp() {
             composable(Page.Like.name) { LikePage(navController = navController) }
             composable(Page.Map.name) { MapPage(navController = navController) }
             composable(Page.My.name) { MyPage(navController = navController) }
-            composable(Page.PopularEvent.name) { PopularEventPage(navController = navController) }
+            composable("${Page.PopularEvent.name}/{category}") {
+                it.arguments?.getString("category")?.let { category ->
+                    PopularEventPage(navController = navController, category = category)
+                }
+            }
         }
     }
 }

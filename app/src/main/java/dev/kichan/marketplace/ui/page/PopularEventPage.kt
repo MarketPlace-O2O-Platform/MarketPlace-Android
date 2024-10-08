@@ -1,10 +1,14 @@
 package dev.kichan.marketplace.ui.page
 
 import LargeCategory
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,19 +16,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.category.Category
 import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.EventListItem
 import dev.kichan.marketplace.ui.component.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun PopularEventPage(navController: NavController) {
-    var selectedCategory by remember { mutableStateOf(LargeCategory.Food) }
+fun PopularEventPage(navController: NavController, category: String) {
+    var selectedCategory by remember { mutableStateOf(LargeCategory.findByNameKo(category)) }
 
     Scaffold(
         topBar = {
@@ -35,7 +40,9 @@ fun PopularEventPage(navController: NavController) {
     ) {
         Column(Modifier.padding(it)) {
             CategoryTap(selectedCategory = selectedCategory, onSelected = { selectedCategory = it })
-            LazyColumn {
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+            ) {
                 items(50) {
                     EventListItem(
                         imageRes = R.drawable.desert,
@@ -46,6 +53,15 @@ fun PopularEventPage(navController: NavController) {
                         category = "음식&주점",
                         modifier = Modifier
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xffEAEAEA))
+                            .height(1.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
@@ -56,6 +72,6 @@ fun PopularEventPage(navController: NavController) {
 @Composable
 fun PopularEventPagePreview() {
     MarketPlaceTheme {
-        LikePage(rememberNavController())
+        PopularEventPage(rememberNavController(), LargeCategory.Food.nameKo)
     }
 }

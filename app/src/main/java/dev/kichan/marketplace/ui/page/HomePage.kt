@@ -1,8 +1,10 @@
 package dev.kichan.marketplace.ui.page
 
+import LargeCategory
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -87,8 +89,8 @@ fun HomePage(navController: NavController) {
         }
 
         LazyColumn {
+            // 쿠폰 배너 바로 상단바 아래에 위치
             item {
-                // 쿠폰 배너 바로 상단바 아래에 위치
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -100,20 +102,15 @@ fun HomePage(navController: NavController) {
             // 카테고리 섹션
             item {
                 Spacer(modifier = Modifier.height(50.dp))
-                CategorySelector()
+                CategorySelector(navController)
             }
 
-            // 요즘 많이 찾는 제휴 이벤트
+            // Top 20 인기 페이지"
             item {
-                MoreViewTitle(
-                    Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
-                    "요즘 많이 찾는 제휴 이벤트",
-                    { navController.navigate(Page.PopularEvent.name) }
-                )
             }
             item {
-                Spacer(modifier = Modifier.height(16 .dp))
-                PopularityEvent()
+                Spacer(modifier = Modifier.height(16.dp))
+                PopularityEvent(navController)
             }
 
             // 최신 제휴 이벤트
@@ -161,8 +158,8 @@ fun CouponBanner(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CategorySelector() {
-    val categories = listOf("전체보기", "음식", "주점", "카페", "뷰티", "놀이", "기타", "클래스")
+fun CategorySelector(navController: NavController) {
+    val categories = LargeCategory.entries
 
     Column(
         Modifier
@@ -187,7 +184,10 @@ fun CategorySelector() {
             ) {
                 rowItems.forEach { category ->
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally // 버튼과 텍스트를 가운데 정렬
+                        horizontalAlignment = Alignment.CenterHorizontally, // 버튼과 텍스트를 가운데 정렬
+                        modifier = Modifier.clickable {
+                            navController.navigate("${Page.PopularEvent.name}/${category.name}")
+                        }
                     ) {
                         Box(
                             Modifier
@@ -195,7 +195,7 @@ fun CategorySelector() {
                                 .background(Color.LightGray, shape = CircleShape)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = category)
+                        Text(text = category.nameKo)
                     }
                 }
             }
@@ -205,8 +205,16 @@ fun CategorySelector() {
 }
 
 @Composable
-fun PopularityEvent(modifier: Modifier = Modifier) {
+fun PopularityEvent(navController: NavController, modifier: Modifier = Modifier) {
     Column {
+        MoreViewTitle(
+            Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
+            "Top 20 인기 페이지"
+        ) {
+            navController.navigate("${Page.PopularEvent.name}/${LargeCategory.All.name}")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
@@ -225,7 +233,6 @@ fun PopularityEvent(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DeadlineEvent(modifier: Modifier = Modifier) {
     val sampleEvent = Event(
@@ -276,7 +283,7 @@ fun RecentEvent(modifier: Modifier = Modifier) {
     Column {
         MoreViewTitle(
             Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
-            "최신 제휴 이벤트",
+            "이번달 신규 이벤트",
             {}
         )
         Spacer(modifier = Modifier.height(16.dp))
