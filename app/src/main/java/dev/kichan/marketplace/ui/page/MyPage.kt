@@ -7,14 +7,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -54,7 +59,7 @@ fun MyPage(navController: NavController) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(end = 40.dp),
+                    .padding(end = 20.dp),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -66,6 +71,9 @@ fun MyPage(navController: NavController) {
                         // 로그아웃 처리
                     }
                 )
+                Spacer(modifier = Modifier.width(8.dp))
+                //todo: 로그아웃 버튼 아이콘 수정
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = "로그아웃")
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -130,35 +138,29 @@ fun MyPage(navController: NavController) {
             // 2x2 그리드 형태로 CurationCard 4개 추가
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+            val curationCardModifier = Modifier.weight(1f)
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Row(
-                    Modifier.fillMaxWidth()
-                ) {
-                    CurationCard(
-                        event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe,
-                    )
-                    CurationCard(
-                        event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe,
-                    )
-                }
-                Row(
-                    Modifier.fillMaxWidth()
-                ) {
-                    CurationCard(
-                        event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe,
-                    )
-                    CurationCard(
-                        event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe,
-                    )
+                for (i in 1..10) {
+                    item {
+                        CurationCard(
+                            modifier = curationCardModifier,
+                            event = Event(
+                                marketName = "콜드케이스 인하대점",
+                                eventName = "송도",
+                                defaultPrice = 50000,
+                                eventPrice = 29500
+                            ),
+                            imageResId = R.drawable.cafe,
+                        )
+                    }
                 }
             }
+
         }
     }
 }
@@ -169,8 +171,7 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
     var isBookMark by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .padding(8.dp)
+        modifier = modifier
     ) {
         // 이미지와 스크랩 아이콘
         Box(
@@ -185,6 +186,7 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
             )
 
             Icon(
+                //todo: 아이콘 변경
                 imageVector = if (!isBookMark) Carbon_bookmark else Icons.Filled.Favorite,
                 contentDescription = "Bookmark",
                 tint = Color.White,
@@ -197,27 +199,31 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
 
         // 가게명과 위치 정보
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = event.marketName,
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp)
         ) {
-            Icon(
-                imageVector = Icons.Filled.LocationOn,
-                contentDescription = "위치",
-                tint = Color.Gray,
-                modifier = Modifier.size(14.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = event.eventName,
-                color = Color.Gray,
-                fontSize = 12.sp
+                text = event.marketName,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
             )
+            Spacer(modifier = Modifier.height(2.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.LocationOn,
+                    contentDescription = "위치",
+                    tint = Color.Gray,
+                    modifier = Modifier.size(14.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = event.eventName,
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+            }
         }
     }
 }
@@ -233,7 +239,12 @@ fun MyPagePreview() {
 private fun CurationCard() {
     MarketPlaceTheme {
         CurationCard(
-            event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
+            event = Event(
+                marketName = "콜드케이스 인하대점",
+                eventName = "송도",
+                defaultPrice = 50000,
+                eventPrice = 29500
+            ),
             imageResId = R.drawable.cafe
         )
     }
