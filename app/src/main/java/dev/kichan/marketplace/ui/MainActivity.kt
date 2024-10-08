@@ -22,6 +22,8 @@ import androidx.navigation.compose.rememberNavController
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
+import dev.kichan.marketplace.ui.page.CouponPage
+import dev.kichan.marketplace.ui.page.GoogleMapTestPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -42,7 +44,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                MyApp()
+                GoogleMapTestPage(navController = rememberNavController())
+//                MyApp()
             }
         }
     }
@@ -77,6 +80,7 @@ fun MyApp() {
             composable(Page.Like.name) { LikePage(navController = navController) }
             composable(Page.Map.name) { MapPage(navController = navController) }
             composable(Page.My.name) { MyPage(navController = navController) }
+            composable(Page.Coupon.name) { CouponPage(navController = navController) }
             composable("${Page.PopularEvent.name}/{category}") {
                 it.arguments?.getString("category")?.let { category ->
                     PopularEventPage(navController = navController, category = category)

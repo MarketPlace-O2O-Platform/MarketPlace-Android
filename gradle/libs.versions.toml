@@ -16,6 +16,7 @@ playServicesMaps = "19.0.0"
 okhttp3 = "4.10.0"
 retrofit = "2.11.0"
 kakaoSdkAll = "2.20.5"
+secretsGradlePlugin = "2.0.1"
 
 [libraries]
 accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistPagerIndicators" }

@@ -41,16 +41,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CouponPage(navController: NavController, modifier: Modifier = Modifier) {
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController = navController, pageList = listOf(
-                Page.Home to Icons.Filled.Home,
-                Page.Like to Icons.Filled.Favorite,
-                Page.Map to Icons.Filled.LocationOn,
-                Page.My to Icons.Filled.Person
-            ))
-        }
-    ) { innerPadding -> // paddingValues를 innerPadding으로 전달
+    Scaffold { innerPadding -> // paddingValues를 innerPadding으로 전달
         LazyColumn(
             contentPadding = PaddingValues(
                 vertical = 8.dp,
