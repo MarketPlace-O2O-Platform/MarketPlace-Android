@@ -36,24 +36,13 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
-
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 
 //MyPage
 @Composable
 fun MyPage(navController: NavController) {
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController = navController, pageList = listOf(
-                Page.Home to Icons.Filled.Home,
-                Page.Like to Icons.Filled.Favorite,
-                Page.Map to Icons.Filled.LocationOn,
-                Page.My to Icons.Filled.Person
-            )
-
-            )
-        }
-    ) { innerPadding ->  // padding을 추가해 bottomBar와의 충돌 방지
+    Scaffold { innerPadding ->  // padding을 추가해 bottomBar와의 충돌 방지
         Column(
             Modifier
                 .fillMaxSize()
@@ -150,11 +139,11 @@ fun MyPage(navController: NavController) {
                 ) {
                     CurationCard(
                         event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe
+                        imageResId = R.drawable.cafe,
                     )
                     CurationCard(
                         event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe
+                        imageResId = R.drawable.cafe,
                     )
                 }
                 Row(
@@ -162,11 +151,11 @@ fun MyPage(navController: NavController) {
                 ) {
                     CurationCard(
                         event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe
+                        imageResId = R.drawable.cafe,
                     )
                     CurationCard(
                         event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
-                        imageResId = R.drawable.cafe
+                        imageResId = R.drawable.cafe,
                     )
                 }
             }
@@ -176,13 +165,12 @@ fun MyPage(navController: NavController) {
 
 // Updated CurationCard function with event details and image
 @Composable
-fun CurationCard(event: Event, imageResId: Int) {
+fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
     var isBookMark by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .width(180.dp)
     ) {
         // 이미지와 스크랩 아이콘
         Box(
@@ -238,4 +226,15 @@ fun CurationCard(event: Event, imageResId: Int) {
 @Composable
 fun MyPagePreview() {
     MyPage(navController = rememberNavController())
+}
+
+@Preview
+@Composable
+private fun CurationCard() {
+    MarketPlaceTheme {
+        CurationCard(
+            event = Event(marketName = "콜드케이스 인하대점", eventName = "송도", defaultPrice = 50000, eventPrice = 29500),
+            imageResId = R.drawable.cafe
+        )
+    }
 }
