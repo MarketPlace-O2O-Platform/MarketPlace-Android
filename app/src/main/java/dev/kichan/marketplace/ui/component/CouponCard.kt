@@ -60,7 +60,7 @@ fun CouponCard(coupon: Coupon, imageUrl: String) {
                 )
 
                 Text(
-                    text = "미용실 간석동", // todo: 카테고리, 위치 변경
+                    text = "건강&뷰티", // todo: 카테고리, 위치 변경
                     fontFamily = PretendardFamily,
                     fontWeight = FontWeight(500),
                     color = Color(0xff7d7d7d),
