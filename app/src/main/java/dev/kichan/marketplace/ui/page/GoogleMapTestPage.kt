@@ -38,6 +38,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import dev.kichan.marketplace.R
@@ -194,26 +195,8 @@ fun GoogleMapTestPage(navController: NavHostController) {
                     clickMarker = clickMarker + listOf(it)
                 }
             ) {
-                val mountainIcon = vectorToBitmap(
-                    LocalContext.current,
-                    BitmapParameters(
-                        id = R.drawable.baseline_fastfood_24,
-                        iconColor = androidx.compose.ui.graphics.Color.Red.toArgb(),
-                        backgroundColor = androidx.compose.ui.graphics.Color.Black.toArgb(),
-                    )
-                )
-                clickMarker.forEach { ad ->
-                    Marker(
-                        state = rememberMarkerState(
-                            position = ad,
-                        ),
-                        onClick = {
-                            Toast.makeText(c, ad.toString(), Toast.LENGTH_SHORT).show()
-                            false
-                        },
-                        icon = mountainIcon
-                    )
-                }
+
+                Polyline(points = clickMarker)
             }
 
             Button(onClick = {
