@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui
 
+import LoginPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -44,8 +45,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                GoogleMapTestPage(navController = rememberNavController())
-//                MyApp()
+//                GoogleMapTestPage(navController = rememberNavController())
+                MyApp()
             }
         }
     }
@@ -67,7 +68,7 @@ fun MyApp() {
     ) {
         NavHost(
             navController = navController,
-            startDestination = Page.Home.name,
+            startDestination = Page.Login.name,
             modifier = Modifier.padding(it),
             enterTransition = {
                 EnterTransition.None
@@ -76,6 +77,7 @@ fun MyApp() {
                 ExitTransition.None
             }
         ) {
+            composable(Page.Login.name) { LoginPage(navController = navController) }
             composable(Page.Home.name) { HomePage(navController = navController) }
             composable(Page.Like.name) { LikePage(navController = navController) }
             composable(Page.Map.name) { MapPage(navController = navController) }

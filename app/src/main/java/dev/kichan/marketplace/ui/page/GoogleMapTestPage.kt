@@ -62,8 +62,8 @@ fun GoogleMapTestPage(navController: NavHostController) {
     var page by remember { mutableStateOf(1) }
 
     val getData = {
-        val retrofit = NetworkModule().provideRetrofit("https://dapi.kakao.com/")
-        val service = retrofit.create(KakaoLocalService::class.java)
+//        val retrofit = NetworkModule.getService(KakaoLocalService::class.java)
+        val service = NetworkModule.getService(KakaoLocalService::class.java)
 
         isLoading = true
 

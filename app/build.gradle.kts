@@ -32,6 +32,7 @@ android {
         buildConfigField("String", "KAKAO_REST_API_KEY", properties["KAKAO_REST_API_KEY"].toString())
         buildConfigField("String", "KAKAO_NATIVE_API_KEY", properties["KAKAO_NATIVE_API_KEY"].toString())
         buildConfigField("String", "KAKAO_ADMIN_API_KEY", properties["KAKAO_ADMIN_API_KEY"].toString())
+        buildConfigField("String", "API_BASE_URL", properties["API_BASE_URL"].toString())
     }
 
     buildTypes {
