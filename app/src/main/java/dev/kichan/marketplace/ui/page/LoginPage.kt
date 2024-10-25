@@ -8,12 +8,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.login.LoginReq
+import dev.kichan.marketplace.model.data.login.LoginRes
+import dev.kichan.marketplace.model.repository.MemberRepository
+import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.model.service.MemberService
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
@@ -22,26 +27,37 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginPage(navController: NavHostController) {
-    val retrofit = NetworkModule.getService(MemberService::class.java)
+    val memberRepository = MemberRepositoryImpl()
 
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+    var result by remember { mutableStateOf<ResponseTemplate<LoginRes>?>(null) }
 
-    val login : (String, String) -> Unit = {id, pw ->
+    val login: (String, String) -> Unit = { id, pw ->
         CoroutineScope(Dispatchers.IO).launch {
-            val res = retrofit.login(body = LoginReq(id, pw))
+            val res = memberRepository.login(body = LoginReq(id, pw))
 
-            Log.d("login", res.toString())
+            if (res.isSuccessful) {
+                result = res.body()
+            }
         }
     }
 
     Column {
         TextField(value = inputId, onValueChange = { inputId = it })
-        TextField(value = inputPassword, onValueChange = { inputPassword = it })
+        TextField(
+            value = inputPassword,
+            onValueChange = { inputPassword = it },
+            visualTransformation = PasswordVisualTransformation()
+        )
 
         Button(onClick = { login(inputId, inputPassword) }) {
             Text(text = "로그인")
         }
+
+        if (isLoading) Text(text = "로딩중")
+        if (result != null) Text(text = result.toString())
     }
 }
 
