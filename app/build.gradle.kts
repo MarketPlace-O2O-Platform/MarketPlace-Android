@@ -11,7 +11,7 @@ plugins {
 
 secrets {
     propertiesFileName = "secrets.properties"
-    defaultPropertiesFileName = "local.defaults.properties"
+    defaultPropertiesFileName = "local.properties"
 }
 
 android {
