@@ -208,29 +208,6 @@ fun SheetContentPreview() {
     }
 }
 
-@Composable
-fun SheetBack(
-    mapPosition: LatLng,
-    placeDate: KakaoLocal<Place>?,
-    sheetState: ModalBottomSheetState,
-    sheetScope: CoroutineScope,
-    onOpenBottomSheet: () -> Unit
-) {
-    Box {
-        Row(
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            Button(onClick = { sheetScope.launch { sheetState.show() } }) {
-                Text(text = "열기")
-            }
-
-            Button(onClick = { sheetScope.launch { sheetState.show() } }) {
-                Text(text = "열기")
-            }
-        }
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
