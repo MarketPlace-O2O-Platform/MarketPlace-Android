@@ -82,6 +82,8 @@ fun MapPage(navController: NavController) {
         LocalConfiguration.current.screenHeightDp.dp * 0.8f
     }
 
+    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController, pageList = bottomNavItem) },
     ) {
@@ -99,37 +101,29 @@ fun MapPage(navController: NavController) {
             sheetShape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp),
             sheetElevation = 100.dp
         ) { innerPadding ->
-            GoogleMap(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-                onMapLoaded = { },
-                cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(
-                    zoomControlsEnabled = false,
-                    myLocationButtonEnabled = true,
-                ),
-                onMapClick = {
-                }
-            ) {
-            }
-
-            Column {
-                Button(onClick = {
-                    scope.launch {
-                        bottomSheetState.expand()
+            Box {
+                GoogleMap(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(),
+                    onMapLoaded = { },
+                    cameraPositionState = cameraPositionState,
+                    uiSettings = MapUiSettings(
+                        zoomControlsEnabled = false,
+                        myLocationButtonEnabled = true,
+                    ),
+                    onMapClick = {
                     }
-                }) {
-                    Text(text = "열기")
+                ) {
                 }
 
-                Button(onClick = {
-                    scope.launch {
-                        bottomSheetState.collapse()
-                    }
-                }) {
-                    Text(text = "닫기")
-                }
+                CategoryTap(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter),
+                    selectedCategory = selectedCategory,
+                    onSelected = { selectedCategory = it }
+                )
             }
         }
     }
@@ -222,17 +216,7 @@ fun SheetBack(
     sheetScope: CoroutineScope,
     onOpenBottomSheet: () -> Unit
 ) {
-    var selectedCategory by remember { mutableStateOf(LargeCategory.Food) }
-
     Box {
-        CategoryTap(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter),
-            selectedCategory = selectedCategory,
-            onSelected = { selectedCategory = it }
-        )
-
         Row(
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {
