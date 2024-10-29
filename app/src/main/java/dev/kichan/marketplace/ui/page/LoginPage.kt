@@ -33,13 +33,23 @@ fun LoginPage(navController: NavHostController) {
     var inputPassword by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var result by remember { mutableStateOf<ResponseTemplate<LoginRes>?>(null) }
+    var error by remember { mutableStateOf<String?>(null) }
 
     val login: (String, String) -> Unit = { id, pw ->
+        result = null
+        isLoading = true
+        error = null
+
         CoroutineScope(Dispatchers.IO).launch {
+            isLoading = false
             val res = memberRepository.login(body = LoginReq(id, pw))
 
             if (res.isSuccessful) {
                 result = res.body()
+            }
+            else {
+                Log.d("error", res.errorBody().toString())
+                error = res.errorBody()?.string()
             }
         }
     }
@@ -58,6 +68,7 @@ fun LoginPage(navController: NavHostController) {
 
         if (isLoading) Text(text = "로딩중")
         if (result != null) Text(text = result.toString())
+        if(error != null) Text(text = error.toString())
     }
 }
 
