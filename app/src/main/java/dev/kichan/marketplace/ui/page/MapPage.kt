@@ -41,6 +41,8 @@ import dev.kichan.marketplace.model.data.kakao.KakaoLocal
 import dev.kichan.marketplace.model.data.kakao.adress.Address
 import dev.kichan.marketplace.model.data.kakao.local.Place
 import dev.kichan.marketplace.model.service.KakaoLocalService
+import dev.kichan.marketplace.ui.bottomNavItem
+import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.CouponCard
 import dev.kichan.marketplace.ui.component.KakaoMap
@@ -107,26 +109,33 @@ fun MapPage(navController: NavController) {
         126.63425891507083,
     )
 
-    ModalBottomSheetLayout(
-        sheetState = sheetState, // 바텀 시트 상태
-        sheetContent = {
-            SheetContent(
-                modifier = Modifier.fillMaxHeight(0.8f)
-            ) // 바텀 시트의 내용물
-        },
-        sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp), // 바텀시트 둥근 모양
-        sheetBackgroundColor = Color(0xffFAFAFA), // 바텀시트 배경 색
-        scrimColor = Color.Unspecified, // 바컴 시트 뒤에 투명한 배경색, 지금은 투명으로,
-        sheetElevation = 3.dp // 바텀시트 그림자
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController, pageList = bottomNavItem)
+        }
     ) {
-        // 바텀 시트뒤 배경
-        SheetBack(
-            mapPosition = inu,
-            placeDate = placeDate,
-            sheetState = sheetState,
-            sheetScope = sheetScope,
-            onOpenBottomSheet = { sheetScope.launch { sheetState.show() } }
-        )
+        ModalBottomSheetLayout(
+            modifier = Modifier.padding(it),
+            sheetState = sheetState, // 바텀 시트 상태
+            sheetContent = {
+                SheetContent(
+                    modifier = Modifier.fillMaxHeight(0.8f)
+                ) // 바텀 시트의 내용물
+            },
+            sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp), // 바텀시트 둥근 모양
+            sheetBackgroundColor = Color(0xffFAFAFA), // 바텀시트 배경 색
+            scrimColor = Color.Unspecified, // 바컴 시트 뒤에 투명한 배경색, 지금은 투명으로,
+            sheetElevation = 3.dp // 바텀시트 그림자
+        ) {
+            // 바텀 시트뒤 배경
+            SheetBack(
+                mapPosition = inu,
+                placeDate = placeDate,
+                sheetState = sheetState,
+                sheetScope = sheetScope,
+                onOpenBottomSheet = { sheetScope.launch { sheetState.show() } }
+            )
+        }
     }
 }
 

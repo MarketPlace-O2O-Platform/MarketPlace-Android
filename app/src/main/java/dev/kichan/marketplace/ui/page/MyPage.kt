@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
@@ -47,7 +48,11 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 //MyPage
 @Composable
 fun MyPage(navController: NavController) {
-    Scaffold { innerPadding ->  // padding을 추가해 bottomBar와의 충돌 방지
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController, pageList = bottomNavItem)
+        }
+    ) { innerPadding ->  // padding을 추가해 bottomBar와의 충돌 방지
         Column(
             Modifier
                 .fillMaxSize()

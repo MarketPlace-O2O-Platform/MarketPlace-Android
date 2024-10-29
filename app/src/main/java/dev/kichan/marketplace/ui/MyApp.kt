@@ -31,11 +31,6 @@ fun MyApp() {
 
     val navController = rememberNavController()
 
-//    Scaffold(
-//        bottomBar = { BottomNavigationBar(navController = navController, pageList = bottomNavItem) }
-//    ) {
-//    }
-
     NavHost(
         navController = navController,
         startDestination = Page.Main.name,
