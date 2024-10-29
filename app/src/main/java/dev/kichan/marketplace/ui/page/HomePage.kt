@@ -65,12 +65,21 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 fun HomePage(navController: NavController) {
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController = navController, pageList = bottomNavItem)
+            Box{
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp) // BottomNavigation의 둥근 모서리를 덮는 높이로 설정
+                        .background(Color.White)
+                        .align(Alignment.TopCenter)
+                )
+                BottomNavigationBar(navController = navController, pageList = bottomNavItem)
+            }
         }
-    ) {
+    ) { _ ->
         Column(
             Modifier
-                .padding(it)
+                .padding()
                 .fillMaxSize()
         ) {
             // 아이콘 상단 바

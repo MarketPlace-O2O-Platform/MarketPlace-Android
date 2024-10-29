@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.page
 
 import LargeCategory
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,9 +21,12 @@ import androidx.compose.material.Button
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,6 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -53,6 +58,7 @@ import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.CouponCard
 import dev.kichan.marketplace.ui.component.KakaoMap
+import dev.kichan.marketplace.ui.theme.Gray_3
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -77,19 +83,21 @@ fun MapPage(navController: NavController) {
     }
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController = navController, pageList = bottomNavItem) }
+        bottomBar = { BottomNavigationBar(navController = navController, pageList = bottomNavItem) },
     ) {
         BottomSheetScaffold(
             sheetContent = {
                 SheetContent(
                     modifier = Modifier.height(expandedHeight),
-                    isExpended = bottomSheetState.isExpanded
+                    isExpended = bottomSheetState.isExpanded,
+                    onCloseSheet = { scope.launch { bottomSheetState.collapse() } }
                 )
             },
             scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState),
             modifier = Modifier.padding(it),
             sheetPeekHeight = 200.dp,
-            sheetShape = RoundedCornerShape(20.dp),
+            sheetShape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp),
+            sheetElevation = 100.dp
         ) { innerPadding ->
             GoogleMap(
                 modifier = Modifier
@@ -128,57 +136,72 @@ fun MapPage(navController: NavController) {
 }
 
 @Composable
-fun SheetContent(modifier: Modifier = Modifier, isExpended : Boolean) {
-    LazyColumn(
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 20.dp),
-        modifier = modifier,
-        userScrollEnabled = isExpended
-    ) {
-        item {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
+fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseSheet: () -> Unit) {
+    Box(modifier = Modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 20.dp),
+            modifier = modifier,
+            userScrollEnabled = isExpended
+        ) {
+            item {
                 Box(
-                    modifier = Modifier
-                        .width(34.dp)
-                        .height(5.dp)
-                        .background(Color(0xffc7c7c7), RoundedCornerShape(12.dp))
-                ) {}
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(34.dp)
+                            .height(5.dp)
+                            .background(Color(0xffc7c7c7), RoundedCornerShape(12.dp))
+                    ) {}
+                }
+            }
+            item { Spacer(modifier = Modifier.height(21.dp)) }
+            items(10) {
+                CouponCard(
+                    coupon = Coupon(
+                        id = 0,
+                        marketId = 0,
+                        name = "커트 2,000원 할인 $it",
+                        description = null,
+                        deadline = LocalDate.of(2024, 10, 31),
+                        count = 0,
+                        isHidden = false,
+                        isDeleted = false,
+                        createdAt = LocalDate.now(),
+                        modifiedAt = null
+
+                    ),
+                    imageUrl = "https://via.placeholder.com/150" //임시
+                )
+
+                // 쿠폰 아이템 사이에 있는 그거
+                if (it != 9) { // 마지막이 아니면 보임
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(2.dp)
+                            .background(Color(0xfff4f4f4))
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
             }
         }
 
-        item { Spacer(modifier = Modifier.height(21.dp)) }
-
-        items(10) {
-            CouponCard(
-                coupon = Coupon(
-                    id = 0,
-                    marketId = 0,
-                    name = "커트 2,000원 할인 $it",
-                    description = null,
-                    deadline = LocalDate.of(2024, 10, 31),
-                    count = 0,
-                    isHidden = false,
-                    isDeleted = false,
-                    createdAt = LocalDate.now(),
-                    modifiedAt = null
-
-                ),
-                imageUrl = "https://via.placeholder.com/150" //임시
-            )
-
-            // 쿠폰 아이템 사이에 있는 그거
-            if (it != 9) { // 마지막이 아니면 보임
-                Spacer(modifier = Modifier.height(20.dp))
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(2.dp)
-                        .background(Color(0xfff4f4f4))
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+        Row(
+            modifier = Modifier
+                .padding(bottom = 20.dp)
+                .align(Alignment.BottomCenter)
+                .background(color = Color(0xff121212), shape = RoundedCornerShape(58.dp))
+                .padding(vertical = 8.dp, horizontal = 16.dp)
+                .shadow(20.dp)
+                .clickable { onCloseSheet() },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(imageVector = Icons.Default.LocationOn, contentDescription = null, tint = Gray_3)
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = "지도 보기", color = Gray_3)
         }
     }
 }
@@ -187,7 +210,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended : Boolean) {
 @Composable
 fun SheetContentPreview() {
     MarketPlaceTheme {
-        SheetContent(isExpended = true)
+        SheetContent(isExpended = true, onCloseSheet = {})
     }
 }
 
@@ -202,22 +225,6 @@ fun SheetBack(
     var selectedCategory by remember { mutableStateOf(LargeCategory.Food) }
 
     Box {
-        KakaoMap(
-            position = mapPosition,
-            marker = placeDate?.documents?.map {
-                LatLng.from(
-                    it.y.toDouble(),
-                    it.x.toDouble()
-                )
-            } ?: listOf(
-                LatLng.from(
-                    37.376651978907326,
-                    126.63425891507083,
-                )
-            ),
-            onMarketClick = onOpenBottomSheet
-        )
-
         CategoryTap(
             modifier = Modifier
                 .fillMaxWidth()
@@ -236,23 +243,6 @@ fun SheetBack(
             Button(onClick = { sheetScope.launch { sheetState.show() } }) {
                 Text(text = "열기")
             }
-//                Button(onClick = {
-//                    page -= 1
-//                    getData()
-//                }) {
-//                    Text(text = "이전 페이지")
-//                }
-//
-//                Button(onClick = { getData() }) {
-//                    Text(text = "데이터 로드")
-//                }
-//
-//                Button(onClick = {
-//                    page += 1
-//                    getData()
-//                }) {
-//                    Text(text = "다음 페이지")
-//                }
         }
     }
 }
