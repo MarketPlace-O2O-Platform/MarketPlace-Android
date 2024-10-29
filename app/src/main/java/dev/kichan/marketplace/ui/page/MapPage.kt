@@ -1,24 +1,27 @@
 package dev.kichan.marketplace.ui.page
 
 import LargeCategory
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Button
-import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -30,17 +33,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.kakao.vectormap.LatLng
-import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.model.data.kakao.KakaoLocal
 import dev.kichan.marketplace.model.data.kakao.adress.Address
 import dev.kichan.marketplace.model.data.kakao.local.Place
-import dev.kichan.marketplace.model.service.KakaoLocalService
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
@@ -48,101 +55,84 @@ import dev.kichan.marketplace.ui.component.CouponCard
 import dev.kichan.marketplace.ui.component.KakaoMap
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 @Composable
 fun MapPage(navController: NavController) {
-    var placeDate by remember { mutableStateOf<KakaoLocal<Place>?>(null) }
-    var addressData by remember { mutableStateOf<List<Address?>>(listOf()) }
-    var loadtime by remember { mutableStateOf(0L) }
-    var isLoading by remember { mutableStateOf(false) }
-    var page by remember { mutableStateOf(1) }
+    val bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val scope = rememberCoroutineScope()
 
-    val sheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.HalfExpanded,
-        confirmValueChange = { true })
-    val sheetScope = rememberCoroutineScope()
-
-    val getData = {
-        val service = NetworkModule.getService(KakaoLocalService::class.java)
-
-        isLoading = true
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val time1 = System.currentTimeMillis()
-
-            val res = service.searchKeyword(
-                query = "음식점",
-                x = "126.63425891507083",
-                y = "37.376651978907326",
-                radius = 1000,
-                page = page,
-            )
-
-            val addressList = res.body()!!.documents.map {
-                val addressRes =
-                    service.getAddress(query = it.address_name).body()!!.documents.getOrNull(0)
-                if (addressRes == null) {
-                    Log.d("address", it.toString())
-                }
-
-                addressRes
-            }
-
-            val time2 = System.currentTimeMillis()
-
-            withContext(Dispatchers.Main) {
-                loadtime = time2 - time1
-                isLoading = false
-                addressData = addressList
-                placeDate = res.body()
-            }
-        }
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(
+            com.google.android.gms.maps.model.LatLng(
+                37.376651978907326,
+                126.63425891507083,
+            ), 14f
+        )
     }
 
-    val inu = LatLng.from(
-        37.376651978907326,
-        126.63425891507083,
-    )
+    val expandedHeight = with(LocalDensity.current) {
+        LocalConfiguration.current.screenHeightDp.dp * 0.8f
+    }
 
     Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController = navController, pageList = bottomNavItem)
-        }
+        bottomBar = { BottomNavigationBar(navController = navController, pageList = bottomNavItem) }
     ) {
-        ModalBottomSheetLayout(
-            modifier = Modifier.padding(it),
-            sheetState = sheetState, // 바텀 시트 상태
+        BottomSheetScaffold(
             sheetContent = {
                 SheetContent(
-                    modifier = Modifier.fillMaxHeight(0.8f)
-                ) // 바텀 시트의 내용물
+                    modifier = Modifier.height(expandedHeight),
+                    isExpended = bottomSheetState.isExpanded
+                )
             },
-            sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp), // 바텀시트 둥근 모양
-            sheetBackgroundColor = Color(0xffFAFAFA), // 바텀시트 배경 색
-            scrimColor = Color.Unspecified, // 바컴 시트 뒤에 투명한 배경색, 지금은 투명으로,
-            sheetElevation = 3.dp // 바텀시트 그림자
-        ) {
-            // 바텀 시트뒤 배경
-            SheetBack(
-                mapPosition = inu,
-                placeDate = placeDate,
-                sheetState = sheetState,
-                sheetScope = sheetScope,
-                onOpenBottomSheet = { sheetScope.launch { sheetState.show() } }
-            )
+            scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState),
+            modifier = Modifier.padding(it),
+            sheetPeekHeight = 200.dp,
+            sheetShape = RoundedCornerShape(20.dp),
+        ) { innerPadding ->
+            GoogleMap(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                onMapLoaded = { },
+                cameraPositionState = cameraPositionState,
+                uiSettings = MapUiSettings(
+                    zoomControlsEnabled = false,
+                    myLocationButtonEnabled = true,
+                ),
+                onMapClick = {
+                }
+            ) {
+            }
+
+            Column {
+                Button(onClick = {
+                    scope.launch {
+                        bottomSheetState.expand()
+                    }
+                }) {
+                    Text(text = "열기")
+                }
+
+                Button(onClick = {
+                    scope.launch {
+                        bottomSheetState.collapse()
+                    }
+                }) {
+                    Text(text = "닫기")
+                }
+            }
         }
     }
 }
 
 @Composable
-fun SheetContent(modifier: Modifier = Modifier) {
+fun SheetContent(modifier: Modifier = Modifier, isExpended : Boolean) {
     LazyColumn(
         contentPadding = PaddingValues(vertical = 8.dp, horizontal = 20.dp),
-        modifier = modifier
+        modifier = modifier,
+        userScrollEnabled = isExpended
     ) {
         item {
             Box(
@@ -197,7 +187,7 @@ fun SheetContent(modifier: Modifier = Modifier) {
 @Composable
 fun SheetContentPreview() {
     MarketPlaceTheme {
-        SheetContent()
+        SheetContent(isExpended = true)
     }
 }
 
@@ -207,7 +197,7 @@ fun SheetBack(
     placeDate: KakaoLocal<Place>?,
     sheetState: ModalBottomSheetState,
     sheetScope: CoroutineScope,
-    onOpenBottomSheet : () -> Unit
+    onOpenBottomSheet: () -> Unit
 ) {
     var selectedCategory by remember { mutableStateOf(LargeCategory.Food) }
 
