@@ -51,13 +51,13 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.DayOfWeekSelector
 import dev.kichan.marketplace.ui.component.EventBanner
 import dev.kichan.marketplace.ui.component.EventBox
 import dev.kichan.marketplace.ui.component.EventCard
 import dev.kichan.marketplace.ui.component.PagerIndicator
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 

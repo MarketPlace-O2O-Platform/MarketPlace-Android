@@ -26,13 +26,6 @@ import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.PopularEventPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
-val bottomNavItem = listOf(
-    Page.Home to Icons.Filled.Home,
-    Page.Like to Icons.Filled.ShoppingCart,
-    Page.Map to Icons.Filled.Place,
-    Page.My to Icons.Filled.Person,
-)
-
 @Composable
 fun MyApp() {
 
