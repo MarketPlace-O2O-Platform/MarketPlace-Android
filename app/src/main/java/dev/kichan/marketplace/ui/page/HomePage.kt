@@ -28,6 +28,7 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,73 +51,82 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.DayOfWeekSelector
 import dev.kichan.marketplace.ui.component.EventBanner
 import dev.kichan.marketplace.ui.component.EventBox
 import dev.kichan.marketplace.ui.component.EventCard
 import dev.kichan.marketplace.ui.component.PagerIndicator
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun HomePage(navController: NavController) {
-    Column(
-        Modifier
-            .fillMaxSize()
-    ) {
-        // 아이콘 상단 바
-        Row(
-            Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { /* 검색 */ }) {
-                Icon(
-                    Icons.Outlined.Search,
-                    contentDescription = "Search",
-                    modifier = Modifier.size(32.dp)  // 사이즈 조정
-                )
-            }
-            Spacer(modifier = Modifier.width(10.dp))
-            IconButton(onClick = { /* 알림 */ }) {
-                Icon(
-                    Icons.Outlined.Notifications,
-                    contentDescription = "Notifications",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
-
-        LazyColumn {
-            // 쿠폰 배너 바로 상단바 아래에 위치
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    CouponBanner()
+    ) {
+        Column(
+            Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
+            // 아이콘 상단 바
+            Row(
+                Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { /* 검색 */ }) {
+                    Icon(
+                        Icons.Outlined.Search,
+                        contentDescription = "Search",
+                        modifier = Modifier.size(32.dp)  // 사이즈 조정
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                IconButton(onClick = { /* 알림 */ }) {
+                    Icon(
+                        Icons.Outlined.Notifications,
+                        contentDescription = "Notifications",
+                        modifier = Modifier.size(32.dp)
+                    )
                 }
             }
 
-            // 카테고리 섹션
-            item {
-                Spacer(modifier = Modifier.height(50.dp))
-                CategorySelector(navController)
-            }
+            LazyColumn {
+                // 쿠폰 배너 바로 상단바 아래에 위치
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        CouponBanner()
+                    }
+                }
 
-            // Top 20 인기 페이지"
-            item {
-            }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                PopularityEvent(navController)
-            }
+                // 카테고리 섹션
+                item {
+                    Spacer(modifier = Modifier.height(50.dp))
+                    CategorySelector(navController)
+                }
 
-            // 최신 제휴 이벤트
-            item {
-                Spacer(modifier = Modifier.height(50.dp))
-                RecentEvent()
+                // Top 20 인기 페이지"
+                item {
+                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    PopularityEvent(navController)
+                }
+
+                // 최신 제휴 이벤트
+                item {
+                    Spacer(modifier = Modifier.height(50.dp))
+                    RecentEvent()
+                }
             }
         }
     }
