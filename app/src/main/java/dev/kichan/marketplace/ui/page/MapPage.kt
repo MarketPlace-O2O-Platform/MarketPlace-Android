@@ -2,11 +2,8 @@ package dev.kichan.marketplace.ui.page
 
 import LargeCategory
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,16 +14,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.Button
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +27,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -48,19 +38,13 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.kakao.vectormap.LatLng
 import dev.kichan.marketplace.model.data.coupon.Coupon
-import dev.kichan.marketplace.model.data.kakao.KakaoLocal
-import dev.kichan.marketplace.model.data.kakao.adress.Address
-import dev.kichan.marketplace.model.data.kakao.local.Place
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.CouponCard
-import dev.kichan.marketplace.ui.component.KakaoMap
-import dev.kichan.marketplace.ui.theme.Gray_3
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -85,7 +69,12 @@ fun MapPage(navController: NavController) {
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController = navController, pageList = bottomNavItem) },
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController,
+                pageList = bottomNavItem
+            )
+        },
     ) {
         BottomSheetScaffold(
             sheetContent = {
@@ -183,20 +172,16 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
             }
         }
 
-        Row(
+        IconChip(
             modifier = Modifier
-                .padding(bottom = 20.dp)
                 .align(Alignment.BottomCenter)
-                .background(color = Color(0xff121212), shape = RoundedCornerShape(58.dp))
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-                .shadow(20.dp)
-                .clickable { onCloseSheet() },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(imageVector = Icons.Default.LocationOn, contentDescription = null, tint = Gray_3)
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(text = "지도 보기", color = Gray_3)
-        }
+                .padding(bottom = 20.dp),
+            onClick = { /*TODO*/ },
+            icon = Icons.Default.LocationOn,
+            title = "지도 닫기",
+            contentColor = Color(0xffffffff),
+            backgroundColor = Color(0xff121212)
+        )
     }
 }
 
