@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
@@ -28,14 +29,17 @@ fun IconChip(
     icon: ImageVector,
     title: String,
     contentColor: Color,
-    backgroundColor: Color
+    backgroundColor: Color,
+    shadowElevation: Dp = 3.dp,
 ) {
+    val shape = RoundedCornerShape(58.dp)
+
     Row(
         modifier = modifier
-            .background(color = backgroundColor, shape = RoundedCornerShape(58.dp))
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-            .shadow(20.dp)
-            .clickable { onClick() },
+            .shadow(elevation = shadowElevation, shape = shape)
+            .background(color = backgroundColor, shape = shape)
+            .clickable { onClick() }
+            .padding(vertical = 8.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(imageVector = icon, contentDescription = null, tint = contentColor)

@@ -16,6 +16,7 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.Scaffold
@@ -27,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -112,6 +114,17 @@ fun MapPage(navController: NavController) {
                         .align(Alignment.TopCenter),
                     selectedCategory = selectedCategory,
                     onSelected = { selectedCategory = it }
+                )
+
+                IconChip(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 220.dp),
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Default.Menu,
+                    title = "목록 보기",
+                    contentColor = Color(0xff545454),
+                    backgroundColor = Color(0xffffffff)
                 )
             }
         }
