@@ -83,7 +83,7 @@ fun DetailPage() {
         ImageSlider()
         DetailContent()
 
-        // 두꺼운 회색 바
+        // 첫 번째 회색 바
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -112,18 +112,70 @@ fun DetailPage() {
 
         // "쿠폰 부가" 텍스트
         Text(
-            text = "쿠폰 부가 설명 \n쿠폰 부가 설명",
+            text = "쿠폰 부가",
             color = Color.Gray,
             fontSize = 14.sp,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
-        // 두 번째 회색 바 추가
+
+        // 두 번째 회색 바
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(5.dp)
                 .background(Color.LightGray)
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // "영업 정보" 텍스트
+        Text(
+            text = "영업 정보",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+
+        // 영업 정보 내용
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            BusinessInfoRow("시간", "토일 11:00 - 23:00\n평일 12:00 - 23:00")
+            BusinessInfoRow("휴무일", "매주 화요일")
+            BusinessInfoRow("매장 전화번호", "032-000-0000")
+            BusinessInfoRow("주소", "인천시 연수구 송도동 174-3 송도 트리플 스트리트 B동 2층 202,203호\n테크노파크역 2번 출구 도보 13분")
+
+            // "주소 복사 | 길찾기" 텍스트 바로 아래 위치
+            Text(
+                text = "                         주소 복사 | 길찾기",
+                color = Color(0xFF4B4B4B), // 색상 #4B4B4B로 설정
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun BusinessInfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = label,
+            color = Color(0xFF868686), // 연한 회색
+            fontSize = 14.sp,
+            modifier = Modifier.width(100.dp)
+        )
+        Column {
+            Text(
+                text = value,
+                color = Color(0xFF5E5E5E), // 진한 회색
+                fontSize = 14.sp
+            )
+        }
     }
 }
 
