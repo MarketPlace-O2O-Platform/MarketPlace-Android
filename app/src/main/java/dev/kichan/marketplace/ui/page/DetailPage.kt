@@ -5,7 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,17 +28,15 @@ fun ImageSlider() {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .height(280.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp) // 이미지를 나란히 배열하고 간격 추가
     ) {
-        items(images) { imageRes ->
-            val painter = painterResource(id = imageRes)
+        itemsIndexed(images) { _, imageRes ->
             Image(
-                painter = painter,
+                painter = painterResource(id = imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1.5f)
+                    .size(280.dp) // 정사각형 크기 설정
             )
         }
     }
