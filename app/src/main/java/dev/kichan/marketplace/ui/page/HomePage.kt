@@ -1,7 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
 import LargeCategory
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +58,7 @@ import dev.kichan.marketplace.ui.component.DayOfWeekSelector
 import dev.kichan.marketplace.ui.component.EventBanner
 import dev.kichan.marketplace.ui.component.EventBox
 import dev.kichan.marketplace.ui.component.EventCard
-import dev.kichan.marketplace.ui.component.PagerIndicator
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.PagerCounter
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -65,21 +66,12 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 fun HomePage(navController: NavController) {
     Scaffold(
         bottomBar = {
-            Box{
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp) // BottomNavigation의 둥근 모서리를 덮는 높이로 설정
-                        .background(Color.White)
-                        .align(Alignment.TopCenter)
-                )
-                BottomNavigationBar(navController = navController, pageList = bottomNavItem)
-            }
+            BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
-    ) { _ ->
+    ) { innerPadding ->
         Column(
             Modifier
-                .padding()
+                .padding(innerPadding)
                 .fillMaxSize()
         ) {
             // 아이콘 상단 바
@@ -109,12 +101,12 @@ fun HomePage(navController: NavController) {
             LazyColumn {
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        CouponBanner()
-                    }
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                    ) {
+//                    }
+                    CouponBanner()
                 }
 
                 // 카테고리 섹션
@@ -144,20 +136,24 @@ fun HomePage(navController: NavController) {
 @Composable
 fun CouponBanner(modifier: Modifier = Modifier) {
     val bannerList = listOf(
-        R.drawable.banner,
-        R.drawable.banner,
-        R.drawable.banner,
-        R.drawable.banner,
-        R.drawable.banner,
+        R.drawable.banner_2,
+        R.drawable.banner_2,
+        R.drawable.banner_2,
+        R.drawable.banner_2,
+        R.drawable.banner_2,
+        R.drawable.banner_2,
     )
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { bannerList.size })
 
-    Box {
+    Box(
+        Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING)
+    ) {
         HorizontalPager(state = pagerState) {
             Box(
                 modifier = modifier
                     .fillMaxWidth()
-                    .aspectRatio(9 / 5.8f) // 배너 이미지 비율
+                    .aspectRatio(335.0f / 360) // 배너 이미지 비율
+                    .clip(shape = RoundedCornerShape(12.dp))
             ) {
                 Image(
                     painter = painterResource(id = bannerList[it]),
@@ -166,15 +162,19 @@ fun CouponBanner(modifier: Modifier = Modifier) {
                 )
             }
         }
-
-        PagerIndicator(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp),
-            pagerState = pagerState,
+        PagerCounter(
+            modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp),
+            pagerState = pagerState
         )
+//        PagerIndicator(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .padding(bottom = 20.dp),
+//            pagerState = pagerState,
+//        )
     }
 }
+
 
 @Composable
 fun CategorySelector(navController: NavController) {
