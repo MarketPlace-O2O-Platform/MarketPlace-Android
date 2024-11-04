@@ -147,13 +147,13 @@ fun CouponBanner(modifier: Modifier = Modifier) {
 
     Box(
         Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING)
+            .clip(shape = RoundedCornerShape(12.dp))
     ) {
         HorizontalPager(state = pagerState) {
             Box(
                 modifier = modifier
                     .fillMaxWidth()
                     .aspectRatio(335.0f / 360) // 배너 이미지 비율
-                    .clip(shape = RoundedCornerShape(12.dp))
             ) {
                 Image(
                     painter = painterResource(id = bannerList[it]),

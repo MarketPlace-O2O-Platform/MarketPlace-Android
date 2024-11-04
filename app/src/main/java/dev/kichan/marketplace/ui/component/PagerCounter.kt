@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -27,6 +28,7 @@ fun PagerCounter(
     ) {
         Text(
             text = "${pagerState.currentPage + 1}/${pagerState.pageCount}",
+            fontSize = 12.sp,
             color = Color(0xffffffff)
         )
     }
