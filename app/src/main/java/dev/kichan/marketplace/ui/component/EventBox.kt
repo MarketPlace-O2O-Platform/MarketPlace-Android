@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -38,17 +40,16 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun EventBox(
+    modifier: Modifier = Modifier,
     event: Event
 ) {
     var isBookMark by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
-            .width(200.dp)
-            .height(200.dp)
+        modifier = modifier
     ) {
         Image(
-            painter = painterResource(id = R.drawable.cafe),
+            painter = painterResource(id = event.imageRes),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
@@ -89,21 +90,21 @@ fun EventBox(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = event.defaultPrice.toString(),
-                    color = Color.Gray,
-                    fontSize = 12.sp,
-                    textDecoration = TextDecoration.LineThrough
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "${event.eventPrice}원",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Text(
+//                    text = event.defaultPrice.toString(),
+//                    color = Color.Gray,
+//                    fontSize = 12.sp,
+//                    textDecoration = TextDecoration.LineThrough
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
+//                Text(
+//                    text = "${event.eventPrice}원",
+//                    color = Color.White,
+//                    fontSize = 16.sp,
+//                    fontWeight = FontWeight.Bold
+//                )
+//            }
         }
     }
 }
@@ -115,8 +116,12 @@ fun PreviewEventBox() {
         marketName = "콜드케이스 인하대점",
         eventName = "방탈출카페 2인권",
         defaultPrice = 50000,
-        eventPrice = 29500
+        eventPrice = 29500,
+        imageRes = R.drawable.roomex
     )
 
-    EventBox(event)
+    EventBox(
+        modifier = Modifier.fillMaxWidth(0.7f).aspectRatio(1f/1),
+        event = event
+    )
 }

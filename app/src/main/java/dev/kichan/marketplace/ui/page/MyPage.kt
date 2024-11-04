@@ -158,7 +158,8 @@ fun MyPage(navController: NavController) {
                                 marketName = "콜드케이스 인하대점",
                                 eventName = "송도",
                                 defaultPrice = 50000,
-                                eventPrice = 29500
+                                eventPrice = 29500,
+                                imageRes = R.drawable.roomex
                             ),
                             imageResId = R.drawable.cafe,
                         )
@@ -248,7 +249,8 @@ private fun CurationCard() {
                 marketName = "콜드케이스 인하대점",
                 eventName = "송도",
                 defaultPrice = 50000,
-                eventPrice = 29500
+                eventPrice = 29500,
+                imageRes = R.drawable.roomex
             ),
             imageResId = R.drawable.cafe
         )

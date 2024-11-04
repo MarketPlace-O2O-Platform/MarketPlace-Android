@@ -85,7 +85,8 @@ fun PreviewEventBanner() {
         marketName = "꽃하늘날다 스튜디오",
         eventName = "흑백사진 패키지",
         defaultPrice = 50000,
-        eventPrice = 29500
+        eventPrice = 29500,
+        imageRes = R.drawable.roomex
     )
     EventBanner(event = sampleEvent)
 }
