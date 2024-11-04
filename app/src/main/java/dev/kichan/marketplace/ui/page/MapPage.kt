@@ -90,7 +90,7 @@ fun MapPage(navController: NavController) {
             modifier = Modifier.padding(it),
             sheetPeekHeight = 200.dp,
             sheetShape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp),
-            sheetElevation = 100.dp
+            sheetElevation = 3.dp
         ) { innerPadding ->
             Box {
                 GoogleMap(
