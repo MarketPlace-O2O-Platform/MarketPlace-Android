@@ -120,7 +120,7 @@ fun MapPage(navController: NavController) {
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 220.dp),
-                    onClick = { /*TODO*/ },
+                    onClick = { scope.launch { bottomSheetState.expand() } },
                     icon = Icons.Default.Menu,
                     title = "목록 보기",
                     contentColor = Color(0xff545454),
@@ -189,7 +189,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 20.dp),
-            onClick = { /*TODO*/ },
+            onClick = { onCloseSheet() },
             icon = Icons.Default.LocationOn,
             title = "지도 닫기",
             contentColor = Color(0xffffffff),
