@@ -14,5 +14,5 @@
 .cxx
 local.properties
 local.defaults.properties
-/.idea/
+/.idea/*
 /secrets.properties

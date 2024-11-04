@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
@@ -67,6 +68,7 @@ import dev.kichan.marketplace.ui.component.DayOfWeekSelector
 import dev.kichan.marketplace.ui.component.EventBanner
 import dev.kichan.marketplace.ui.component.EventBox
 import dev.kichan.marketplace.ui.component.EventCard
+import dev.kichan.marketplace.ui.component.IconAppBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.PagerCounter
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -74,6 +76,9 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 @Composable
 fun HomePage(navController: NavController) {
     Scaffold(
+        topBar = {
+            IconAppBar(title = "쿠러미", Icons.Outlined.Notifications to {})
+        },
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
@@ -85,6 +90,7 @@ fun HomePage(navController: NavController) {
         ) {
             LazyColumn {
                 item {
+                    Spacer(modifier = Modifier.height(20.dp))
                     SearchBar()
                 }
                 // 쿠폰 배너 바로 상단바 아래에 위치
@@ -153,12 +159,6 @@ fun CouponBanner(modifier: Modifier = Modifier) {
                 .padding(20.dp),
             pagerState = pagerState
         )
-//        PagerIndicator(
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .padding(bottom = 20.dp),
-//            pagerState = pagerState,
-//        )
     }
 }
 
@@ -215,15 +215,6 @@ fun SearchBar() {
         }
     }
 }
-
-@Preview
-@Composable
-fun SearchBarPreview() {
-    MarketPlaceTheme {
-        SearchBar()
-    }
-}
-
 
 @Composable
 fun CategorySelector(navController: NavController) {
@@ -372,7 +363,6 @@ fun RecentEvent(modifier: Modifier = Modifier) {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
