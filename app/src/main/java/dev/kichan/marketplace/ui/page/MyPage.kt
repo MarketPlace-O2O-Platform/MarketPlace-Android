@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
@@ -47,7 +48,11 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 //MyPage
 @Composable
 fun MyPage(navController: NavController) {
-    Scaffold { innerPadding ->  // padding을 추가해 bottomBar와의 충돌 방지
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController = navController, pageList = bottomNavItem)
+        }
+    ) { innerPadding ->  // padding을 추가해 bottomBar와의 충돌 방지
         Column(
             Modifier
                 .fillMaxSize()
@@ -101,7 +106,7 @@ fun MyPage(navController: NavController) {
 
                 // 받은 쿠폰함 버튼
                 Button(
-                    onClick = { /* CouponPage로 이동 */ },
+                    onClick = { navController.navigate(Page.Coupon.name) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
                         contentColor = Color.Black
@@ -153,7 +158,8 @@ fun MyPage(navController: NavController) {
                                 marketName = "콜드케이스 인하대점",
                                 eventName = "송도",
                                 defaultPrice = 50000,
-                                eventPrice = 29500
+                                eventPrice = 29500,
+                                imageRes = R.drawable.roomex
                             ),
                             imageResId = R.drawable.cafe,
                         )
@@ -243,7 +249,8 @@ private fun CurationCard() {
                 marketName = "콜드케이스 인하대점",
                 eventName = "송도",
                 defaultPrice = 50000,
-                eventPrice = 29500
+                eventPrice = 29500,
+                imageRes = R.drawable.roomex
             ),
             imageResId = R.drawable.cafe
         )

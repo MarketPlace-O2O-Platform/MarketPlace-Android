@@ -2,7 +2,9 @@ package dev.kichan.marketplace.ui.component
 
 import LargeCategory
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -10,6 +12,8 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,13 +36,14 @@ fun CategoryTap(
         fontSize = 15.sp
     )
     LazyRow(
-        modifier = modifier.background(Color.White)
+        modifier = modifier.background(Color.White),
+        contentPadding = PaddingValues(horizontal = 20.dp)
     ) {
         LargeCategory.entries.map {
             item {
                 Surface(
                     modifier = Modifier
-                        .clickable { onSelected(it) }
+                        .clickable { onSelected(it) },
                 ) {
                     Text(
                         text = it.nameKo,
@@ -49,7 +54,31 @@ fun CategoryTap(
                             )
                         ),
                         modifier = Modifier
-                            .padding(bottom = 8.dp, top = 16.dp, start = 20.dp, end = 20.dp)
+                            .then(
+                                if(selectedCategory == it)
+                                    Modifier.drawBehind {
+                                        val strokeWidth = 2.dp.toPx()
+                                        val y = size.height - strokeWidth / 2
+                                        drawLine(
+                                            color = Color.Black, // 밑줄 색상
+                                            start = Offset(0f, y),
+                                            end = Offset(size.width, y),
+                                            strokeWidth = strokeWidth
+                                        )
+                                    }
+                                else
+                                    Modifier.drawBehind {
+                                        val strokeWidth = 2.dp.toPx()
+                                        val y = size.height - strokeWidth / 2
+                                        drawLine(
+                                            color = Color(0xff7D7D7),
+                                            start = Offset(0f, y),
+                                            end = Offset(size.width, y),
+                                            strokeWidth = strokeWidth
+                                        )
+                                    }
+                            )
+                            .padding(bottom = 8.dp, top = 16.dp, start = 16.dp, end = 16.dp)
                     )
                 }
             }
@@ -62,7 +91,7 @@ fun CategoryTap(
 fun CategoryTapPreview() {
     MarketPlaceTheme {
         CategoryTap(
-            selectedCategory = LargeCategory.Food,
+            selectedCategory = LargeCategory.All,
             onSelected = {}
         )
     }

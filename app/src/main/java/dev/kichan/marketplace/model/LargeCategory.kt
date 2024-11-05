@@ -1,7 +1,7 @@
 enum class LargeCategory(
     val nameKo: String,
 ) {
-    All("전체보기"),
+    All("전체"),
     Food("음식"),
     Dessert("디저트"),
     Sports("스포츠"),

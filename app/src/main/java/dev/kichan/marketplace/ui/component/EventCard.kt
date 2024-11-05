@@ -78,14 +78,16 @@ fun PreviewEventCard() {
         marketName = "콜드케이스 인하대점",
         eventName = "2인 디저트 이용권",
         defaultPrice = 50000,
-        eventPrice = 29500
+        eventPrice = 29500,
+        imageRes = R.drawable.roomex
     )
 
     val event2 = Event(
         marketName = "CHUNGDAMN",
         eventName = "2인 방탈출 이용권",
         defaultPrice = 50000,
-        eventPrice = 29500
+        eventPrice = 29500,
+        imageRes = R.drawable.roomex
     )
 
     LazyRow(

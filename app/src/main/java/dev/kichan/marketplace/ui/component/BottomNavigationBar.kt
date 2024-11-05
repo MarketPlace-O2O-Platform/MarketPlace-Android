@@ -14,8 +14,11 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,7 +29,7 @@ import dev.kichan.marketplace.ui.Page
 
 @Composable
 fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, ImageVector>>) {
-    val selectedIndex = remember { mutableStateOf(0) }
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
     val selectedContentColor = Color(0xff545454)
     val unselectedContentColor = Color(0xffC7C7C7)
@@ -48,10 +51,10 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
 
             BottomNavigationItem(
                 icon = { Icon(icon, contentDescription = page.name) },
-                label = { Text(page.name.uppercase() ) }, // 문자열.uppercase() : 문자열을 대문자로 바꿈
-                selected = selectedIndex.value == index,
+                label = { Text(page.name.uppercase()) }, // 문자열.uppercase() : 문자열을 대문자로 바꿈
+                selected = navController.currentDestination?.route == page.name,
                 onClick = {
-                    selectedIndex.value = index
+                    selectedIndex = index
                     navController.navigate(page.name)
                 },
                 selectedContentColor = selectedContentColor,
