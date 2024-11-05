@@ -303,6 +303,9 @@ fun EventList(
             items(eventList) {
                 EventBox(
                     modifier = Modifier
+                        .clickable {
+                            navController.navigate(Page.EventDetail.name)
+                        }
                         .fillParentMaxSize(0.8f)
                         .aspectRatio(1f / 1),
                     event = it

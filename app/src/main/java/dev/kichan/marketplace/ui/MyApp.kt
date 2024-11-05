@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.gson.annotations.SerializedName
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
+import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
@@ -46,6 +47,7 @@ fun MyApp() {
             composable(Page.Like.name) { LikePage(navController = navController) }
             composable(Page.Map.name) { MapPage(navController = navController) }
             composable(Page.My.name) { MyPage(navController = navController) }
+            composable(Page.EventDetail.name) { DetailPage() }
         }
 
         composable("${Page.PopularEvent.name}/{category}") {

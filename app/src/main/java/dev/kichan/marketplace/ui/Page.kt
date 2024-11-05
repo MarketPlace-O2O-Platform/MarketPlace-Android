@@ -3,7 +3,7 @@ package dev.kichan.marketplace.ui
 enum class Page {
     Main, LocalApiTestPage, GoogleMapTestPage,
 
-    Home, Like, Map, My, Coupon, Login,
+    Home, Like, Map, My, Coupon, Login, EventDetail,
 
     PopularEvent,
 }
