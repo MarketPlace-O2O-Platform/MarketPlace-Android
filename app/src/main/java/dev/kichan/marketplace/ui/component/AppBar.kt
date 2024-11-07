@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -27,7 +28,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 val appBarModifier = Modifier
     .fillMaxWidth()
-    .padding(top = 18.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+    .padding(top = 32.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
 
 val titleStyle = TextStyle(
     fontSize = 18.sp,
@@ -51,12 +52,13 @@ fun IconAppBar(title: String, vararg icons: Pair<ImageVector, () -> Unit>) {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             for (icon in icons) {
-                Icon(
-                    imageVector = icon.first,
-                    contentDescription = null,
-                    Modifier.clickable { icon.second() },
-                    tint = Color(0xff121212)
-                )
+                IconButton(onClick = { icon.second }) {
+                    Icon(
+                        imageVector = icon.first,
+                        contentDescription = null,
+                        tint = Color(0xff121212)
+                    )
+                }
             }
         }
     }
@@ -69,7 +71,9 @@ fun NavAppBar(title: String, onBack: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            modifier = Modifier.align(Alignment.CenterStart).clickable { onBack() },
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .clickable { onBack() },
             imageVector = Icons.Default.KeyboardArrowLeft,
             contentDescription = null,
             tint = Color(0xff545454),

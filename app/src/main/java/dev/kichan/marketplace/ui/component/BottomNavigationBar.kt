@@ -51,7 +51,7 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
 
             BottomNavigationItem(
                 icon = { Icon(icon, contentDescription = page.name) },
-                label = { Text(page.name.uppercase()) }, // 문자열.uppercase() : 문자열을 대문자로 바꿈
+                label = { Text(page.pageName) },
                 selected = navController.currentDestination?.route == page.name,
                 onClick = {
                     selectedIndex = index
