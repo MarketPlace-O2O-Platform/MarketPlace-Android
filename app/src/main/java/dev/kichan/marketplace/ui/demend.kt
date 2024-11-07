@@ -11,7 +11,7 @@ val PAGE_HORIZONTAL_PADDING = 20.dp
 
 val bottomNavItem = listOf(
     Page.Home to Icons.Filled.Home,
-    Page.Like to Icons.Filled.ShoppingCart,
     Page.Map to Icons.Filled.Place,
+    Page.Like to Icons.Filled.ShoppingCart,
     Page.My to Icons.Filled.Person,
 )
