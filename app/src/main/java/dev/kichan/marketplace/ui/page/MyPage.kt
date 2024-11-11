@@ -5,17 +5,15 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Info
@@ -27,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -44,19 +41,17 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
-
-//MyPage
 @Composable
 fun MyPage(navController: NavController) {
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
-    ) { innerPadding ->  // padding을 추가해 bottomBar와의 충돌 방지
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)  // 여기서 padding 추가
+                .padding(innerPadding)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -77,7 +72,6 @@ fun MyPage(navController: NavController) {
                     }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                //todo: 로그아웃 버튼 아이콘 수정
                 Icon(imageVector = Icons.Outlined.Info, contentDescription = "로그아웃")
             }
 
@@ -101,20 +95,19 @@ fun MyPage(navController: NavController) {
                             .background(Color(0xFFF9F9F9), shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(text = "202000877 님", fontSize = 26.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "202000877 님", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 }
 
                 // 받은 쿠폰함 버튼
                 Button(
                     onClick = {
-//                        navController.navigate(Page.Coupon.name)
-                        //todo: Coupon 페이지로 이동
+                        // navController.navigate(Page.Coupon.name)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
                         contentColor = Color.Black
                     ),
-                    contentPadding = PaddingValues(8.dp),
+                    contentPadding = PaddingValues(10.dp),
                     border = BorderStroke(1.dp, Color.Gray),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -125,7 +118,7 @@ fun MyPage(navController: NavController) {
             Spacer(modifier = Modifier.height(2.dp))
 
             // 실선
-            HorizontalDivider(
+            Divider(
                 color = Color(0xFFF4F4F4),
                 thickness = 1.dp,
                 modifier = Modifier.fillMaxWidth()
@@ -133,20 +126,11 @@ fun MyPage(navController: NavController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            //'나만의 큐레이션'
-            Text(
-                text = "나만의 큐레이션",
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                fontWeight = FontWeight.SemiBold
-            )
+            // 나만의 큐레이션과 카테고리 선택 버튼
+            CurationCategorySelector()
 
             // 2x2 그리드 형태로 CurationCard 4개 추가
             Spacer(modifier = Modifier.height(16.dp))
-
-            val curationCardModifier = Modifier.weight(1f)
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -156,7 +140,6 @@ fun MyPage(navController: NavController) {
                 for (i in 1..10) {
                     item {
                         CurationCard(
-                            modifier = curationCardModifier,
                             event = Event(
                                 marketName = "콜드케이스 인하대점",
                                 eventName = "송도",
@@ -169,12 +152,58 @@ fun MyPage(navController: NavController) {
                     }
                 }
             }
-
         }
     }
 }
 
-// Updated CurationCard function with event details and image
+@Composable
+fun CurationCategorySelector() {
+    val scrollState = rememberScrollState()
+
+    Column {
+        Text(
+            text = "나만의 큐레이션",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState)
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val categories = listOf("TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT")
+            categories.forEachIndexed { index, category ->
+                Button(
+                    onClick = { /* TODO: 카테고리 선택 로직 추가 */ },
+                    colors = if (index == 0) {
+                        // 선택된 버튼 스타일
+                        ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White)
+                    } else {
+                        // 선택되지 않은 버튼 스타일 (테두리만 보이도록)
+                        ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Black)
+                    },
+                    border = if (index == 0) null else BorderStroke(1.dp, Color(0xFFC6C6C6)),
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .height(32.dp) // 버튼 높이 감소
+                        .widthIn(min = 64.dp) // 버튼 너비 최소값 설정
+                ) {
+                    Text(text = category, fontSize = 12.sp)
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
     var isBookMark by remember { mutableStateOf(false) }
@@ -182,10 +211,8 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
     Column(
         modifier = modifier
     ) {
-        // 이미지와 스크랩 아이콘
         Box(
-            modifier = Modifier
-                .aspectRatio(1.0f)
+            modifier = Modifier.aspectRatio(1.0f)
         ) {
             Image(
                 painter = painterResource(id = imageResId),
@@ -193,9 +220,7 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
-
             Icon(
-                //todo: 아이콘 변경
                 imageVector = if (!isBookMark) Carbon_bookmark else Icons.Filled.Favorite,
                 contentDescription = "Bookmark",
                 tint = Color.White,
@@ -206,20 +231,11 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
             )
         }
 
-        // 가게명과 위치 정보
         Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier.padding(horizontal = 8.dp)
-        ) {
-            Text(
-                text = event.marketName,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
-            )
+        Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+            Text(text = event.marketName, fontWeight = FontWeight.Bold, fontSize = 14.sp)
             Spacer(modifier = Modifier.height(2.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.LocationOn,
                     contentDescription = "위치",
@@ -227,11 +243,7 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = event.eventName,
-                    color = Color.Gray,
-                    fontSize = 12.sp
-                )
+                Text(text = event.eventName, color = Color.Gray, fontSize = 12.sp)
             }
         }
     }
@@ -241,21 +253,4 @@ fun CurationCard(modifier: Modifier = Modifier, event: Event, imageResId: Int) {
 @Composable
 fun MyPagePreview() {
     MyPage(navController = rememberNavController())
-}
-
-@Preview
-@Composable
-private fun CurationCard() {
-    MarketPlaceTheme {
-        CurationCard(
-            event = Event(
-                marketName = "콜드케이스 인하대점",
-                eventName = "송도",
-                defaultPrice = 50000,
-                eventPrice = 29500,
-                imageRes = R.drawable.roomex
-            ),
-            imageResId = R.drawable.cafe
-        )
-    }
 }
