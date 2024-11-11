@@ -180,6 +180,7 @@ fun CurationCategorySelector() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             val categories = listOf("TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT")
+
             categories.forEachIndexed { index, category ->
                 Button(
                     onClick = { /* TODO: 카테고리 선택 로직 추가 */ },
