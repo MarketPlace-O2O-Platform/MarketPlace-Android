@@ -8,8 +8,8 @@ data class Coupon(
     val marketId: Long,
     @SerializedName("couponName") val name: String,
     val description: String?,
-    @SerializedName("deadLine") val deadline: LocalDate,
+    @SerializedName("deadLine") val deadline: String,
     val stock: Int,
     @SerializedName("hidden") val isHidden: Boolean,
-    val createdAt: LocalDate,
+    val createdAt: String,
 )
