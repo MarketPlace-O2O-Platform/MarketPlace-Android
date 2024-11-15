@@ -25,7 +25,6 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Composable
 fun CouponCard(coupon: Coupon, imageUrl: String) {
@@ -169,7 +168,7 @@ fun PreviewCouponCard() {
             name = "커트 2,000원 할인",
             description = "주말 사용 불가입니다.",
             deadline = LocalDate.of(2024, 10, 31),
-            count = 0,
+            stock = 0,
             isHidden = false,
             isDeleted = false,
             createdAt = LocalDate.now(),

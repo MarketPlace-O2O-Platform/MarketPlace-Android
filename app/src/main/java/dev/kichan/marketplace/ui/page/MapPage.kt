@@ -28,7 +28,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -161,7 +160,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                         name = "커트 2,000원 할인 $it",
                         description = null,
                         deadline = LocalDate.of(2024, 10, 31),
-                        count = 0,
+                        stock = 0,
                         isHidden = false,
                         isDeleted = false,
                         createdAt = LocalDate.now(),
