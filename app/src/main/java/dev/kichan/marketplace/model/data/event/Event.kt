@@ -8,5 +8,4 @@ data class Event(
     val defaultPrice : Int,
     val eventPrice : Int,
     @DrawableRes val imageRes: Int
-
 )
