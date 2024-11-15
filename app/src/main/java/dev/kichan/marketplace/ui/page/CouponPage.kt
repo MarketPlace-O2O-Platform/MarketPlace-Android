@@ -29,9 +29,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.ui.component.CouponCard
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.toUsFormat
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)

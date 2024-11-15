@@ -44,11 +44,10 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.CouponCard
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.toUsFormat
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable

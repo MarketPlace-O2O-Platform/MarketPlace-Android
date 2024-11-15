@@ -23,9 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.coupon.Coupon
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.toUsFormat
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable

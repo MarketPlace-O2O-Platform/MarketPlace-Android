@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponCreateReq
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.toUsFormat
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

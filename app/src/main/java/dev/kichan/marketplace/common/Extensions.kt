@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
