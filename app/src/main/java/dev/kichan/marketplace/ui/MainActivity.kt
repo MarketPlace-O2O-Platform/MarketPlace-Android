@@ -44,8 +44,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                ApiTestPage()
-//                MyApp()
+//                ApiTestPage()
+                MyApp()
             }
         }
     }
