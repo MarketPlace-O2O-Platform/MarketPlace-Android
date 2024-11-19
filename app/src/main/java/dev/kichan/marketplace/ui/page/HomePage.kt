@@ -263,11 +263,7 @@ fun CategorySelector(navController: NavController) {
                             navController.navigate("${Page.PopularEvent.name}/${category.name}")
                         }
                     ) {
-                        Box(
-                            Modifier
-                                .size(64.dp)  // 카테고리 가로 세로 크기 64dp로 설정
-                                .background(Color.LightGray, shape = CircleShape)
-                        )
+                        Image(painter = painterResource(id = category.icon), contentDescription = null)
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = category.nameKo)
                     }
