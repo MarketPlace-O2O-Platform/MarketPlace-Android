@@ -1,6 +1,8 @@
 [versions]
 accompanistPagerIndicators = "0.34.0"
 agp = "8.5.0"
+coilCompose = "3.0.3"
+coilNetworkOkhttp = "3.0.3"
 kakaoMap = "2.11.9"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -20,6 +22,8 @@ secretsGradlePlugin = "2.0.1"
 
 [libraries]
 accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistPagerIndicators" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 kakao-map = { module = "com.kakao.maps.open:android", version.ref = "kakaoMap" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }

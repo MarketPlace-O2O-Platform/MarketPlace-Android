@@ -1,0 +1,12 @@
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market
+
+import com.google.gson.annotations.SerializedName
+
+data class MarketCreateReq(
+    @SerializedName("marketId") val name: String,
+    val description: String,
+    val operationHours: String,
+    val closedDays: String,
+    val phoneNumber: String,
+    val major : String,
+)

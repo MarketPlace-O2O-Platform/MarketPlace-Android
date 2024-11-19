@@ -79,12 +79,15 @@ dependencies {
     implementation(libs.kakao.map)
     implementation(libs.kakao.sdk.all)
 
+    // Retorift
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
 
-
+    //Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
