@@ -161,7 +161,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
         ) {
             item {
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
@@ -172,7 +172,6 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                     ) {}
                 }
             }
-            item { Spacer(modifier = Modifier.height(21.dp)) }
             items(10) {
                 EventListItem(
                     modifier = Modifier.padding(12.dp),
