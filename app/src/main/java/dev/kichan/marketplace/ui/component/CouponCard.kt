@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.coupon.Coupon
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
@@ -168,13 +168,10 @@ fun PreviewCouponCard() {
             marketId = 0,
             name = "커트 2,000원 할인",
             description = "주말 사용 불가입니다.",
-            deadline = LocalDate.of(2024, 10, 31),
-            count = 0,
+            deadline = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
+            stock = 0,
             isHidden = false,
-            isDeleted = false,
-            createdAt = LocalDate.now(),
-            modifiedAt = null
-
+            createdAt = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
         ),
         imageUrl = "https://via.placeholder.com/150"
     )

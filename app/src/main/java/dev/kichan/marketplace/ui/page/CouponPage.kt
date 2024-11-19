@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,11 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.model.data.coupon.Coupon
-import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CouponCard
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -92,12 +87,10 @@ fun CouponPage(navController: NavController, modifier: Modifier = Modifier) {
                         marketId = 0,
                         name = "커트 2,000원 할인 $it",
                         description = null,
-                        deadline = LocalDate.of(2024, 10, 31),
-                        count = 0,
+                        deadline = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
+                        stock = 0,
                         isHidden = false,
-                        isDeleted = false,
-                        createdAt = LocalDate.now(),
-                        modifiedAt = null
+                        createdAt = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
                     ),
                     imageUrl = "https://via.placeholder.com/150" // 임시
                 )

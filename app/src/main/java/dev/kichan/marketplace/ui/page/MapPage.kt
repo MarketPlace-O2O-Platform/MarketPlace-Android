@@ -51,10 +51,11 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.CouponCard
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
 fun MapPage(navController: NavController) {
@@ -177,13 +178,10 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                         marketId = 0,
                         name = "커트 2,000원 할인 $it",
                         description = null,
-                        deadline = LocalDate.of(2024, 10, 31),
-                        count = 0,
+                        deadline = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
+                        stock = 0,
                         isHidden = false,
-                        isDeleted = false,
-                        createdAt = LocalDate.now(),
-                        modifiedAt = null
-
+                        createdAt = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
                     ),
                     imageUrl = "https://via.placeholder.com/150" //임시
                 )
