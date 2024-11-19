@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.page
 
 import LargeCategory
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -133,9 +134,19 @@ fun MapPage(navController: NavController) {
                         .align(Alignment.TopEnd)
                         .padding(top = 52.dp, end = 12.dp)
                         .background(color = Color(0xffffffff), shape = CircleShape)
+                        .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
                 ) {
                     Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, tint = Color(0xff545454))
                 }
+                
+                IconChip(
+                    modifier = Modifier.align(Alignment.TopCenter).padding(52.dp),
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Default.Menu,
+                    title = "현 지도에서 검색",
+                    contentColor = Color(0xFF545454),
+                    backgroundColor = Color(0xFFffffff)
+                )
 
                 IconChip(
                     modifier = Modifier
@@ -161,7 +172,9 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
         ) {
             item {
                 Box(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
