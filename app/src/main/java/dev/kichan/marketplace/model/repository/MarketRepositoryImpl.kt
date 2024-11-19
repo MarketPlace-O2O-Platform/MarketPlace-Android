@@ -17,6 +17,7 @@ import java.io.File
 
 
 class MarketRepositoryImpl : MarketRepository {
+    //todo: DI 적용하기
     private val marketService = NetworkModule.getService(MarketService::class.java)
 
     override suspend fun getMarket(id: Int): Response<ResponseTemplate<Market>>

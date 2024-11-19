@@ -9,6 +9,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.
 import retrofit2.Response
 
 class CouponRepositoryImpl : CouponRepository {
+    //todo: DI 적용하기
     private val service = NetworkModule.getService(CouponService::class.java)
 
     override suspend fun createCoupon(
