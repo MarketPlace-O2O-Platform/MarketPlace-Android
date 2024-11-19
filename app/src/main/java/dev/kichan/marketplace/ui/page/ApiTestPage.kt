@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import LargeCategory
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
@@ -16,24 +17,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.app.ActivityCompat.startActivityForResult
 import coil3.compose.rememberAsyncImagePainter
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponCreateReq
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 @Composable
 fun ApiTestPage() {
+    val context = LocalContext.current
     val repository = MarketRepositoryImpl()
     val image = remember{ mutableStateOf<Uri?>(null) }
+    val isLoading = remember { mutableStateOf(false) }
 
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
         image.value = it
@@ -48,14 +47,38 @@ fun ApiTestPage() {
             }) {
                 Text(text = "이미지 가져 오기")
             }
-            Button(onClick = { 
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    repository.createMarket(
-//                        body = MarketCreateReq()
-//                    )
-//                }
+            Button(onClick = {
+                isLoading.value = true
+                CoroutineScope(Dispatchers.IO).launch {
+                    val res = repository.createMarket(
+                        context = context,
+                        body = MarketCreateReq(
+                            name = "돼라",
+                            description = "제발 돼라",
+                            operationHours = "12:00",
+                            closedDays = "월화수",
+                            phoneNumber = "010----",
+                            major = LargeCategory.Food.backendLable,
+                            address = "서울시 강남구"
+                        ),
+                        image = image.value!!,
+                    )
+
+                    isLoading.value = false
+
+                    if(res.isSuccessful) {
+                        Log.d("TAG", "ApiTestPage: ${res.body()}")
+                    }
+                    else {
+                        Log.d("TAG", "ApiTestPage: ${res.errorBody()}")
+                    }
+                }
             }) {
                 Text(text = "클릭")
+            }
+
+            if(isLoading.value) {
+                Text(text = "로딩중")
             }
 
             if(image.value != null) {

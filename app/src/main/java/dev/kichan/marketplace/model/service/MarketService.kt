@@ -14,7 +14,7 @@ interface MarketService {
     @Multipart
     @POST("api/owners/markets")
     suspend fun createMarket(
-        @Body body: MarketCreateReq,
+        @Part("jsonData") body: MarketCreateReq,
         @Part file : MultipartBody.Part
     ) : Response<ResponseTemplate<Market>>
 }

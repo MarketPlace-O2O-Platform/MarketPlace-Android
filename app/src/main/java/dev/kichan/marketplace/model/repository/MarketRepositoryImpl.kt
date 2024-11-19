@@ -5,10 +5,9 @@ import android.net.Uri
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.market.Market
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.FileUtils
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.FileUtils
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MarketService
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

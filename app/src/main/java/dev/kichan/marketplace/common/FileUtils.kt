@@ -1,9 +1,8 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common
 
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.FileUtils
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 
