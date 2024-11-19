@@ -34,7 +34,7 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
     val selectedContentColor = Color(0xff545454)
     val unselectedContentColor = Color(0xffC7C7C7)
 
-    val bottomNavShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+    val bottomNavShape = RoundedCornerShape(0.dp)
     val itemModifier = Modifier.padding(vertical = 6.dp)
 
     BottomNavigation(
