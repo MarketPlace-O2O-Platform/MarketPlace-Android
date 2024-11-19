@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,11 +31,16 @@ import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.EventListItem
 import dev.kichan.marketplace.ui.component.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun CategoryEventListPage(navController: NavController, category: LargeCategory) {
+    val coroutinScope = rememberCoroutineScope()
     var selectedCategory by remember { mutableStateOf(category) }
-    val pagerState = rememberPagerState(initialPage =  LargeCategory.entries.indexOf(category), pageCount = { LargeCategory.entries.size })
+    val pagerState = rememberPagerState(
+        initialPage = LargeCategory.entries.indexOf(category),
+        pageCount = { LargeCategory.entries.size }
+    )
 
     LaunchedEffect(pagerState.currentPage) {
         selectedCategory = LargeCategory.entries[pagerState.currentPage]
@@ -48,7 +54,15 @@ fun CategoryEventListPage(navController: NavController, category: LargeCategory)
         }
     ) {
         Column(Modifier.padding(it)) {
-            CategoryTap(selectedCategory = selectedCategory, onSelected = { selectedCategory = it })
+            CategoryTap(
+                selectedCategory = selectedCategory,
+                onSelected = {
+                    selectedCategory = it
+                    coroutinScope.launch {
+                        pagerState.animateScrollToPage(LargeCategory.entries.indexOf(it))
+                    }
+                }
+            )
             HorizontalPager(state = pagerState) {
                 LazyColumn(
                     contentPadding = PaddingValues(16.dp),
