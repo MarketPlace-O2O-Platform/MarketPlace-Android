@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -260,14 +259,10 @@ fun CategorySelector(navController: NavController) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally, // 버튼과 텍스트를 가운데 정렬
                         modifier = Modifier.clickable {
-                            navController.navigate("${Page.PopularEvent.name}/${category.name}")
+                            navController.navigate("${Page.CategoryEventList.name}/${category.name}")
                         }
                     ) {
-                        Box(
-                            Modifier
-                                .size(64.dp)  // 카테고리 가로 세로 크기 64dp로 설정
-                                .background(Color.LightGray, shape = CircleShape)
-                        )
+                        Image(painter = painterResource(id = category.icon), contentDescription = null)
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = category.nameKo)
                     }
@@ -291,7 +286,7 @@ fun EventList(
             modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
             title = title
         ) {
-            navController.navigate("${Page.PopularEvent.name}/${LargeCategory.All.name}")
+            navController.navigate("${Page.EventList.name}/${title}")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import LargeCategory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,10 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +38,10 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun MyPage(navController: NavController) {
+    var selectedCategory by remember {
+        mutableStateOf(LargeCategory.All)
+    }
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
@@ -117,7 +126,10 @@ fun MyPage(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             // 나만의 큐레이션과 카테고리 선택 버튼
-            CurationCategorySelector()
+            CurationCategorySelector(
+                selectedCategory = selectedCategory,
+                onChange = { selectedCategory = it }
+            )
             Spacer(modifier = Modifier.height(20.dp))
 
             // MyPageCard를 세로로 나열하는 리스트, 각 카드 사이에 구분선 추가
@@ -141,7 +153,10 @@ fun MyPage(navController: NavController) {
 }
 
 @Composable
-fun CurationCategorySelector() {
+fun CurationCategorySelector(
+    selectedCategory: LargeCategory,
+    onChange: (LargeCategory) -> Unit,
+) {
     val scrollState = rememberScrollState()
 
     Column {
@@ -161,26 +176,30 @@ fun CurationCategorySelector() {
                 .fillMaxWidth()
                 .horizontalScroll(scrollState)
                 .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val categories = listOf("TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT")
+            val categories = LargeCategory.entries
+
+            val categoryShape = RoundedCornerShape(50.dp)
+
             categories.forEachIndexed { index, category ->
-                Button(
-                    onClick = { /* TODO: 카테고리 선택 로직 추가 */ },
-                    colors = if (index == 0) {
-                        ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White)
-                    } else {
-                        ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Black)
-                    },
-                    border = if (index == 0) null else BorderStroke(1.dp, Color(0xFFC6C6C6)),
-                    shape = RoundedCornerShape(50),
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .height(32.dp)
-                        .widthIn(min = 64.dp) // 버튼 최소 가로 길이 축소
+                // todo: 카테고리 칩을 컴포넌트로 따로 빼서 boolean 파라미터 받는거로 변경하기
+                Surface(
+                    onClick = { onChange(category) },
+                    shape = categoryShape,
+                    border = BorderStroke(
+                        1.dp,
+                        if (selectedCategory == category) Color(0xff303030) else Color(0xffC6C6C6)
+                    ),
+                    color = if (selectedCategory == category) Color(0xff303030) else Color(0xffFFFFFF)
                 ) {
-                    Text(text = category, fontSize = 12.sp)
-                }
+                Text(
+                    text = category.nameKo,
+                    color = if (selectedCategory == category) Color(0xffffffff) else Color(0xff5E5E5E),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
+            }
             }
         }
     }
@@ -220,6 +239,17 @@ fun sampleEvents() = listOf(
     )
     // 추가 샘플 데이터를 필요에 따라 추가할 수 있습니다.
 )
+
+@Preview
+@Composable
+private fun CurationCategorySelectorPreview() {
+    MarketPlaceTheme {
+        CurationCategorySelector(
+            selectedCategory = LargeCategory.All,
+            {}
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

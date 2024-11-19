@@ -47,7 +47,7 @@ fun MyPageCard(event: Event2, modifier: Modifier = Modifier) {
             contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(16.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
