@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui
 
+import LargeCategory
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -9,12 +10,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.CategoryEventListPage
+import dev.kichan.marketplace.ui.page.EventList
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -42,13 +45,13 @@ fun MyApp() {
 
         composable("${Page.CategoryEventList.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
-                CategoryEventListPage(navController = navController, category = category)
+                CategoryEventListPage(navController = navController, category = LargeCategory.valueOf(category))
             }
         }
 
         composable("${Page.EventList.name}/{title}") {
-            it.arguments?.getString("title")?.let { category ->
-                CategoryEventListPage(navController = navController, category = category)
+            it.arguments?.getString("title")?.let { title ->
+                EventListPage(navController = navController, title = title)
             }
         }
     }

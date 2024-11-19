@@ -11,10 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,13 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.EventListItem
 import dev.kichan.marketplace.ui.component.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun PopularEventPage(navController: NavController, title: String) {
+fun EventListPage(navController: NavController, title: String) {
     Scaffold(
         topBar = {
             NavAppBar(title = title) {
@@ -69,6 +64,6 @@ fun PopularEventPage(navController: NavController, title: String) {
 @Composable
 fun PopularEventPagePreview() {
     MarketPlaceTheme {
-        PopularEventPage(rememberNavController(), LargeCategory.Food.nameKo)
+        EventListPage(rememberNavController(), LargeCategory.Food.nameKo)
     }
 }
