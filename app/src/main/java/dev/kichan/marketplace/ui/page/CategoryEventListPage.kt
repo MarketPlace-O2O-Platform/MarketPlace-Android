@@ -28,7 +28,7 @@ import dev.kichan.marketplace.ui.component.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun PopularEventPage(navController: NavController, category: String) {
+fun CategoryEventListPage(navController: NavController, category: String) {
     var selectedCategory by remember { mutableStateOf(LargeCategory.findByNameKo(category)) }
 
     Scaffold(
@@ -72,6 +72,6 @@ fun PopularEventPage(navController: NavController, category: String) {
 @Composable
 fun PopularEventPagePreview() {
     MarketPlaceTheme {
-        PopularEventPage(rememberNavController(), LargeCategory.Food.nameKo)
+        CategoryEventListPage(rememberNavController(), LargeCategory.Food.nameKo)
     }
 }

@@ -2,29 +2,19 @@ package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.google.gson.annotations.SerializedName
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
-import dev.kichan.marketplace.ui.page.PopularEventPage
+import dev.kichan.marketplace.ui.page.CategoryEventListPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -50,9 +40,15 @@ fun MyApp() {
             composable(Page.EventDetail.name) { DetailPage() }
         }
 
-        composable("${Page.PopularEvent.name}/{category}") {
+        composable("${Page.CategoryEventList.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
-                PopularEventPage(navController = navController, category = category)
+                CategoryEventListPage(navController = navController, category = category)
+            }
+        }
+
+        composable("${Page.EventList.name}/{title}") {
+            it.arguments?.getString("title")?.let { category ->
+                CategoryEventListPage(navController = navController, category = category)
             }
         }
     }
