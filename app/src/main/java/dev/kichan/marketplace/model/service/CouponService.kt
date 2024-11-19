@@ -15,23 +15,23 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CouponService {
-    @GET("/api/owners/coupons/:couponId")
+    @GET("/api/owners/coupons/{couponId}")
     suspend fun getCoupon(
         @Path("couponId") couponId: Long,
     ): Response<ResponseTemplate<Coupon>>
 
-    @PUT("/api/owners/coupons/:couponId")
+    @PUT("/api/owners/coupons/{couponId}")
     suspend fun updateCoupon(
         @Path("couponId") couponId: Long,
         @Body body: CouponUpdateReq
     ) : Response<ResponseTemplate<Coupon>>
 
-    @DELETE("/api/owners/coupons/:couponId")
+    @DELETE("/api/owners/coupons/{couponId}")
     suspend fun deleteCoupon(
         @Path("couponId") couponId: Long,
     )
 
-    @PUT("/api/owners/coupons/hidden/:couponId")
+    @PUT("/api/owners/coupons/hidden/{couponId}")
     suspend fun updateHiddenCoupon(
         @Path("couponId") couponId: Long,
     ) : Response<ResponseTemplate<CouponHiddenRes>>

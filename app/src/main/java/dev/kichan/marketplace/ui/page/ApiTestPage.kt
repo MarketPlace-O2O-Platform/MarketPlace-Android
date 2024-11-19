@@ -50,19 +50,7 @@ fun ApiTestPage() {
             Button(onClick = {
                 isLoading.value = true
                 CoroutineScope(Dispatchers.IO).launch {
-                    val res = repository.createMarket(
-                        context = context,
-                        body = MarketCreateReq(
-                            name = "돼라",
-                            description = "제발 돼라",
-                            operationHours = "12:00",
-                            closedDays = "월화수",
-                            phoneNumber = "010----",
-                            major = LargeCategory.Food.backendLable,
-                            address = "서울시 강남구"
-                        ),
-                        image = image.value!!,
-                    )
+                    val res = repository.getMarket(id = 9)
 
                     isLoading.value = false
 

@@ -16,24 +16,24 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface MarketService {
-    @GET("api/owners/markets/:marketId")
+    @GET("/api/owners/markets/{marketId}")
     suspend fun getMarket(
         @Path("marketId") id: Int
     ): Response<ResponseTemplate<Market>>
 
-    @PUT("api/owners/markets/:marketId")
+    @PUT("/api/owners/markets/{marketId}")
     suspend fun updateMarket(
         @Path("marketId") id: Int,
         @Body body: MarketUpdateReq
     ): Response<ResponseTemplate<Market>>
 
-    @DELETE("api/owners/markets/:marketId")
+    @DELETE("/api/owners/markets/{marketId}")
     suspend fun deleteMarket(
         @Path("marketId") id: Int
     )
 
     @Multipart
-    @POST("api/owners/markets")
+    @POST("/api/owners/markets")
     suspend fun createMarket(
         @Part("jsonData") body: MarketCreateReq,
         @Part file : MultipartBody.Part
