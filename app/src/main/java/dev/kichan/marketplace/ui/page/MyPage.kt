@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event2
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.MyPageCard
@@ -100,7 +101,7 @@ fun MyPage(navController: NavController) {
                 // 받은 쿠폰함 버튼
                 Button(
                     onClick = {
-                        // navController.navigate(Page.Coupon.name)
+                        navController.navigate(Page.Coupon.name)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,

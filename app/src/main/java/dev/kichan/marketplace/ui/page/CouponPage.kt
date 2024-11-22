@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.CouponCard
 
@@ -122,6 +123,11 @@ fun ExpiredCouponsList() {
             CouponCard()
         }
     }
+}
+@Composable
+fun CouponPage(navController: NavHostController) {
+    // '받은 쿠폰함' 화면의 UI 구성
+    // 예: 받은 쿠폰 목록을 표시하는 리스트 등
 }
 
 @Preview(showBackground = true)
