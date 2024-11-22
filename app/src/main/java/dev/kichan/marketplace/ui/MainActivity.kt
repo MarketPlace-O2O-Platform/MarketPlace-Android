@@ -24,7 +24,6 @@ import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.MyApp
-import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.ui.page.GoogleMapTestPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
