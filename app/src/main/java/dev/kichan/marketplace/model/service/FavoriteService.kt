@@ -13,4 +13,6 @@ interface FavoriteService {
     ) : Response<ResponseTemplate<Unit>>
 }
 
-interface User
+interface CouponUserRepository {
+
+}
