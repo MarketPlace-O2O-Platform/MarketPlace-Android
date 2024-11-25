@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import LargeCategory
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,6 +21,8 @@ import coil3.compose.rememberAsyncImagePainter
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.FavoriteRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
@@ -31,15 +34,19 @@ fun ApiTestPage() {
     val context = LocalContext.current
     val repository = MarketRepositoryImpl()
     val memberRepo = MemberRepositoryImpl()
-    val image = remember{ mutableStateOf<Uri?>(null) }
+    val favotriteRepo = FavoriteRepositoryImpl()
+
+
+    val image = remember { mutableStateOf<Uri?>(null) }
     val isLoading = remember { mutableStateOf(false) }
     var res = remember {
         mutableStateOf<LoginRes?>(null)
     }
 
-    val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-        image.value = it
-    }
+    val galleryLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
+            image.value = it
+        }
 
     Scaffold {
         Column(
@@ -48,42 +55,47 @@ fun ApiTestPage() {
             Button(onClick = {
                 galleryLauncher.launch("image/*")
             }) {
-                Text(text = "이미지 가져 오기")
-            }
-            Button(onClick = {
-                isLoading.value = true
-                CoroutineScope(Dispatchers.IO).launch {
-                    val res1 = memberRepo.getMemberData(202401598)
-
-                    isLoading.value = false
-
-                    if(res1.isSuccessful) {
-                        Log.d("TAG", "ApiTestPage: ${res1.body()}")
-                        res.value = res1.body()?.response
-                    }
-                    else {
-                        Log.d("TAG", "ApiTestPage: ${res1.errorBody()}")
-                    }
-                }
-            }) {
-                Text(text = "클릭")
+                Text(text = "갤러리")
             }
 
             Button(onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
-                    memberRepo.login(
-                        body = LoginReq("202401598", "1111111")
+                    val re = repository.createMarket(
+                        context = context, body = MarketCreateReq(
+                            name = "공공공씨네 주먹밥",
+                            description = "특징) 이거 먹을바에 봉구스가지 말 나옴",
+                            operationHours = "22",
+                            closedDays = "월화수",
+                            phoneNumber = "112",
+                            major = LargeCategory.Food.backendLable,
+                            address = "ds"
+                        ), image = image.value!!
                     )
                 }
+
+
             }) {
-                Text(text = "회원가입")
+                Text(text = "마켓")
+            }
+            Button(onClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val r = favotriteRepo.favoriteToggle("202401598", "1")
+
+                    if (r.isSuccessful) {
+                        Log.d("TAG", "성공")
+                    } else {
+                        Log.d("TAG", "실패 ${r.message()}")
+                    }
+                }
+            }) {
+                Text(text = "찜")
             }
 
-            if(isLoading.value) {
+            if (isLoading.value) {
                 Text(text = "로딩중")
             }
 
-            if(image.value != null) {
+            if (image.value != null) {
                 Image(painter = rememberAsyncImagePainter(image.value), contentDescription = null)
             }
         }
