@@ -61,8 +61,9 @@ fun ApiTestPage() {
             Button(onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
                     val re = repository.createMarket(
-                        context = context, body = MarketCreateReq(
-                            name = "공공공씨네 주먹밥",
+                        context = context,
+                        body = MarketCreateReq(
+                            name = "공공공공씨네 주먹밥",
                             description = "특징) 이거 먹을바에 봉구스가지 말 나옴",
                             operationHours = "22",
                             closedDays = "월화수",

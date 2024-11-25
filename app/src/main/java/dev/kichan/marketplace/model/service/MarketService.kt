@@ -36,6 +36,6 @@ interface MarketService {
     @POST("/api/owners/markets")
     suspend fun createMarket(
         @Part("jsonData") body: MarketCreateReq,
-        @Part file : MultipartBody.Part
+        @Part images : List<MultipartBody.Part>
     ) : Response<ResponseTemplate<Market>>
 }
