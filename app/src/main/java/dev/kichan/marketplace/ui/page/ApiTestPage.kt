@@ -1,9 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
-import LargeCategory
-import android.content.Intent
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,7 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.rememberAsyncImagePainter
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
+import dev.kichan.marketplace.model.data.login.LoginReq
+import dev.kichan.marketplace.model.data.login.LoginRes
+import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
@@ -31,8 +30,12 @@ import kotlinx.coroutines.launch
 fun ApiTestPage() {
     val context = LocalContext.current
     val repository = MarketRepositoryImpl()
+    val memberRepo = MemberRepositoryImpl()
     val image = remember{ mutableStateOf<Uri?>(null) }
     val isLoading = remember { mutableStateOf(false) }
+    var res = remember {
+        mutableStateOf<LoginRes?>(null)
+    }
 
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
         image.value = it
@@ -50,19 +53,30 @@ fun ApiTestPage() {
             Button(onClick = {
                 isLoading.value = true
                 CoroutineScope(Dispatchers.IO).launch {
-                    val res = repository.getMarket(id = 9)
+                    val res1 = memberRepo.getMemberData(202401598)
 
                     isLoading.value = false
 
-                    if(res.isSuccessful) {
-                        Log.d("TAG", "ApiTestPage: ${res.body()}")
+                    if(res1.isSuccessful) {
+                        Log.d("TAG", "ApiTestPage: ${res1.body()}")
+                        res.value = res1.body()?.response
                     }
                     else {
-                        Log.d("TAG", "ApiTestPage: ${res.errorBody()}")
+                        Log.d("TAG", "ApiTestPage: ${res1.errorBody()}")
                     }
                 }
             }) {
                 Text(text = "클릭")
+            }
+
+            Button(onClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    memberRepo.login(
+                        body = LoginReq("202401598", "1111111")
+                    )
+                }
+            }) {
+                Text(text = "회원가입")
             }
 
             if(isLoading.value) {
