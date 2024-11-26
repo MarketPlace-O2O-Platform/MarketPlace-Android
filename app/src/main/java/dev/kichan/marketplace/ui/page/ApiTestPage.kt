@@ -22,10 +22,13 @@ import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.memberCoupon.MemberCoupon
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponUserRepository
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponUserRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.FavoriteRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MemberCouponRepository
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MemberCouponRepositoryImpl
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +41,7 @@ fun ApiTestPage() {
     val memberRepo = MemberRepositoryImpl()
     val favotriteRepo = FavoriteRepositoryImpl()
     val CouponRepo = CouponUserRepositoryImpl()
+    val memberCouponRepo = MemberCouponRepositoryImpl()
 
 
     val image = remember { mutableStateOf<Uri?>(null) }
@@ -56,17 +60,11 @@ fun ApiTestPage() {
             modifier = Modifier.padding(it)
         ) {
             Button(onClick = {
-                galleryLauncher.launch("image/*")
-            }) {
-                Text(text = "갤러리")
-            }
-
-            Button(onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val re = CouponRepo.getCouponList("1")
+                    memberCouponRepo.getValidMemberCoupons(202401598)
                 }
             }) {
-                Text(text = "찜")
+                Text(text = "클릭")
             }
 
             if (isLoading.value) {

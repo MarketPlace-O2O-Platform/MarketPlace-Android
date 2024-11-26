@@ -28,18 +28,18 @@ interface MemberCouponService {
         @Path("memberCouponId") memberCouponId: Long
     ) : Response<ResponseTemplate<MemberCoupon>>
 
-    @GET("/api/members/coipons/valid")
+    @GET("/api/members/coupons/valid")
     suspend fun getValidMemberCoupons(
         @Query("memberId") memberId: Int
     ) : Response<ResponseTemplate<List<MemberCoupon>>>
 
-    @GET("/api/members/coipons/used")
+    @GET("/api/members/coupons/used")
     suspend fun getUsedMemberCoupons(
         @Query("memberId") memberId: Int
     ) : Response<ResponseTemplate<List<MemberCoupon>>>
 
 
-    @GET("/api/members/coipons/expired")
+    @GET("/api/members/coupons/expired")
     suspend fun getExpiredMemberCoupons(
         @Query("memberId") memberId: Int
     ) : Response<ResponseTemplate<List<MemberCoupon>>>
