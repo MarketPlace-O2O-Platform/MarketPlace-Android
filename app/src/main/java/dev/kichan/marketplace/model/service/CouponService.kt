@@ -2,7 +2,7 @@ package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service
 
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.Coupon
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.CouponHiddenRes
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponHiddenRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponCreateReq
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponUpdateReq
 import retrofit2.Response
