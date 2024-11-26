@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.page
 
 import LargeCategory
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -45,10 +47,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
 import dev.kichan.marketplace.ui.component.CouponCard
+import dev.kichan.marketplace.ui.component.EventListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -128,9 +133,19 @@ fun MapPage(navController: NavController) {
                         .align(Alignment.TopEnd)
                         .padding(top = 52.dp, end = 12.dp)
                         .background(color = Color(0xffffffff), shape = CircleShape)
+                        .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
                 ) {
                     Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, tint = Color(0xff545454))
                 }
+                
+                IconChip(
+                    modifier = Modifier.align(Alignment.TopCenter).padding(52.dp),
+                    onClick = { /*TODO*/ },
+                    icon = Icons.Default.Menu,
+                    title = "현 지도에서 검색",
+                    contentColor = Color(0xFF545454),
+                    backgroundColor = Color(0xFFffffff)
+                )
 
                 IconChip(
                     modifier = Modifier
@@ -151,13 +166,14 @@ fun MapPage(navController: NavController) {
 fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseSheet: () -> Unit) {
     Box(modifier = Modifier) {
         LazyColumn(
-            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 20.dp),
             modifier = modifier,
             userScrollEnabled = isExpended
         ) {
             item {
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
@@ -168,33 +184,21 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                     ) {}
                 }
             }
-            item { Spacer(modifier = Modifier.height(21.dp)) }
             items(10) {
-               /* CouponCard(
-                    coupon = Coupon(
-                        id = 0,
-                        marketId = 0,
-                        name = "커트 2,000원 할인 $it",
-                        description = null,
-                        deadline = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
-                        stock = 0,
-                        isHidden = false,
-                        createdAt = LocalDateTime.of(2024, 10, 31, 23, 59, 59).toUsFormat(),
-                    ),
-                    imageUrl = "https://via.placeholder.com/150" //임시
+                EventListItem(
+                    modifier = Modifier.padding(12.dp),
+                    imageRes = R.drawable.desert,
+                    title = "참피온삼겹살 트리플스트리",
+                    couponDescription = "맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹...",
+                    location = "송도",
+                    likes = 10,
+                    category = LargeCategory.Food.nameKo
                 )
-*/
-                // 쿠폰 아이템 사이에 있는 그거
-                if (it != 9) { // 마지막이 아니면 보임
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(2.dp)
-                            .background(Color(0xfff4f4f4))
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                }
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color(0xffEAEAEA)
+                )
             }
         }
 

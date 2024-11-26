@@ -39,9 +39,9 @@ class MarketRepositoryImpl : MarketRepository {
 
         val file = File(filePath)
         val requestFile = RequestBody.create("image/png".toMediaTypeOrNull(), file)
-        val filePart = MultipartBody.Part.createFormData("files", file.name, requestFile)
+        val filePart = MultipartBody.Part.createFormData("images", file.name, requestFile)
 
-        val res = marketService.createMarket(body, filePart)
+        val res = marketService.createMarket(body, listOf(filePart))
 
         return res
     }

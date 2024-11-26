@@ -2,7 +2,7 @@ package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service
 
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.Coupon
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.CouponHiddenRes
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponHiddenRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponCreateReq
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponUpdateReq
 import retrofit2.Response
@@ -24,7 +24,7 @@ interface CouponService {
     suspend fun updateCoupon(
         @Path("couponId") couponId: Long,
         @Body body: CouponUpdateReq
-    ) : Response<ResponseTemplate<Coupon>>
+    ): Response<ResponseTemplate<Coupon>>
 
     @DELETE("/api/owners/coupons/{couponId}")
     suspend fun deleteCoupon(
@@ -34,11 +34,11 @@ interface CouponService {
     @PUT("/api/owners/coupons/hidden/{couponId}")
     suspend fun updateHiddenCoupon(
         @Path("couponId") couponId: Long,
-    ) : Response<ResponseTemplate<CouponHiddenRes>>
+    ): Response<ResponseTemplate<CouponHiddenRes>>
 
     @POST("/api/owners/coupons")
     suspend fun createCoupon(
         @Body body: CouponCreateReq,
         @Query("marketId") marketId: Int,
-    ) : Response<ResponseTemplate<Coupon>>
+    ): Response<ResponseTemplate<Coupon>>
 }
