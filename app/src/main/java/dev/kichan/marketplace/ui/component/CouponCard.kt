@@ -17,6 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.data.coupon.Coupon
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.toUsFormat
+import dev.kichan.marketplace.ui.theme.PretendardFamily
+import java.time.LocalDateTime
 
 @Composable
 fun CouponCard() {
