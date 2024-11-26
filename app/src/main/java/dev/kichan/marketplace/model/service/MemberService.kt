@@ -18,3 +18,4 @@ interface MemberService {
         @Path("memberId") id : Int
     ) : Response<ResponseTemplate<LoginRes>>
 }
+
