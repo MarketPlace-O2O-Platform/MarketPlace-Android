@@ -14,7 +14,7 @@ interface MarketDataService {
     suspend fun getMarkets(
         @Query("lastPageIndex") lastPageIndex: Int,
         @Query("category") category: String,
-        @Query("pageSize") pageSize: String
+        @Query("pageSize") pageSize: Int,
     ): Response<ResponseTemplate<MarketPageRes>>
 
     @GET("/api/markets/{marketId}")
