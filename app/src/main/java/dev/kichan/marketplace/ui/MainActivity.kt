@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.MyApp
+import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,8 +23,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                ApiTestPage()
-//                MyApp()
+                MyApp()
             }
         }
     }
