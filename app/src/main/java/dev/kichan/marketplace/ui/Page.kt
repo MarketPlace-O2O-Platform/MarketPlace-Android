@@ -14,6 +14,7 @@ enum class Page(
     Coupon(pageName = "쿠폰"),
     Login(pageName = "로그인"),
     EventDetail(pageName = "이벤트 정보"),
+    CouponHam(pageName = "쿠폰함페이지"),
 
     CategoryEventList(pageName = "카테고리 이벤트"),
     EventList(pageName = "이벤트 리스트")

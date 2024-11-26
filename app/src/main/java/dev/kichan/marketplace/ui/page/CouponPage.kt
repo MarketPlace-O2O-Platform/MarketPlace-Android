@@ -61,7 +61,7 @@ fun ReceivedCouponsScreen() {
                             text = title,
                             style = TextStyle(
                                 fontSize = 14.sp,
-                                //fontFamily = FontFamily(Font(R.font.pretendard)),
+                                fontFamily = FontFamily(Font(R.font.pretendard_bold)),
                                 fontWeight = FontWeight.SemiBold,
                                 color = if (selectedTab == index) Color(0xFF000000) else Color(0xFF7D7D7D),
                                 textAlign = TextAlign.Center
@@ -126,6 +126,7 @@ fun ExpiredCouponsList() {
 }
 @Composable
 fun CouponPage(navController: NavHostController) {
+    ReceivedCouponsScreen()
     // '받은 쿠폰함' 화면의 UI 구성
     // 예: 받은 쿠폰 목록을 표시하는 리스트 등
 }

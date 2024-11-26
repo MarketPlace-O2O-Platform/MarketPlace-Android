@@ -40,17 +40,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.CategoryTap
-import dev.kichan.marketplace.ui.component.CouponCard
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.launch
@@ -171,7 +168,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
             }
             item { Spacer(modifier = Modifier.height(21.dp)) }
             items(10) {
-                CouponCard(
+               /* CouponCard(
                     coupon = Coupon(
                         id = 0,
                         marketId = 0,
@@ -187,7 +184,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                     ),
                     imageUrl = "https://via.placeholder.com/150" //임시
                 )
-
+*/
                 // 쿠폰 아이템 사이에 있는 그거
                 if (it != 9) { // 마지막이 아니면 보임
                     Spacer(modifier = Modifier.height(20.dp))

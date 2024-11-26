@@ -101,7 +101,7 @@ fun MyPage(navController: NavController) {
                 // 받은 쿠폰함 버튼
                 Button(
                     onClick = {
-                        navController.navigate(Page.Coupon.name)
+                        navController.navigate(Page.CouponHam.name)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
