@@ -21,7 +21,7 @@ import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponUserRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.FavoriteRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketOwnerRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MemberCouponRepositoryImpl
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponMemberRepositoryImpl
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +34,7 @@ fun ApiTestPage() {
     val memberRepo = MemberRepositoryImpl()
     val favotriteRepo = FavoriteRepositoryImpl()
     val CouponRepo = CouponUserRepositoryImpl()
-    val memberCouponRepo = MemberCouponRepositoryImpl()
+    val memberCouponRepo = CouponMemberRepositoryImpl()
 
 
     val image = remember { mutableStateOf<Uri?>(null) }
