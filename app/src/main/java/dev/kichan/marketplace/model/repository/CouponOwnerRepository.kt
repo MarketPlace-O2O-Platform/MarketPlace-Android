@@ -5,7 +5,7 @@ import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponCreateReq
 import retrofit2.Response
 
-interface CouponRepository {
+interface CouponOwnerRepository {
     suspend fun createCoupon(
         body: CouponCreateReq,
         marketId: Int

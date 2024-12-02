@@ -14,7 +14,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface CouponService {
+interface CouponOwnerService {
     @GET("/api/owners/coupons/{couponId}")
     suspend fun getCoupon(
         @Path("couponId") couponId: Long,
