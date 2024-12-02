@@ -8,8 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-//todo: MarketService로 이름 변경
-interface MarketDataService {
+interface MarketService {
     @GET("/api/markets")
     suspend fun getMarkets(
         @Query("lastPageIndex") lastPageIndex: Int,

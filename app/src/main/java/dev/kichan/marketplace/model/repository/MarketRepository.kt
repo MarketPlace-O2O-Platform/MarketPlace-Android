@@ -6,7 +6,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.mar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketPageRes
 import retrofit2.Response
 
-interface MarketDataRepository {
+interface MarketRepository {
     suspend fun getMarkets(
         lastPageIndex: Int,
         category: LargeCategory,

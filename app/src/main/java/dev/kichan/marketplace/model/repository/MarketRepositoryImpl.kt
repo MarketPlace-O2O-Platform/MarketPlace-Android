@@ -5,11 +5,11 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketPageRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MarketDataService
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MarketService
 import retrofit2.Response
 
-class MarketDataRepositoryImpl : MarketDataRepository {
-    private val marketDataRepository = NetworkModule.getService(MarketDataService::class.java)
+class MarketRepositoryImpl : MarketRepository {
+    private val marketDataRepository = NetworkModule.getService(MarketService::class.java)
 
     override suspend fun getMarkets(
         lastPageIndex: Int,
