@@ -1,8 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
-import LargeCategory
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -18,16 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.rememberAsyncImagePainter
-import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.memberCoupon.MemberCoupon
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponUserRepository
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponUserRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.FavoriteRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MemberCouponRepository
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketOwnerRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MemberCouponRepositoryImpl
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +30,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ApiTestPage() {
     val context = LocalContext.current
-    val repository = MarketRepositoryImpl()
+    val repository = MarketOwnerRepositoryImpl()
     val memberRepo = MemberRepositoryImpl()
     val favotriteRepo = FavoriteRepositoryImpl()
     val CouponRepo = CouponUserRepositoryImpl()
