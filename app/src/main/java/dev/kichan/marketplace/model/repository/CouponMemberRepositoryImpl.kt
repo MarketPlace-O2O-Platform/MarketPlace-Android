@@ -4,11 +4,11 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.memberCoupon.MemberCoupon
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.memberCoupon.MemberCouponUseRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MemberCouponService
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.CouponMembersService
 import retrofit2.Response
 
-class MemberCouponRepositoryImpl : MemberCouponRepository {
-    private val memberCouponService = NetworkModule.getService(MemberCouponService::class.java)
+class CouponMemberRepositoryImpl : CouponMemberRepository {
+    private val memberCouponService = NetworkModule.getService(CouponMembersService::class.java)
 
     override suspend fun useCoupon(memberCouponId: Long): Response<ResponseTemplate<MemberCouponUseRes>> =
         memberCouponService.useCoupon(memberCouponId = memberCouponId)

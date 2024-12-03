@@ -5,7 +5,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.mem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.memberCoupon.MemberCouponUseRes
 import retrofit2.Response
 
-interface MemberCouponRepository {
+interface CouponMemberRepository {
     suspend fun useCoupon(
         memberCouponId: Long,
     ): Response<ResponseTemplate<MemberCouponUseRes>>
