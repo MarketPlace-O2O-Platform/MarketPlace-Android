@@ -13,7 +13,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
 
         // Key Hash 가져오는 코드
 //        val keyHash = Utility.getKeyHash(this)
