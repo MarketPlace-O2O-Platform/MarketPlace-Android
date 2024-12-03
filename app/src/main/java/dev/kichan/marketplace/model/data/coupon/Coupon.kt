@@ -1,7 +1,6 @@
 package dev.kichan.marketplace.model.data.coupon
 
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDate
 
 data class Coupon(
     @SerializedName("couponId") val id: Long,

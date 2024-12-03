@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import kotlinx.coroutines.launch
 
@@ -15,7 +14,6 @@ class MainViewModel : ViewModel() {
     //todo: DI 적용하기
     private val memberRepository = MemberRepositoryImpl()
     private val marketRepository = MarketRepositoryImpl()
-    private val couponRepository = CouponRepositoryImpl()
 
     val state = MutableLiveData(State.Success)
 

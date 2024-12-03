@@ -1,41 +1,37 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service
 
 import dev.kichan.marketplace.model.data.ResponseTemplate
-import dev.kichan.marketplace.model.data.market.Market
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketUpdateReq
-import okhttp3.MultipartBody
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketPageRes
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MarketService {
-    @GET("/api/owners/markets/{marketId}")
-    suspend fun getMarket(
-        @Path("marketId") id: Int
-    ): Response<ResponseTemplate<Market>>
+    @GET("/api/markets")
+    suspend fun getMarkets(
+        @Query("lastPageIndex") lastPageIndex: Int,
+        @Query("category") category: String,
+        @Query("pageSize") pageSize: Int,
+    ): Response<ResponseTemplate<MarketPageRes>>
 
-    @PUT("/api/owners/markets/{marketId}")
-    suspend fun updateMarket(
-        @Path("marketId") id: Int,
-        @Body body: MarketUpdateReq
-    ): Response<ResponseTemplate<Market>>
+    @GET("/api/markets/{marketId}")
+    suspend fun getMarketDetail(
+        @Path("marketId") marketId: Int
+    ): Response<ResponseTemplate<MarketDetailRes>>
 
-    @DELETE("/api/owners/markets/{marketId}")
-    suspend fun deleteMarket(
-        @Path("marketId") id: Int
-    )
+    @GET("/api/markets/top-favorite-markets")
+    suspend fun getTopFavoriteMarkets(
+        @Query("lastPageIndex") lastPageIndex: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<ResponseTemplate<MarketPageRes>>
 
-    @Multipart
-    @POST("/api/owners/markets")
-    suspend fun createMarket(
-        @Part("jsonData") body: MarketCreateReq,
-        @Part file : MultipartBody.Part
-    ) : Response<ResponseTemplate<Market>>
+    @GET("/api/markets/my-favorite-markets")
+    suspend fun getMyFavoriteMarkets(
+        @Query("memberId") memberId: Int,
+        @Query("lastPageIndex") lastPageIndex: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<ResponseTemplate<MarketPageRes>>
 }
+

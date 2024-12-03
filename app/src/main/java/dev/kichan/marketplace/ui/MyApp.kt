@@ -20,6 +20,7 @@ import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.CategoryEventListPage
 import dev.kichan.marketplace.ui.page.EventList
+import dev.kichan.marketplace.ui.screen.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -42,6 +43,8 @@ fun MyApp(viewModel : MainViewModel) {
             composable(Page.Like.name) { LikePage(navController = navController) }
             composable(Page.Map.name) { MapPage(navController = navController) }
             composable(Page.My.name) { MyPage(navController = navController) }
+            composable(Page.CouponHam.name) { CouponPage(navController = navController) }
+
             composable(Page.EventDetail.name) { DetailPage() }
         }
         composable(route = Page.Login.name) {
