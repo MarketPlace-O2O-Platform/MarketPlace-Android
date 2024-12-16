@@ -1,12 +1,10 @@
-package dev.kichan.marketplace.ui.component
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
 import LargeCategory
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
