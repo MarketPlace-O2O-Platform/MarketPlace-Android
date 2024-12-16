@@ -17,7 +17,6 @@ import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.CategoryEventListPage
-import dev.kichan.marketplace.ui.page.EventList
 import dev.kichan.marketplace.ui.screen.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 

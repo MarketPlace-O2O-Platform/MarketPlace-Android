@@ -4,11 +4,9 @@ import LargeCategory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -34,6 +32,7 @@ import dev.kichan.marketplace.model.data.event.Event2
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MyPageCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
@@ -127,7 +126,7 @@ fun MyPage(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             // 나만의 큐레이션과 카테고리 선택 버튼
-            CurationCategorySelector(
+            CategorySelector(
                 selectedCategory = selectedCategory,
                 onChange = { selectedCategory = it }
             )
@@ -148,59 +147,6 @@ fun MyPage(navController: NavController) {
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun CurationCategorySelector(
-    selectedCategory: LargeCategory,
-    onChange: (LargeCategory) -> Unit,
-) {
-    val scrollState = rememberScrollState()
-
-    Column {
-        Text(
-            text = "나만의 큐레이션",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(scrollState)
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            val categories = LargeCategory.entries
-
-            val categoryShape = RoundedCornerShape(50.dp)
-
-            categories.forEachIndexed { index, category ->
-                // todo: 카테고리 칩을 컴포넌트로 따로 빼서 boolean 파라미터 받는거로 변경하기
-                Surface(
-                    onClick = { onChange(category) },
-                    shape = categoryShape,
-                    border = BorderStroke(
-                        1.dp,
-                        if (selectedCategory == category) Color(0xff303030) else Color(0xffC6C6C6)
-                    ),
-                    color = if (selectedCategory == category) Color(0xff303030) else Color(0xffFFFFFF)
-                ) {
-                Text(
-                    text = category.nameKo,
-                    color = if (selectedCategory == category) Color(0xffffffff) else Color(0xff5E5E5E),
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                )
-            }
             }
         }
     }
@@ -243,9 +189,9 @@ fun sampleEvents() = listOf(
 
 @Preview
 @Composable
-private fun CurationCategorySelectorPreview() {
+private fun CategorySelectorPreview() {
     MarketPlaceTheme {
-        CurationCategorySelector(
+        CategorySelector(
             selectedCategory = LargeCategory.All,
             {}
         )
