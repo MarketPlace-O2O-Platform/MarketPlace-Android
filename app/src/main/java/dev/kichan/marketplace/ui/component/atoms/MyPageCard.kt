@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
 import Carbon_bookmark
 import androidx.compose.foundation.Image

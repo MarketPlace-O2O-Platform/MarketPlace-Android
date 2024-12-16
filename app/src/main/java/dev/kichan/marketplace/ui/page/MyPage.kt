@@ -33,8 +33,8 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event2
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.MyPageCard
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MyPageCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable

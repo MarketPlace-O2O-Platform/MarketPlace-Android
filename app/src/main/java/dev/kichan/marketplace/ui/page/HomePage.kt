@@ -50,19 +50,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.MoreViewTitle
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MoreViewTitle
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.DayOfWeekSelector
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.DayOfWeekSelector
 import dev.kichan.marketplace.ui.component.EventBanner
-import dev.kichan.marketplace.ui.component.EventBox
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventBox
 import dev.kichan.marketplace.ui.component.EventCard
-import dev.kichan.marketplace.ui.component.IconAppBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.PagerCounter
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconAppBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.PagerCounter
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
