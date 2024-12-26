@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui
 
 import LargeCategory
+import LoginPage
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.MainViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
@@ -21,13 +23,13 @@ import dev.kichan.marketplace.ui.screen.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun MyApp() {
+fun MyApp(viewModel : MainViewModel) {
 
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Page.Main.name,
+        startDestination = Page.Login.name,
         enterTransition = {
             EnterTransition.None
         },
@@ -43,6 +45,9 @@ fun MyApp() {
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
 
             composable(Page.EventDetail.name) { DetailPage() }
+        }
+        composable(route = Page.Login.name) {
+            LoginPage(navController = navController, viewModel = viewModel)
         }
 
         composable("${Page.CategoryEventList.name}/{category}") {
@@ -63,6 +68,6 @@ fun MyApp() {
 @Composable
 fun MyAppPreview() {
     MarketPlaceTheme {
-        MyApp()
+        MyApp(MainViewModel())
     }
 }
