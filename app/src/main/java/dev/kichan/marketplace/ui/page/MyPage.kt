@@ -59,7 +59,7 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
     }
 
     LaunchedEffect(Unit) {
-        viewModel.getMyCuration()
+//        viewModel.getMyCuration()
     }
 
     Scaffold(
@@ -155,9 +155,10 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
             // MyPageCard를 세로로 나열하는 리스트, 각 카드 사이에 구분선 추가
             if(myCuration.value.isNullOrEmpty()) {
                 Box(
-                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "저장한 매장이 없습나다.")
+                    Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
                 }
             }
             else {
@@ -180,41 +181,6 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
         }
     }
 }
-
-// 샘플 Event 데이터 목록
-fun sampleEvents() = listOf(
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    )
-    // 추가 샘플 데이터를 필요에 따라 추가할 수 있습니다.
-)
 
 @Preview
 @Composable
