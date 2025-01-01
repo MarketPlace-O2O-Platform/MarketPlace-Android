@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
