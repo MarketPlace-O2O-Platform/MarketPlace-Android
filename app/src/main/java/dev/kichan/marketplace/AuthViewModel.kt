@@ -11,6 +11,7 @@ import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AuthViewModel : ViewModel() {
     //todo: DI 적용하기
@@ -27,11 +28,15 @@ class AuthViewModel : ViewModel() {
             val res = memberRepository.login(body = LoginReq(studentId = id, password = password))
 
             if(res.isSuccessful) {
-                member.value = res.body()!!.response
-                onSuccess()
+                withContext(Dispatchers.Main){
+                    member.value = res.body()!!.response
+                    onSuccess()
+                }
             }
             else {
-                onFail()
+                withContext(Dispatchers.Main) {
+                    onFail()
+                }
             }
         }
     }
@@ -51,14 +56,26 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val res = marketRepository.getTopFavoriteMarkets(lastPageIndex = 2, pageSize = 20)
             if(res.isSuccessful) {
-                top20Market.value = res.body()!!.response.markets
+                withContext(Dispatchers.Main){
+                    top20Market.value = res.body()!!.response.markets
+                }
             }
         }
     }
 
     fun getNewEvent() {
         viewModelScope.launch(Dispatchers.IO) {
-            //todo 이거 api 없다고 말하기
+            val res = marketRepository.getLatestCoupon(
+                memberId = member.value!!.studentId,
+                lastPageIndex = null,
+                lastCreateAt = null,
+                pageSize = null
+            )
+            if(res.isSuccessful) {
+                withContext(Dispatchers.Main) {
+                    newEvent.value = res.body()!!.response.markets
+                }
+            }
         }
     }
 
@@ -66,7 +83,9 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val res = marketRepository.getMyFavoriteMarkets(memberId = member.value!!.studentId, lastPageIndex = 0, pageSize = 5)
             if(res.isSuccessful) {
-                myCuration.value = res.body()!!.response.markets
+                withContext(Dispatchers.Main){
+                    myCuration.value = res.body()!!.response.markets
+                }
             }
         }
     }

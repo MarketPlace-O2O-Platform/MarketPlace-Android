@@ -33,5 +33,13 @@ interface MarketService {
         @Query("lastPageIndex") lastPageIndex: Int,
         @Query("pageSize") pageSize: Int
     ): Response<ResponseTemplate<MarketPageRes>>
+
+    @GET("/api/markets/latest-coupon")
+    suspend fun getMyLatestCoupon(
+        @Query("memberId") memberId: Int,
+        @Query("lastPageIndex") lastPageIndex: Int? = null,
+        @Query("lastCreatedAt") lastCreatedAt: String? = null,
+        @Query("pageSize") pageSize: Int? = null
+    ) : Response<ResponseTemplate<MarketPageRes>>
 }
 
