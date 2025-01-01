@@ -12,7 +12,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.MyApp
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 class MainActivity : ComponentActivity() {
-    private val viewModel : AuthViewModel by viewModels()
+    private val authViewModel : AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                MyApp(authViewModel = viewModel)
+                MyApp(authViewModel = authViewModel)
             }
         }
     }

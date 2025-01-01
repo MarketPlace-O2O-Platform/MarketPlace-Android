@@ -29,7 +29,7 @@ fun MyApp(authViewModel : AuthViewModel) {
 
     NavHost(
         navController = navController,
-        startDestination = Page.Login.name,
+        startDestination = Page.Main.name,
         enterTransition = {
             EnterTransition.None
         },
@@ -38,7 +38,7 @@ fun MyApp(authViewModel : AuthViewModel) {
         }
     ) {
         navigation(route = Page.Main.name, startDestination = Page.Home.name) {
-            composable(Page.Home.name) { HomePage(navController = navController) }
+            composable(Page.Home.name) { HomePage(navController = navController, viewModel = authViewModel) }
             composable(Page.Like.name) { LikePage(navController = navController) }
             composable(Page.Map.name) { MapPage(navController = navController) }
             composable(Page.My.name) { MyPage(navController = navController) }

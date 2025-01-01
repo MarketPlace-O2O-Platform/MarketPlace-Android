@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.kichan.marketplace.model.data.event.Event
+import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventBox
@@ -26,7 +27,7 @@ fun EventList(
     modifier: Modifier = Modifier,
     navController: NavController,
     title: String,
-    eventList: List<Event>
+    eventList: List<Market>
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),

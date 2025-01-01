@@ -32,12 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
+import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun EventBox(
     modifier: Modifier = Modifier,
-    event: Event
+    event: Market
 ) {
     var isBookMark by remember { mutableStateOf(false) }
 
@@ -45,7 +46,7 @@ fun EventBox(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(id = event.imageRes),
+            painter = painterResource(id = R.drawable.cafe),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
@@ -73,34 +74,19 @@ fun EventBox(
                 .padding(12.dp)
         ) {
             Text(
-                text = event.marketName,
+                text = event.name,
                 color = Color(0xffC7C7C7),
                 fontFamily = PretendardFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
             )
             Text(
-                text = event.eventName,
+                text = event.name,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Text(
-//                    text = event.defaultPrice.toString(),
-//                    color = Color.Gray,
-//                    fontSize = 12.sp,
-//                    textDecoration = TextDecoration.LineThrough
-//                )
-//                Spacer(modifier = Modifier.width(8.dp))
-//                Text(
-//                    text = "${event.eventPrice}원",
-//                    color = Color.White,
-//                    fontSize = 16.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//            }
         }
     }
 }
@@ -108,16 +94,19 @@ fun EventBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
-    val event = Event(
-        marketName = "콜드케이스 인하대점",
-        eventName = "방탈출카페 2인권",
-        defaultPrice = 50000,
-        eventPrice = 29500,
-        imageRes = R.drawable.roomex
+    val market = Market(
+        id = 2943,
+        name = "Ashley Underwood",
+        description = "sanctus",
+        operationHours = "mi",
+        closedDays = "posse",
+        phoneNumber = "(928) 333-0396",
+        address = "tamquam",
+        thumbnail = "contentiones"
     )
 
     EventBox(
         modifier = Modifier.fillMaxWidth(0.7f).aspectRatio(1f/1),
-        event = event
+        event = market
     )
 }
