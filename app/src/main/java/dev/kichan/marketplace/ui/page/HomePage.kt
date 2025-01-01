@@ -13,6 +13,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,7 +33,8 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun HomePage(navController: NavController, viewModel: AuthViewModel) {
-    val top20 = viewModel.top20Market
+    val top20 = viewModel.top20Market.observeAsState()
+    val newEvent = viewModel.newEvent.observeAsState()
 
     Scaffold(
         topBar = {
@@ -45,7 +47,6 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
         Column(
             Modifier
                 .padding(innerPadding)
-//                .fillMaxSize()
         ) {
             LazyColumn {
                 item {
@@ -73,21 +74,11 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                 // Top 20 인기 페이지"
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-                    if(top20.value?.isEmpty() != false) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("이벤트가 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
-                        }
-                    }
-                    else {
-                        EventList(
-                            navController = navController,
-                            title = "Top 20 인기 페이지",
-                            eventList = top20.value ?: listOf()
-                        )
-                    }
+                    EventList(
+                        navController = navController,
+                        title = "Top 20 인기 페이지",
+                        eventList = top20.value ?: listOf()
+                    )
                 }
 
                 // 최신 제휴 이벤트
@@ -96,7 +87,7 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                     EventList(
                         navController = navController,
                         title = "이번달 신규 이벤트",
-                        eventList = listOf()
+                        eventList = newEvent.value ?: listOf()
                     )
                 }
 

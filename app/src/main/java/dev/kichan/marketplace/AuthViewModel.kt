@@ -18,8 +18,6 @@ class AuthViewModel : ViewModel() {
 
     val member = MutableLiveData<LoginRes>()
 
-    val top20Market = MutableLiveData<List<Market>>()
-
     fun login(id : String, password : String, onSuccess : () -> Unit, onFail : () -> Unit) {
         viewModelScope.launch {
             val res = memberRepository.login(body = LoginReq(studentId = id, password = password))
@@ -34,12 +32,23 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    ///////////////////////  이벤트  /////////////////////////
+
+    val top20Market = MutableLiveData<List<Market>>()
+    val newEvent = MutableLiveData<List<Market>>()
+
     fun getTop20Market() {
         viewModelScope.launch(Dispatchers.IO) {
             val res = marketRepository.getTopFavoriteMarkets(lastPageIndex = 2, pageSize = 20)
             if(res.isSuccessful) {
                 top20Market.value = res.body()!!.response.markets
             }
+        }
+    }
+
+    fun getNewEvent() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //todo 이거 api 없다고 말하기
         }
     }
 }
