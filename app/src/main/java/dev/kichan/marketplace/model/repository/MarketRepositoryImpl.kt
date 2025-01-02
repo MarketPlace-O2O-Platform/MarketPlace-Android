@@ -38,4 +38,16 @@ class MarketRepositoryImpl : MarketRepository {
         lastPageIndex = lastPageIndex,
         pageSize = pageSize
     )
+
+    override suspend fun getLatestCoupon(
+        memberId: Int,
+        lastPageIndex: Int?,
+        lastCreateAt: String?,
+        pageSize: Int?
+    ) : Response<ResponseTemplate<MarketPageRes>> = marketDataRepository.getMyLatestCoupon(
+        memberId = memberId,
+        lastPageIndex = lastPageIndex,
+        lastCreatedAt = lastCreateAt,
+        pageSize = pageSize
+    )
 }

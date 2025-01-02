@@ -27,4 +27,11 @@ interface MarketRepository {
         lastPageIndex: Int,
         pageSize: Int
     ): Response<ResponseTemplate<MarketPageRes>>
+
+    suspend fun getLatestCoupon(
+        memberId: Int,
+        lastPageIndex: Int?,
+        lastCreateAt : String?,
+        pageSize: Int?
+    ) : Response<ResponseTemplate<MarketPageRes>>
 }
