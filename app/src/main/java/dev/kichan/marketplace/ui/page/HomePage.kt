@@ -20,7 +20,7 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconAppBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LogoAppBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.SearchBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CategorySelector
@@ -31,7 +31,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 fun HomePage(navController: NavController) {
     Scaffold(
         topBar = {
-            IconAppBar(title = "쿠러미", Icons.Outlined.Notifications to {})
+            LogoAppBar(logo = R.drawable.logo, Icons.Outlined.Notifications to {})
         },
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
@@ -45,7 +45,7 @@ fun HomePage(navController: NavController) {
             LazyColumn {
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
-                    SearchBar()
+                    SearchBar(onSearch = {})
                 }
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {

@@ -29,7 +29,7 @@ fun MyApp(viewModel : MainViewModel) {
 
     NavHost(
         navController = navController,
-        startDestination = Page.Login.name,
+        startDestination = Page.Main.name,
         enterTransition = {
             EnterTransition.None
         },

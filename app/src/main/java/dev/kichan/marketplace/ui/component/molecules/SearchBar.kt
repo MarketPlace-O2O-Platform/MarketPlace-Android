@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,22 +24,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun SearchBar() {
+fun SearchBar(modifier: Modifier = Modifier, onSearch : (String) -> Unit) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
+    var isDialogShow by remember { mutableStateOf(false) }
+
+    if(isDialogShow) {
+        Dialog(onDismissRequest = {isDialogShow = false}) {
+            Box() {
+                Text("쿠폰을 사용하시겠습니까?")
+            }
+        }
+    }
+
 
     Box(
-        modifier = Modifier
-            .padding(horizontal = PAGE_HORIZONTAL_PADDING)
-            .fillMaxWidth()
-            .wrapContentHeight()
+        modifier = modifier
             .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(24.dp))
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
@@ -51,13 +63,13 @@ fun SearchBar() {
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search Icon",
                 tint = Color(0xff121212),
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp).clickable { onSearch(searchText.text) }
             )
             Spacer(modifier = Modifier.width(10.dp))
 
             Spacer(
                 modifier = Modifier
-                    .background(Color(0xffff0000))
+                    .background(Color(0xffC6C6C6))
                     .width(1.dp)
                     .fillMaxHeight()
             )
@@ -80,6 +92,16 @@ fun SearchBar() {
                 }
                 innerTextField()
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SearchBarPreview() {
+    MarketPlaceTheme {
+        SearchBar(Modifier.fillMaxWidth()) {
+
         }
     }
 }
