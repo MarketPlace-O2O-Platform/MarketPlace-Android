@@ -27,9 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event2
+import dev.kichan.marketplace.model.data.market.Market
 
 @Composable
-fun MyPageCard(event: Event2, modifier: Modifier = Modifier) {
+fun MyPageCard(event: Market, modifier: Modifier = Modifier) {
     var isBookmarked by remember { mutableStateOf(false) }
 
     Row(
@@ -39,7 +40,7 @@ fun MyPageCard(event: Event2, modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.Top
     ) {
         Image(
-            painter = painterResource(id = event.imageRes),
+            painter = painterResource(id = R.drawable.cham),
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)
@@ -51,14 +52,14 @@ fun MyPageCard(event: Event2, modifier: Modifier = Modifier) {
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = event.marketName,
+                text = event.name,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = event.eventName,
+                text = event.name,
                 fontSize = 14.sp,
                 color = Color.Gray,
                 maxLines = 2
@@ -78,7 +79,7 @@ fun MyPageCard(event: Event2, modifier: Modifier = Modifier) {
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = event.location,
+                        text = event.address,
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
@@ -101,13 +102,15 @@ fun MyPageCard(event: Event2, modifier: Modifier = Modifier) {
 @Composable
 fun MyPageCardPreview() {
     MyPageCard(
-        event = Event2(
-            marketName = "참피온삼겹살 트리플스트리제목",
-            eventName = "맛있는 삼겹살",
-            location = "송도",
-            imageRes = R.drawable.cham
-
-
+        event = Market(
+            id = 6576,
+            name = "Joan Potts",
+            description = "blandit",
+            operationHours = "assueverit",
+            closedDays = "inani",
+            phoneNumber = "(929) 451-1388",
+            address = "cetero",
+            thumbnail = "postea"
         )
     )
 }

@@ -14,7 +14,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,15 +33,33 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event2
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MyPageCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun MyPage(navController: NavController) {
+fun MyPage(navController: NavController, viewModel : AuthViewModel) {
+    val member = viewModel.member.observeAsState()
+    val myCuration = viewModel.myCuration.observeAsState()
+
     var selectedCategory by remember {
         mutableStateOf(LargeCategory.All)
+    }
+
+    val onLogout = {
+        viewModel.logout(
+            onSuccess = {
+                navController.popBackStack()
+                navController.navigate(Page.Login.name)
+            },
+            onFail = {}
+        )
+    }
+
+    LaunchedEffect(Unit) {
+//        viewModel.getMyCuration()
     }
 
     Scaffold(
@@ -67,7 +87,7 @@ fun MyPage(navController: NavController) {
                     fontSize = 14.sp,
                     color = Color.Gray,
                     modifier = Modifier.clickable {
-                        // 로그아웃 처리
+                        onLogout()
                     }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -94,7 +114,7 @@ fun MyPage(navController: NavController) {
                             .background(Color(0xFFF9F9F9), shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(text = "202000877 님", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "${member.value?.studentId}님", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 }
 
                 // 받은 쿠폰함 버튼
@@ -133,59 +153,34 @@ fun MyPage(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             // MyPageCard를 세로로 나열하는 리스트, 각 카드 사이에 구분선 추가
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
-            ) {
-                items(sampleEvents()) { event ->
-                    Column {
-                        MyPageCard(event = event)
-                        Divider(
-                            color = Color(0xFFF4F4F4),
-                            thickness = 1.dp,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+            if(myCuration.value.isNullOrEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
+                }
+            }
+            else {
+                LazyColumn(
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
+                ) {
+                    items(myCuration.value ?: listOf()) { event ->
+                        Column {
+                            MyPageCard(event = event)
+                            Divider(
+                                color = Color(0xFFF4F4F4),
+                                thickness = 1.dp,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
-
-// 샘플 Event 데이터 목록
-fun sampleEvents() = listOf(
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    ),
-    Event2(
-        marketName = "참피온삼겹살 트리플스트리제목",
-        eventName = "맛있는 삼겹살",
-        imageRes = R.drawable.cham,
-        location = "송도"
-    )
-    // 추가 샘플 데이터를 필요에 따라 추가할 수 있습니다.
-)
 
 @Preview
 @Composable
@@ -201,5 +196,5 @@ private fun CategorySelectorPreview() {
 @Preview(showBackground = true)
 @Composable
 fun MyPagePreview() {
-    MyPage(navController = rememberNavController())
+    MyPage(navController = rememberNavController(), viewModel = AuthViewModel())
 }
