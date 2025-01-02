@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,7 +27,7 @@ fun CouponCard(onClick: () -> Unit, status: String) {
         modifier = Modifier
             .fillMaxWidth()
             .height(102.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+            .background(color = Color.White, shape = CutCornerShape(8.dp))
             .padding(horizontal = 0.dp) // 카드 내부 여백 추가
     ) {
         // 왼쪽 이미지 (정사각형)
@@ -89,6 +91,27 @@ fun CouponCard(onClick: () -> Unit, status: String) {
             "사용 완료" -> Color.White // 흰색
             "기간 만료" -> Color.White // 흰색
             else -> Color.Black
+        }
+
+        // 상태 박스와 텍스트 사이의 타원 연결 구현
+        Column(
+            modifier = Modifier
+                .width(80.dp)
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(20.dp) // 타원 크기 증가
+                    .background(color = Color.White, shape = CircleShape)
+            )
+
+            Box(
+                modifier = Modifier
+                    .size(20.dp) // 타원 크기 증가
+                    .background(color = Color.White, shape = CircleShape)
+            )
         }
 
         Box(
