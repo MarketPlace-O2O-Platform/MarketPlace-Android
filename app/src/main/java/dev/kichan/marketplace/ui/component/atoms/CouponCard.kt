@@ -2,7 +2,10 @@ package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -19,12 +22,12 @@ import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 
 @Composable
-fun CouponCard() {
+fun CouponCard(onClick: () -> Unit, status: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(102.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+            .background(color = Color.White, shape = CutCornerShape(8.dp))
             .padding(horizontal = 0.dp) // 카드 내부 여백 추가
     ) {
         // 왼쪽 이미지 (정사각형)
@@ -75,20 +78,56 @@ fun CouponCard() {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // "사용가능" 영역
-        Box(
+        // 상태에 따른 텍스트 및 색상 변경
+        val backgroundColor = when (status) {
+            "사용 가능" -> Color.Black
+            "사용 완료" -> Color(0xFF7D7D7D) // 연회색
+            "기간 만료" -> Color(0xFF7D7D7D) // 연회색
+            else -> Color.White
+        }
+
+        val textColor = when (status) {
+            "사용 가능" -> Color.White
+            "사용 완료" -> Color.White // 흰색
+            "기간 만료" -> Color.White // 흰색
+            else -> Color.Black
+        }
+
+        // 상태 박스와 텍스트 사이의 타원 연결 구현
+        Column(
             modifier = Modifier
                 .width(80.dp)
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(20.dp) // 타원 크기 증가
+                    .background(color = Color.White, shape = CircleShape)
+            )
+
+            Box(
+                modifier = Modifier
+                    .size(20.dp) // 타원 크기 증가
+                    .background(color = Color.White, shape = CircleShape)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .clickable { onClick() }
+                .width(80.dp)
                 .fillMaxHeight()
-                .background(color = Color(0xFF000000), shape = RoundedCornerShape(8.dp)),
+                .background(color = backgroundColor, shape = RoundedCornerShape(8.dp)),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "사용가능",
+                text = status,
                 style = TextStyle(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = textColor
                 )
             )
         }
@@ -98,5 +137,11 @@ fun CouponCard() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewCouponCard() {
-    CouponCard()
+    Column {
+        CouponCard(onClick = {}, status = "사용 가능")
+        Spacer(modifier = Modifier.height(8.dp))
+        CouponCard(onClick = {}, status = "사용 완료")
+        Spacer(modifier = Modifier.height(8.dp))
+        CouponCard(onClick = {}, status = "기간 만료")
+    }
 }
