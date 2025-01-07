@@ -2,7 +2,6 @@ package dev.kichan.marketplace.ui.page
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,12 +15,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,13 +36,14 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun LikePage(navController: NavController) {
-    var searchInput by remember { mutableStateOf("") }
+    var searchKey by remember { mutableStateOf("") }
 
     Scaffold(
         bottomBar = {
@@ -56,35 +54,10 @@ fun LikePage(navController: NavController) {
             modifier = Modifier.padding(it)
         ) {
             item {
-                // todo: TextField 디자인 수정
-                Box(
-                    modifier = Modifier
-                        .background(color = Color.Black)
-                        .padding(
-                            top = 12.dp,
-                            start = 20.dp,
-                            end = 20.dp,
-                            bottom = 40.dp
-                        )
-                ) {
-                    TextField(
-                        value = searchInput,
-                        onValueChange = { searchInput = it },
-                        placeholder = {
-                            Text(
-                                text = "제휴 할인받고 싶은 매장을 알려주세요",
-                                color = Color(0xffBDB6B6),
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Thin
-                            )
-                        },
-                        trailingIcon = {
-                            Icon(imageVector = Icons.Default.Search, contentDescription = null)
-                        },
-                        shape = RoundedCornerShape(7.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                LikeMarketSearchBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    key = searchKey
+                ) { searchKey = it }
             }
             item {
                 Row(
