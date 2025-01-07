@@ -21,7 +21,9 @@ class AuthViewModel : ViewModel() {
 
     ///////////////////////  회원  /////////////////////////
 
-    val member = MutableLiveData<LoginRes?>()
+    val member = MutableLiveData<LoginRes?>(
+        LoginRes(studentId = 202401598)
+    )
 
     fun login(id : String, password : String, onSuccess : () -> Unit, onFail : () -> Unit) {
         viewModelScope.launch {
@@ -54,7 +56,7 @@ class AuthViewModel : ViewModel() {
 
     fun getTop20Market() {
         viewModelScope.launch(Dispatchers.IO) {
-            val res = marketRepository.getTopFavoriteMarkets(lastPageIndex = 2, pageSize = 20)
+            val res = marketRepository.getTopFavoriteMarkets(memberId = member.value!!.studentId, pageSize = 20)
             if(res.isSuccessful) {
                 withContext(Dispatchers.Main){
                     top20Market.value = res.body()!!.response.markets
@@ -67,9 +69,7 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val res = marketRepository.getLatestCoupon(
                 memberId = member.value!!.studentId,
-                lastPageIndex = null,
-                lastCreateAt = null,
-                pageSize = null
+                count = 10
             )
             if(res.isSuccessful) {
                 withContext(Dispatchers.Main) {

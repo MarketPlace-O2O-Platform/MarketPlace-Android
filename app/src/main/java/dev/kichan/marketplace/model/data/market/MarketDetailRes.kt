@@ -11,5 +11,5 @@ data class MarketDetailRes(
     val closedDay: String,
     val phoneNumber: String,
     val address: String,
-    @SerializedName("imageResDtoList") val images: List<ImageRes>
+    @SerializedName("imageResList") val images: List<ImageRes>
 )

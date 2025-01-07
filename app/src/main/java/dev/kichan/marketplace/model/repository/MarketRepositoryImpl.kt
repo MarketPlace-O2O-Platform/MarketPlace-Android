@@ -22,10 +22,10 @@ class MarketRepositoryImpl : MarketRepository {
         marketDataRepository.getMarketDetail(marketId = marketId)
 
     override suspend fun getTopFavoriteMarkets(
-        lastPageIndex: Int,
+        memberId: Int,
         pageSize: Int
     ): Response<ResponseTemplate<MarketPageRes>> = marketDataRepository.getTopFavoriteMarkets(
-        lastPageIndex = lastPageIndex,
+        memberId = memberId,
         pageSize = pageSize
     )
 
@@ -35,19 +35,14 @@ class MarketRepositoryImpl : MarketRepository {
         pageSize: Int
     ): Response<ResponseTemplate<MarketPageRes>> = marketDataRepository.getMyFavoriteMarkets(
         memberId = memberId,
-        lastPageIndex = lastPageIndex,
         pageSize = pageSize
     )
 
     override suspend fun getLatestCoupon(
         memberId: Int,
-        lastPageIndex: Int?,
-        lastCreateAt: String?,
-        pageSize: Int?
-    ) : Response<ResponseTemplate<MarketPageRes>> = marketDataRepository.getMyLatestCoupon(
+        count: Int,
+    ) : Response<ResponseTemplate<MarketPageRes>> = marketDataRepository.getTopLatestCoupon(
         memberId = memberId,
-        lastPageIndex = lastPageIndex,
-        lastCreatedAt = lastCreateAt,
-        pageSize = pageSize
+        count = count
     )
 }

@@ -29,8 +29,8 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             id = id,
             password = password,
             onSuccess = {
-                navController.navigate(Page.Main.name)
                 navController.popBackStack()
+                navController.navigate(Page.Main.name)
             },
             onFail = {
             }

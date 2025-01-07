@@ -11,6 +11,7 @@ import retrofit2.http.Query
 interface MarketService {
     @GET("/api/markets")
     suspend fun getMarkets(
+        @Query("memberId") memberId: Int,
         @Query("lastPageIndex") lastPageIndex: Int,
         @Query("category") category: String,
         @Query("pageSize") pageSize: Int,
@@ -21,25 +22,28 @@ interface MarketService {
         @Path("marketId") marketId: Int
     ): Response<ResponseTemplate<MarketDetailRes>>
 
+    @GET("/api/markets/top-latest-coupons")
+    suspend fun getTopLatestCoupons(
+        @Query("memberId") memberId: Int,
+        @Query("count") pageSize: Int
+    ): Response<ResponseTemplate<MarketPageRes>>
+
     @GET("/api/markets/top-favorite-markets")
     suspend fun getTopFavoriteMarkets(
-        @Query("lastPageIndex") lastPageIndex: Int,
-        @Query("pageSize") pageSize: Int
+        @Query("memberId") memberId: Int,
+        @Query("count") pageSize: Int
     ): Response<ResponseTemplate<MarketPageRes>>
 
     @GET("/api/markets/my-favorite-markets")
     suspend fun getMyFavoriteMarkets(
         @Query("memberId") memberId: Int,
-        @Query("lastPageIndex") lastPageIndex: Int,
-        @Query("pageSize") pageSize: Int
+        @Query("pageSize") pageSize: Int?
     ): Response<ResponseTemplate<MarketPageRes>>
 
-    @GET("/api/markets/latest-coupon")
-    suspend fun getMyLatestCoupon(
+    @GET("/api/markets/top-latest-coupon")
+    suspend fun getTopLatestCoupon(
         @Query("memberId") memberId: Int,
-        @Query("lastPageIndex") lastPageIndex: Int? = null,
-        @Query("lastCreatedAt") lastCreatedAt: String? = null,
-        @Query("pageSize") pageSize: Int? = null
+        @Query("count") count: Int
     ) : Response<ResponseTemplate<MarketPageRes>>
 }
 

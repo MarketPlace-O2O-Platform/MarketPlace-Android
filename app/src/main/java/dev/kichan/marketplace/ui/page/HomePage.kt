@@ -13,6 +13,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,11 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 fun HomePage(navController: NavController, viewModel: AuthViewModel) {
     val top20 = viewModel.top20Market.observeAsState()
     val newEvent = viewModel.newEvent.observeAsState()
+
+    LaunchedEffect(Unit) {
+//        viewModel.getTop20Market()
+        viewModel.getNewEvent()
+    }
 
     Scaffold(
         topBar = {
@@ -82,14 +88,14 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                 }
 
                 // 최신 제휴 이벤트
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    EventList(
-                        navController = navController,
-                        title = "이번달 신규 이벤트",
-                        eventList = newEvent.value ?: listOf()
-                    )
-                }
+//                item {
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    EventList(
+//                        navController = navController,
+//                        title = "이번달 신규 이벤트",
+//                        eventList = newEvent.value ?: listOf()
+//                    )
+//                }
 
                 item {
                     Spacer(modifier = Modifier.height(32.dp))
