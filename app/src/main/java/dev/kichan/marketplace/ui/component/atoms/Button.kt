@@ -5,10 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,15 +34,16 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun Button(
-    onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = Color.White,
     backgroundColor: Color = Gray_8,
-    shape: Shape = RoundedCornerShape(4.dp),
+    shape: Shape = RoundedCornerShape(8.dp),
     border: BorderStroke? = null,
     isDisable: Boolean = false,
-    icon : ImageVector? = null
+    icon: ImageVector? = null,
+    contentPadding: PaddingValues = PaddingValues(vertical = 10.dp, horizontal = 12.dp),
+    onClick: () -> Unit,
 ) {
     val bgc = animateColorAsState(
         targetValue = if (!isDisable) {
@@ -52,17 +55,17 @@ fun Button(
 
     Row(
         modifier
-            .clickable(!isDisable) { onClick() }
             .let { if (border != null) it.border(border, shape) else it }
             .background(
                 color = bgc.value, shape = shape
             )
-            .padding(horizontal = 12.dp, vertical = 15.dp),
+            .clickable(!isDisable) { onClick() }
+            .padding(contentPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        if(icon != null) {
-            Icon(imageVector = icon, contentDescription = null, tint = textColor)
+        if (icon != null) {
+            Icon(imageVector = icon, contentDescription = null, tint = textColor, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(4.dp))
         }
         Text(
@@ -70,8 +73,8 @@ fun Button(
             style = TextStyle(
                 color = textColor,
                 fontFamily = PretendardFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                fontWeight = FontWeight(500),
+                fontSize = 12.sp,
             )
         )
     }

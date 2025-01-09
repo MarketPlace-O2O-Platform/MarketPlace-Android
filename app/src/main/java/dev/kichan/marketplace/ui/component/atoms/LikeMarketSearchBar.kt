@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -50,7 +51,7 @@ fun LikeMarketSearchBar(modifier: Modifier = Modifier, key: String, onChange: (S
             }
             .padding(
                 vertical = 10.dp,
-                horizontal = 22.dp
+                horizontal = PAGE_HORIZONTAL_PADDING
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {

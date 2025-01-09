@@ -39,7 +39,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 @Composable
 fun MyPage(navController: NavController) {
     var selectedCategory by remember {
-        mutableStateOf(LargeCategory.All)
+        mutableStateOf(mutableListOf(LargeCategory.All))
     }
 
     Scaffold(
@@ -127,8 +127,8 @@ fun MyPage(navController: NavController) {
 
             // 나만의 큐레이션과 카테고리 선택 버튼
             CategorySelector(
-                selectedCategory = selectedCategory,
-                onChange = { selectedCategory = it }
+                selectedCategorys = selectedCategory,
+                onChange = { }
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -192,7 +192,7 @@ fun sampleEvents() = listOf(
 private fun CategorySelectorPreview() {
     MarketPlaceTheme {
         CategorySelector(
-            selectedCategory = LargeCategory.All,
+            selectedCategorys = listOf(LargeCategory.All),
             {}
         )
     }
