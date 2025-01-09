@@ -276,8 +276,8 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             // Pw Input
             Input(
-                value = inputId,
-                onChange = { inputId = it },
+                value = inputPassword,
+                onChange = { inputPassword = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "비밀번호를 입력해주세요"
 
