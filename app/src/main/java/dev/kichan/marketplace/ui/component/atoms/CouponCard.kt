@@ -96,37 +96,40 @@ fun CouponCard(onClick: () -> Unit, status: String) {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // 상태에 따른 텍스트 및 색상 변경
-        val backgroundColor = when (status) {
-            "사용 가능" -> Color.Black
-            "사용 완료" -> Color(0xFF7D7D7D) // 연회색
-            "기간 만료" -> Color(0xFF7D7D7D) // 연회색
-            else -> Color.White
-        }
-
-        val textColor = when (status) {
-            "사용 가능" -> Color.White
-            "사용 완료" -> Color.White // 흰색
-            "기간 만료" -> Color.White // 흰색
-            else -> Color.Black
-        }
-
+        // 상태에 따른 텍스트 및 색상 변경 (이미지 위에 텍스트)
         Box(
             modifier = Modifier
                 .clickable { onClick() }
                 .width(80.dp)
                 .fillMaxHeight()
-                .background(color = backgroundColor, shape = RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = status,
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = textColor
-                )
+            Image(
+                painter = painterResource(id = R.drawable.subtract), // Background image
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                val textColor = when (status) {
+                    "사용 가능" -> Color.White
+                    "사용 완료" -> Color.White // 흰색
+                    "기간 만료" -> Color.White // 흰색
+                    else -> Color.Black
+                }
+
+                Text(
+                    text = status,
+                    style = TextStyle(
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = textColor
+                    )
+                )
+            }
         }
     }
 }
