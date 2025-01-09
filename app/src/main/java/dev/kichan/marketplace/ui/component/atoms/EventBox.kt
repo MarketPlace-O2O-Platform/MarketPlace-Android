@@ -38,7 +38,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 @Composable
 fun EventBox(
     modifier: Modifier = Modifier,
-    event: Market
+    event: Event
 ) {
     var isBookMark by remember { mutableStateOf(false) }
 
@@ -74,14 +74,14 @@ fun EventBox(
                 .padding(12.dp)
         ) {
             Text(
-                text = event.name,
+                text = event.eventName,
                 color = Color(0xffC7C7C7),
                 fontFamily = PretendardFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
             )
             Text(
-                text = event.name,
+                text = event.eventName,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -94,15 +94,12 @@ fun EventBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
-    val market = Market(
-        id = 2943,
-        name = "Ashley Underwood",
-        description = "sanctus",
-        operationHours = "mi",
-        closedDays = "posse",
-        phoneNumber = "(928) 333-0396",
-        address = "tamquam",
-        thumbnail = "contentiones"
+    val market = Event(
+        marketName = "Bette Sheppard",
+        eventName = "Bernard Bullock",
+        defaultPrice = 4136,
+        eventPrice = 4187,
+        imageRes = 4367
     )
 
     EventBox(

@@ -30,7 +30,7 @@ fun EventList(
     modifier: Modifier = Modifier,
     navController: NavController,
     title: String,
-    eventList: List<Market>
+    eventList: List<Event>
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
