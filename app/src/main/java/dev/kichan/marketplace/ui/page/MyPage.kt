@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MyPageCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun MyPage(navController: NavController, viewModel : AuthViewModel) {
@@ -72,8 +74,9 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(21.dp))
 
+            /* 없어진듯
             // 상단 로그아웃 버튼
             Row(
                 Modifier
@@ -93,7 +96,7 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(imageVector = Icons.Outlined.Info, contentDescription = "로그아웃")
             }
-
+            */
             Spacer(modifier = Modifier.height(4.dp))
 
             // 아이콘과 사용자 이름, 쿠폰함 버튼
@@ -114,7 +117,17 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
                             .background(Color(0xFFF9F9F9), shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(text = "${member.value?.studentId}님", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "${member.value?.studentId}님", fontSize = 16.sp, lineHeight = 22.4.sp, fontWeight = FontWeight.Bold, fontFamily = PretendardFamily)
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    // Dropdown Icon
+                    Icon(
+                        painter = painterResource(id = R.drawable.down),
+                        contentDescription = "드롭다운",
+                        tint = Color(0xFF838A94),
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
 
                 // 받은 쿠폰함 버튼
@@ -139,11 +152,11 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
             // 상단 실선
             Divider(
                 color = Color(0xFFF4F4F4),
-                thickness = 10.dp,
+                thickness = 8.dp,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // 나만의 큐레이션과 카테고리 선택 버튼
             CategorySelector(

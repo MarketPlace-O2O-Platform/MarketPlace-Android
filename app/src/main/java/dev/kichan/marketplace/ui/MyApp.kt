@@ -1,7 +1,6 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui
 
 import LargeCategory
-import LoginPage
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.CategoryEventListPage
+import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.screen.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
