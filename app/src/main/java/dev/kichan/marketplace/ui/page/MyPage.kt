@@ -45,7 +45,7 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
     val myCuration = viewModel.myCuration.observeAsState()
 
     var selectedCategory by remember {
-        mutableStateOf(LargeCategory.All)
+        mutableStateOf(mutableListOf(LargeCategory.All))
     }
 
     val onLogout = {
@@ -147,8 +147,8 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
 
             // 나만의 큐레이션과 카테고리 선택 버튼
             CategorySelector(
-                selectedCategory = selectedCategory,
-                onChange = { selectedCategory = it }
+                selectedCategorys = selectedCategory,
+                onChange = { }
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -187,7 +187,7 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
 private fun CategorySelectorPreview() {
     MarketPlaceTheme {
         CategorySelector(
-            selectedCategory = LargeCategory.All,
+            selectedCategorys = listOf(LargeCategory.All),
             {}
         )
     }

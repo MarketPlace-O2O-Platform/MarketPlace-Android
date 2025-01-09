@@ -5,12 +5,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -30,7 +32,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
 
 @Composable
-fun RequestCard(
+fun RequestSmallCard(
     //todo: 나중에 더 좋은 이름으로 변경
     modifier: Modifier = Modifier,
     state: LikeRequest,
@@ -53,7 +55,7 @@ fun RequestCard(
             modifier = Modifier.padding(horizontal = 4.dp)
         ) {
             Text(
-                text = "‘${state.marketName}’ 할인을 받고 싶어요!",
+                text = state.marketName,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = PretendardFamily,
@@ -79,7 +81,7 @@ fun RequestCard(
                         )
                     } else {
                         val current = LocalDate.now()
-                        Text(text = "공감 마감까지 None일 남음", fontSize = 12.sp, color = Color.Gray)
+                        Text(text = "공감 마감까지 1일 남음", fontSize = 12.sp, color = Color.Gray)
                     }
                 }
 
@@ -87,32 +89,29 @@ fun RequestCard(
                     Text(text = state.likeCount.toString())
                     Spacer(modifier = Modifier.width(4.dp))
                     //todo: 아이콘 변경
-                    Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like")
+                    Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like", Modifier.size(16.dp))
                 }
             }
 
-            Spacer(modifier = Modifier.height(7.dp))
-
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Color(0xffF3F0F0))
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             val buttonModifier = Modifier.fillMaxWidth()
 
             if (state.isRequestDone) {
-                Button(text = "제휴 컨텍중", isDisable = true, modifier = buttonModifier) {
+                Button(
+                    text = "제휴 컨텍중",
+                    isDisable = true,
+                    modifier = buttonModifier,
+                    contentPadding = PaddingValues(vertical = 10.dp)
+                ) {
 
                 }
             } else {
                 Button(
                     text = "공감 하기",
                     icon = Icons.Default.FavoriteBorder,
-                    modifier = buttonModifier
+                    modifier = buttonModifier,
+                    contentPadding = PaddingValues(vertical = 10.dp)
                 ) {
 
                 }
