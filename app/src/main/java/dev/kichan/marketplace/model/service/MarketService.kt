@@ -1,11 +1,12 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service
 
-import androidx.lifecycle.ReportFragment
 import dev.kichan.marketplace.model.data.ResponseTemplate
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.PageNationTemplate
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.TopFavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopClosingCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.FavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MyFavoriteMarketRes
@@ -42,7 +43,7 @@ interface MarketService {
 
     @GET("/api/markets/top-closing-coupon")
     suspend fun getTopClosingCoupon(
-        @Query("count") count: Int?
+        @Query("count") pageSize: Int?
     ) : Response<ResponseTemplate<List<TopClosingCouponRes>>>
 
     @GET("/api/markets/my-favorite")
@@ -58,14 +59,18 @@ interface MarketService {
         @Query("address") address: String,
         @Query("category") category: String,
         @Query("pageSize") pageSize: Int?,
-    ) : ResponseTemplate<PageNationTemplate<MarketRes>>
+    ) : Response<ResponseTemplate<PageNationTemplate<MarketRes>>>
 
     @GET("/api/markets/latest-coupon")
     suspend fun getLatestCoupon(
         @Query("memberId") memberId: Int,
         @Query("pageSize") pageSize: Int?,
-    ) : ResponseTemplate<PageNationTemplate<MarketRes>>
+    ) : Response<ResponseTemplate<PageNationTemplate<LatestCouponRes>>>
+    // todo : 이거 res dto 서버한테 물어보기
 
     @GET("/api/markets/favorite")
-    suspend fun getMarketsByFavorite()
+    suspend fun getMarketsByFavorite(
+        @Query("memberId") memberId: Int,
+        @Query("pageSize") pageSize: Int?,
+    ) : Response<ResponseTemplate<PageNationTemplate<FavoriteMarketRes>>>
 }

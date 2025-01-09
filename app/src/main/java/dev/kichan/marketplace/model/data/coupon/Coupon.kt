@@ -18,8 +18,5 @@ data class LatestCouponRes(
     val marketId: Long,
     @SerializedName("couponName") val name: String,
     val description: String?,
-    @SerializedName("deadLine") val deadline: String,
-    val stock: Int,
-    @SerializedName("hidden") val isHidden: Boolean,
     val createdAt: String,
 )
