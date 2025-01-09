@@ -3,6 +3,7 @@ package dev.kichan.marketplace.ui.page
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,6 +39,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
 
     val onLogin: (String, String) -> Unit = { id, password ->
         authViewModel.login(
@@ -137,7 +139,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             )
             Spacer(modifier = Modifier.height(4.dp))
 
-            // 셀렉터 박스
+            // Dropdown Selector
             Box(
                 modifier = Modifier
                     .border(
@@ -145,17 +147,19 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                         color = Color(0xFFE0E0E0),
                         shape = RoundedCornerShape(size = 2.dp)
                     )
-                    .width(335.dp)
+                    .fillMaxWidth()
                     .height(48.dp)
                     .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 2.dp))
-                    .padding(0.dp)
+                    .clickable { /* Logic for dropdown expansion */ }
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(0.dp)
                 ) {
-                    // 텍스트
+                    // Placeholder Text
                     Text(
                         text = "학교를 선택해주세요",
                         style = TextStyle(
@@ -163,19 +167,58 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                             lineHeight = 20.8.sp,
                             fontFamily = PretendardFamily,
                             fontWeight = FontWeight(400),
-                            color = Color(0xFF838A94),
+                            color = Color(0xFF838A94)
                         )
                     )
 
-                    // 드롭다운 아이콘
+                    // Dropdown Icon
                     Icon(
-                        painter = painterResource(id = R.drawable.down), // 드롭다운 아이콘
+                        painter = painterResource(id = R.drawable.down),
                         contentDescription = "드롭다운",
                         tint = Color(0xFF838A94),
                         modifier = Modifier.size(16.dp)
                     )
                 }
+
+
+                // Logic for Dropdown Menu (Placeholder)
+                // Add DropdownMenu here if needed
+//                DropdownMenu(
+//                    expanded = expanded,
+//                    onDismissRequest = { expanded = false },
+//                    modifier = Modifier
+//                        .border(
+//                            width = 1.dp,
+//                            color = Color(0xFFE0E0E0),
+//                            shape = RoundedCornerShape(size = 2.dp)
+//                        )
+//                        .width(335.dp)
+//                        .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 2.dp))
+//                ) {
+//                    val universities = listOf("인천대학교", "인하대학교", "연세대학교")
+//                    universities.forEach { university ->
+//                        DropdownMenuItem(
+//                            onClick = {
+//                                expanded = false
+//                            },
+//                            text = {
+//                                Text(
+//                                    text = university,
+//                                    style = TextStyle(
+//                                        fontSize = 13.sp,
+//                                        lineHeight = 20.8.sp,
+//                                        fontFamily = PretendardFamily,
+//                                        fontWeight = FontWeight(400),
+//                                        color = Color(0xFF000000)
+//                                    )
+//                                )
+//                            }
+//                        )
+//                    }
+//                }
             }
+
+
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
@@ -245,17 +288,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             )
             Spacer(modifier = Modifier.height(4.dp))
 
-            /* Password Input
-            TextField(
-                value = inputPassword,
-                onValueChange = { inputPassword = it },
-                label = { Text("비밀번호를 입력해 주세요.") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-            )
-*/
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
@@ -296,19 +329,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                     )
                 }
             }
-/*
-            // Login Button
-            Button(
-                onClick = { onLogin(inputId, inputPassword) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                shape = RoundedCornerShape(4.dp)
-            ) {
-                Text(text = "로그인", style = TextStyle(fontSize = 16.sp, color = Color.White))
-            }
-*/
+
             Spacer(modifier = Modifier.height(8.dp))
 
             // Checkboxes
@@ -330,6 +351,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
