@@ -1,7 +1,10 @@
 package dev.kichan.marketplace.ui.page
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -12,11 +15,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
+
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +30,9 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
+import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
@@ -51,50 +59,193 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                 .padding(it)
                 .fillMaxSize()
                 .background(color = Color.White)
-                .padding(16.dp),
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(100.dp))
 
-            // Title
-            Text(
-                text = "쿠러미",
-                style = TextStyle(
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+            // Top Row with Image
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo), // Replace with your XML drawable resource
+                    contentDescription = "App Logo",
+                    modifier = Modifier
+                        .padding(0.dp)
+                        .width(124.dp)
+                        .height(40.dp)
+                )
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Description
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "문구문구문구문구문구문구문구문구문구문구문구",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 22.4.sp,
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFF333333),
+                    ),
+                    modifier = Modifier
+
+                        .fillMaxWidth()
+                        .padding(1.dp)
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "문구문구문구문구문구문구문구문구문구",
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        lineHeight = 19.2.sp,
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF333333),
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(1.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(46.79.dp))
+
             Text(
-                text = "문구문구문구문구문구문구문구문구문구문구\n문구문구문구문구문구문구문구문구문구문구",
+                text = "학교",
+
+                // Body/Regular 14
                 style = TextStyle(
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.Center
+                    lineHeight = 22.4.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF333333),
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // 셀렉터 박스
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFFE0E0E0),
+                        shape = RoundedCornerShape(size = 2.dp)
+                    )
+                    .width(335.dp)
+                    .height(48.dp)
+                    .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 2.dp))
+                    .padding(0.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    // 텍스트
+                    Text(
+                        text = "학교를 선택해주세요",
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            lineHeight = 20.8.sp,
+                            fontFamily = PretendardFamily,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFF838A94),
+                        )
+                    )
+
+                    // 드롭다운 아이콘
+                    Icon(
+                        painter = painterResource(id = R.drawable.down), // 드롭다운 아이콘
+                        contentDescription = "드롭다운",
+                        tint = Color(0xFF838A94),
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "학번(ID)",
+
+                // Body/Regular 14
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 22.4.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF333333),
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             // ID Input
-            TextField(
+            Input(
+                value = inputId,
+                onChange = { inputId = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = "학번을 입력해주세요"
+
+                )
+            /*TextField(
                 value = inputId,
                 onValueChange = { inputId = it },
-                label = { Text("아이디를 입력해 주세요.") },
+                label = { Text("학번을 입력해 주세요.") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+            )*/
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+
+            Text(
+                text = "비밀번호",
+
+                // Body/Regular 14
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 22.4.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF333333),
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-            // Password Input
+            // Pw Input
+            Input(
+                value = inputId,
+                onChange = { inputId = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = "비밀번호를 입력해주세요"
+
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+
+            /* Password Input
             TextField(
                 value = inputPassword,
                 onValueChange = { inputPassword = it },
@@ -104,20 +255,61 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
             )
+*/
+            Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.",
 
+                // Body/Regular 14
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    lineHeight = 19.2.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF333333),
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp)
+            )
+
+            Spacer(modifier = Modifier.height(17.dp))
+
+            // Login Button
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .width(335.dp)
+                    .height(38.dp)
+                    .background(color = Color(0xFF303030), shape = RoundedCornerShape(size = 4.dp))
+            ) {
+                Button(
+                    onClick = { onLogin(inputId, inputPassword) },
+                    modifier = Modifier.fillMaxSize(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "로그인",
+                        style = TextStyle(fontSize = 14.sp, color = Color.White)
+                    )
+                }
+            }
+/*
             // Login Button
             Button(
                 onClick = { onLogin(inputId, inputPassword) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                shape = RoundedCornerShape(4.dp)
             ) {
                 Text(text = "로그인", style = TextStyle(fontSize = 16.sp, color = Color.White))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
+*/
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Checkboxes
             Row(
