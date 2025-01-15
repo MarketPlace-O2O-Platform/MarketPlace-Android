@@ -175,45 +175,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                         modifier = Modifier.size(24.dp)
                     )
                 }
-
-
-                // Logic for Dropdown Menu (Placeholder)
-                // Add DropdownMenu here if needed
-//                DropdownMenu(
-//                    expanded = expanded,
-//                    onDismissRequest = { expanded = false },
-//                    modifier = Modifier
-//                        .border(
-//                            width = 1.dp,
-//                            color = Color(0xFFE0E0E0),
-//                            shape = RoundedCornerShape(size = 2.dp)
-//                        )
-//                        .width(335.dp)
-//                        .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 2.dp))
-//                ) {
-//                    val universities = listOf("인천대학교", "인하대학교", "연세대학교")
-//                    universities.forEach { university ->
-//                        DropdownMenuItem(
-//                            onClick = {
-//                                expanded = false
-//                            },
-//                            text = {
-//                                Text(
-//                                    text = university,
-//                                    style = TextStyle(
-//                                        fontSize = 13.sp,
-//                                        lineHeight = 20.8.sp,
-//                                        fontFamily = PretendardFamily,
-//                                        fontWeight = FontWeight(400),
-//                                        color = Color(0xFF000000)
-//                                    )
-//                                )
-//                            }
-//                        )
-//                    }
-//                }
             }
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -233,28 +195,21 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                     .padding(0.dp)
             )
 
-
             Spacer(modifier = Modifier.height(4.dp))
 
             // ID Input
             Input(
                 value = inputId,
-                onChange = { inputId = it },
+                onChange = {
+                    if (it.all { char -> char.isDigit() }) { // 숫자인지 확인
+                        inputId = it
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = "학번을 입력해주세요"
-
-                )
-            /*TextField(
-                value = inputId,
-                onValueChange = { inputId = it },
-                label = { Text("학번을 입력해 주세요.") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-            )*/
+                placeholder = "학번을 입력해주세요(숫자만)"
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
-
 
             Text(
                 text = "비밀번호",
@@ -280,10 +235,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                 onChange = { inputPassword = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "비밀번호를 입력해주세요"
-
             )
-            Spacer(modifier = Modifier.height(4.dp))
-
 
             Spacer(modifier = Modifier.height(8.dp))
 
