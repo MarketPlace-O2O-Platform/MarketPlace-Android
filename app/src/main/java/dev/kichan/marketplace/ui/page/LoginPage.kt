@@ -21,6 +21,7 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.component.atoms.PasswordInput
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import kotlinx.coroutines.delay
@@ -50,8 +51,8 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                 id = id,
                 password = password,
                 onSuccess = {
-                    navController.navigate(Page.Main.name)
                     navController.popBackStack()
+                    navController.navigate(Page.Main.name)
                 },
                 onFail = {
                     showError = true
@@ -62,9 +63,10 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
     if (showError) {
         LaunchedEffect(Unit) {
-            delay(5000)
-            message = "학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다."
+            message = "다시 입력해주세요."
+
             showError = false
+            delay(5000)
         }
     }
 
@@ -132,6 +134,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Spacer(modifier = Modifier.height(46.79.dp))
 
+
             // 학교 선택 드롭다운
             Text(
                 text = "학교",
@@ -161,13 +164,19 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .menuAnchor(), // 드롭다운 메뉴와 연결
-                    label = { Text("학교") },
+                    textStyle = TextStyle( // 수정됨: 텍스트 스타일 정의
+                        fontSize = 13.sp,
+                        lineHeight = 20.8.sp,
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFF838A94)
+                    ),
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Gray
+                        focusedBorderColor = Color(0xFF333333), // 수정됨: 포커스 시 테두리 색상 변경
+                        unfocusedBorderColor = Color(0xFFAAAAAA) // 수정됨: 비포커스 시 테두리 색상 변경
                     )
                 )
 
@@ -237,7 +246,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             Spacer(modifier = Modifier.height(4.dp))
 
             // Pw Input
-            Input(
+            PasswordInput(
                 value = inputPassword,
                 onChange = { inputPassword = it },
                 modifier = Modifier.fillMaxWidth(),
