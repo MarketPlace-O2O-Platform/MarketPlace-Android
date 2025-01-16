@@ -3,12 +3,14 @@ package dev.kichan.marketplace.ui.component.dev.kichan.marketplace
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,6 +55,7 @@ class AuthViewModel : ViewModel() {
     val top20Coupon = MutableLiveData<List<TopLatestCoupon>>()
     val newEvent = MutableLiveData<List<TopLatestCoupon>>()
     val myCuration = MutableLiveData<List<Market>>()
+    val detailMarket = MutableLiveData<MarketDetailRes>()
 
     fun getTop20Market() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -94,5 +97,18 @@ class AuthViewModel : ViewModel() {
 //                }
 //            }
 //        }
+    }
+
+    fun getDetailMarket(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = marketRepository.getMarketDetail(
+                marketId = id
+            )
+            if(res.isSuccessful) {
+                withContext(Dispatchers.Main) {
+                    detailMarket.value = res.body()!!.response
+                }
+            }
+        }
     }
 }

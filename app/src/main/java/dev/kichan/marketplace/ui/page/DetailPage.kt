@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +27,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 
 @Composable
 fun ImageSlider() {
@@ -53,13 +58,13 @@ fun ImageSlider() {
 }
 
 @Composable
-fun DetailContent() {
+fun DetailContent(data: MarketDetailRes) {
     var isBookMark by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = "콜드케이스 트리플 인하대점",
+                text = data.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 modifier = Modifier.weight(1f)
@@ -76,7 +81,7 @@ fun DetailContent() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "믿고 즐기는 인하대 방탈출 맛집! 맛집! 맛집!\n스릴 넘치는 테마부터 낭만적인 꽃길 걷을 수 있는 곳!",
+            text = data.description,
             color = Color.Gray,
             fontSize = 14.sp
         )
@@ -119,79 +124,93 @@ fun KakaoMapSearchBox() {
 }
 
 @Composable
-fun DetailPage() {
-    Scaffold {
-        Column(
-            modifier = Modifier.padding(it).verticalScroll(rememberScrollState())
-        ) {
-            ImageSlider()
-            DetailContent()
+fun DetailPage(
+    navController: NavController,
+    viewModel: AuthViewModel,
+    id: String
+) {
+    val data = viewModel.detailMarket.observeAsState()
 
-            Box(
+    LaunchedEffect(Unit) {
+        viewModel.getDetailMarket(id)
+    }
+
+    if(data.value != null) {
+        Scaffold {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(5.dp)
-                    .background(Color.LightGray)
-            )
+                    .padding(it)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                ImageSlider()
+                DetailContent(data.value!!)
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(5.dp)
+                        .background(Color.LightGray)
+                )
 
-            Text(
-                text = "이벤트 쿠폰",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.detailcoupon),
-                contentDescription = "Detail Coupon",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-
-            Text(
-                text = "쿠폰 부가 설명\n쿠폰 부가 설명",
-                color = Color.Gray,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(5.dp)
-                    .background(Color.LightGray)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "영업 정보",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                BusinessInfoRow("시간", "토일 11:00 - 23:00\n평일 12:00 - 23:00")
-                BusinessInfoRow("휴무일", "매주 화요일")
-                BusinessInfoRow("매장 전화번호", "032-000-0000")
-                BusinessInfoRow("주소", "인천시 연수구 송도동 174-3 송도 트리플 스트리트 B동 2층 202,203호\n테크노파크역 2번 출구 도보 13분")
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "                         주소 복사 | 길찾기",
-                    color = Color(0xFF4B4B4B),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(top = 8.dp)
+                    text = "이벤트 쿠폰",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
+
+                Image(
+                    painter = painterResource(id = R.drawable.detailcoupon),
+                    contentDescription = "Detail Coupon",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+
+                Text(
+                    text = "쿠폰 부가 설명\n쿠폰 부가 설명",
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(5.dp)
+                        .background(Color.LightGray)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "영업 정보",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    BusinessInfoRow("시간", data.value!!.operationHours)
+                    BusinessInfoRow("휴무일", "매주 화요일")
+                    BusinessInfoRow("매장 전화번호", "032-000-0000")
+                    BusinessInfoRow("주소", data.value!!.address)
+
+                    Text(
+                        text = "                         주소 복사 | 길찾기",
+                        color = Color(0xFF4B4B4B),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                KakaoMapSearchBox()
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            KakaoMapSearchBox()
         }
     }
 }
@@ -223,5 +242,5 @@ fun BusinessInfoRow(label: String, value: String) {
 @Preview(showBackground = true)
 @Composable
 fun DetailPagePreview() {
-    DetailPage()
+    DetailPage(rememberNavController(), AuthViewModel(), "asd")
 }

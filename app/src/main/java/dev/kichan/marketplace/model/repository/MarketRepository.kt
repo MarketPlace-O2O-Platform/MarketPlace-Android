@@ -26,7 +26,7 @@ interface MarketRepository {
     ): Response<ResponseTemplate<PageNationTemplate<MarketRes>>>
 
     suspend fun getMarketDetail(
-        marketId: Int
+        marketId: String
     ): Response<ResponseTemplate<MarketDetailRes>>
 
     suspend fun getTopLatestCoupons(

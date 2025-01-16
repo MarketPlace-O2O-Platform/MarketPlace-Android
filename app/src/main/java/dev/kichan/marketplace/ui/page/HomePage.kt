@@ -41,7 +41,6 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
 
     Scaffold(
         topBar = {
-//            LogoAppBar(logo = R.drawable.logo, Icons.Outlined.Notifications to {})
             HomeAppBar(logo = R.drawable.logo, {}, Icons.Outlined.Notifications to {})
         },
         bottomBar = {
@@ -78,6 +77,7 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                         navController = navController,
                         title = "Top 20 인기 페이지",
                         eventList = top20.value?.map { Event(
+                            id = it.id.toString(),
                             marketName = it.marketName,
                             eventName = it.name,
                             defaultPrice = 30000,
@@ -95,6 +95,7 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                         navController = navController,
                         title = "이번달 신규 이벤트",
                         eventList = newEvent.value?.map { Event(
+                            id = it.id.toString(),
                             marketName = it.marketName,
                             eventName = it.name,
                             defaultPrice = 30000,

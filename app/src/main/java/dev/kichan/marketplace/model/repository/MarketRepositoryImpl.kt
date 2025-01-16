@@ -26,7 +26,7 @@ class MarketRepositoryImpl : MarketRepository {
     ): Response<ResponseTemplate<PageNationTemplate<MarketRes>>> =
         marketService.getMarkets(memberId, lastPageIndex, category, pageSize)
 
-    override suspend fun getMarketDetail(marketId: Int): Response<ResponseTemplate<MarketDetailRes>> {
+    override suspend fun getMarketDetail(marketId: String): Response<ResponseTemplate<MarketDetailRes>> {
         return marketService.getMarketDetail(marketId = marketId)
     }
 

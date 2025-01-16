@@ -26,7 +26,7 @@ interface MarketService {
 
     @GET("/api/markets/{marketId}")
     suspend fun getMarketDetail(
-        @Path("marketId") marketId: Int
+        @Path("marketId") marketId: String
     ): Response<ResponseTemplate<MarketDetailRes>>
 
     @GET("/api/markets/top-latest-coupon")

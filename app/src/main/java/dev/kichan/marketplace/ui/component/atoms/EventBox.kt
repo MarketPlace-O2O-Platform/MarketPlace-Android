@@ -106,7 +106,8 @@ fun PreviewEventBox() {
         eventName = "Bernard Bullock",
         defaultPrice = 4136,
         eventPrice = 4187,
-        imageRes = 4367
+        imageRes = 4367,
+        id = "sdas"
     )
 
     EventBox(
