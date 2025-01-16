@@ -2,22 +2,15 @@ package dev.kichan.marketplace.ui.page
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,25 +23,49 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
+    var showError by remember { mutableStateOf(false) }
+
+    // 드롭다운 상태 관리
     var expanded by remember { mutableStateOf(false) }
+    var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
+    val schools = listOf("학교 A", "학교 B", "학교 C") // 예시 학교 목록
 
     val onLogin: (String, String) -> Unit = { id, password ->
-        authViewModel.login(
-            id = id,
-            password = password,
-            onSuccess = {
-                navController.navigate(Page.Main.name)
-                navController.popBackStack()
-            },
-            onFail = {
-                // Handle login failure
-            }
-        )
+        if (selectedSchool == "학교를 선택해주세요") {
+            message = "학교를 선택해주세요."
+            showError = true
+        } else if (id.isBlank() || password.isBlank()) {
+            message = "ID와 비밀번호를 입력해주세요."
+            showError = true
+        } else {
+            authViewModel.login(
+                id = id,
+                password = password,
+                onSuccess = {
+                    navController.navigate(Page.Main.name)
+                    navController.popBackStack()
+                },
+                onFail = {
+                    showError = true
+                }
+            )
+        }
+    }
+
+    if (showError) {
+        LaunchedEffect(Unit) {
+            delay(5000)
+            message = "학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다."
+            showError = false
+        }
     }
 
     Scaffold {
@@ -62,13 +79,12 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
         ) {
             Spacer(modifier = Modifier.height(100.dp))
 
-            // Top Row with Image
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.logo), // Replace with your XML drawable resource
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = "App Logo",
                     modifier = Modifier
                         .padding(0.dp)
@@ -79,7 +95,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Description
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -94,7 +109,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                         color = Color(0xFF333333),
                     ),
                     modifier = Modifier
-
                         .fillMaxWidth()
                         .padding(1.dp)
                 )
@@ -118,10 +132,9 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Spacer(modifier = Modifier.height(46.79.dp))
 
+            // 학교 선택 드롭다운
             Text(
                 text = "학교",
-
-                // Body/Regular 14
                 style = TextStyle(
                     fontSize = 14.sp,
                     lineHeight = 22.4.sp,
@@ -133,47 +146,45 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                     .fillMaxWidth()
                     .padding(0.dp)
             )
+
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Dropdown Selector
-            Box(
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = Color(0xFFE0E0E0),
-                        shape = RoundedCornerShape(size = 2.dp)
-                    )
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 2.dp))
-                    .clickable { /* Logic for dropdown expansion */ }
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded } // 드롭다운 상태 토글
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                // 드롭다운 트리거
+                OutlinedTextField(
+                    value = selectedSchool,
+                    onValueChange = {},
+                    readOnly = true,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(0.dp)
-                ) {
-                    // Placeholder Text
-                    Text(
-                        text = "학교를 선택해주세요",
-                        style = TextStyle(
-                            fontSize = 13.sp,
-                            lineHeight = 20.8.sp,
-                            fontFamily = PretendardFamily,
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF838A94)
-                        )
+                        .fillMaxWidth()
+                        .menuAnchor(), // 드롭다운 메뉴와 연결
+                    label = { Text("학교") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color.Black,
+                        unfocusedBorderColor = Color.Gray
                     )
+                )
 
-                    // Dropdown Icon
-                    Icon(
-                        painter = painterResource(id = R.drawable.down),
-                        contentDescription = "드롭다운",
-                        tint = Color(0xFF838A94),
-                        modifier = Modifier.size(24.dp)
-                    )
+                // 드롭다운 메뉴
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    schools.forEach { school ->
+                        DropdownMenuItem(
+                            text = { Text(text = school) },
+                            onClick = {
+                                selectedSchool = school
+                                expanded = false // 선택 후 드롭다운 닫기
+                            }
+                        )
+                    }
                 }
             }
 
@@ -181,8 +192,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Text(
                 text = "학번(ID)",
-
-                // Body/Regular 14
                 style = TextStyle(
                     fontSize = 14.sp,
                     lineHeight = 22.4.sp,
@@ -201,7 +210,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             Input(
                 value = inputId,
                 onChange = {
-                    if (it.all { char -> char.isDigit() }) { // 숫자인지 확인
+                    if (it.all { char -> char.isDigit() }) {
                         inputId = it
                     }
                 },
@@ -213,8 +222,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Text(
                 text = "비밀번호",
-
-                // Body/Regular 14
                 style = TextStyle(
                     fontSize = 14.sp,
                     lineHeight = 22.4.sp,
@@ -240,9 +247,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.",
-
-                // Body/Regular 14
+                text = message,
                 style = TextStyle(
                     fontSize = 12.sp,
                     lineHeight = 19.2.sp,
@@ -257,7 +262,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Spacer(modifier = Modifier.height(17.dp))
 
-            // Login Button
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -280,7 +284,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Checkboxes
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -300,14 +303,12 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun LoginPagePreview() {
     MarketPlaceTheme {
         LoginPage(
             navController = rememberNavController(),
-            authViewModel = AuthViewModel()
-        )
+            authViewModel = AuthViewModel() )// ViewModel 인스턴스를 직접 생성하는 것은 피하는 것이 좋습니다.
     }
 }
