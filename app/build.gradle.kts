@@ -68,12 +68,18 @@ android {
 dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.volley)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.appcompat)
     val mapsComposeVersion = "4.4.1"
     implementation("com.google.maps.android:maps-compose:$mapsComposeVersion")
     // Google Maps Compose utility library
     implementation("com.google.maps.android:maps-compose-utils:$mapsComposeVersion")
     // Google Maps Compose widgets library
     implementation("com.google.maps.android:maps-compose-widgets:$mapsComposeVersion")
+
+    implementation("io.coil-kt:coil-compose:2.2.2") // 최신 버전 확인 후 업데이트
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)

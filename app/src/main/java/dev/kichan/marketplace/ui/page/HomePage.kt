@@ -86,7 +86,8 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                             eventName = it.name,
                             defaultPrice = 30000,
                             eventPrice = 1000,
-                            imageRes = R.drawable.cafe
+                            imageRes = R.drawable.cafe,
+                            url = it.thumbnail
                         ) } ?: listOf()
                     )
                 }
@@ -102,7 +103,8 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                             eventName = it.name,
                             defaultPrice = 30000,
                             eventPrice = 1000,
-                            imageRes = R.drawable.cafe
+                            imageRes = R.drawable.cafe,
+                            url = it.thumbnail
                         ) } ?: listOf()
                     )
                 }

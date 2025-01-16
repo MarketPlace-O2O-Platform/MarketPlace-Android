@@ -7,6 +7,6 @@ data class Event(
     val eventName: String,
     val defaultPrice : Int,
     val eventPrice : Int,
-    @DrawableRes val imageRes: Int
-
+    @DrawableRes val imageRes: Int,
+    val url : String? = null,
 )

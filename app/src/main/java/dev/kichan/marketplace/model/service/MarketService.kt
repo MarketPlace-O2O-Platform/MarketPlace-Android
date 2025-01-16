@@ -29,7 +29,7 @@ interface MarketService {
         @Path("marketId") marketId: Int
     ): Response<ResponseTemplate<MarketDetailRes>>
 
-    @GET("/api/markets/top-latest-coupons")
+    @GET("/api/markets/top-latest-coupon")
     suspend fun getTopLatestCoupons(
         @Query("memberId") memberId: Int,
         @Query("count") pageSize: Int?

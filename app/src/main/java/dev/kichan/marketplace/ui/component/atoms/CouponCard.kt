@@ -2,7 +2,11 @@ package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,26 +21,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun CouponCard() {
+fun CouponCard(onClick: () -> Unit, status: String) {
     Row(
         modifier = Modifier
+            .border(width = 1.dp, color = Color(0xFFE0E0E0))
             .fillMaxWidth()
             .height(102.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-            .padding(horizontal = 0.dp) // 카드 내부 여백 추가
+            .background(color = Color.White, shape = CutCornerShape(8.dp))
     ) {
         // 왼쪽 이미지 (정사각형)
         Image(
-            painter = painterResource(id = R.drawable.cafe), // 적절한 이미지로 교체
+            painter = painterResource(id = R.drawable.hair), // 적절한 이미지로 교체
             contentDescription = "Coupon Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(102.dp) // 정사각형 크기
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(12.dp))
 
         // 텍스트 영역
         Column(
@@ -49,25 +54,41 @@ fun CouponCard() {
                 text = "70%",
                 style = TextStyle(
                     fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
+                    lineHeight = 42.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(600),
                     color = Color(0xFF121212)
                 )
             )
 
-            Text(
-                text = "붙임머리 할인",
-                style = TextStyle(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF121212)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "붙임머리 할인",
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        lineHeight = 24.sp,
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFF121212)
+                    )
                 )
-            )
+                Spacer(modifier = Modifier.width(4.dp)) // Optional: Adjust spacing between text and icon
+                Icon(
+                    painter = painterResource(id = R.drawable.right), // Replace with your actual icon resource
+                    contentDescription = "Icon Description", // Provide an appropriate description
+                    modifier = Modifier.size(16.dp) // Adjust the size as needed
+                )
+            }
 
             Text(
                 text = "2024년 10월 31일까지",
                 style = TextStyle(
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
+                    lineHeight = 22.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
                     color = Color(0xFF545454)
                 )
             )
@@ -75,22 +96,40 @@ fun CouponCard() {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // "사용가능" 영역
+        // 상태에 따른 텍스트 및 색상 변경 (이미지 위에 텍스트)
         Box(
             modifier = Modifier
+                .clickable { onClick() }
                 .width(80.dp)
                 .fillMaxHeight()
-                .background(color = Color(0xFF000000), shape = RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "사용가능",
-                style = TextStyle(
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+            Image(
+                painter = painterResource(id = R.drawable.subtract), // Background image
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                val textColor = when (status) {
+                    "사용 가능" -> Color.White
+                    "사용 완료" -> Color.White // 흰색
+                    "기간 만료" -> Color.White // 흰색
+                    else -> Color.Black
+                }
+
+                Text(
+                    text = status,
+                    style = TextStyle(
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = textColor
+                    )
+                )
+            }
         }
     }
 }
@@ -98,5 +137,11 @@ fun CouponCard() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewCouponCard() {
-    CouponCard()
+    Column {
+        CouponCard(onClick = {}, status = "사용 가능")
+        Spacer(modifier = Modifier.height(16.dp))
+        CouponCard(onClick = {}, status = "사용 완료")
+        Spacer(modifier = Modifier.height(16.dp))
+        CouponCard(onClick = {}, status = "기간 만료")
+    }
 }

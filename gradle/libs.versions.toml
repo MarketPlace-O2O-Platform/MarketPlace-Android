@@ -21,6 +21,8 @@ kakaoSdkAll = "2.20.5"
 secretsGradlePlugin = "2.0.1"
 playServicesLocation = "21.3.0"
 runtimeLivedata = "1.7.5"
+volley = "1.2.1"
+appcompat = "1.4.2"
 
 [libraries]
 accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistPagerIndicators" }
@@ -52,6 +54,8 @@ retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref 
 kakao-sdk-all = { module = "com.kakao.sdk:v2-all", version.ref = "kakaoSdkAll" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

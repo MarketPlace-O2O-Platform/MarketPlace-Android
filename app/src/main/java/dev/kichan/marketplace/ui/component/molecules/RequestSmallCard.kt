@@ -51,9 +51,7 @@ fun RequestSmallCard(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
-            modifier = Modifier.padding(horizontal = 4.dp)
-        ) {
+        Column {
             Text(
                 text = state.marketName,
                 fontSize = 16.sp,
@@ -102,7 +100,7 @@ fun RequestSmallCard(
                     text = "제휴 컨텍중",
                     isDisable = true,
                     modifier = buttonModifier,
-                    contentPadding = PaddingValues(vertical = 10.dp)
+//                    contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
 
                 }
@@ -111,7 +109,7 @@ fun RequestSmallCard(
                     text = "공감 하기",
                     icon = Icons.Default.FavoriteBorder,
                     modifier = buttonModifier,
-                    contentPadding = PaddingValues(vertical = 10.dp)
+//                    contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
 
                 }
