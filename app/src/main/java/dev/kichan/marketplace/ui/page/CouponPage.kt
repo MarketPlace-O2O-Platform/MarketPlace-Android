@@ -24,12 +24,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CouponCard
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun ReceivedCouponsScreen() {
+fun ReceivedCouponsScreen(navController: NavHostController) {
     var selectedTab by remember { mutableStateOf(0) } // 선택된 탭의 상태
     var isDialogShow by remember { mutableStateOf(false) } // 다이얼로그 상태
 
@@ -57,6 +60,10 @@ fun ReceivedCouponsScreen() {
                         .size(32.dp)
                         .padding(start = 8.dp)
                         .clickable {
+                            Log.d("tag","clicked")
+
+                            navController.navigate(Page.My.name)
+                            // navController.popBackStack()
                             // Navigate to the previous screen (MyPage)
                             // Example: navController.popBackStack()
                         }
@@ -225,11 +232,11 @@ fun ExpiredCouponsList(onCouponClick: () -> Unit) {
 
 @Composable
 fun CouponPage(navController: NavHostController) {
-    ReceivedCouponsScreen()
+    ReceivedCouponsScreen(navController)
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewReceivedCouponsScreen() {
-    ReceivedCouponsScreen()
+    ReceivedCouponsScreen(rememberNavController())
 }
