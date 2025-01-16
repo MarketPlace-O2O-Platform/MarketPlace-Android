@@ -85,12 +85,12 @@ class AuthViewModel : ViewModel() {
 //        viewModelScope.launch(Dispatchers.IO) {
 //            val res = marketRepository.getMyFavoriteMarkets(
 //                memberId = member.value!!.studentId,
-//                lastPageIndex = 0,
-//                pageSize = 5
+//                pageSize = 10,
+//                lastModifiedAt = null
 //            )
 //            if (res.isSuccessful) {
 //                withContext(Dispatchers.Main) {
-//                    myCuration.value = res.body()!!.response.markets
+//                    myCuration.value = res.body()!!.response.body
 //                }
 //            }
 //        }

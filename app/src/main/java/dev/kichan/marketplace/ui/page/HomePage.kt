@@ -22,12 +22,11 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LogoAppBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.SearchBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -42,7 +41,8 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
 
     Scaffold(
         topBar = {
-            LogoAppBar(logo = R.drawable.logo, Icons.Outlined.Notifications to {})
+//            LogoAppBar(logo = R.drawable.logo, Icons.Outlined.Notifications to {})
+            HomeAppBar(logo = R.drawable.logo, {}, Icons.Outlined.Notifications to {})
         },
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
@@ -53,10 +53,6 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                 .padding(innerPadding)
         ) {
             LazyColumn {
-                item {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    SearchBar(onSearch = {})
-                }
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
                     Spacer(modifier = Modifier.height(20.dp))

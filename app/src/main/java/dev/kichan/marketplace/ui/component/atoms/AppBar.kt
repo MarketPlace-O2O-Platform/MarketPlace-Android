@@ -1,11 +1,10 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.SearchBar
+import dev.kichan.marketplace.ui.component.molecules.SearchBar
 import dev.kichan.marketplace.ui.theme.Gray_9
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -76,7 +75,7 @@ fun LogoAppBar(@DrawableRes logo: Int, vararg icons: Pair<ImageVector, () -> Uni
 fun HomeAppBar(@DrawableRes logo: Int, onSearch : (String) -> Unit, vararg icons: Pair<ImageVector, () -> Unit>) {
     Row(
         modifier = appBarModifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(11.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -129,7 +128,7 @@ fun NavAppBarPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun HomeAppBarPreview() {
     MarketPlaceTheme {
