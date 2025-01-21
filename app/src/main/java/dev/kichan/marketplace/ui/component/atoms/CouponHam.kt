@@ -1,19 +1,22 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,12 +25,12 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun CouponCard(onClick: () -> Unit, status: String) {
+fun CouponUI() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
-            .clickable { onClick() }
+
     ) {
         // Background image (component.png)
         Image(
@@ -46,7 +49,7 @@ fun CouponCard(onClick: () -> Unit, status: String) {
                 painter = painterResource(id = R.drawable.hair), // hair.png
                 contentDescription = "Hair Image",
                 modifier = Modifier
-                    .size(118.dp) // Adjust size as needed
+                    .size(118.dp) // 크기를 적절히 조정
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -55,10 +58,10 @@ fun CouponCard(onClick: () -> Unit, status: String) {
             Column {
                 Text(
                     text = "70%",
-                    fontSize = 28.sp, // Text size
-                    lineHeight = 42.sp, // Line height
-                    fontFamily = PretendardFamily, // Pretendard font applied
-                    fontWeight = FontWeight(600), // FontWeight value 600 = SemiBold
+                    fontSize = 28.sp, // 글자 크기
+                    lineHeight = 42.sp, // 줄 높이
+                    fontFamily = PretendardFamily, // Pretendard 폰트 적용
+                    fontWeight = FontWeight(600), // FontWeight 값 600을 SemiBold로 변경
                     color = Color(0xFF121212),
                 )
                 Text(
@@ -68,6 +71,7 @@ fun CouponCard(onClick: () -> Unit, status: String) {
                     fontFamily = PretendardFamily,
                     fontWeight = FontWeight(600),
                     color = Color(0xFF121212),
+
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -84,7 +88,7 @@ fun CouponCard(onClick: () -> Unit, status: String) {
 
             // Right button or tag
             Text(
-                text = status,
+                text = "사용가능",
                 fontSize = 13.sp,
                 lineHeight = 30.sp,
                 fontFamily = PretendardFamily,
@@ -93,20 +97,16 @@ fun CouponCard(onClick: () -> Unit, status: String) {
                 letterSpacing = 0.26.sp,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(end = 18.dp)
+                    .padding(end = 20.dp)
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun PreviewCouponCard() {
-    Column {
-        CouponCard(onClick = {}, status = "사용 가능")
-        Spacer(modifier = Modifier.height(16.dp))
-        CouponCard(onClick = {}, status = "사용 완료")
-        Spacer(modifier = Modifier.height(16.dp))
-        CouponCard(onClick = {}, status = "기간 만료")
-    }
+fun PreviewCouponUI() {
+    CouponUI()
 }
+
+
