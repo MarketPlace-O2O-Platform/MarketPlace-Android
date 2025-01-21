@@ -53,21 +53,17 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
             ) {
                 // Icon to navigate back
                 Icon(
-                    painter = painterResource(R.drawable.left), // Replace with your actual back icon resource
+                    painter = painterResource(R.drawable.left), // 실제 뒤로 가기 아이콘 리소스
                     contentDescription = "Back Icon",
                     tint = Color(0xFF838A94),
                     modifier = Modifier
                         .size(32.dp)
                         .padding(start = 8.dp)
                         .clickable {
-                            Log.d("tag","clicked")
-
-                            navController.navigate(Page.My.name)
-                            // navController.popBackStack()
-                            // Navigate to the previous screen (MyPage)
-                            // Example: navController.popBackStack()
+                            navController.navigate(Page.My.name) // Page.My.name 경로로 이동
                         }
                 )
+
 
                 // Title Text
                 Text(
