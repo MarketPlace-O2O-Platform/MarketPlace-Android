@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace
 
 import LargeCategory
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,16 +39,19 @@ class AuthViewModel : ViewModel() {
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    onFail()
+                    onFail() // 일반 함수로 유지
                 }
             }
         }
     }
 
+
     fun logout(onSuccess: () -> Unit, onFail: () -> Unit) {
         member.value = null
-        onSuccess()
+        onSuccess() // 로그아웃 성공 시 호출
+        // 필요에 따라 실패 시 호출할 로직 추가
     }
+
 
     ///////////////////////  이벤트  /////////////////////////
 

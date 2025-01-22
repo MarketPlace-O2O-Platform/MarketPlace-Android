@@ -29,7 +29,7 @@ fun MyApp(authViewModel: AuthViewModel) {
 
     NavHost(
         navController = navController,
-        startDestination = Page.Main.name,
+        startDestination = Page.Login.name,
         enterTransition = {
             EnterTransition.None
         },

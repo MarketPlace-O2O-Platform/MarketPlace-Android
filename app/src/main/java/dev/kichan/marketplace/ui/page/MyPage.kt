@@ -56,7 +56,11 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
                 navController.popBackStack()
                 navController.navigate(Page.Login.name)
             },
-            onFail = {}
+            onFail = {
+                // 로그아웃 실패 시 처리 로직을 추가
+                // 예를 들어, 오류 메시지를 표시할 수 있습니다.
+                // 예: showError("로그아웃 실패")
+            }
         )
     }
 

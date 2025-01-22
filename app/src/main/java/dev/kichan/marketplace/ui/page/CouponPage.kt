@@ -24,12 +24,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CouponCard
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun ReceivedCouponsScreen() {
+fun ReceivedCouponsScreen(navController: NavHostController) {
     var selectedTab by remember { mutableStateOf(0) } // 선택된 탭의 상태
     var isDialogShow by remember { mutableStateOf(false) } // 다이얼로그 상태
 
@@ -50,17 +53,17 @@ fun ReceivedCouponsScreen() {
             ) {
                 // Icon to navigate back
                 Icon(
-                    painter = painterResource(R.drawable.left), // Replace with your actual back icon resource
+                    painter = painterResource(R.drawable.left), // 실제 뒤로 가기 아이콘 리소스
                     contentDescription = "Back Icon",
                     tint = Color(0xFF838A94),
                     modifier = Modifier
                         .size(32.dp)
                         .padding(start = 8.dp)
                         .clickable {
-                            // Navigate to the previous screen (MyPage)
-                            // Example: navController.popBackStack()
+                            navController.navigate(Page.My.name) // Page.My.name 경로로 이동
                         }
                 )
+
 
                 // Title Text
                 Text(
@@ -225,11 +228,11 @@ fun ExpiredCouponsList(onCouponClick: () -> Unit) {
 
 @Composable
 fun CouponPage(navController: NavHostController) {
-    ReceivedCouponsScreen()
+    ReceivedCouponsScreen(navController)
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewReceivedCouponsScreen() {
-    ReceivedCouponsScreen()
+    ReceivedCouponsScreen(rememberNavController())
 }
