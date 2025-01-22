@@ -253,7 +253,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp)
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -280,7 +279,6 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp)
             )
 
             Spacer(modifier = Modifier.height(17.dp))
