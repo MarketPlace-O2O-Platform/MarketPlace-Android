@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import Bookmark
 import Carbon_bookmark
@@ -31,14 +31,13 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun EventBox(
     modifier: Modifier = Modifier,
-    title: String,
-    subTitle: String,
-    image: String,
+    event: Event
 ) {
     var isBookMark by remember { mutableStateOf(false) }
 
@@ -47,7 +46,7 @@ fun EventBox(
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(image)
+                .data(event.url)
                 .crossfade(true)
                 .build(),
             contentDescription = "Event Thumnail",
@@ -77,14 +76,14 @@ fun EventBox(
                 .padding(12.dp)
         ) {
             Text(
-                text = subTitle,
+                text = event.subTitle,
                 color = Color(0xffC7C7C7),
                 fontFamily = PretendardFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
             )
             Text(
-                text = title,
+                text = event.title,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -97,10 +96,9 @@ fun EventBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
+    val event = Event(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png")
     EventBox(
         modifier = Modifier.fillMaxWidth(0.7f).aspectRatio(1f/1),
-        title = "아 싸다 쿠폰",
-        subTitle = "사장님이 미쳤어요",
-        image = ""
+        event = event
     )
 }

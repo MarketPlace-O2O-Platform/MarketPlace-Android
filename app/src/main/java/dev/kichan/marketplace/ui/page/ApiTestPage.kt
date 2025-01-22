@@ -19,7 +19,8 @@ fun ApiTestPage(couponViewModel: CouponViewModel) {
     Column {
         Button(
             onClick = {
-                couponViewModel.getLatestCoupon()
+//                couponViewModel.getClosingCoupon()
+//                couponViewModel.getLatestCoupon()
 //                couponViewModel.getCoupons(1L)
             }
         ) { Text("클릭") }

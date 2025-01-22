@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventBox
+import dev.kichan.marketplace.ui.component.atoms.EventBox
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MoreViewTitle
 
 @Composable
@@ -29,7 +29,10 @@ fun EventList(
     modifier: Modifier = Modifier,
     navController: NavController,
     title: String,
-    eventList: List<Event>
+    eventList: List<Event>,
+//    onFavoriteClick: (Event, Boolean) -> Unit = { event, isFavorite ->
+//
+//    }
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -65,9 +68,7 @@ fun EventList(
                             }
                             .fillParentMaxSize(0.8f)
                             .aspectRatio(1f / 1),
-                        title = it.title,
-                        subTitle = it.subTitle,
-                        image = it.url!!
+                        event = it
                     )
                 }
             }
