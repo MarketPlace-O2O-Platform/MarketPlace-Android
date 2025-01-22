@@ -2,8 +2,6 @@ package dev.kichan.marketplace.ui.page
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,10 +20,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.component.atoms.PasswordInput
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily

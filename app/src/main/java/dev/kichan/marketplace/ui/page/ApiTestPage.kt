@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.common.CouponViewModel
+import dev.kichan.marketplace.CouponViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
 import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -19,7 +19,8 @@ fun ApiTestPage(couponViewModel: CouponViewModel) {
     Column {
         Button(
             onClick = {
-                couponViewModel.getCoupons(1L)
+                couponViewModel.getLatestCoupon()
+//                couponViewModel.getCoupons(1L)
             }
         ) { Text("클릭") }
 

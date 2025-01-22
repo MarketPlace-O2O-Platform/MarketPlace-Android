@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace
+package dev.kichan.marketplace
 
 import LargeCategory
 import androidx.compose.runtime.Composable
@@ -21,8 +21,6 @@ class AuthViewModel : ViewModel() {
     private val memberRepository = MemberRepositoryImpl()
     private val marketRepository = MarketRepositoryImpl()
 
-
-    ///////////////////////  회원  /////////////////////////
 
     val member = MutableLiveData<LoginRes?>(
         LoginRes(studentId = 202401598)
@@ -48,30 +46,6 @@ class AuthViewModel : ViewModel() {
 
     fun logout(onSuccess: () -> Unit, onFail: () -> Unit) {
         member.value = null
-        onSuccess() // 로그아웃 성공 시 호출
-        // 필요에 따라 실패 시 호출할 로직 추가
+        onSuccess()
     }
-
-
-    ///////////////////////  이벤트  /////////////////////////
-
-    val top20Coupon = MutableLiveData<List<TopLatestCoupon>>()
-    val newEvent = MutableLiveData<List<TopLatestCoupon>>()
-    val myCuration = MutableLiveData<List<Market>>()
-    val detailMarket = MutableLiveData<MarketDetailRes>()
-//    val allMarket = MutableLiveData<List<Market>>()
-//
-//    fun getTop20Market() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val res = marketRepository.getTopLatestCoupons(
-//                memberId = member.value!!.studentId,
-//                pageSize = 20
-//            )
-//            if (res.isSuccessful) {
-//                withContext(Dispatchers.Main) {
-//                    top20Coupon.value = res.body()!!.response
-//                }
-//            }
-//        }
-//    }
 }

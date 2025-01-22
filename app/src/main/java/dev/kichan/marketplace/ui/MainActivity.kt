@@ -8,8 +8,8 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
-import dev.kichan.marketplace.common.CouponViewModel
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.CouponViewModel
+import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 class MainActivity : ComponentActivity() {

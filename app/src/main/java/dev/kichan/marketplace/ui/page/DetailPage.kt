@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -30,7 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 
 @Composable
@@ -129,90 +129,91 @@ fun DetailPage(
     viewModel: AuthViewModel,
     id: String
 ) {
-    val data = viewModel.detailMarket.observeAsState()
+//    val data = viewModel.detailMarket.observeAsState()
+//    val data = Market()
 
     LaunchedEffect(Unit) {
 //        viewModel.getDetailMarket(id)
     }
 
-    if(data.value != null) {
-        Scaffold {
-            Column(
-                modifier = Modifier
-                    .padding(it)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                ImageSlider()
-                DetailContent(data.value!!)
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(5.dp)
-                        .background(Color.LightGray)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "이벤트 쿠폰",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.detailcoupon),
-                    contentDescription = "Detail Coupon",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-
-                Text(
-                    text = "쿠폰 부가 설명\n쿠폰 부가 설명",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(5.dp)
-                        .background(Color.LightGray)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "영업 정보",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    BusinessInfoRow("시간", data.value!!.operationHours)
-                    BusinessInfoRow("휴무일", "매주 화요일")
-                    BusinessInfoRow("매장 전화번호", "032-000-0000")
-                    BusinessInfoRow("주소", data.value!!.address)
-
-                    Text(
-                        text = "                         주소 복사 | 길찾기",
-                        color = Color(0xFF4B4B4B),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                KakaoMapSearchBox()
-            }
-        }
-    }
+//    if(data.value != null) {
+//        Scaffold {
+//            Column(
+//                modifier = Modifier
+//                    .padding(it)
+//                    .verticalScroll(rememberScrollState())
+//            ) {
+//                ImageSlider()
+//                DetailContent(data.value!!)
+//
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(5.dp)
+//                        .background(Color.LightGray)
+//                )
+//
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+//                Text(
+//                    text = "이벤트 쿠폰",
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 18.sp,
+//                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+//                )
+//
+//                Image(
+//                    painter = painterResource(id = R.drawable.detailcoupon),
+//                    contentDescription = "Detail Coupon",
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp)
+//                )
+//
+//                Text(
+//                    text = "쿠폰 부가 설명\n쿠폰 부가 설명",
+//                    color = Color.Gray,
+//                    fontSize = 14.sp,
+//                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+//                )
+//
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(5.dp)
+//                        .background(Color.LightGray)
+//                )
+//
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+//                Text(
+//                    text = "영업 정보",
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 18.sp,
+//                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+//                )
+//
+//                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+//                    BusinessInfoRow("시간", data.value!!.operationHours)
+//                    BusinessInfoRow("휴무일", "매주 화요일")
+//                    BusinessInfoRow("매장 전화번호", "032-000-0000")
+//                    BusinessInfoRow("주소", data.value!!.address)
+//
+//                    Text(
+//                        text = "                         주소 복사 | 길찾기",
+//                        color = Color(0xFF4B4B4B),
+//                        fontSize = 16.sp,
+//                        fontWeight = FontWeight.Medium,
+//                        modifier = Modifier.padding(top = 8.dp)
+//                    )
+//                }
+//
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+//                KakaoMapSearchBox()
+//            }
+//        }
+//    }
 }
 
 @Composable

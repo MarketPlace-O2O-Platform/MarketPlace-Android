@@ -26,7 +26,7 @@ interface CouponService {
         @Query("lastCreatedAt") lastCreatedAt : String?,
         @Query("lastCouponId") lastCouponId : Long?,
         @Query("pageSize") pageSize: Int?
-    ): Response<ResponseTemplate<List<LatestCoupon>>>
+    ): Response<ResponseTemplate<CouponPageNation>>
 
     @GET("api/coupons/closing")
     suspend fun getClosingCoupon(

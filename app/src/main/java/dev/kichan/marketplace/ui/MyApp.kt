@@ -9,8 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.common.CouponViewModel
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.CouponViewModel
+import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.DetailPage
@@ -42,7 +42,8 @@ fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
-                    viewModel = authViewModel
+                    authViewModel = authViewModel,
+                    couponViewModel=couponViewModel
                 )
             }
             composable(Page.Like.name) { LikePage(navController = navController) }

@@ -19,22 +19,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.data.Event
+import dev.kichan.marketplace.CouponViewModel
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CouponBanner
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun HomePage(navController: NavController, viewModel: AuthViewModel) {
-    val top20 = viewModel.top20Coupon.observeAsState()
-    val newEvent = viewModel.newEvent.observeAsState()
+fun HomePage(navController: NavController, authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
+    val top20 = couponViewModel.coupons.observeAsState()
 
     LaunchedEffect(Unit) {
+//        couponViewModel.
 //        viewModel.getTop20Market()
 //        viewModel.getNewEvent()
     }
@@ -71,34 +70,34 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                 }
 
                 // Top 20 인기 페이지"
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    EventList(
-                        navController = navController,
-                        title = "Top 20 인기 페이지",
-                        eventList = top20.value?.map { Event(
-                            id = it.id.toString(),
-                            title = it.name,
-                            subTitle = it.marketName,
-                            url = it.thumbnail
-                        ) } ?: listOf()
-                    )
-                }
-
-                // 최신 제휴 이벤트
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    EventList(
-                        navController = navController,
-                        title = "이번달 신규 이벤트",
-                        eventList = newEvent.value?.map { Event(
-                            id = it.id.toString(),
-                            subTitle = it.marketName,
-                            title = it.name,
-                            url = it.thumbnail
-                        ) } ?: listOf()
-                    )
-                }
+//                item {
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    EventList(
+//                        navController = navController,
+//                        title = "Top 20 인기 페이지",
+//                        eventList = top20.value?.map { Event(
+//                            id = it.id.toString(),
+//                            title = it.name,
+//                            subTitle = it.marketName,
+//                            url = it.thumbnail
+//                        ) } ?: listOf()
+//                    )
+//                }
+//
+//                // 최신 제휴 이벤트
+//                item {
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    EventList(
+//                        navController = navController,
+//                        title = "이번달 신규 이벤트",
+//                        eventList = newEvent.value?.map { Event(
+//                            id = it.id.toString(),
+//                            subTitle = it.marketName,
+//                            title = it.name,
+//                            url = it.thumbnail
+//                        ) } ?: listOf()
+//                    )
+//                }
 
                 item {
                     Spacer(modifier = Modifier.height(32.dp))
@@ -112,6 +111,6 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
 @Composable
 fun HomePagePreview() {
     MarketPlaceTheme {
-        HomePage(rememberNavController(), AuthViewModel())
+        HomePage(rememberNavController(), AuthViewModel(), CouponViewModel())
     }
 }
