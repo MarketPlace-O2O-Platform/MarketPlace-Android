@@ -18,7 +18,7 @@ import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
-import dev.kichan.marketplace.ui.page.CategoryEventListPage
+import dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -68,7 +68,7 @@ fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
 
         composable("${Page.CategoryEventList.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
-                CategoryEventListPage(
+                EventListPage(
                     navController = navController,
                     viewModel = authViewModel,
                     category = LargeCategory.valueOf(category)

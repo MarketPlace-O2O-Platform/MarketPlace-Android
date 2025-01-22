@@ -34,7 +34,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun CategoryEventListPage(navController: NavController, viewModel : AuthViewModel, category: LargeCategory) {
+fun EventListPage(navController: NavController, viewModel : AuthViewModel, category: LargeCategory) {
     val coroutinScope = rememberCoroutineScope()
     var selectedCategory by remember { mutableStateOf(category) }
     val pagerState = rememberPagerState(
@@ -97,6 +97,6 @@ fun CategoryEventListPage(navController: NavController, viewModel : AuthViewMode
 @Composable
 fun PopularEventPagePreview() {
     MarketPlaceTheme {
-        CategoryEventListPage(rememberNavController(), AuthViewModel(), LargeCategory.Food)
+        EventListPage(rememberNavController(), AuthViewModel(), LargeCategory.Food)
     }
 }

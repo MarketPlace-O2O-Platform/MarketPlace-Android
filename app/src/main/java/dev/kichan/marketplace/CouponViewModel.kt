@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.kichan.marketplace.model.data.CouponMemberRes
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.repository.CouponRepositoryImpl
 import kotlinx.coroutines.launch
 
@@ -22,9 +23,13 @@ class CouponViewModel : ViewModel() {
         }
     }
 
+    val latestCoupon = MutableLiveData<List<CouponMemberRes>>()
     fun getLatestCoupon() {
         viewModelScope.launch {
-            repository.getLatestTopCoupon(null, null, null)
+            val res = repository.getLatestTopCoupon(null, null, null)
+            if(res.isSuccessful) {
+                latestCoupon.value = res.body()!!.response.couponResDtos
+            }
         }
     }
 

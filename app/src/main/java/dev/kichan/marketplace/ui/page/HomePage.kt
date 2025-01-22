@@ -26,11 +26,14 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.o
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
+import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun HomePage(navController: NavController, authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
     val top20 = couponViewModel.coupons.observeAsState()
+    val latestCoupons = couponViewModel.latestCoupon.observeAsState()
 
     LaunchedEffect(Unit) {
 //        couponViewModel.
@@ -85,19 +88,19 @@ fun HomePage(navController: NavController, authViewModel: AuthViewModel, couponV
 //                }
 //
 //                // 최신 제휴 이벤트
-//                item {
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    EventList(
-//                        navController = navController,
-//                        title = "이번달 신규 이벤트",
-//                        eventList = newEvent.value?.map { Event(
-//                            id = it.id.toString(),
-//                            subTitle = it.marketName,
-//                            title = it.name,
-//                            url = it.thumbnail
-//                        ) } ?: listOf()
-//                    )
-//                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    EventList(
+                        navController = navController,
+                        title = "이번달 신규 이벤트",
+                        eventList = latestCoupons.value?.map { Event(
+                            id = it.id.toString(),
+                            subTitle = it.description,
+                            title = it.name,
+                            url = "" //todo: 백엔드에 이미지 주소도 달라고 요청
+                        ) } ?: listOf()
+                    )
+                }
 
                 item {
                     Spacer(modifier = Modifier.height(32.dp))
