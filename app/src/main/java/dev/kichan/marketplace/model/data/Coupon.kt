@@ -22,6 +22,7 @@ data class LatestCoupon(
 data class ClosingCouponRes(
     @SerializedName("couponId") val id: Long,
     @SerializedName("couponName") val name: String,
+    val deadline : String,
     val marketId : Long,
     val marketName: String,
     val thumbnail: String,

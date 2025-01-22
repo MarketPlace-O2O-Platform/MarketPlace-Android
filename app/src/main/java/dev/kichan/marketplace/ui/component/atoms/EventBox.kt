@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.component.atoms
 
 import Bookmark
 import Carbon_bookmark
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -33,12 +34,14 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlin.math.log
 
 @Composable
 fun EventBox(
     modifier: Modifier = Modifier,
     event: Event
 ) {
+    Log.d("ImageUrl", "EventBox: ${event.url}")
     var isBookMark by remember { mutableStateOf(false) }
 
     Box(
@@ -98,7 +101,9 @@ fun EventBox(
 fun PreviewEventBox() {
     val event = Event(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png")
     EventBox(
-        modifier = Modifier.fillMaxWidth(0.7f).aspectRatio(1f/1),
+        modifier = Modifier
+            .fillMaxWidth(0.7f)
+            .aspectRatio(1f / 1),
         event = event
     )
 }

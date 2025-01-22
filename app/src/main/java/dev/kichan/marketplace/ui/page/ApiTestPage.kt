@@ -37,19 +37,6 @@ fun ApiTestPage(couponViewModel: CouponViewModel) {
                 }
             }
         ) { Text("클릭") }
-
-        EventList(
-            navController = rememberNavController(),
-            title = "쿠폰 목록",
-            eventList = coupons.value?.map {
-                Event(
-                    id = it.id.toString(),
-                    title = it.name,
-                    subTitle = it.deadLine,
-                    url = it.description
-                )
-            } ?: listOf()
-        )
     }
 }
 

@@ -19,7 +19,7 @@ class CouponRepositoryImpl {
         lastCreatedAt: LocalDateTime?,
         lastCouponId: Long?,
         pageSize: Int?
-    ): Response<ResponseTemplate<CouponPageNation>> {
+    ): Response<ResponseTemplate<CouponPageNation<LatestCoupon>>> {
         return service.getLatestCoupon(
             if (lastCreatedAt != null) {
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")

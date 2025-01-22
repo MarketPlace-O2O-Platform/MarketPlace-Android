@@ -30,7 +30,7 @@ fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
 
     NavHost(
         navController = navController,
-        startDestination = Page.LocalApiTestPage.name,
+        startDestination = Page.Main.name,
         enterTransition = {
             EnterTransition.None
         },

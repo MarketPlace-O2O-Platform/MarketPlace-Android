@@ -23,22 +23,28 @@ import dev.kichan.marketplace.CouponViewModel
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CategorySelector
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CouponBanner
+import dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
+import dev.kichan.marketplace.ui.component.organisms.BannerItem
 import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun HomePage(navController: NavController, authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
-    val top20 = couponViewModel.coupons.observeAsState()
+fun HomePage(
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    couponViewModel: CouponViewModel
+) {
     val latestCoupons = couponViewModel.latestCoupon.observeAsState()
+    val closingCoupons = couponViewModel.closingCoupon.observeAsState()
 
     LaunchedEffect(Unit) {
-//        couponViewModel.
-//        viewModel.getTop20Market()
-//        viewModel.getNewEvent()
+//        couponViewModel.getCoupons(1L)
+//        couponViewModel.getClosingCoupon()
+        couponViewModel.getLatestCoupon()
     }
 
     Scaffold(
@@ -57,7 +63,16 @@ fun HomePage(navController: NavController, authViewModel: AuthViewModel, couponV
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
-                    CouponBanner()
+                    CouponBanner(
+                        bannerList = closingCoupons.value?.map({
+                            BannerItem(
+                                title = it.marketName,
+                                subTitle = it.name,
+                                description = it.deadline,
+                                imageUrl = "${BuildConfig.API_BASE_URL}/images/${it.thumbnail}"
+                            )
+                        }) ?: listOf()
+                    )
                 }
 
                 // 카테고리 섹션
@@ -93,12 +108,14 @@ fun HomePage(navController: NavController, authViewModel: AuthViewModel, couponV
                     EventList(
                         navController = navController,
                         title = "이번달 신규 이벤트",
-                        eventList = latestCoupons.value?.map { Event(
-                            id = it.id.toString(),
-                            subTitle = it.description,
-                            title = it.name,
-                            url = "" //todo: 백엔드에 이미지 주소도 달라고 요청
-                        ) } ?: listOf()
+                        eventList = latestCoupons.value?.map {
+                            Event(
+                                id = it.id.toString(),
+                                subTitle = it.marketName,
+                                title = it.name,
+                                url = "${BuildConfig.API_BASE_URL}image/${it.thumbnail}"
+                            )
+                        } ?: listOf()
                     )
                 }
 
