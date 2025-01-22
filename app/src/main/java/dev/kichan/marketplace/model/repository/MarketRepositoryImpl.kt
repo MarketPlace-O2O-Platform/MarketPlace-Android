@@ -5,7 +5,7 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.PageNationTemplate
-import dev.kichan.marketplace.model.service.MarketPageNationRes
+import dev.kichan.marketplace.model.data.MarketPageNationRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.TopFavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopClosingCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
@@ -38,24 +38,6 @@ class MarketRepositoryImpl : MarketRepository {
     ): Response<ResponseTemplate<MarketPageNationRes>> =
         marketService.getMarketSearch(name, lastPageIndex, pageSize)
 
-    override suspend fun getTopLatestCoupons(
-        memberId: Int,
-        pageSize: Int?
-    ): Response<ResponseTemplate<List<TopLatestCoupon>>> {
-        return marketService.getTopLatestCoupons(memberId, pageSize)
-    }
-
-    override suspend fun getTopFavoriteMarkets(
-        memberId: Int,
-        pageSize: Int?
-    ): Response<ResponseTemplate<TopFavoriteMarketRes>> {
-        return marketService.getTopFavoriteMarkets(memberId, pageSize)
-    }
-
-    override suspend fun getTopClosingCoupon(pageSize: Int?): Response<ResponseTemplate<List<TopClosingCouponRes>>> {
-        return marketService.getTopClosingCoupon(pageSize)
-    }
-
     override suspend fun getMyFavoriteMarkets(
         memberId: Int,
         lastModifiedAt: String?,
@@ -71,19 +53,5 @@ class MarketRepositoryImpl : MarketRepository {
         pageSize: Int?
     ): Response<ResponseTemplate<PageNationTemplate<MarketRes>>> {
         return marketService.getMarketsByAddress(memberId, address, category.backendLable, pageSize)
-    }
-
-    override suspend fun getLatestCoupon(
-        memberId: Int,
-        pageSize: Int?
-    ): Response<ResponseTemplate<PageNationTemplate<LatestCouponRes>>> {
-        return marketService.getLatestCoupon(memberId, pageSize)
-    }
-
-    override suspend fun getMarketsByFavorite(
-        memberId: Int,
-        pageSize: Int?
-    ): Response<ResponseTemplate<PageNationTemplate<FavoriteMarketRes>>> {
-        return marketService.getMarketsByFavorite(memberId, pageSize)
     }
 }

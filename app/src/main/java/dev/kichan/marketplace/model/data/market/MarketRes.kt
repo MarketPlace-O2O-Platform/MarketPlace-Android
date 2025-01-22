@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.model.data.market
 
-import android.text.BoringLayout
 import com.google.gson.annotations.SerializedName
 
 data class MarketRes(

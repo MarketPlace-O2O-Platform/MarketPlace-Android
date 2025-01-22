@@ -4,7 +4,7 @@ import LargeCategory
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.PageNationTemplate
-import dev.kichan.marketplace.model.service.MarketPageNationRes
+import dev.kichan.marketplace.model.data.MarketPageNationRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.TopFavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopClosingCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
@@ -32,20 +32,6 @@ interface MarketRepository {
         pageSize: Int?,
     ) : Response<ResponseTemplate<MarketPageNationRes>>
 
-    suspend fun getTopLatestCoupons(
-        memberId: Int,
-        pageSize: Int?
-    ): Response<ResponseTemplate<List<TopLatestCoupon>>>
-
-    suspend fun getTopFavoriteMarkets(
-        memberId: Int,
-        pageSize: Int?
-    ): Response<ResponseTemplate<TopFavoriteMarketRes>>
-
-    suspend fun getTopClosingCoupon(
-        pageSize: Int?
-    ): Response<ResponseTemplate<List<TopClosingCouponRes>>>
-
     suspend fun getMyFavoriteMarkets(
         memberId: Int,
         lastModifiedAt: String?,
@@ -58,14 +44,4 @@ interface MarketRepository {
         category: LargeCategory,
         pageSize: Int?,
     ): Response<ResponseTemplate<PageNationTemplate<MarketRes>>>
-
-    suspend fun getLatestCoupon(
-        memberId: Int,
-        pageSize: Int?,
-    ): Response<ResponseTemplate<PageNationTemplate<LatestCouponRes>>>
-
-    suspend fun getMarketsByFavorite(
-        memberId: Int,
-        pageSize: Int?,
-    ): Response<ResponseTemplate<PageNationTemplate<FavoriteMarketRes>>>
 }

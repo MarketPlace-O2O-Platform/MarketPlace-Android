@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.model.service
 
+import dev.kichan.marketplace.model.data.MarketPageNationRes
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.PageNationTemplate
@@ -14,11 +15,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
-data class MarketPageNationRes(
-    val marketResDtos: List<MarketRes>,
-    val hasNext : Boolean,
-)
 
 interface MarketService {
     @GET("/api/markets")
@@ -41,23 +37,6 @@ interface MarketService {
         @Query("pageSize") pageSize: Int?,
     ): Response<ResponseTemplate<MarketPageNationRes>>
 
-    @GET("/api/markets/top-latest-coupon")
-    suspend fun getTopLatestCoupons(
-        @Query("memberId") memberId: Int,
-        @Query("count") pageSize: Int?
-    ): Response<ResponseTemplate<List<TopLatestCoupon>>>
-
-    @GET("/api/markets/top-favorite")
-    suspend fun getTopFavoriteMarkets(
-        @Query("memberId") memberId: Int,
-        @Query("count") pageSize: Int?
-    ): Response<ResponseTemplate<TopFavoriteMarketRes>>
-
-    @GET("/api/markets/top-closing-coupon")
-    suspend fun getTopClosingCoupon(
-        @Query("count") pageSize: Int?
-    ) : Response<ResponseTemplate<List<TopClosingCouponRes>>>
-
     @GET("/api/markets/my-favorite")
     suspend fun getMyFavoriteMarkets(
         @Query("memberId") memberId: Int,
@@ -72,17 +51,4 @@ interface MarketService {
         @Query("category") category: String,
         @Query("pageSize") pageSize: Int?,
     ) : Response<ResponseTemplate<PageNationTemplate<MarketRes>>>
-
-    @GET("/api/markets/latest-coupon")
-    suspend fun getLatestCoupon(
-        @Query("memberId") memberId: Int,
-        @Query("pageSize") pageSize: Int?,
-    ) : Response<ResponseTemplate<PageNationTemplate<LatestCouponRes>>>
-    // todo : 이거 res dto 서버한테 물어보기
-
-    @GET("/api/markets/favorite")
-    suspend fun getMarketsByFavorite(
-        @Query("memberId") memberId: Int,
-        @Query("pageSize") pageSize: Int?,
-    ) : Response<ResponseTemplate<PageNationTemplate<FavoriteMarketRes>>>
 }
