@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui
+package dev.kichan.marketplace.ui
 
 import LargeCategory
 import androidx.compose.animation.EnterTransition
@@ -9,9 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.common.CouponViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.page.EventListPage
+import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
@@ -23,13 +24,13 @@ import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun MyApp(authViewModel: AuthViewModel) {
+fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
 
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Page.Main.name,
+        startDestination = Page.LocalApiTestPage.name,
         enterTransition = {
             EnterTransition.None
         },
@@ -79,6 +80,10 @@ fun MyApp(authViewModel: AuthViewModel) {
                 EventListPage(navController = navController, title = title)
             }
         }
+
+        composable(Page.LocalApiTestPage.name) {
+            ApiTestPage(couponViewModel)
+        }
     }
 }
 
@@ -86,6 +91,6 @@ fun MyApp(authViewModel: AuthViewModel) {
 @Composable
 fun MyAppPreview() {
     MarketPlaceTheme {
-        MyApp(AuthViewModel())
+        MyApp(AuthViewModel(), CouponViewModel())
     }
 }

@@ -77,14 +77,14 @@ fun EventBox(
                 .padding(12.dp)
         ) {
             Text(
-                text = title,
+                text = subTitle,
                 color = Color(0xffC7C7C7),
                 fontFamily = PretendardFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
             )
             Text(
-                text = subTitle,
+                text = title,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold

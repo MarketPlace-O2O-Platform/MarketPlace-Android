@@ -8,12 +8,13 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
+import dev.kichan.marketplace.common.CouponViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.MyApp
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 class MainActivity : ComponentActivity() {
     private val authViewModel : AuthViewModel by viewModels()
+    private val couponViewModel: CouponViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                MyApp(authViewModel = authViewModel)
+                MyApp(authViewModel = authViewModel, couponViewModel = couponViewModel)
             }
         }
     }

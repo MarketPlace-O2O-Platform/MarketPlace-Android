@@ -59,74 +59,19 @@ class AuthViewModel : ViewModel() {
     val newEvent = MutableLiveData<List<TopLatestCoupon>>()
     val myCuration = MutableLiveData<List<Market>>()
     val detailMarket = MutableLiveData<MarketDetailRes>()
-    val allMarket = MutableLiveData<List<Market>>()
-
-    fun getTop20Market() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val res = marketRepository.getTopLatestCoupons(
-                memberId = member.value!!.studentId,
-                pageSize = 20
-            )
-            if (res.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                    top20Coupon.value = res.body()!!.response
-                }
-            }
-        }
-    }
-
-    fun getNewEvent() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val res = marketRepository.getLatestCoupon(
-                memberId = member.value!!.studentId,
-                pageSize = 20
-            )
-            if (res.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                }
-            }
-        }
-    }
-
-    fun getMyCuration() {
+//    val allMarket = MutableLiveData<List<Market>>()
+//
+//    fun getTop20Market() {
 //        viewModelScope.launch(Dispatchers.IO) {
-//            val res = marketRepository.getMyFavoriteMarkets(
+//            val res = marketRepository.getTopLatestCoupons(
 //                memberId = member.value!!.studentId,
-//                pageSize = 10,
-//                lastModifiedAt = null
+//                pageSize = 20
 //            )
 //            if (res.isSuccessful) {
 //                withContext(Dispatchers.Main) {
-//                    myCuration.value = res.body()!!.response.body
+//                    top20Coupon.value = res.body()!!.response
 //                }
 //            }
 //        }
-    }
-
-    fun getDetailMarket(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val res = marketRepository.getMarketDetail(
-                marketId = id
-            )
-            if(res.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                    detailMarket.value = res.body()!!.response
-                }
-            }
-        }
-    }
-
-    fun featchMarket(page: Int, category: LargeCategory) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val res = marketRepository.getMarkets(
-                memberId = member.value!!.studentId,
-                pageSize = 10,
-                category = category.backendLable,
-                lastPageIndex = page
-            )
-            if(res.isSuccessful) {
-                allMarket.value = (allMarket.value ?: listOf<Market>())
-            }
-        }
-    }
+//    }
 }

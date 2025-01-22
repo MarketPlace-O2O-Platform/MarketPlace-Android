@@ -1,73 +1,40 @@
 package dev.kichan.marketplace.ui.page
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
-import coil3.compose.rememberAsyncImagePainter
-import dev.kichan.marketplace.model.data.login.LoginRes
-import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponUserRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.FavoriteRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketOwnerRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.CouponMemberRepositoryImpl
+import androidx.navigation.compose.rememberNavController
+import dev.kichan.marketplace.common.CouponViewModel
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
+import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
-fun ApiTestPage() {
-    val context = LocalContext.current
-    val repository = MarketOwnerRepositoryImpl()
-    val memberRepo = MemberRepositoryImpl()
-    val favotriteRepo = FavoriteRepositoryImpl()
-    val CouponRepo = CouponUserRepositoryImpl()
-    val memberCouponRepo = CouponMemberRepositoryImpl()
+fun ApiTestPage(couponViewModel: CouponViewModel) {
+    val coupons = couponViewModel.coupons.observeAsState();
 
-
-    val image = remember { mutableStateOf<Uri?>(null) }
-    val isLoading = remember { mutableStateOf(false) }
-    var res = remember {
-        mutableStateOf<LoginRes?>(null)
-    }
-
-    val galleryLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-            image.value = it
-        }
-
-    Scaffold {
-        Column(
-            modifier = Modifier.padding(it)
-        ) {
-            Button(onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    memberCouponRepo.getValidMemberCoupons(202401598)
-                }
-            }) {
-                Text(text = "클릭")
+    Column {
+        Button(
+            onClick = {
+                couponViewModel.getCoupons(1L)
             }
+        ) { Text("클릭") }
 
-            if (isLoading.value) {
-                Text(text = "로딩중")
-            }
-
-            if (image.value != null) {
-                Image(painter = rememberAsyncImagePainter(image.value), contentDescription = null)
-            }
-        }
+        EventList(
+            navController = rememberNavController(),
+            title = "쿠폰 목록",
+            eventList = coupons.value?.map {
+                Event(
+                    id = it.id.toString(),
+                    title = it.name,
+                    subTitle = it.deadLine,
+                    url = it.description
+                )
+            } ?: listOf()
+        )
     }
 }
 
@@ -75,7 +42,7 @@ fun ApiTestPage() {
 @Composable
 fun ApiTestPagePreview() {
     MarketPlaceTheme {
-        ApiTestPage()
+        ApiTestPage(CouponViewModel())
     }
 }
 

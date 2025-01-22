@@ -35,8 +35,8 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
     val newEvent = viewModel.newEvent.observeAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getTop20Market()
-        viewModel.getNewEvent()
+//        viewModel.getTop20Market()
+//        viewModel.getNewEvent()
     }
 
     Scaffold(

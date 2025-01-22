@@ -132,7 +132,7 @@ fun DetailPage(
     val data = viewModel.detailMarket.observeAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getDetailMarket(id)
+//        viewModel.getDetailMarket(id)
     }
 
     if(data.value != null) {

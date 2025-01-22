@@ -3,7 +3,7 @@ package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.reposit
 import LargeCategory
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.PageNationTemplate
+import dev.kichan.marketplace.model.data.PageNationTemplate
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.TopFavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopClosingCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon

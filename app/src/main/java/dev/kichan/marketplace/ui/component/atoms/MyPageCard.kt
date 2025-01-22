@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.event.Event2
 import dev.kichan.marketplace.model.data.market.Market
 
 @Composable
