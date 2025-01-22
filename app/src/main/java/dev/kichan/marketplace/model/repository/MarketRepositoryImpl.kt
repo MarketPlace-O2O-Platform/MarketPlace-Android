@@ -5,15 +5,15 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.PageNationTemplate
+import dev.kichan.marketplace.model.service.MarketPageNationRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.TopFavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopClosingCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.FavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MyFavoriteMarketRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepository
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MarketService
+import dev.kichan.marketplace.model.service.MarketService
 import retrofit2.Response
 
 class MarketRepositoryImpl : MarketRepository {
@@ -30,6 +30,13 @@ class MarketRepositoryImpl : MarketRepository {
     override suspend fun getMarketDetail(marketId: String): Response<ResponseTemplate<MarketDetailRes>> {
         return marketService.getMarketDetail(marketId = marketId)
     }
+
+    override suspend fun getMarketSearch(
+        name: String,
+        lastPageIndex: Int?,
+        pageSize: Int?
+    ): Response<ResponseTemplate<MarketPageNationRes>> =
+        marketService.getMarketSearch(name, lastPageIndex, pageSize)
 
     override suspend fun getTopLatestCoupons(
         memberId: Int,

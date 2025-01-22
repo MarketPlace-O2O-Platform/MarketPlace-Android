@@ -1,21 +1,18 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository
+package dev.kichan.marketplace.model.repository
 
 import LargeCategory
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.PageNationTemplate
+import dev.kichan.marketplace.model.service.MarketPageNationRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.TopFavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopClosingCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.FavoriteMarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketPageRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MyFavoriteMarketRes
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface MarketRepository {
     suspend fun getMarkets(
@@ -28,6 +25,12 @@ interface MarketRepository {
     suspend fun getMarketDetail(
         marketId: String
     ): Response<ResponseTemplate<MarketDetailRes>>
+
+    suspend fun getMarketSearch(
+        name: String,
+        lastPageIndex: Int?,
+        pageSize: Int?,
+    ) : Response<ResponseTemplate<MarketPageNationRes>>
 
     suspend fun getTopLatestCoupons(
         memberId: Int,
