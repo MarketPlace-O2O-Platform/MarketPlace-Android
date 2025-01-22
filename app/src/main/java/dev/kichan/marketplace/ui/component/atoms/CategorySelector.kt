@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun CategorySelector(
-    selectedCategory: LargeCategory,
+    selectedCategorys: List<LargeCategory>,
     onChange: (LargeCategory) -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -54,23 +54,21 @@ fun CategorySelector(
             val categoryShape = RoundedCornerShape(50.dp)
 
             categories.forEachIndexed { index, category ->
+                val isSelected = selectedCategorys.any { it == category }
+
                 // todo: 카테고리 칩을 컴포넌트로 따로 빼서 boolean 파라미터 받는거로 변경하기
                 Surface(
                     onClick = { onChange(category) },
                     shape = categoryShape,
                     border = BorderStroke(
                         1.dp,
-                        if (selectedCategory == category) Color(0xff303030) else Color(0xffC6C6C6)
+                        if (isSelected) Color(0xff303030) else Color(0xffC6C6C6)
                     ),
-                    color = if (selectedCategory == category) Color(0xff303030) else Color(
-                        0xffFFFFFF
-                    )
+                    color = if (isSelected) Color(0xff303030) else Color(0xffFFFFFF)
                 ) {
                     Text(
                         text = category.nameKo,
-                        color = if (selectedCategory == category) Color(0xffffffff) else Color(
-                            0xff5E5E5E
-                        ),
+                        color = if (isSelected) Color(0xffffffff) else Color(0xff5E5E5E),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                     )
                 }
