@@ -38,7 +38,7 @@ fun Button(
     modifier: Modifier = Modifier,
     textColor: Color = Color.White,
     backgroundColor: Color = Gray_8,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(4.dp),
     border: BorderStroke? = null,
     isDisable: Boolean = false,
     icon: ImageVector? = null,

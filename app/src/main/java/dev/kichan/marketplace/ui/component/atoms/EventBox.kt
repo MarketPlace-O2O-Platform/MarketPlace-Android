@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
+import Bookmark
 import Carbon_bookmark
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -66,7 +67,7 @@ fun EventBox(
         )
 
         Icon(
-            imageVector = if(!isBookMark) Carbon_bookmark else Icons.Filled.Favorite,
+            imageVector = if(!isBookMark) Carbon_bookmark else Bookmark,
             contentDescription = "Bookmark",
             tint = Color.White,
             modifier = Modifier

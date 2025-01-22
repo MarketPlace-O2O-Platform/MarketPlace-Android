@@ -29,7 +29,7 @@ fun MyApp(authViewModel: AuthViewModel) {
 
     NavHost(
         navController = navController,
-        startDestination = Page.Login.name,
+        startDestination = Page.Main.name,
         enterTransition = {
             EnterTransition.None
         },
@@ -68,6 +68,7 @@ fun MyApp(authViewModel: AuthViewModel) {
             it.arguments?.getString("category")?.let { category ->
                 CategoryEventListPage(
                     navController = navController,
+                    viewModel = authViewModel,
                     category = LargeCategory.valueOf(category)
                 )
             }

@@ -1,17 +1,16 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace
 
+import LargeCategory
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepositoryImpl
+import dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -56,6 +55,7 @@ class AuthViewModel : ViewModel() {
     val newEvent = MutableLiveData<List<TopLatestCoupon>>()
     val myCuration = MutableLiveData<List<Market>>()
     val detailMarket = MutableLiveData<MarketDetailRes>()
+    val allMarket = MutableLiveData<List<Market>>()
 
     fun getTop20Market() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -108,6 +108,20 @@ class AuthViewModel : ViewModel() {
                 withContext(Dispatchers.Main) {
                     detailMarket.value = res.body()!!.response
                 }
+            }
+        }
+    }
+
+    fun featchMarket(page: Int, category: LargeCategory) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = marketRepository.getMarkets(
+                memberId = member.value!!.studentId,
+                pageSize = 10,
+                category = category.backendLable,
+                lastPageIndex = page
+            )
+            if(res.isSuccessful) {
+                allMarket.value = (allMarket.value ?: listOf<Market>())
             }
         }
     }

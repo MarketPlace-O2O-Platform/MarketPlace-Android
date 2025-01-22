@@ -84,7 +84,26 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                             eventPrice = 1000,
                             imageRes = R.drawable.cafe,
                             url = it.thumbnail
-                        ) } ?: listOf()
+                        ) } ?: listOf(
+                            Event(
+                                id = "elit",
+                                marketName = "Arlene McLean",
+                                eventName = "Edward Puckett",
+                                defaultPrice = 4755,
+                                eventPrice = 9653,
+                                imageRes = 7417,
+                                url = "https://www.cosinkorea.com/data/photos/20220936/art_16623477281141_06fd91.jp"
+                            ),
+                            Event(
+                                id = "elit",
+                                marketName = "Arlene McLean",
+                                eventName = "Edward Puckett",
+                                defaultPrice = 4755,
+                                eventPrice = 9653,
+                                imageRes = 7417,
+                                url = "https://www.cosinkorea.com/data/photos/20220936/art_16623477281141_06fd91.jp"
+                            )
+                        )
                     )
                 }
 

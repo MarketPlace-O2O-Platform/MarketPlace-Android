@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository
+package dev.kichan.marketplace.model.repository
 
 import LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
@@ -12,6 +12,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.mar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MyFavoriteMarketRes
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MarketService
 import retrofit2.Response
 
