@@ -2,8 +2,12 @@ package dev.kichan.marketplace.ui.page
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,6 +38,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
     var showError by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     // 드롭다운 상태 관리
     var expanded by remember { mutableStateOf(false) }
@@ -88,9 +93,12 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(WindowInsets.ime.asPaddingValues()) // 키보드 패딩 추가
                 .background(color = Color.White)
                 .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+
         ) {
             Spacer(modifier = Modifier.height(100.dp))
 

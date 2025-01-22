@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false) // WindowInsets 활성화
 
         // Key Hash 가져오는 코드
 //        val keyHash = Utility.getKeyHash(this)
