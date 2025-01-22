@@ -41,7 +41,6 @@ fun EventBox(
     modifier: Modifier = Modifier,
     event: Event
 ) {
-    Log.d("ImageUrl", "EventBox: ${event.url}")
     var isBookMark by remember { mutableStateOf(false) }
 
     Box(
@@ -80,7 +79,7 @@ fun EventBox(
         ) {
             Text(
                 text = event.subTitle,
-                color = Color(0xffC7C7C7),
+                color = Color(0xffffffff),
                 fontFamily = PretendardFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,

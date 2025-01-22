@@ -55,12 +55,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MapPage(navController: NavController) {
-//    val permissionsState = rememberMultiplePermissionsState(
-//        permissions = listOf(
-//            Manifest.permission.ACCESS_FINE_LOCATION,
-//            Manifest.permission.ACCESS_COARSE_LOCATION
-//        )
-//    )
     var currentLocation by remember { mutableStateOf<LatLng?>(null) }
     var address by remember { mutableStateOf("") }
 

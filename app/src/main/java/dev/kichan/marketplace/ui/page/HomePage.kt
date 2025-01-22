@@ -43,7 +43,7 @@ fun HomePage(
 
     LaunchedEffect(Unit) {
 //        couponViewModel.getCoupons(1L)
-//        couponViewModel.getClosingCoupon()
+        couponViewModel.getClosingCoupon()
         couponViewModel.getLatestCoupon()
     }
 
@@ -69,7 +69,7 @@ fun HomePage(
                                 title = it.marketName,
                                 subTitle = it.name,
                                 description = it.deadline,
-                                imageUrl = "${BuildConfig.API_BASE_URL}/images/${it.thumbnail}"
+                                imageUrl = "${BuildConfig.API_BASE_URL}image/${it.thumbnail}"
                             )
                         }) ?: listOf()
                     )

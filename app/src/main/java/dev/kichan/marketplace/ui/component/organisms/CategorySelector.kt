@@ -32,7 +32,7 @@ fun CategorySelector(navController: NavController) {
     ) {
         categories.chunked(4).forEach { rowItems ->
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().padding(7.dp),
                 horizontalArrangement = Arrangement.SpaceBetween // 각 항목 간 간격을 균등하게 설정
             ) {
                 rowItems.forEach { category ->

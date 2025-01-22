@@ -48,6 +48,7 @@ fun CouponBanner(modifier: Modifier = Modifier, bannerList: List<BannerItem>) {
                     .aspectRatio(335.0f / 360) // 배너 이미지 비율
             ) {
                 AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(item.imageUrl)
                         .crossfade(true)

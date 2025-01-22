@@ -56,7 +56,7 @@ fun EventList(
         }
         else {
             LazyRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 7.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
             ) {
