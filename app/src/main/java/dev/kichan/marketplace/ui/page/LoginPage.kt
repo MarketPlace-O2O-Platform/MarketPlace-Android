@@ -94,7 +94,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
                 .padding(it)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(WindowInsets.ime.asPaddingValues()) // 키보드 패딩 추가
+                .padding(WindowInsets.ime.asPaddingValues())
                 .background(color = Color.White)
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

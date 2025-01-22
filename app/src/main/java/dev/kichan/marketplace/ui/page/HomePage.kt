@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.event.Event
+import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
@@ -78,32 +78,10 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                         title = "Top 20 인기 페이지",
                         eventList = top20.value?.map { Event(
                             id = it.id.toString(),
-                            marketName = it.marketName,
-                            eventName = it.name,
-                            defaultPrice = 30000,
-                            eventPrice = 1000,
-                            imageRes = R.drawable.cafe,
+                            title = it.name,
+                            subTitle = it.marketName,
                             url = it.thumbnail
-                        ) } ?: listOf(
-                            Event(
-                                id = "elit",
-                                marketName = "Arlene McLean",
-                                eventName = "Edward Puckett",
-                                defaultPrice = 4755,
-                                eventPrice = 9653,
-                                imageRes = 7417,
-                                url = "https://www.cosinkorea.com/data/photos/20220936/art_16623477281141_06fd91.jp"
-                            ),
-                            Event(
-                                id = "elit",
-                                marketName = "Arlene McLean",
-                                eventName = "Edward Puckett",
-                                defaultPrice = 4755,
-                                eventPrice = 9653,
-                                imageRes = 7417,
-                                url = "https://www.cosinkorea.com/data/photos/20220936/art_16623477281141_06fd91.jp"
-                            )
-                        )
+                        ) } ?: listOf()
                     )
                 }
 
@@ -115,11 +93,8 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                         title = "이번달 신규 이벤트",
                         eventList = newEvent.value?.map { Event(
                             id = it.id.toString(),
-                            marketName = it.marketName,
-                            eventName = it.name,
-                            defaultPrice = 30000,
-                            eventPrice = 1000,
-                            imageRes = R.drawable.cafe,
+                            subTitle = it.marketName,
+                            title = it.name,
                             url = it.thumbnail
                         ) } ?: listOf()
                     )

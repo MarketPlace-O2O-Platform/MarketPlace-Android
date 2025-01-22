@@ -18,8 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import dev.kichan.marketplace.model.data.event.Event
-import dev.kichan.marketplace.model.data.market.Market
+import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventBox
@@ -66,7 +65,9 @@ fun EventList(
                             }
                             .fillParentMaxSize(0.8f)
                             .aspectRatio(1f / 1),
-                        event = it
+                        title = it.title,
+                        subTitle = it.subTitle,
+                        image = it.url!!
                     )
                 }
             }
