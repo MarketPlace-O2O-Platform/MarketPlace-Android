@@ -42,7 +42,6 @@ fun HomePage(
     val closingCoupons = couponViewModel.closingCoupon.observeAsState()
 
     LaunchedEffect(Unit) {
-//        couponViewModel.getCoupons(1L)
         couponViewModel.getClosingCoupon()
         couponViewModel.getLatestCoupon()
     }
@@ -63,16 +62,34 @@ fun HomePage(
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
-                    CouponBanner(
-                        bannerList = closingCoupons.value?.map({
-                            BannerItem(
-                                title = it.marketName,
-                                subTitle = it.name,
-                                description = it.deadline,
-                                imageUrl = "${BuildConfig.API_BASE_URL}image/${it.thumbnail}"
-                            )
-                        }) ?: listOf()
-                    )
+                    if(closingCoupons.value.isNullOrEmpty()) {
+                        val images = listOf(
+                            "https://github.com/kichan05/kichan05/blob/main/assets/banner_2.png?raw=true",
+                            "https://github.com/kichan05/kichan05/blob/main/assets/banner_3.png?raw=true",
+                        )
+                        CouponBanner(
+                            bannerList = images.map({
+                                BannerItem(
+                                    title = "",
+                                    subTitle = "",
+                                    description = "",
+                                    imageUrl = it
+                                )
+                            })
+                        )
+                    }
+                    else {
+                        CouponBanner(
+                            bannerList = closingCoupons!!.value!!.map({
+                                BannerItem(
+                                    title = it.marketName,
+                                    subTitle = it.name,
+                                    description = it.deadline,
+                                    imageUrl = "${BuildConfig.API_BASE_URL}image/${it.thumbnail}"
+                                )
+                            })
+                        )
+                    }
                 }
 
                 // 카테고리 섹션

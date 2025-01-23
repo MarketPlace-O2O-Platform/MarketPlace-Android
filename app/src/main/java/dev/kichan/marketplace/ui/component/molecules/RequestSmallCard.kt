@@ -79,7 +79,7 @@ fun RequestSmallCard(
                         )
                     } else {
                         val current = LocalDate.now()
-                        Text(text = "공감 마감까지 1일 남음", fontSize = 12.sp, color = Color.Gray)
+                        Text(text = "마감까지 1일 남음", fontSize = 12.sp, color = Color.Gray)
                     }
                 }
 

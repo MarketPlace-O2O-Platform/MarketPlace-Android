@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules
+package dev.kichan.marketplace.ui.component.molecules
 
 import Button
 import androidx.compose.foundation.Image
@@ -79,7 +79,7 @@ fun RequestCard(
                         )
                     } else {
                         val current = LocalDate.now()
-                        Text(text = "공감 마감까지 None일 남음", fontSize = 12.sp, color = Color.Gray)
+                        Text(text = "마감까지 None일 남음", fontSize = 12.sp, color = Color.Gray)
                     }
                 }
 
