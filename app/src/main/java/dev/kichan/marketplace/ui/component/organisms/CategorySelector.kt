@@ -1,6 +1,5 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms
+package dev.kichan.marketplace.ui.component.organisms
 
-import LargeCategory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.kichan.marketplace.model.LargeCategory
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 

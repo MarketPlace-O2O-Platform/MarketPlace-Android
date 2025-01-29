@@ -30,8 +30,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.AuthViewModel
-import dev.kichan.marketplace.model.data.market.Market
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Coupon
 
 @Composable
@@ -59,34 +57,7 @@ fun ImageSlider() {
 }
 
 @Composable
-fun DetailContent(data: MarketDetailRes) {
-    var isBookMark by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = data.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.weight(1f)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.bookmark),
-                contentDescription = "Bookmark",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { isBookMark = !isBookMark }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = data.description,
-            color = Color.Gray,
-            fontSize = 14.sp
-        )
-    }
+fun DetailContent() {
 }
 
 @Composable
@@ -130,100 +101,6 @@ fun DetailPage(
     viewModel: AuthViewModel,
     id: String
 ) {
-//    val data = viewModel.detailMarket.observeAsState()
-    val data = MarketDetailRes(
-        id = 7120,
-        name = "Giovanni Malone",
-        description = "antiopam",
-        operationHours = "fastidii",
-        closedDay = "vel",
-        phoneNumber = "(893) 435-7939",
-        address = "platea",
-        images = listOf()
-    )
-
-    LaunchedEffect(Unit) {
-//        viewModel.getDetailMarket(id)
-    }
-
-    if(data != null) {
-        Scaffold {
-            Column(
-                modifier = Modifier
-                    .padding(it)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                ImageSlider()
-                DetailContent(data)
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(5.dp)
-                        .background(Color.LightGray)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "이벤트 쿠폰",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.detailcoupon),
-                    contentDescription = "Detail Coupon",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-
-                Text(
-                    text = "쿠폰 부가 설명\n쿠폰 부가 설명",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(5.dp)
-                        .background(Color.LightGray)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "영업 정보",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    BusinessInfoRow("시간", data.operationHours)
-                    BusinessInfoRow("휴무일", "매주 화요일")
-                    BusinessInfoRow("매장 전화번호", "032-000-0000")
-                    BusinessInfoRow("주소", data.address)
-
-                    Text(
-                        text = "                         주소 복사 | 길찾기",
-                        color = Color(0xFF4B4B4B),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                KakaoMapSearchBox()
-            }
-        }
-    }
 }
 
 @Composable

@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui
 
-import LargeCategory
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -11,14 +10,14 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.CouponViewModel
 import dev.kichan.marketplace.AuthViewModel
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.page.EventListPage
+import dev.kichan.marketplace.model.LargeCategory
+import dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
-import dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme

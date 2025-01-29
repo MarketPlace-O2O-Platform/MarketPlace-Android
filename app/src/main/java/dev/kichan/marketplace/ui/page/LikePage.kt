@@ -36,11 +36,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.LargeCategory
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.like.LikeRequest
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategorySelector
+import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
@@ -93,14 +93,14 @@ private fun Jigum() {
         mutableStateOf(mutableListOf(LargeCategory.All, LargeCategory.Food))
     }
 
-    val state = LikeRequest(
-        marketName = "콜드케이스 인하대점",
-        likeCount = 9,
-        imageRes = R.drawable.cafe,
-        isMyDone = false,
-        isRequestDone = false,
-        deadLine = LocalDate.of(2025, 3, 12)
-    )
+//    val state = LikeRequest(
+//        marketName = "콜드케이스 인하대점",
+//        likeCount = 9,
+//        imageRes = R.drawable.cafe,
+//        isMyDone = false,
+//        isRequestDone = false,
+//        deadLine = LocalDate.of(2025, 3, 12)
+//    )
     SpaceTitle(title = "지금 공감하면 할인권을 드려요", badgeTitle = "EVENT")
     Spacer(modifier = Modifier.height(20.dp))
     CategorySelector(
@@ -116,8 +116,8 @@ private fun Jigum() {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
-                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
+//                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
+//                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
             }
         }
     }
@@ -174,21 +174,21 @@ private fun DeadLineOGoitssm() {
             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            val state = LikeRequest(
-                marketName = "콜드케이스 인하대점",
-                likeCount = 100,
-                imageRes = R.drawable.cafe,
-                isMyDone = false,
-                isRequestDone = false,
-                deadLine = LocalDate.of(2025, 3, 12)
-            )
+//            val state = LikeRequest(
+//                marketName = "콜드케이스 인하대점",
+//                likeCount = 100,
+//                imageRes = R.drawable.cafe,
+//                isMyDone = false,
+//                isRequestDone = false,
+//                deadLine = LocalDate.of(2025, 3, 12)
+//            )
 
-            items(10) {
-                RequestCard(
-                    modifier = Modifier.width(284.dp),
-                    state = state
-                )
-            }
+//            items(10) {
+//                RequestCard(
+//                    modifier = Modifier.width(284.dp),
+//                    state = state
+//                )
+//            }
         }
     }
 }

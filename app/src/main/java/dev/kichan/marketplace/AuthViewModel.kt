@@ -1,17 +1,11 @@
 package dev.kichan.marketplace
 
-import LargeCategory
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
-import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.TopLatestCoupon
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
-import dev.kichan.marketplace.model.repository.MarketRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,7 +13,6 @@ import kotlinx.coroutines.withContext
 class AuthViewModel : ViewModel() {
     //todo: DI 적용하기
     private val memberRepository = MemberRepositoryImpl()
-    private val marketRepository = MarketRepositoryImpl()
 
 
     val member = MutableLiveData<LoginRes?>(

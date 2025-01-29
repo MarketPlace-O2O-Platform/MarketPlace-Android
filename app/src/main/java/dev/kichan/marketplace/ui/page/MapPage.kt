@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import LargeCategory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -45,9 +44,10 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.LargeCategory
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategoryTap
+import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -73,7 +73,7 @@ fun MapPage(navController: NavController) {
         LocalConfiguration.current.screenHeightDp.dp * 0.8f
     }
 
-    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
+//    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     Scaffold(
         bottomBar = {
@@ -113,13 +113,13 @@ fun MapPage(navController: NavController) {
                 ) {
                 }
 
-                CategoryTap(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.TopCenter),
-                    selectedCategory = selectedCategory,
-                    onSelected = { selectedCategory = it }
-                )
+//                CategoryTap(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .align(Alignment.TopCenter),
+//                    selectedCategory = selectedCategory,
+//                    onSelected = { selectedCategory = it }
+//                )
 
                 IconButton(
                     onClick = {

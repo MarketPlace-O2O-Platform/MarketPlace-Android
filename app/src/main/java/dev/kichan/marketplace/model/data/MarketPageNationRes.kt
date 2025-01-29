@@ -1,8 +1,7 @@
 package dev.kichan.marketplace.model.data
 
-import dev.kichan.marketplace.model.data.market.MarketRes
 
-data class MarketPageNationRes(
-    val marketResDtos: List<MarketRes>,
+data class MarketPageNationRes<T>(
+    val marketResDtos: List<T>,
     val hasNext : Boolean,
 )

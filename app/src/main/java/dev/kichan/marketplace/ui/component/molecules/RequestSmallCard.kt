@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.like.LikeRequest
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
 
@@ -35,85 +34,85 @@ import java.time.LocalDate
 fun RequestSmallCard(
     //todo: 나중에 더 좋은 이름으로 변경
     modifier: Modifier = Modifier,
-    state: LikeRequest,
+//    state: LikeRequest,
 ) {
-    Column(
-        modifier = modifier
-    ) {
-        Image(
-            painter = painterResource(state.imageRes), // 여기에 이미지 리소스 추가
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
-            contentScale = ContentScale.Crop,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Column {
-            Text(
-                text = state.marketName,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                fontFamily = PretendardFamily,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    if (state.isRequestDone) {
-                        Text(text = "공감 마감", fontSize = 12.sp, color = Color.Gray)
-                        Text(
-                            text = "제휴 컨텍 중",
-                            fontSize = 12.sp,
-                            color = Color(0xff383838),
-                            fontWeight = FontWeight.Medium
-                        )
-                    } else {
-                        val current = LocalDate.now()
-                        Text(text = "마감까지 1일 남음", fontSize = 12.sp, color = Color.Gray)
-                    }
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = state.likeCount.toString())
-                    Spacer(modifier = Modifier.width(4.dp))
-                    //todo: 아이콘 변경
-                    Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like", Modifier.size(16.dp))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            val buttonModifier = Modifier.fillMaxWidth()
-
-            if (state.isRequestDone) {
-                Button(
-                    text = "제휴 컨텍중",
-                    isDisable = true,
-                    modifier = buttonModifier,
-//                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-
-                }
-            } else {
-                Button(
-                    text = "공감 하기",
-                    icon = Icons.Default.FavoriteBorder,
-                    modifier = buttonModifier,
-//                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-
-                }
-            }
-        }
-    }
+//    Column(
+//        modifier = modifier
+//    ) {
+//        Image(
+//            painter = painterResource(state.imageRes), // 여기에 이미지 리소스 추가
+//            contentDescription = null,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .aspectRatio(1f),
+//            contentScale = ContentScale.Crop,
+//        )
+//
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        Column {
+//            Text(
+//                text = state.marketName,
+//                fontSize = 16.sp,
+//                fontWeight = FontWeight.Medium,
+//                fontFamily = PretendardFamily,
+//            )
+//            Spacer(modifier = Modifier.height(8.dp))
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+//                ) {
+//                    if (state.isRequestDone) {
+//                        Text(text = "공감 마감", fontSize = 12.sp, color = Color.Gray)
+//                        Text(
+//                            text = "제휴 컨텍 중",
+//                            fontSize = 12.sp,
+//                            color = Color(0xff383838),
+//                            fontWeight = FontWeight.Medium
+//                        )
+//                    } else {
+//                        val current = LocalDate.now()
+//                        Text(text = "마감까지 1일 남음", fontSize = 12.sp, color = Color.Gray)
+//                    }
+//                }
+//
+//                Row(verticalAlignment = Alignment.CenterVertically) {
+//                    Text(text = state.likeCount.toString())
+//                    Spacer(modifier = Modifier.width(4.dp))
+//                    //todo: 아이콘 변경
+//                    Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like", Modifier.size(16.dp))
+//                }
+//            }
+//
+//            Spacer(modifier = Modifier.height(20.dp))
+//
+//            val buttonModifier = Modifier.fillMaxWidth()
+//
+//            if (state.isRequestDone) {
+//                Button(
+//                    text = "제휴 컨텍중",
+//                    isDisable = true,
+//                    modifier = buttonModifier,
+////                    contentPadding = PaddingValues(vertical = 8.dp)
+//                ) {
+//
+//                }
+//            } else {
+//                Button(
+//                    text = "공감 하기",
+//                    icon = Icons.Default.FavoriteBorder,
+//                    modifier = buttonModifier,
+////                    contentPadding = PaddingValues(vertical = 8.dp)
+//                ) {
+//
+//                }
+//            }
+//        }
+//    }
 }
