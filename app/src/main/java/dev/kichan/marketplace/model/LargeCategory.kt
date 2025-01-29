@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model
+
 import androidx.annotation.DrawableRes
 import dev.kichan.marketplace.R
 

@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository
+package dev.kichan.marketplace.model.repository
 
 import android.content.Context
 import android.net.Uri

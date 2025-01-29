@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository
+package dev.kichan.marketplace.model.repository
 
 import android.content.Context
 import android.net.Uri
@@ -8,7 +8,7 @@ import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.common.FileUtils
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketUpdateReq
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MarketOwnerService
+import dev.kichan.marketplace.model.service.MarketOwnerService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
