@@ -1,19 +1,14 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,42 +18,46 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun CouponCard(onClick: () -> Unit, status: String) {
+    // status 값에 따라 배경 이미지 변경
+    val backgroundImage = when (status) {
+        "사용 완료", "기간 만료" -> R.drawable.subtract2 // 사용 완료 또는 기간 만료 시 subtract2.png 사용
+        else -> R.drawable.component // 기본 component.png 사용
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
             .clickable { onClick() }
     ) {
-        // Background image (component.png)
+        // 배경 이미지 설정
         Image(
-            painter = painterResource(id = R.drawable.component), // component.png
+            painter = painterResource(id = backgroundImage),
             contentDescription = "Coupon Background",
             modifier = Modifier.fillMaxSize()
         )
 
         Row(
-            modifier = Modifier
-                .matchParentSize(),
+            modifier = Modifier.matchParentSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Hair image (hair.png)
+            // 헤어 이미지
             Image(
-                painter = painterResource(id = R.drawable.hair), // hair.png
+                painter = painterResource(id = R.drawable.hair),
                 contentDescription = "Hair Image",
-                modifier = Modifier
-                    .size(118.dp) // Adjust size as needed
+                modifier = Modifier.size(102.dp)
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Coupon details
+            // 쿠폰 정보
             Column {
                 Text(
                     text = "70%",
-                    fontSize = 28.sp, // Text size
-                    lineHeight = 42.sp, // Line height
-                    fontFamily = PretendardFamily, // Pretendard font applied
-                    fontWeight = FontWeight(600), // FontWeight value 600 = SemiBold
+                    fontSize = 28.sp,
+                    lineHeight = 42.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF121212),
                 )
                 Text(
@@ -66,7 +65,7 @@ fun CouponCard(onClick: () -> Unit, status: String) {
                     fontSize = 15.sp,
                     lineHeight = 24.sp,
                     fontFamily = PretendardFamily,
-                    fontWeight = FontWeight(600),
+                    fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF121212),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -75,21 +74,21 @@ fun CouponCard(onClick: () -> Unit, status: String) {
                     fontSize = 13.sp,
                     lineHeight = 22.sp,
                     fontFamily = PretendardFamily,
-                    fontWeight = FontWeight(400),
+                    fontWeight = FontWeight.Normal,
                     color = Color(0xFF545454),
                 )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Right button or tag
+            // 상태 표시 (사용 가능, 사용 완료, 기간 만료 등)
             Text(
                 text = status,
                 fontSize = 13.sp,
                 lineHeight = 30.sp,
                 fontFamily = PretendardFamily,
-                fontWeight = FontWeight(700),
-                color = Color(0xFFFFFFFF),
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
                 letterSpacing = 0.26.sp,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -98,6 +97,7 @@ fun CouponCard(onClick: () -> Unit, status: String) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
