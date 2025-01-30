@@ -8,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CouponUserService {
@@ -16,15 +17,15 @@ interface CouponUserService {
         @Query("memberCouponId") memberCouponId: Long
     ) : Response<ResponseTemplate<CouponHandleRes>>
 
-    @POST("/api/members/coupons/{couponId}}")
+    @POST("/api/members/coupons/{couponId}")
     suspend fun createUserCoupon(
         @Query("memberId") memberId: Long,
-        @Query("couponId") couponId: Long,
+        @Path("couponId") couponId: Long,
     )
 
     @GET("/api/members/coupons/{memberCouponId}")
     suspend fun getMemberCoupon(
-        @Query("memberCouponId") memberCouponId: Long
+        @Path("memberCouponId") memberCouponId: Long
     ) : Response<ResponseTemplate<IssuedCouponRes>>
 
     @GET("/api/members/coupons/valid")
