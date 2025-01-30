@@ -40,7 +40,7 @@ interface CouponOwnerService {
     @GET("/api/owners/coupons/coupons")
     suspend fun getAllCouponByMarket(
         @Query("marketId") marketId: Int
-    ) : Response<ResponseTemplate<CouponPagenation>>
+    ) : Response<ResponseTemplate<CouponPagenation<CouponRes>>>
 
     @POST("/api/owners/coupons")
     suspend fun createCoupon(
