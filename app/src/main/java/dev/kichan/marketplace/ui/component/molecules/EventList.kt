@@ -30,7 +30,7 @@ fun EventList(
     modifier: Modifier = Modifier,
     navController: NavController,
     title: String,
-    eventList: List<Market>
+    eventList: List<Event>
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -62,7 +62,7 @@ fun EventList(
                     EventBox(
                         modifier = Modifier
                             .clickable {
-                                navController.navigate(Page.EventDetail.name)
+                                navController.navigate("${Page.EventDetail.name}/${it.id}")
                             }
                             .fillParentMaxSize(0.8f)
                             .aspectRatio(1f / 1),

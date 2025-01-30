@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.screen
+package dev.kichan.marketplace.ui.page
 
 import android.util.Log
 import androidx.compose.foundation.background

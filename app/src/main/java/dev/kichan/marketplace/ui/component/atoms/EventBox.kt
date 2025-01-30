@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
+import Bookmark
 import Carbon_bookmark
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,11 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.event.Event
 import dev.kichan.marketplace.model.data.market.Market
@@ -38,18 +43,21 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 @Composable
 fun EventBox(
     modifier: Modifier = Modifier,
-    event: Market
+    event: Event
 ) {
     var isBookMark by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.cafe),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("https://marketplace.inuappcenter.kr/image/${event.url}")
+                .crossfade(true)
+                .build(),
+            contentDescription = "Image from URL",
+            contentScale = ContentScale.Crop, // 이미지 비율 조정
+            modifier = modifier
         )
 
         Box(
@@ -59,7 +67,7 @@ fun EventBox(
         )
 
         Icon(
-            imageVector = if(!isBookMark) Carbon_bookmark else Icons.Filled.Favorite,
+            imageVector = if(!isBookMark) Carbon_bookmark else Bookmark,
             contentDescription = "Bookmark",
             tint = Color.White,
             modifier = Modifier
@@ -74,14 +82,14 @@ fun EventBox(
                 .padding(12.dp)
         ) {
             Text(
-                text = event.name,
+                text = event.eventName,
                 color = Color(0xffC7C7C7),
                 fontFamily = PretendardFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
             )
             Text(
-                text = event.name,
+                text = event.eventName,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -94,15 +102,13 @@ fun EventBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
-    val market = Market(
-        id = 2943,
-        name = "Ashley Underwood",
-        description = "sanctus",
-        operationHours = "mi",
-        closedDays = "posse",
-        phoneNumber = "(928) 333-0396",
-        address = "tamquam",
-        thumbnail = "contentiones"
+    val market = Event(
+        marketName = "Bette Sheppard",
+        eventName = "Bernard Bullock",
+        defaultPrice = 4136,
+        eventPrice = 4187,
+        imageRes = 4367,
+        id = "sdas"
     )
 
     EventBox(
