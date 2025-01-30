@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CouponCard
+import dev.kichan.marketplace.ui.component.atoms.CouponCard
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
