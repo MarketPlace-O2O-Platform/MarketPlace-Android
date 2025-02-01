@@ -10,7 +10,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.CouponViewModel
 import dev.kichan.marketplace.AuthViewModel
-import dev.kichan.marketplace.model.LargeCategory
+import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.DetailPage
@@ -24,6 +24,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
+    throw Exception("Null pointer Exception")
 
     val navController = rememberNavController()
 
@@ -81,9 +82,9 @@ fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
             }
         }
 
-        composable(Page.LocalApiTestPage.name) {
-            ApiTestPage(couponViewModel)
-        }
+//        composable(Page.LocalApiTestPage.name) {
+//            ApiTestPage(couponViewModel)
+//        }
     }
 }
 

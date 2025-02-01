@@ -21,7 +21,7 @@ fun ApiTestPage(marketViewModel: MarketViewModel) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
     ) { uris: List<Uri> ->
-        marketViewModel.
+//        marketViewModel.
     }
 }
 

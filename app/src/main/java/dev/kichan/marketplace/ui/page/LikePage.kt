@@ -35,17 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.LargeCategory
+import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
-import dev.kichan.marketplace.ui.component.molecules.RequestCard
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import java.time.LocalDate
 
 @Composable
 fun LikePage(navController: NavController) {
