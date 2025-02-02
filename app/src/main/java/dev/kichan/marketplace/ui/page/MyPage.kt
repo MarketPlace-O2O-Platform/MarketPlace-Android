@@ -36,7 +36,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun MyPage(navController: NavController) {
-    val member = viewModel.member.observeAsState()
+//    val member = viewModel.member.observeAsState()
 //    val myCuration = viewModel.myCuration.observeAsState()
 
     var selectedCategory by remember {
@@ -44,17 +44,17 @@ fun MyPage(navController: NavController) {
     }
 
     val onLogout = {
-        viewModel.logout(
-            onSuccess = {
-                navController.popBackStack()
-                navController.navigate(Page.Login.name)
-            },
-            onFail = {
-                // 로그아웃 실패 시 처리 로직을 추가
-                // 예를 들어, 오류 메시지를 표시할 수 있습니다.
-                // 예: showError("로그아웃 실패")
-            }
-        )
+//        viewModel.logout(
+//            onSuccess = {
+//                navController.popBackStack()
+//                navController.navigate(Page.Login.name)
+//            },
+//            onFail = {
+//                // 로그아웃 실패 시 처리 로직을 추가
+//                // 예를 들어, 오류 메시지를 표시할 수 있습니다.
+//                // 예: showError("로그아웃 실패")
+//            }
+//        )
     }
 
     LaunchedEffect(Unit) {
@@ -114,7 +114,7 @@ fun MyPage(navController: NavController) {
                             .background(Color(0xFFF9F9F9), shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(text = "${member.value?.studentId}님", fontSize = 16.sp, lineHeight = 22.4.sp, fontWeight = FontWeight.Bold, fontFamily = PretendardFamily)
+                    Text(text = "${202401598}님", fontSize = 16.sp, lineHeight = 22.4.sp, fontWeight = FontWeight.Bold, fontFamily = PretendardFamily)
 
                     Spacer(modifier = Modifier.width(12.dp))
 

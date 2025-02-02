@@ -22,57 +22,54 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.data.login.LoginReq
+import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(navController: NavHostController) {
+    val memberRepo = MemberRepositoryImpl()
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
     var showError by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
-    // 드롭다운 상태 관리
     var expanded by remember { mutableStateOf(false) }
     var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
-    val schools = listOf("학교 A", "학교 B", "학교 C") // 예시 학교 목록
+    val schools = listOf("학교 A", "학교 B", "학교 C")
+
 
     val onLogin: (String, String) -> Unit = { id, password ->
-//        authViewModel.login(
-//            id = id,
-//            password = password,
-//            onSuccess = {
-//                navController.popBackStack()
-//                navController.navigate(Page.Main.name)
-//            },
-//            onFail = {
-//                // Handle login failure
-//            }
-//        )
-        
-        if (selectedSchool == "학교를 선택해주세요") {
-            message = "학교를 선택해주세요."
-            showError = true
-        } else if (id.isBlank() || password.isBlank()) {
-            message = "ID와 비밀번호를 입력해주세요."
-            showError = true
-        } else {
-//            authViewModel.login(
-//                id = id,
-//                password = password,
-//                onSuccess = {
-//                    navController.popBackStack()
-//                    navController.navigate(Page.Main.name)
-//                },
-//                onFail = {
-//                    showError = true
-//                }
-//            )
+        CoroutineScope(Dispatchers.IO).launch {
+            val req = LoginReq(id, password)
+            val res = memberRepo.login(req)
+
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    navController.popBackStack()
+                    navController.navigate(Page.Main.name)
+                }
+                else {
+                    showError = true
+                }
+            }
         }
+//        if (selectedSchool == "학교를 선택해주세요") {
+//            message = "학교를 선택해주세요."
+//            showError = true
+//        } else if (id.isBlank() || password.isBlank()) {
+//            message = "ID와 비밀번호를 입력해주세요."
+//            showError = true
+//        }
     }
 
     if (showError) {

@@ -10,12 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import dev.kichan.marketplace.CouponViewModel
-import dev.kichan.marketplace.MarketViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun ApiTestPage(marketViewModel: MarketViewModel) {
+fun ApiTestPage( ) {
     val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -29,7 +27,7 @@ fun ApiTestPage(marketViewModel: MarketViewModel) {
 @Composable
 fun ApiTestPagePreview() {
     MarketPlaceTheme {
-        ApiTestPage(MarketViewModel())
+        ApiTestPage()
     }
 }
 
