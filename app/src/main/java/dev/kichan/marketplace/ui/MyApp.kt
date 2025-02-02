@@ -8,8 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.CouponViewModel
-import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.ApiTestPage
@@ -23,9 +21,7 @@ import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
-    throw Exception("Null pointer Exception")
-
+fun MyApp() {
     val navController = rememberNavController()
 
     NavHost(
@@ -42,8 +38,6 @@ fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
-                    authViewModel = authViewModel,
-                    couponViewModel=couponViewModel
                 )
             }
             composable(Page.Like.name) { LikePage(navController = navController) }
@@ -51,26 +45,24 @@ fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
-                    viewModel = authViewModel
                 )
             }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
 
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
-                    DetailPage(navController, authViewModel, id)
+                    DetailPage(navController, id)
                 }
             }
         }
         composable(route = Page.Login.name) {
-            LoginPage(navController = navController, authViewModel = authViewModel)
+            LoginPage(navController = navController)
         }
 
         composable("${Page.CategoryEventList.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
                 EventListPage(
                     navController = navController,
-                    viewModel = authViewModel,
                     category = LargeCategory.valueOf(category)
                 )
             }
@@ -92,6 +84,6 @@ fun MyApp(authViewModel: AuthViewModel, couponViewModel: CouponViewModel) {
 @Composable
 fun MyAppPreview() {
     MarketPlaceTheme {
-        MyApp(AuthViewModel(), CouponViewModel())
+        MyApp()
     }
 }

@@ -28,13 +28,12 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
-import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun EventListPage(navController: NavController, viewModel : AuthViewModel, category: LargeCategory) {
+fun EventListPage(navController: NavController, category: LargeCategory) {
     val coroutinScope = rememberCoroutineScope()
     var selectedCategory by remember { mutableStateOf(category) }
     val pagerState = rememberPagerState(
@@ -97,6 +96,6 @@ fun EventListPage(navController: NavController, viewModel : AuthViewModel, categ
 @Composable
 fun PopularEventPagePreview() {
     MarketPlaceTheme {
-        EventListPage(rememberNavController(), AuthViewModel(), LargeCategory.Food)
+        EventListPage(rememberNavController(), LargeCategory.Food)
     }
 }

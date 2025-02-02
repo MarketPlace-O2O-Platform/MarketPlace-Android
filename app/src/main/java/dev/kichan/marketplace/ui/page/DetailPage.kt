@@ -29,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Coupon
 
 @Composable
@@ -98,7 +97,6 @@ fun KakaoMapSearchBox() {
 @Composable
 fun DetailPage(
     navController: NavController,
-    viewModel: AuthViewModel,
     id: String
 ) {
 }
@@ -130,5 +128,5 @@ fun BusinessInfoRow(label: String, value: String) {
 @Preview(showBackground = true)
 @Composable
 fun DetailPagePreview() {
-    DetailPage(rememberNavController(), AuthViewModel(), "asd")
+    DetailPage(rememberNavController(), "asd")
 }

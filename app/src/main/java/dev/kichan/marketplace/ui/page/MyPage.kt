@@ -28,7 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
@@ -36,7 +35,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun MyPage(navController: NavController, viewModel : AuthViewModel) {
+fun MyPage(navController: NavController) {
     val member = viewModel.member.observeAsState()
 //    val myCuration = viewModel.myCuration.observeAsState()
 
@@ -207,5 +206,5 @@ private fun CategorySelectorPreview() {
 @Preview(showBackground = true)
 @Composable
 fun MyPagePreview() {
-    MyPage(navController = rememberNavController(), viewModel = AuthViewModel())
+    MyPage(navController = rememberNavController())
 }

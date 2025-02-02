@@ -4,18 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
-import dev.kichan.marketplace.CouponViewModel
-import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 class MainActivity : ComponentActivity() {
-    private val authViewModel : AuthViewModel by viewModels()
-    private val couponViewModel: CouponViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                MyApp(authViewModel = authViewModel, couponViewModel = couponViewModel)
+                MyApp()
             }
         }
     }

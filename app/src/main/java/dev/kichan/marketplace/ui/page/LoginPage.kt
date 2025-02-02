@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
@@ -30,7 +29,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
+fun LoginPage(navController: NavHostController) {
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
@@ -43,17 +42,17 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
     val schools = listOf("학교 A", "학교 B", "학교 C") // 예시 학교 목록
 
     val onLogin: (String, String) -> Unit = { id, password ->
-        authViewModel.login(
-            id = id,
-            password = password,
-            onSuccess = {
-                navController.popBackStack()
-                navController.navigate(Page.Main.name)
-            },
-            onFail = {
-                // Handle login failure
-            }
-        )
+//        authViewModel.login(
+//            id = id,
+//            password = password,
+//            onSuccess = {
+//                navController.popBackStack()
+//                navController.navigate(Page.Main.name)
+//            },
+//            onFail = {
+//                // Handle login failure
+//            }
+//        )
         
         if (selectedSchool == "학교를 선택해주세요") {
             message = "학교를 선택해주세요."
@@ -62,17 +61,17 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             message = "ID와 비밀번호를 입력해주세요."
             showError = true
         } else {
-            authViewModel.login(
-                id = id,
-                password = password,
-                onSuccess = {
-                    navController.popBackStack()
-                    navController.navigate(Page.Main.name)
-                },
-                onFail = {
-                    showError = true
-                }
-            )
+//            authViewModel.login(
+//                id = id,
+//                password = password,
+//                onSuccess = {
+//                    navController.popBackStack()
+//                    navController.navigate(Page.Main.name)
+//                },
+//                onFail = {
+//                    showError = true
+//                }
+//            )
         }
     }
 
@@ -334,7 +333,7 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
 fun LoginPagePreview() {
     MarketPlaceTheme {
         LoginPage(
-            navController = rememberNavController(),
-            authViewModel = AuthViewModel() )// ViewModel 인스턴스를 직접 생성하는 것은 피하는 것이 좋습니다.
+            navController = rememberNavController()
+        )// ViewModel 인스턴스를 직접 생성하는 것은 피하는 것이 좋습니다.
     }
 }

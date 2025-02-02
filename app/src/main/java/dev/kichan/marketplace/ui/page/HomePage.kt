@@ -19,12 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.CouponViewModel
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.ui.component.organisms.CouponBanner
-import dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
@@ -35,8 +33,6 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 @Composable
 fun HomePage(
     navController: NavController,
-    authViewModel: AuthViewModel,
-    couponViewModel: CouponViewModel
 ) {
 //    val latestCoupons = couponViewModel.latestCoupon.observeAsState()
 //    val closingCoupons = couponViewModel.closingCoupon.observeAsState()
@@ -148,6 +144,6 @@ fun HomePage(
 @Composable
 fun HomePagePreview() {
     MarketPlaceTheme {
-        HomePage(rememberNavController(), AuthViewModel(), CouponViewModel())
+        HomePage(rememberNavController())
     }
 }
