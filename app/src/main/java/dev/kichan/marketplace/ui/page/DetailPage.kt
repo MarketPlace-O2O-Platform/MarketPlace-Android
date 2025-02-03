@@ -3,17 +3,13 @@ package dev.kichan.marketplace.ui.page
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,9 +27,10 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.coupon.CouponRes
+import dev.kichan.marketplace.model.data.market.MarketDetailRes
+import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.model.service.CouponOwnerService
-import dev.kichan.marketplace.model.service.CouponService
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Coupon
+import dev.kichan.marketplace.model.service.MarketService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -103,16 +100,16 @@ fun KakaoMapSearchBox() {
 }
 
 @Composable
-fun DetailPage(
+fun MarketDetailPage(
     navController: NavController,
     id: Long
 ) {
-    val service = NetworkModule.getService(CouponOwnerService::class.java)
-    val data = remember { mutableStateOf<CouponRes?>(null)}
+    val service = NetworkModule.getService(MarketService::class.java)
+    val data = remember { mutableStateOf<MarketDetailRes?>(null)}
 
     val getData = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = service.getCoupon(id)
+            val res = service.getMarket(id)
             withContext(Dispatchers.Main) {
                 if(res.isSuccessful) {
                     data.value = res.body()!!.response
@@ -161,5 +158,5 @@ fun BusinessInfoRow(label: String, value: String) {
 @Preview(showBackground = true)
 @Composable
 fun DetailPagePreview() {
-    DetailPage(rememberNavController(), 12121L)
+    MarketDetailPage(rememberNavController(), 12121L)
 }

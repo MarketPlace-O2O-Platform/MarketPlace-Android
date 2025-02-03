@@ -10,7 +10,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.EventListPage
-import dev.kichan.marketplace.ui.page.DetailPage
+import dev.kichan.marketplace.ui.page.MarketDetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
@@ -52,7 +52,7 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
 
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
-                    DetailPage(navController, id.toLong())
+                    MarketDetailPage(navController, id.toLong())
                 }
             }
         }
