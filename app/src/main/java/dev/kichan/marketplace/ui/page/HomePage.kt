@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,7 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.coupon.CouponPagination
 import dev.kichan.marketplace.model.data.coupon.CouponRes
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -43,8 +45,8 @@ fun HomePage(
     singleTonViewModel: SingleTonViewModel = SingleTonViewModel()
 ) {
     val couponRepo = CouponRepository()
-    val latestCoupons = remember { mutableStateOf<CouponPagination<CouponRes>?>(null) }
-    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>?>(null) }
+    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>?>(emptyList()) }
+    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>?>(listOf()) }
 
     val getPopularCoupon = {
         CoroutineScope(Dispatchers.IO).launch {
@@ -63,8 +65,27 @@ fun HomePage(
         }
     }
 
+    val getLatestCoupon = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = couponRepo.getLatestCoupon(
+                singleTonViewModel.currentMember.value!!.studentId,
+                null,
+                null,
+                20,
+            )
+            withContext(Dispatchers.Main) {
+                if (res.isSuccessful) {
+                    latestCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
+                } else {
+
+                }
+            }
+        }
+    }
+
     LaunchedEffect(Unit) {
-        getPopularCoupon()
+//        getPopularCoupon();
+        getLatestCoupon();
     }
 
     Scaffold(
@@ -125,7 +146,6 @@ fun HomePage(
                         } ?: listOf()
                     )
                 }
-//
 //                // 최신 제휴 이벤트
                 item {
                     Spacer(modifier = Modifier.height(16.dp))

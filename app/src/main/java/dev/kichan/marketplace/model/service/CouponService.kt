@@ -4,6 +4,7 @@ import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
 import dev.kichan.marketplace.model.data.coupon.CouponPagination
 import dev.kichan.marketplace.model.data.coupon.CouponRes
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import retrofit2.Response
 import retrofit2.http.GET
@@ -31,7 +32,7 @@ interface CouponService {
         @Query("lastCreatedAt") lastCreatedAt: String?,
         @Query("lastCouponId") lastCouponId: Long?,
         @Query("pageSize") pageSize: Int
-    ): Response<ResponseTemplate<CouponPagination<CouponRes>>>
+    ): Response<ResponseTemplate<CouponPagination<LatestCouponRes>>>
 
     @GET("/api/coupons/closing")
     suspend fun getClosingCoupon(
