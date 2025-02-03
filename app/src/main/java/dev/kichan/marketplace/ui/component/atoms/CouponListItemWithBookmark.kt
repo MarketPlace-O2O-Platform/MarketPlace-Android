@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import Carbon_bookmark
 import androidx.compose.foundation.Image
@@ -32,7 +32,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun EventListItem(
+fun CouponListItemWithBookmark(
     imageRes: Int,
     title: String,
     couponDescription: String,
@@ -115,7 +115,7 @@ fun EventListItem(
 @Composable
 fun EventCardPreview() {
     MarketPlaceTheme {
-        EventListItem(
+        CouponListItemWithBookmark(
             imageRes = R.drawable.desert,
             title = "참피온삼겹살 트리플 스트리트점",
             couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",

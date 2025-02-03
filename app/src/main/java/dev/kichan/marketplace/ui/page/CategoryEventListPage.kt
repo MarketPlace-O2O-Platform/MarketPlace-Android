@@ -26,7 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventListItem
+import dev.kichan.marketplace.ui.component.atoms.CouponListItemWithBookmark
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -67,7 +67,7 @@ fun EventListPage(navController: NavController, category: LargeCategory) {
                     contentPadding = PaddingValues(16.dp),
                 ) {
                     items(50) {
-                        EventListItem(
+                        CouponListItemWithBookmark(
                             imageRes = R.drawable.desert,
                             title = "참피온삼겹살 트리플 스트리트점",
                             couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",

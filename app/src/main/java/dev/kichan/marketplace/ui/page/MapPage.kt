@@ -47,7 +47,7 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventListItem
+import dev.kichan.marketplace.ui.component.atoms.CouponListItemWithBookmark
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.launch
@@ -180,7 +180,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                 }
             }
             items(10) {
-                EventListItem(
+                CouponListItemWithBookmark(
                     modifier = Modifier.padding(12.dp),
                     imageRes = R.drawable.desert,
                     title = "참피온삼겹살 트리플스트리",
