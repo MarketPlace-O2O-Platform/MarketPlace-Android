@@ -22,36 +22,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun CouponListItemWithBookmark(
+    modifier: Modifier = Modifier,
     imageRes: Int,
     title: String,
     couponDescription: String,
     location: String,
     likes: Int,
     category: String,
-    modifier: Modifier = Modifier
+    thumbnail: String,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource(imageRes),
-            contentDescription = null,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(thumbnail)
+                .crossfade(true)
+                .build(),
+            contentDescription = "Event Thumnail",
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(110.dp)
-                .clip(RoundedCornerShape(4.dp))
+            modifier = Modifier.size(110.dp)
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -122,7 +128,8 @@ fun EventCardPreview() {
             location = "송도",
             likes = 440,
             category = "음식&주점",
-            modifier = Modifier
+            modifier = Modifier,
+            thumbnail = ""
         )
     }
 }

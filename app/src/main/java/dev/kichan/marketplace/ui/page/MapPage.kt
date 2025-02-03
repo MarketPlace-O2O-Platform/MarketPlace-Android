@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
@@ -24,6 +25,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,17 +47,42 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.service.MarketService
 import dev.kichan.marketplace.ui.bottomNavItem
+import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemWithBookmark
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.math.sin
 
 @Composable
-fun MapPage(navController: NavController) {
-    var currentLocation by remember { mutableStateOf<LatLng?>(null) }
-    var address by remember { mutableStateOf("") }
+fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel = SingleTonViewModel()) {
+    val service = NetworkModule.getService(MarketService::class.java)
+    val marketList = remember { mutableStateOf<List<MarketRes>>(listOf()) }
+
+    val getMarkets = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = service.getMarkets(
+                singleTonViewModel.currentMember.value!!.studentId,
+                null,
+                null,
+                null,
+            )
+
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    marketList.value = res.body()!!.response.marketResDtos
+                }
+            }
+        }
+    }
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -72,7 +99,9 @@ fun MapPage(navController: NavController) {
         LocalConfiguration.current.screenHeightDp.dp * 0.8f
     }
 
-//    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
+    LaunchedEffect(Unit) {
+        getMarkets()
+    }
 
     Scaffold(
         bottomBar = {
@@ -87,6 +116,7 @@ fun MapPage(navController: NavController) {
                 SheetContent(
                     modifier = Modifier.height(expandedHeight),
                     isExpended = bottomSheetState.isExpanded,
+                    markets = marketList.value,
                     onCloseSheet = { scope.launch { bottomSheetState.collapse() } }
                 )
             },
@@ -112,13 +142,13 @@ fun MapPage(navController: NavController) {
                 ) {
                 }
 
-//                CategoryTap(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .align(Alignment.TopCenter),
-//                    selectedCategory = selectedCategory,
-//                    onSelected = { selectedCategory = it }
-//                )
+                CategoryTap(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter),
+                    selectedCategory = LargeCategory.All,
+                    onSelected = { }
+                )
 
                 IconButton(
                     onClick = {
@@ -158,7 +188,12 @@ fun MapPage(navController: NavController) {
 }
 
 @Composable
-fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseSheet: () -> Unit) {
+fun SheetContent(
+    modifier: Modifier = Modifier,
+    isExpended: Boolean,
+    markets: List<MarketRes>,
+    onCloseSheet: () -> Unit
+) {
     Box(modifier = Modifier) {
         LazyColumn(
             modifier = modifier,
@@ -179,15 +214,16 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                     ) {}
                 }
             }
-            items(10) {
+            items(markets) {
                 CouponListItemWithBookmark(
                     modifier = Modifier.padding(12.dp),
                     imageRes = R.drawable.desert,
-                    title = "참피온삼겹살 트리플스트리",
-                    couponDescription = "맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹...",
-                    location = "송도",
+                    title = it.name,
+                    couponDescription = it.description,
+                    location = it.address,
                     likes = 10,
-                    category = LargeCategory.Food.nameKo
+                    category = LargeCategory.Food.nameKo,
+                    thumbnail = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
                 )
 
                 HorizontalDivider(
@@ -214,7 +250,7 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
 @Composable
 fun SheetContentPreview() {
     MarketPlaceTheme {
-        SheetContent(isExpended = true, onCloseSheet = {})
+        SheetContent(isExpended = true, markets = listOf(), onCloseSheet = {})
     }
 }
 

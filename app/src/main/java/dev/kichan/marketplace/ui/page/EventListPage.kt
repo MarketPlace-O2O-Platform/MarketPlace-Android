@@ -39,7 +39,8 @@ fun EventListPage(navController: NavController, title: String) {
                         location = "송도",
                         likes = 440,
                         category = "음식&주점",
-                        modifier = Modifier
+                        modifier = Modifier,
+                        thumbnail = ""
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
