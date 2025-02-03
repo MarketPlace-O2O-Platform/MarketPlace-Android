@@ -84,7 +84,7 @@ fun HomePage(
     }
 
     LaunchedEffect(Unit) {
-//        getPopularCoupon();
+        getPopularCoupon();
         getLatestCoupon();
     }
 
@@ -149,18 +149,18 @@ fun HomePage(
 //                // 최신 제휴 이벤트
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-//                    EventList(
-//                        navController = navController,
-//                        title = "이번달 신규 이벤트",
-//                        eventList = latestCoupons.value?.map {
-//                            Event(
-//                                id = it.id.toString(),
-//                                subTitle = it.marketName,
-//                                title = it.name,
-//                                url = "${BuildConfig.API_BASE_URL}image/${it.thumbnail}"
-//                            )
-//                        } ?: listOf()
-//                    )
+                    EventList(
+                        navController = navController,
+                        title = "이번달 신규 이벤트",
+                        eventList = latestCoupons.value?.map {
+                            Event(
+                                id = it.id.toString(),
+                                subTitle = it.marketName,
+                                title = it.name,
+                                url = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
+                            )
+                        } ?: listOf()
+                    )
                 }
 
                 item {
