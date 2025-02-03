@@ -17,12 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.login.LoginReq
+import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
@@ -33,9 +36,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+class SingleTonViewModel : ViewModel() {
+    val currentMember = MutableLiveData<LoginRes>(LoginRes(202401598))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginPage(navController: NavHostController) {
+fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) {
     val memberRepo = MemberRepositoryImpl()
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
@@ -55,6 +62,7 @@ fun LoginPage(navController: NavHostController) {
 
             withContext(Dispatchers.Main) {
                 if(res.isSuccessful) {
+                    singleTon.currentMember.value = res.body()!!.response
                     navController.popBackStack()
                     navController.navigate(Page.Main.name)
                 }
@@ -330,7 +338,8 @@ fun LoginPage(navController: NavHostController) {
 fun LoginPagePreview() {
     MarketPlaceTheme {
         LoginPage(
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            singleTon = SingleTonViewModel()
         )// ViewModel 인스턴스를 직접 생성하는 것은 피하는 것이 좋습니다.
     }
 }

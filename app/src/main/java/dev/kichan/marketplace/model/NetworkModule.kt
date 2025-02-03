@@ -9,7 +9,7 @@ import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 object NetworkModule {
-    private const val BASE_URL = BuildConfig.API_BASE_URL
+    const val BASE_URL = BuildConfig.API_BASE_URL
 
     private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

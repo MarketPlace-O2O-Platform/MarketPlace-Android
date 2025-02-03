@@ -10,7 +10,6 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.EventListPage
-import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
@@ -18,15 +17,16 @@ import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.CouponPage
+import dev.kichan.marketplace.ui.page.SingleTonViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun MyApp() {
+fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Page.Login.name,
+        startDestination = Page.Main.name,
         enterTransition = {
             EnterTransition.None
         },
@@ -38,6 +38,7 @@ fun MyApp() {
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
+                    singleTonViewModel = singlethone,
                 )
             }
             composable(Page.Like.name) { LikePage(navController = navController) }
@@ -56,7 +57,7 @@ fun MyApp() {
             }
         }
         composable(route = Page.Login.name) {
-            LoginPage(navController = navController)
+            LoginPage(navController = navController, singleTon = singlethone)
         }
 
         composable("${Page.CategoryEventList.name}/{category}") {

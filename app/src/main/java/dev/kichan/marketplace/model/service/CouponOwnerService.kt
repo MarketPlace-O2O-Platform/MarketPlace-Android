@@ -1,6 +1,6 @@
 package dev.kichan.marketplace.model.service
 
-import dev.kichan.marketplace.model.data.coupon.CouponPagenation
+import dev.kichan.marketplace.model.data.coupon.CouponPagination
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.CouponRes
 import dev.kichan.marketplace.model.data.coupon.CouponCreateReq
@@ -39,7 +39,7 @@ interface CouponOwnerService {
     @GET("/api/owners/coupons/coupons")
     suspend fun getAllCouponByMarket(
         @Query("marketId") marketId: Int
-    ) : Response<ResponseTemplate<CouponPagenation<CouponRes>>>
+    ) : Response<ResponseTemplate<CouponPagination<CouponRes>>>
 
     @POST("/api/owners/coupons")
     suspend fun createCoupon(

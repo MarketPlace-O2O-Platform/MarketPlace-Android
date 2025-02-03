@@ -2,7 +2,7 @@ package dev.kichan.marketplace.model.service
 
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.CouponHandleRes
-import dev.kichan.marketplace.model.data.coupon.CouponPagenation
+import dev.kichan.marketplace.model.data.coupon.CouponPagination
 import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
 import retrofit2.Response
 import retrofit2.http.GET
@@ -34,5 +34,5 @@ interface CouponUserService {
         @Query("type") type: String?,
         @Query("memberCouponId") lastMemberCouponId: Long?,
         @Query("size") pageSize: Int?
-    ) : Response<ResponseTemplate<CouponPagenation<IssuedCouponRes>>>
+    ) : Response<ResponseTemplate<CouponPagination<IssuedCouponRes>>>
 }
