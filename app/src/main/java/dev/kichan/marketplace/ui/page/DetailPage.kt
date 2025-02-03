@@ -29,10 +29,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.coupon.CouponRes
+import dev.kichan.marketplace.model.service.CouponOwnerService
+import dev.kichan.marketplace.model.service.CouponService
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Coupon
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun ImageSlider() {
+fun ImageSlider(iamgeList: List<String>) {
     val images = listOf(
         R.drawable.brown,
         R.drawable.brown
@@ -97,8 +105,33 @@ fun KakaoMapSearchBox() {
 @Composable
 fun DetailPage(
     navController: NavController,
-    id: String
+    id: Long
 ) {
+    val service = NetworkModule.getService(CouponOwnerService::class.java)
+    val data = remember { mutableStateOf<CouponRes?>(null)}
+
+    val getData = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = service.getCoupon(id)
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    data.value = res.body()!!.response
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        getData()
+    }
+
+    if(data.value == null) {
+        return
+    }
+
+    Scaffold {
+        Text(text = data.value.toString())
+    }
 }
 
 @Composable
@@ -128,5 +161,5 @@ fun BusinessInfoRow(label: String, value: String) {
 @Preview(showBackground = true)
 @Composable
 fun DetailPagePreview() {
-    DetailPage(rememberNavController(), "asd")
+    DetailPage(rememberNavController(), 12121L)
 }

@@ -52,7 +52,7 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
 
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
-                    DetailPage(navController, id)
+                    DetailPage(navController, id.toLong())
                 }
             }
         }

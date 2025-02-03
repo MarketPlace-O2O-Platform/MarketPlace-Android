@@ -7,7 +7,6 @@ data class CouponRes(
     @SerializedName("couponName") val name: String,
     @SerializedName("couponDescription") val description: String,
     @SerializedName("deadLine") val deadline: String,
-    val deadLine: String,
     val stock: Int,
     val isHidden: Boolean,
     val isAvailable: Boolean,

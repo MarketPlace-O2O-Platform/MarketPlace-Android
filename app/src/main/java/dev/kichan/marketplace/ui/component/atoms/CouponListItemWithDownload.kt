@@ -109,7 +109,7 @@ fun CouponListItemWithDownload(
                 IconButton(
                     onClick = {}
                 ) {
-                    //todo: 아이콘 변경
+                    //todo: 아 몰라 나중에 해 아이콘 변경
                     Icon(imageVector = Download, contentDescription = null)
                 }
             }
