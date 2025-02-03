@@ -32,6 +32,8 @@ import dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
+import dev.kichan.marketplace.ui.component.organisms.BannerItem
+import dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
@@ -102,21 +104,21 @@ fun HomePage(
         ) {
             LazyColumn {
                 // 쿠폰 배너 바로 상단바 아래에 위치
-//                item {
-//                    Spacer(modifier = Modifier.height(20.dp))
-//                    if(popularCoupons.value != null) {
-//                        CouponBanner(
-//                            bannerList = popularCoupons.value!!.map {
-//                                BannerItem(
-//                                    title = it.name,
-//                                    subTitle = it.deadline,
-//                                    description = it.marketName,
-//                                    imageUrl = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
-//                                )
-//                            }
-//                        )
-//                    }
-//                }
+                item {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    if(popularCoupons.value != null) {
+                        CouponBanner(
+                            bannerList = (1..10).toList().map {
+                                BannerItem(
+                                    title = "${it}번째 배너",
+                                    subTitle = "${it}번째 소재목",
+                                    description = "2024.12.01~2025.12.01",
+                                    imageUrl = "https://github.com/kichan05/kichan05/blob/main/assets/banner_2.png?raw=true"
+                                )
+                            }
+                        )
+                    }
+                }
 
                 // 카테고리 섹션
                 item {
