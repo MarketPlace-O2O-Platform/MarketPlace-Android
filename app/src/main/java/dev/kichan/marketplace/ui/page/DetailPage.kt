@@ -169,35 +169,58 @@ fun MarketDetailPage(
             )
         ) {
             item { ImageSlider(List(5) { "https://picsum.photos/2000" }) }
-            item {
-                Row(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = data.value!!.name,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            fontFamily = PretendardFamily
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = data.value!!.description,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = PretendardFamily,
-                            color = Color(0xff7D7D7D)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    IconButton({}) {
-                        Icon(imageVector = Carbon_bookmark, contentDescription = null)
-                    }
-                }
-            }
+            item { MainInfo(data) }
+            item { BusinessInfo(data) }
             item { KakaoMapSearchBox() }
+        }
+    }
+}
+
+@Composable
+private fun BusinessInfo(data: MutableState<MarketDetailRes?>) {
+    Column(
+        modifier = Modifier.padding(20.dp)
+    ) {
+        Text(
+            text = "영업정보",
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        BusinessInfoRow("시간", data.value!!.operationHours)
+        BusinessInfoRow("휴무일", data.value!!.closedDays)
+        BusinessInfoRow("매장 전화번호", data.value!!.phoneNumber)
+        BusinessInfoRow("주소", data.value!!.address)
+    }
+}
+
+@Composable
+private fun MainInfo(data: MutableState<MarketDetailRes?>) {
+    Row(
+        modifier = Modifier.padding(20.dp)
+    ) {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = data.value!!.name,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = PretendardFamily
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = data.value!!.description,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = PretendardFamily,
+                color = Color(0xff7D7D7D)
+            )
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        IconButton({}) {
+            Icon(imageVector = Carbon_bookmark, contentDescription = null)
         }
     }
 }
