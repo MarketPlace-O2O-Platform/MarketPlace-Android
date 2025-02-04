@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.page
 
 import Bookmark
 import Carbon_bookmark
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,9 +15,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -170,6 +173,40 @@ fun MarketDetailPage(
         ) {
             item { ImageSlider(List(5) { "https://picsum.photos/2000" }) }
             item { MainInfo(data) }
+            item {
+                HorizontalDivider(
+                    Modifier
+                        .height(8.dp)
+                        .background(Color(0xffeeeee))
+                )
+            }
+            item {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Text(
+                        "이벤트 쿠폰",
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 20.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("쿠폰 만들 예정", fontSize = 10.sp)
+                    }
+                }
+            }
+            item {
+                HorizontalDivider(
+                    Modifier
+                        .height(8.dp)
+                        .background(Color(0xffeeeee))
+                )
+            }
             item { BusinessInfo(data) }
             item { KakaoMapSearchBox() }
         }
