@@ -23,6 +23,7 @@ interface KakaoLocalService {
     @GET("/v2/local/search/address.json")
     suspend fun getAddress(
         @Header("Authorization") key: String = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}",
+        @Header("KA") ka : String = "sdk/1.0 os/Android lang/ko-KR origin/DVNfC6O5d5Ju6J8nIvBXxisENpc=",
         @Query("query") query: String,
     ): Response<KakaoLocal<Address>>
 }

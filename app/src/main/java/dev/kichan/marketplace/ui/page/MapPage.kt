@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -44,11 +46,15 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.kakao.KakaoLocal
+import dev.kichan.marketplace.model.data.kakao.adress.Address
 import dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.service.KakaoLocalService
 import dev.kichan.marketplace.model.service.MarketService
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
@@ -64,21 +70,33 @@ import kotlin.math.sin
 
 @Composable
 fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel = SingleTonViewModel()) {
-    val service = NetworkModule.getService(MarketService::class.java)
+    val marketService = NetworkModule.getService(MarketService::class.java)
+    val kakaoService = NetworkModule.getKakaoService()
+    //todo: BASE_URL이 다른 문제부터 해결해보자
+
     val marketList = remember { mutableStateOf<List<MarketRes>>(listOf()) }
+    val marketPositionList = remember { mutableStateOf<List<Address>>(listOf()) }
 
     val getMarkets = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = service.getMarkets(
+            val res = marketService.getMarkets(
                 singleTonViewModel.currentMember.value!!.studentId,
                 null,
                 null,
                 null,
             )
 
+            val marketData = res.body()!!.response.marketResDtos
+
+            val positionList = marketData.map { kakaoService.getAddress(query = it.address) }
+//                .filter { it.isSuccessful }
+//                .map { it.body()!!.documents[0] }
+            Log.d("PositionList", positionList.toString())
+
             withContext(Dispatchers.Main) {
                 if(res.isSuccessful) {
-                    marketList.value = res.body()!!.response.marketResDtos
+                    marketList.value = marketData
+//                    marketPositionList.value = positionList
                 }
             }
         }
@@ -140,6 +158,11 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                     onMapClick = {
                     }
                 ) {
+                    for (p in marketPositionList.value) {
+                        Marker(
+                            anchor = Offset(p.x.toFloat(), p.y.toFloat())
+                        )
+                    }
                 }
 
                 CategoryTap(
