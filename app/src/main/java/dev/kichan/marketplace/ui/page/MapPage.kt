@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.LargeCategory
@@ -72,10 +73,9 @@ import kotlin.math.sin
 fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel = SingleTonViewModel()) {
     val marketService = NetworkModule.getService(MarketService::class.java)
     val kakaoService = NetworkModule.getKakaoService()
-    //todo: BASE_URL이 다른 문제부터 해결해보자
 
     val marketList = remember { mutableStateOf<List<MarketRes>>(listOf()) }
-    val marketPositionList = remember { mutableStateOf<List<Address>>(listOf()) }
+    val marketPositionList = remember { mutableStateOf<List<LatLng>>(listOf()) }
 
     val getMarkets = {
         CoroutineScope(Dispatchers.IO).launch {
@@ -89,14 +89,21 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
             val marketData = res.body()!!.response.marketResDtos
 
             val positionList = marketData.map { kakaoService.getAddress(query = it.address) }
-//                .filter { it.isSuccessful }
-//                .map { it.body()!!.documents[0] }
+                .filter { it.isSuccessful }
+                .map { it.body()!!.documents }
+                .filter { it.isNotEmpty() }
+                .map{
+                    Log.d("Position", it.toString())
+                    it[0]
+                }
+                .map{ LatLng(it.y.toDouble(), it.x.toDouble()) }
+
             Log.d("PositionList", positionList.toString())
 
             withContext(Dispatchers.Main) {
                 if(res.isSuccessful) {
                     marketList.value = marketData
-//                    marketPositionList.value = positionList
+                    marketPositionList.value = positionList
                 }
             }
         }
@@ -160,7 +167,7 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                 ) {
                     for (p in marketPositionList.value) {
                         Marker(
-                            anchor = Offset(p.x.toFloat(), p.y.toFloat())
+                            state = MarkerState(position = p)
                         )
                     }
                 }
