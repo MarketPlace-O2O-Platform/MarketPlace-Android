@@ -3,6 +3,7 @@ package dev.kichan.marketplace.ui.page
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,6 +58,7 @@ import dev.kichan.marketplace.model.data.kakao.adress.Address
 import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.model.service.KakaoLocalService
 import dev.kichan.marketplace.model.service.MarketService
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -142,7 +144,8 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                     modifier = Modifier.height(expandedHeight),
                     isExpended = bottomSheetState.isExpanded,
                     markets = marketList.value,
-                    onCloseSheet = { scope.launch { bottomSheetState.collapse() } }
+                    onCloseSheet = { scope.launch { bottomSheetState.collapse() } },
+                    onDetailClick = { navController.navigate("${Page.EventDetail}/$it") }
                 )
             },
             scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState),
@@ -192,7 +195,7 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                 ) {
                     Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, tint = Color(0xff545454))
                 }
-                
+
                 IconChip(
                     modifier = Modifier.align(Alignment.TopCenter).padding(52.dp),
                     onClick = { /*TODO*/ },
@@ -220,6 +223,7 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
 @Composable
 fun SheetContent(
     modifier: Modifier = Modifier,
+    onDetailClick: (id: Long) -> Unit,
     isExpended: Boolean,
     markets: List<MarketRes>,
     onCloseSheet: () -> Unit
@@ -246,7 +250,9 @@ fun SheetContent(
             }
             items(markets) {
                 CouponListItemWithBookmark(
-                    modifier = Modifier.padding(12.dp),
+                    modifier = Modifier
+                        .clickable { onDetailClick(it.id) }
+                        .padding(12.dp),
                     imageRes = R.drawable.desert,
                     title = it.name,
                     couponDescription = it.description,
@@ -280,7 +286,7 @@ fun SheetContent(
 @Composable
 fun SheetContentPreview() {
     MarketPlaceTheme {
-        SheetContent(isExpended = true, markets = listOf(), onCloseSheet = {})
+        SheetContent(isExpended = true, markets = listOf(), onCloseSheet = {}, onDetailClick = {})
     }
 }
 
