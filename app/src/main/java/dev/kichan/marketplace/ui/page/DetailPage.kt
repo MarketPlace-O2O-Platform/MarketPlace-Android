@@ -21,25 +21,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun ImageSlider() {
     val images = listOf(
-        R.drawable.brown,
-        R.drawable.brown
+        R.drawable.burger,
+        R.drawable.burger
     )
 
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(280.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
         itemsIndexed(images) { _, imageRes ->
             Image(
@@ -56,13 +58,20 @@ fun ImageSlider() {
 fun DetailContent() {
     var isBookMark by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+    Spacer(modifier = Modifier.height(20.dp))
+
+    Column(modifier = Modifier.padding(20.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
-                text = "콜드케이스 트리플 인하대점",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.weight(1f)
+                text = "수제버거 브라더즈",
+                fontWeight = FontWeight(600),
+                lineHeight = 28.sp,
+                fontSize = 19.sp,
+                color = Color(0xFF121212),
+                fontFamily = PretendardFamily
             )
             Image(
                 painter = painterResource(id = R.drawable.bookmark),
@@ -76,12 +85,112 @@ fun DetailContent() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "믿고 즐기는 인하대 방탈출 맛집! 맛집! 맛집!\n스릴 넘치는 테마부터 낭만적인 꽃길 걷을 수 있는 곳!",
-            color = Color.Gray,
-            fontSize = 14.sp
+            text = "매일매일 신선한 소고기로 만든 꽉 찬 육즙을\n느낄 수 있는 00동 핫플, 수제버거 맛집",
+            fontSize = 15.sp,
+            lineHeight = 24.sp,
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight(500),
+            color = Color(0xFF7D7D7D)
         )
     }
 }
+
+@Composable
+fun CouponSlider() {
+    val coupons = listOf(
+        "스트리트 치킨 30% 할인" to "2025년 03월 21일까지",
+        "버거킹 세트 20% 할인" to "2025년 04월 15일까지",
+        "스타벅스 아메리카노 1+1" to "2025년 05월 10일까지"
+    )
+
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(horizontal = 20.dp), // 좌우 여백 추가
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        itemsIndexed(coupons) { _, coupon ->
+            Box(
+                modifier = Modifier
+                    .width(335.dp)
+                    .height(88.dp)
+            ) {
+                // 쿠폰 기본 배경 (subtract_black 이미지)
+                Image(
+                    painter = painterResource(id = R.drawable.subtract_black),
+                    contentDescription = "쿠폰",
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                // 텍스트와 아이콘을 오버레이
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // 텍스트 부분 (쿠폰 제목 + 날짜를 Row로 묶음)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row {
+                            Text(
+                                text = coupon.first,
+                                fontSize = 16.sp,
+                                lineHeight = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                fontFamily = PretendardFamily
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Row {
+                            Text(
+                                text = coupon.second,
+                                color = Color(0xFFFFFFFF),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight(400),
+                                fontFamily = PretendardFamily,
+                                lineHeight = 22.sp
+                            )
+                        }
+                    }
+
+
+                    // 쿠폰 받기 버튼 (아이콘 + 텍스트)
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .width(55.dp)
+                            .fillMaxHeight()
+                            .padding(end=10.dp)
+
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.download), // 쿠폰 받기 아이콘
+                            contentDescription = "쿠폰 받기",
+                            modifier = Modifier
+                                .size(18.dp)
+                                .clickable { /* 쿠폰 다운로드 기능 추가 */ }
+                        )
+
+                        Spacer(modifier = Modifier.height(11.dp))
+
+                        Text(
+                            text = "쿠폰받기",
+                            fontSize = 12.sp,
+                            lineHeight = 14.sp,
+                            fontFamily = PretendardFamily,
+                            fontWeight = FontWeight(500),
+                            color = Color(0xFFFFFFFF),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun KakaoMapSearchBox() {
@@ -127,36 +236,39 @@ fun DetailPage() {
             ImageSlider()
             DetailContent()
 
+
+
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(5.dp)
-                    .background(Color.LightGray)
+                    .width(376.dp)
+                    .height(8.dp)
+                    .background(color = Color(0xFFEEEEEE))
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "이벤트 쿠폰",
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight(600),
+                lineHeight = 28.sp,
+                color = Color(0xFF121212),
                 fontSize = 18.sp,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                fontFamily = PretendardFamily,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.detailcoupon),
-                contentDescription = "Detail Coupon",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
+            CouponSlider()
 
             Text(
-                text = "쿠폰 부가 설명\n쿠폰 부가 설명",
-                color = Color.Gray,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                text = "메인 메뉴(수제 버거) 주문 시, 쿠폰 적용 가능\n쿠폰 다운로드 시점으로부터 3일 이내로 미사용 시 소멸 예정",
+                color = Color(0xFF7D7D7D),
+                lineHeight = 19.5.sp,
+                fontSize = 13.sp,
+                fontFamily = PretendardFamily,
+                fontWeight = FontWeight(400),
+                modifier = Modifier.padding(horizontal = 20.dp)
             )
+            Spacer(modifier = Modifier.height(24.dp))
 
             Box(
                 modifier = Modifier
@@ -165,12 +277,15 @@ fun DetailPage() {
                     .background(Color.LightGray)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "영업 정보",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
+                text = "영업정보",
+                fontSize = 14.sp,
+                lineHeight = 28.sp,
+                fontFamily = PretendardFamily,
+                fontWeight = FontWeight(600),
+                color = Color(0xFF121212),
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
@@ -201,20 +316,27 @@ fun BusinessInfoRow(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.Top
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.spacedBy(69.dp, Alignment.Start)
     ) {
         Text(
             text = label,
+            fontSize = 13.sp,
+            lineHeight = 18.2.sp,
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight(500),
             color = Color(0xFF868686),
-            fontSize = 14.sp,
-            modifier = Modifier.width(100.dp)
+            modifier = Modifier.width((75.dp))
         )
         Column {
             Text(
                 text = value,
+                fontSize = 13.sp,
+                lineHeight = 22.sp,
+                fontFamily = PretendardFamily,
+                fontWeight = FontWeight(500),
                 color = Color(0xFF5E5E5E),
-                fontSize = 14.sp
             )
         }
     }
