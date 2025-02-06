@@ -221,18 +221,19 @@ fun KakaoMapSearchBox() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .height(48.dp)
+            .padding(start = 20.dp, end = 20.dp, bottom = 60.dp)
+            .height(45.dp)
             .clip(RoundedCornerShape(12.dp)) // 둥근 모서리 설정
             .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
-            .background(Color.White),
+            .background(Color.White)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = R.drawable.search), // search.png 불러오기
             contentDescription = null,
             modifier = Modifier
-                .padding(start = 12.dp)
+                .padding(start = 12.dp, end = 8.dp)
                 .size(20.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -244,9 +245,11 @@ fun KakaoMapSearchBox() {
                 }
                 append(" 인하대점 검색")
             },
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             color = Color(0xFF545454), // 텍스트 색상 #545454로 설정
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight(500),
+            lineHeight = 22.sp,
+            fontFamily = PretendardFamily
         )
     }
 }
@@ -254,8 +257,10 @@ fun KakaoMapSearchBox() {
 @Composable
 fun DetailPage(navController: NavController) {
     Scaffold {
+        Text("Detail Page")
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
+
                 modifier = Modifier
                     .padding(it)
                     .verticalScroll(rememberScrollState())
@@ -321,11 +326,12 @@ fun DetailPage(navController: NavController) {
                     BusinessInfoRow("주소", "인천시 연수구 송도동 174-3 송도 트리플 스트리트 B동 2층 202,203호\n테크노파크역 2번 출구 도보 13분")
 
                     Text(
-                        text = "                         주소 복사 | 길찾기",
+                        text = "                                           주소 복사 | 길찾기",
                         color = Color(0xFF4B4B4B),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(top = 8.dp)
+                        fontSize = 14.sp,
+                        lineHeight = 22.sp,
+                        fontWeight = FontWeight(500),
+                        modifier = Modifier.padding(top = 4.dp)
                     )
                 }
 
