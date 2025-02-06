@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,7 +12,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,12 +30,15 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import androidx.compose.material3.Button
+import androidx.compose.ui.window.Dialog
 
 @Composable
 fun ImageSlider() {
@@ -105,11 +113,14 @@ fun CouponSlider() {
         "스타벅스 아메리카노 1+1" to "2025년 05월 10일까지"
     )
 
+    var showDialog by remember { mutableStateOf(false) } // 팝업 상태 관리
+    var selectedCoupon by remember { mutableStateOf("") } // 선택한 쿠폰 제목 저장
+
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-            .padding(horizontal = 20.dp), // 좌우 여백 추가
+            .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         itemsIndexed(coupons) { _, coupon ->
@@ -118,80 +129,146 @@ fun CouponSlider() {
                     .width(335.dp)
                     .height(88.dp)
             ) {
-                // 쿠폰 기본 배경 (subtract_black 이미지)
                 Image(
                     painter = painterResource(id = R.drawable.subtract_black),
                     contentDescription = "쿠폰",
                     modifier = Modifier.fillMaxSize()
                 )
 
-                // 텍스트와 아이콘을 오버레이
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // 텍스트 부분 (쿠폰 제목 + 날짜를 Row로 묶음)
                     Column(modifier = Modifier.weight(1f)) {
-                        Row {
-                            Text(
-                                text = coupon.first,
-                                fontSize = 16.sp,
-                                lineHeight = 24.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                fontFamily = PretendardFamily
-                            )
-                        }
+                        Text(
+                            text = coupon.first,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
                         Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Text(
-                                text = coupon.second,
-                                color = Color(0xFFFFFFFF),
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight(400),
-                                fontFamily = PretendardFamily,
-                                lineHeight = 22.sp
-                            )
-                        }
+                        Text(
+                            text = coupon.second,
+                            fontSize = 14.sp,
+                            color = Color(0xFFD9D9D9)
+                        )
                     }
 
-
-                    // 쿠폰 받기 버튼 (아이콘 + 텍스트)
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .width(55.dp)
                             .fillMaxHeight()
-                            .padding(end=10.dp)
-
+                            .clickable {
+                                selectedCoupon = coupon.first // 선택한 쿠폰 저장
+                                showDialog = true // 팝업 표시
+                            }
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.download), // 쿠폰 받기 아이콘
+                            painter = painterResource(id = R.drawable.download),
                             contentDescription = "쿠폰 받기",
-                            modifier = Modifier
-                                .size(18.dp)
-                                .clickable { /* 쿠폰 다운로드 기능 추가 */ }
+                            modifier = Modifier.size(24.dp)
                         )
-
-                        Spacer(modifier = Modifier.height(11.dp))
-
+                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = "쿠폰받기",
                             fontSize = 12.sp,
-                            lineHeight = 14.sp,
-                            fontFamily = PretendardFamily,
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFFFFFFFF),
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
                         )
                     }
                 }
             }
         }
     }
+
+    // 팝업 다이얼로그
+    if (showDialog) {
+        CouponDownloadDialog(
+            couponTitle = selectedCoupon,
+            onDismiss = { showDialog = false }
+        )
+    }
 }
+
+@Composable
+fun CouponDownloadDialog(couponTitle: String, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
+        Box(
+            modifier = Modifier
+                .width(320.dp) // ✅ 고정된 너비 적용
+                .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 8.dp))
+                .padding(start = 16.dp, top = 32.dp, end = 16.dp, bottom = 32.dp) // ✅ 내부 패딩 조정
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // 제목
+                Text(
+                    text = "이 쿠폰을 받으시겠습니까?",
+                    fontSize = 20.sp,
+                    lineHeight = 30.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(700),
+                    color = Color(0xFF000000),
+                    textAlign = TextAlign.Center,
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // 설명 텍스트
+                Text(
+                    text = "3일 이내 사용하셔야 합니다.\n다운 받은 시점으로 3일 후에 만료됩니다.",
+                    fontSize = 14.sp,
+                    lineHeight = 22.4.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF676C75),
+                    textAlign = TextAlign.Center,
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // 버튼 섹션
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp) // ✅ 버튼 간 간격 유지
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(288.dp)
+                            .height(40.dp)
+                            .background(color = Color(0xFF303030), shape = RoundedCornerShape(size = 4.dp))
+                            .clickable { onDismiss() }, // 클릭 이벤트
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Yes",
+                            color = Color.White,
+                            fontSize = 16.sp
+                        )
+                    }
+
+                    OutlinedButton(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .width(288.dp)
+                            .height(40.dp),
+                        shape = RoundedCornerShape(4.dp),
+                        border = BorderStroke(1.dp, Color.Black)
+                    ) {
+                        Text("No", color = Color.Black, fontSize = 16.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun BackButtonHeader(navController: NavController) {
