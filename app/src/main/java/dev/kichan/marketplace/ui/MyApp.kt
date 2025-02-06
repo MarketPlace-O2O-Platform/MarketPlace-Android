@@ -44,7 +44,7 @@ fun MyApp(authViewModel : AuthViewModel) {
             composable(Page.My.name) { MyPage(navController = navController, viewModel = authViewModel) }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
 
-            composable(Page.EventDetail.name) { DetailPage() }
+            composable(Page.EventDetail.name) { DetailPage(navController = navController) }
         }
         composable(route = Page.Login.name) {
             LoginPage(navController = navController, authViewModel = authViewModel)

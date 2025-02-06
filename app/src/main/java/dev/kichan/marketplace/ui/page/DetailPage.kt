@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -191,6 +193,28 @@ fun CouponSlider() {
     }
 }
 
+@Composable
+fun BackButtonHeader(navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(52.dp)
+            .padding(start = 8.dp, top = 8.dp), // 좌측 상단 배치
+        contentAlignment = Alignment.TopStart
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.left_white), // 왼쪽 상단 아이콘
+            contentDescription = "뒤로 가기",
+            modifier = Modifier
+                .size(32.dp) // 아이콘 크기 조정
+                .clickable {
+                    navController.popBackStack() // 이전 화면으로 이동
+                }
+        )
+    }
+}
+
+
 
 @Composable
 fun KakaoMapSearchBox() {
@@ -228,88 +252,94 @@ fun KakaoMapSearchBox() {
 }
 
 @Composable
-fun DetailPage() {
+fun DetailPage(navController: NavController) {
     Scaffold {
-        Column(
-            modifier = Modifier.padding(it).verticalScroll(rememberScrollState())
-        ) {
-            ImageSlider()
-            DetailContent()
-
-
-
-            Box(
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .width(376.dp)
-                    .height(8.dp)
-                    .background(color = Color(0xFFEEEEEE))
-            )
+                    .padding(it)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                ImageSlider()
+                DetailContent()
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .width(376.dp)
+                        .height(8.dp)
+                        .background(color = Color(0xFFEEEEEE))
+                )
 
-            Text(
-                text = "이벤트 쿠폰",
-                fontWeight = FontWeight(600),
-                lineHeight = 28.sp,
-                color = Color(0xFF121212),
-                fontSize = 18.sp,
-                fontFamily = PretendardFamily,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
-            )
-
-            CouponSlider()
-
-            Text(
-                text = "메인 메뉴(수제 버거) 주문 시, 쿠폰 적용 가능\n쿠폰 다운로드 시점으로부터 3일 이내로 미사용 시 소멸 예정",
-                color = Color(0xFF7D7D7D),
-                lineHeight = 19.5.sp,
-                fontSize = 13.sp,
-                fontFamily = PretendardFamily,
-                fontWeight = FontWeight(400),
-                modifier = Modifier.padding(horizontal = 20.dp)
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(5.dp)
-                    .background(Color.LightGray)
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                text = "영업정보",
-                fontSize = 14.sp,
-                lineHeight = 28.sp,
-                fontFamily = PretendardFamily,
-                fontWeight = FontWeight(600),
-                color = Color(0xFF121212),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                BusinessInfoRow("시간", "토일 11:00 - 23:00\n평일 12:00 - 23:00")
-                BusinessInfoRow("휴무일", "매주 화요일")
-                BusinessInfoRow("매장 전화번호", "032-000-0000")
-                BusinessInfoRow("주소", "인천시 연수구 송도동 174-3 송도 트리플 스트리트 B동 2층 202,203호\n테크노파크역 2번 출구 도보 13분")
 
                 Text(
-                    text = "                         주소 복사 | 길찾기",
-                    color = Color(0xFF4B4B4B),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(top = 8.dp)
+                    text = "이벤트 쿠폰",
+                    fontWeight = FontWeight(600),
+                    lineHeight = 28.sp,
+                    color = Color(0xFF121212),
+                    fontSize = 18.sp,
+                    fontFamily = PretendardFamily,
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
                 )
+
+                CouponSlider()
+
+                Text(
+                    text = "메인 메뉴(수제 버거) 주문 시, 쿠폰 적용 가능\n쿠폰 다운로드 시점으로부터 3일 이내로 미사용 시 소멸 예정",
+                    color = Color(0xFF7D7D7D),
+                    lineHeight = 19.5.sp,
+                    fontSize = 13.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(5.dp)
+                        .background(Color.LightGray)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Text(
+                    text = "영업정보",
+                    fontSize = 14.sp,
+                    lineHeight = 28.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(600),
+                    color = Color(0xFF121212),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    BusinessInfoRow("시간", "토일 11:00 - 23:00\n평일 12:00 - 23:00")
+                    BusinessInfoRow("휴무일", "매주 화요일")
+                    BusinessInfoRow("매장 전화번호", "032-000-0000")
+                    BusinessInfoRow("주소", "인천시 연수구 송도동 174-3 송도 트리플 스트리트 B동 2층 202,203호\n테크노파크역 2번 출구 도보 13분")
+
+                    Text(
+                        text = "                         주소 복사 | 길찾기",
+                        color = Color(0xFF4B4B4B),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                KakaoMapSearchBox()
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            KakaoMapSearchBox()
+            // 이미지를 덮는 위치에 뒤로 가기 버튼 배치
+            BackButtonHeader(navController)
         }
     }
 }
+
 
 @Composable
 fun BusinessInfoRow(label: String, value: String) {
@@ -345,5 +375,6 @@ fun BusinessInfoRow(label: String, value: String) {
 @Preview(showBackground = true)
 @Composable
 fun DetailPagePreview() {
-    DetailPage()
+    val navController = rememberNavController()
+    DetailPage(navController = navController)
 }
