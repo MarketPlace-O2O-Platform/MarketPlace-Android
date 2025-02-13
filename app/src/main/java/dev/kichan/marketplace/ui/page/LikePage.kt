@@ -42,6 +42,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
+import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -194,12 +195,16 @@ private fun DeadLineOGoitssm() {
 //                deadLine = LocalDate.of(2025, 3, 12)
 //            )
 
-//            items(10) {
-//                RequestCard(
-//                    modifier = Modifier.width(284.dp),
-//                    state = state
-//                )
-//            }
+            items(10) {
+                RequestCard(
+                    modifier = Modifier.width(284.dp),
+                    marketName = "콜드케이스 인하대점",
+                    likeCount = 9,
+                    isMyDone = false,
+                    isRequestDone = false,
+                    thumbnail = "https://picsum.photos/1000"
+                )
+            }
         }
     }
 }
@@ -225,7 +230,7 @@ private fun MyHeartCount() {
             )
             Spacer(modifier = Modifier.width(11.dp))
             Text(
-                text = "내 공감권 3개",
+                text = "내 공감권",
                 style = TextStyle(
                     fontSize = 16.sp,
                     lineHeight = 26.sp,
