@@ -62,24 +62,31 @@ fun LikePage(navController: NavController) {
                     key = searchKey
                 ) { searchKey = it }
             }
-            item {
-                MyHeartCount()
-            }
-            item {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Color(0xFFEEEEEE))
-                )
-            }
-            item {
-                //todo: 컴포넌트 명 변경
-                DeadLineOGoitssm()
-            }
+            if(searchKey.isEmpty()) {
+                item {
+                    MyHeartCount()
+                }
+                item {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Color(0xFFEEEEEE))
+                    )
+                }
+                item {
+                    //todo: 컴포넌트 명 변경
+                    DeadLineOGoitssm()
+                }
 
-            item {
-                Jigum()
+                item {
+                    Jigum()
+                }
+            }
+            else {
+                item {
+                    Text("대충 검색")
+                }
             }
         }
     }
@@ -89,14 +96,6 @@ fun LikePage(navController: NavController) {
 private fun Jigum() {
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
-//    val state = LikeRequest(
-//        marketName = "콜드케이스 인하대점",
-//        likeCount = 9,
-//        imageRes = R.drawable.cafe,
-//        isMyDone = false,
-//        isRequestDone = false,
-//        deadLine = LocalDate.of(2025, 3, 12)
-//    )
     SpaceTitle(title = "지금 공감하면 할인권을 드려요", badgeTitle = "EVENT")
     Spacer(modifier = Modifier.height(20.dp))
     CategorySelector(
@@ -186,15 +185,6 @@ private fun DeadLineOGoitssm() {
             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-//            val state = LikeRequest(
-//                marketName = "콜드케이스 인하대점",
-//                likeCount = 100,
-//                imageRes = R.drawable.cafe,
-//                isMyDone = false,
-//                isRequestDone = false,
-//                deadLine = LocalDate.of(2025, 3, 12)
-//            )
-
             items(10) {
                 RequestCard(
                     modifier = Modifier.width(284.dp),
