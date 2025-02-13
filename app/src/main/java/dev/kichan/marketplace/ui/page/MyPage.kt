@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -156,10 +155,10 @@ fun MyPage(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // 나만의 큐레이션과 카테고리 선택 버튼
-            CategorySelector(
-                selectedCategorys = selectedCategory,
-                onChange = { }
-            )
+//            CategorySelector(
+//                selectedCategory = selectedCategory,
+//                onChange = { }
+//            )
             Spacer(modifier = Modifier.height(20.dp))
 
             // MyPageCard를 세로로 나열하는 리스트, 각 카드 사이에 구분선 추가
@@ -192,16 +191,16 @@ fun MyPage(navController: NavController) {
     }
 }
 
-@Preview
-@Composable
-private fun CategorySelectorPreview() {
-    MarketPlaceTheme {
-        CategorySelector(
-            selectedCategorys = listOf(LargeCategory.All),
-            {}
-        )
-    }
-}
+//@Preview
+//@Composable
+//private fun CategorySelectorPreview() {
+//    MarketPlaceTheme {
+//        CategorySelector(
+//            selectedCategory = listOf(LargeCategory.All),
+//            {}
+//        )
+//    }
+//}
 
 @Preview(showBackground = true)
 @Composable

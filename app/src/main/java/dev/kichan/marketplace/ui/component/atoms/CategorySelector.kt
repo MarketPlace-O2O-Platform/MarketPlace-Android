@@ -24,28 +24,28 @@ import dev.kichan.marketplace.common.LargeCategory
 
 @Composable
 fun CategorySelector(
-    selectedCategorys: List<LargeCategory>,
+    selectedCategory: LargeCategory,
     onChange: (LargeCategory) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
     Column {
-        Text(
-            text = "나만의 큐레이션",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
+//        Text(
+//            text = "나만의 큐레이션",
+//            fontSize = 18.sp,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 24.dp),
+//            fontWeight = FontWeight.SemiBold
+//        )
+//
+//        Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .horizontalScroll(scrollState)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 20.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -54,7 +54,7 @@ fun CategorySelector(
             val categoryShape = RoundedCornerShape(50.dp)
 
             categories.forEachIndexed { index, category ->
-                val isSelected = selectedCategorys.any { it == category }
+                val isSelected = selectedCategory == category
 
                 // todo: 카테고리 칩을 컴포넌트로 따로 빼서 boolean 파라미터 받는거로 변경하기
                 Surface(

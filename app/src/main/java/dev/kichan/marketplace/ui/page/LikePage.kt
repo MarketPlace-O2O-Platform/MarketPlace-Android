@@ -41,6 +41,7 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -85,9 +86,7 @@ fun LikePage(navController: NavController) {
 
 @Composable
 private fun Jigum() {
-    var selectedCategorys by remember {
-        mutableStateOf(mutableListOf(LargeCategory.All, LargeCategory.Food))
-    }
+    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
 //    val state = LikeRequest(
 //        marketName = "콜드케이스 인하대점",
@@ -100,8 +99,8 @@ private fun Jigum() {
     SpaceTitle(title = "지금 공감하면 할인권을 드려요", badgeTitle = "EVENT")
     Spacer(modifier = Modifier.height(20.dp))
     CategorySelector(
-        selectedCategorys = selectedCategorys,
-        onChange = {}
+        selectedCategory = selectedCategory,
+        onChange = { selectedCategory = it }
     )
     Spacer(modifier = Modifier.height(20.dp))
     Column(
@@ -112,8 +111,24 @@ private fun Jigum() {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-//                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
-//                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
+                RequestSmallCard(
+                    modifier = Modifier.weight(1.0f),
+                    marketName = "콜드케이스 인하대점",
+                    likeCount = 9,
+                    isMyDone = false,
+                    isRequestDone = false,
+                    thumbnail = "https://picsum.photos/1000"
+//                    deadLine = LocalDate.of(2025, 3, 12)
+                )
+                RequestSmallCard(
+                    modifier = Modifier.weight(1.0f),
+                    marketName = "콜드케이스 인하대점",
+                    likeCount = 9,
+                    isMyDone = false,
+                    isRequestDone = false,
+                    thumbnail = "https://picsum.photos/1000"
+//                    deadLine = LocalDate.of(2025, 3, 12)
+                )
             }
         }
     }
