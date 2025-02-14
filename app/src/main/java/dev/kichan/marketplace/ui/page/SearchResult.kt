@@ -149,6 +149,28 @@ fun SearchResultItem(title: String, description: String) {
                 color = Color(0xFF7D7D7D),
                 modifier = Modifier.padding(start = 16.dp).fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.padding(start = 16.dp,top=20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.location),
+                    contentDescription = "Location",
+                    modifier = Modifier
+                        .width(16.dp)
+                        .height(16.dp)
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                Text(
+                    text = "송도",
+                    fontSize = 13.sp,
+                    lineHeight = 22.sp,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF5E5E5E),
+                )
+            }
         }
     }
 }
