@@ -51,9 +51,9 @@ fun MarketplaceUI() {
                 painter = painterResource(id = R.drawable.left_black),
                 contentDescription = "Back",
                 modifier = Modifier
-                  .width(24.dp)
-                  .height(24.dp)
-                  .padding(1.dp)
+                    .width(24.dp)
+                    .height(24.dp)
+                    .padding(1.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             SearchBar()
@@ -105,7 +105,7 @@ fun SearchBar() {
             .height(32.dp)
             .padding(end=12.dp)
             .background(color = Color(0xFFFAFAFA), shape = RoundedCornerShape(size = 50.dp)),
-            verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(4.dp))
         Image(
@@ -145,7 +145,6 @@ fun Chip(text: String) {
         shape = RoundedCornerShape(50.dp),
         border = BorderStroke(1.dp, Color(0xFFC6C6C6)),
         modifier = Modifier
-            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 50.dp))
             .padding(start = 12.dp, top = 6.dp, bottom = 6.dp)
     ) {
         Text(text = text,
@@ -169,12 +168,22 @@ fun BenefitCard() {
         shape = RoundedCornerShape(4.dp)
     ) {
         Column {
-            Image(
-                painter = painterResource(id = R.drawable.brown), // 이미지 리소스 추가 필요
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.height(172.dp).fillMaxWidth()
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(id = R.drawable.brown),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.height(172.dp).fillMaxWidth()
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.bookmark2), // 스크랩 기능 아이콘
+                    contentDescription = "Bookmark",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.TopEnd)
+                        .padding(10.dp)
+                )
+            }
             Text(
                 text = "콜드케이스 인하대점",
                 fontSize = 10.sp,
