@@ -1,18 +1,15 @@
-package dev.kichan.marketplace.ui.page.searchresult
+package dev.kichan.marketplace.ui.page
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.ui.component.atoms.Button
 
 class SearchEmptyActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +48,7 @@ fun SearchEmptyUI() {
                     .padding(1.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            SearchBar()
+            dev.kichan.marketplace.ui.page.searchresult.SearchBar()
         }
         Divider(color = Color(0xFF303030), thickness = 1.dp)
         Spacer(modifier = Modifier.height(40.dp))
@@ -81,14 +79,25 @@ fun SearchEmptyUI() {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Image(
-            painter = painterResource(id = R.drawable.searchempty),
-            contentDescription = "Search Empty",
-            modifier = Modifier
-                .fillMaxWidth().wrapContentHeight()
-                .width(302.dp)
-                .height(185.dp)
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Image(
+                painter = painterResource(id = R.drawable.searchempty),
+                contentDescription = "Search Empty",
+                modifier = Modifier
+                    .width(302.dp)
+                    .height(185.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(31.dp))
+        Button(
+            text = "요청하기",
+            onClick = { println("매장 요청하기 버튼 클릭됨!") },
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 68.dp) ,
+            textColor = Color.White,
+            isDisable = false
         )
+
     }
 }
 
