@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,19 +33,24 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.repository.FavoriteRepository
+import dev.kichan.marketplace.model.service.FavoritesService
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun CouponListItemWithBookmark(
     modifier: Modifier = Modifier,
-    imageRes: Int,
     title: String,
     couponDescription: String,
     location: String,
     likes: Int,
     category: String,
     thumbnail: String,
+    onFavoriteClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -111,7 +117,11 @@ fun CouponListItemWithBookmark(
                     )
                 }
 
-                Icon(imageVector = Carbon_bookmark, contentDescription = null)
+                IconButton(
+                    onClick = { onFavoriteClick() }
+                ) {
+                    Icon(imageVector = Carbon_bookmark, contentDescription = null)
+                }
             }
         }
     }
@@ -122,14 +132,13 @@ fun CouponListItemWithBookmark(
 fun EventCardPreview() {
     MarketPlaceTheme {
         CouponListItemWithBookmark(
-            imageRes = R.drawable.desert,
             title = "참피온삼겹살 트리플 스트리트점",
             couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
             location = "송도",
             likes = 440,
             category = "음식&주점",
             modifier = Modifier,
-            thumbnail = ""
+            thumbnail = "",
         )
     }
 }
