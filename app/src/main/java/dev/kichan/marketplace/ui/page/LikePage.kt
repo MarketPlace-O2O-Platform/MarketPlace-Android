@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.model.repository.MarkerLikeRepository
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -44,10 +45,28 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun LikePage(navController: NavController) {
     var searchKey by remember { mutableStateOf("") }
+    val repository = MarkerLikeRepository()
+
+    val getTempMarket = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = repository.getTempMarkets(
+                202401598,
+                20,
+            )
+            withContext(Dispatchers.Main) {
+
+            }
+        }
+    }
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
