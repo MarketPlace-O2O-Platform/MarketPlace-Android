@@ -67,6 +67,18 @@ fun LikePage(navController: NavController) {
         }
     }
 
+    val getTempMArketSearch = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = repository.getMarketSearch(
+                202401598,
+                searchKey,
+            )
+            withContext(Dispatchers.Main) {
+
+            }
+        }
+    }
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
