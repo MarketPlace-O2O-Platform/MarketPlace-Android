@@ -57,15 +57,45 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun MapPage(navController: NavController) {
-//    val permissionsState = rememberMultiplePermissionsState(
-//        permissions = listOf(
-//            Manifest.permission.ACCESS_FINE_LOCATION,
-//            Manifest.permission.ACCESS_COARSE_LOCATION
-//        )
-//    )
-    var currentLocation by remember { mutableStateOf<LatLng?>(null) }
-    var address by remember { mutableStateOf("") }
+fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel = SingleTonViewModel()) {
+    //제발되게 해주세요ㅕ 제발요
+    val marketService = NetworkModule.getService(MarketService::class.java)
+    val kakaoService = NetworkModule.getKakaoService()
+
+    val marketList = remember { mutableStateOf<List<MarketRes>>(listOf()) }
+    val marketPositionList = remember { mutableStateOf<List<LatLng>>(listOf()) }
+
+    val getMarkets = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = marketService.getMarkets(
+                singleTonViewModel.currentMember.value!!.studentId,
+                null,
+                null,
+                null,
+            )
+
+            val marketData = res.body()!!.response.marketResDtos
+
+            val positionList = marketData.map { kakaoService.getAddress(query = it.address) }
+                .filter { it.isSuccessful }
+                .map { it.body()!!.documents }
+                .filter { it.isNotEmpty() }
+                .map{
+                    Log.d("Position", it.toString())
+                    it[0]
+                }
+                .map{ LatLng(it.y.toDouble(), it.x.toDouble()) }
+
+            Log.d("PositionList", positionList.toString())
+
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    marketList.value = marketData
+                    marketPositionList.value = positionList
+                }
+            }
+        }
+    }
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -189,13 +219,14 @@ fun SheetContent(modifier: Modifier = Modifier, isExpended: Boolean, onCloseShee
                     ) {}
                 }
             }
-            items(10) {
-                EventListItem(
-                    modifier = Modifier.padding(12.dp),
-                    imageRes = R.drawable.desert,
-                    title = "참피온삼겹살 트리플스트리",
-                    couponDescription = "맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹살맛있는 삼겹...",
-                    location = "송도",
+            items(markets) {
+                CouponListItemWithBookmark(
+                    modifier = Modifier
+                        .clickable { onDetailClick(it.id) }
+                        .padding(12.dp),
+                    title = it.name,
+                    couponDescription = it.description,
+                    location = it.address,
                     likes = 10,
                     category = LargeCategory.Food.nameKo
                 )
