@@ -23,6 +23,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.atoms.PasswordInput
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import kotlinx.coroutines.delay
 
@@ -40,6 +41,18 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
     val schools = listOf("학교 A", "학교 B", "학교 C") // 예시 학교 목록
 
     val onLogin: (String, String) -> Unit = { id, password ->
+        authViewModel.login(
+            id = id,
+            password = password,
+            onSuccess = {
+                navController.popBackStack()
+                navController.navigate(Page.Main.name)
+            },
+            onFail = {
+                // Handle login failure
+            }
+        )
+        
         if (selectedSchool == "학교를 선택해주세요") {
             message = "학교를 선택해주세요."
             showError = true
@@ -246,11 +259,12 @@ fun LoginPage(navController: NavHostController, authViewModel: AuthViewModel) {
             Spacer(modifier = Modifier.height(4.dp))
 
             // Pw Input
-            PasswordInput(
+            Input(
                 value = inputPassword,
                 onChange = { inputPassword = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = "비밀번호를 입력해주세요"
+                placeholder = "비밀번호를 입력해주세요",
+                inputType = InputType.Password
             )
 
             Spacer(modifier = Modifier.height(8.dp))

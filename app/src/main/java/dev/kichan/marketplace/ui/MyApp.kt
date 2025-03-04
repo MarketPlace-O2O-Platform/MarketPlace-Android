@@ -19,11 +19,11 @@ import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.CategoryEventListPage
 import dev.kichan.marketplace.ui.page.LoginPage
-import dev.kichan.marketplace.ui.screen.CouponPage
+import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun MyApp(authViewModel : AuthViewModel) {
+fun MyApp(authViewModel: AuthViewModel) {
 
     val navController = rememberNavController()
 
@@ -38,13 +38,26 @@ fun MyApp(authViewModel : AuthViewModel) {
         }
     ) {
         navigation(route = Page.Main.name, startDestination = Page.Home.name) {
-            composable(Page.Home.name) { HomePage(navController = navController, viewModel = authViewModel) }
+            composable(Page.Home.name) {
+                HomePage(
+                    navController = navController,
+                    viewModel = authViewModel
+                )
+            }
             composable(Page.Like.name) { LikePage(navController = navController) }
             composable(Page.Map.name) { MapPage(navController = navController) }
-            composable(Page.My.name) { MyPage(navController = navController, viewModel = authViewModel) }
+            composable(Page.My.name) {
+                MyPage(
+                    navController = navController,
+                    viewModel = authViewModel
+                )
+            }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
-
-            composable(Page.EventDetail.name) { DetailPage(navController = navController) }
+            composable("${Page.EventDetail.name}/{id}") {
+                it.arguments?.getString("id")?.let { id ->
+                    DetailPage(navController, authViewModel, id)
+                }
+            }
         }
         composable(route = Page.Login.name) {
             LoginPage(navController = navController, authViewModel = authViewModel)
@@ -52,7 +65,11 @@ fun MyApp(authViewModel : AuthViewModel) {
 
         composable("${Page.CategoryEventList.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
-                CategoryEventListPage(navController = navController, category = LargeCategory.valueOf(category))
+                CategoryEventListPage(
+                    navController = navController,
+                    viewModel = authViewModel,
+                    category = LargeCategory.valueOf(category)
+                )
             }
         }
 

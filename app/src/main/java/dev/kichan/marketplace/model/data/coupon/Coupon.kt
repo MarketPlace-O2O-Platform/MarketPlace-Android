@@ -12,3 +12,11 @@ data class Coupon(
     @SerializedName("hidden") val isHidden: Boolean,
     val createdAt: String,
 )
+
+data class LatestCouponRes(
+    @SerializedName("couponId") val id: Long,
+    val marketId: Long,
+    @SerializedName("couponName") val name: String,
+    val description: String?,
+    val createdAt: String,
+)

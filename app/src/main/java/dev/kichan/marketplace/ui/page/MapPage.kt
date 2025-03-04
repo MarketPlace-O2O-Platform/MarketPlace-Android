@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.page
 
 import LargeCategory
+import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -57,6 +58,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MapPage(navController: NavController) {
+//    val permissionsState = rememberMultiplePermissionsState(
+//        permissions = listOf(
+//            Manifest.permission.ACCESS_FINE_LOCATION,
+//            Manifest.permission.ACCESS_COARSE_LOCATION
+//        )
+//    )
+    var currentLocation by remember { mutableStateOf<LatLng?>(null) }
+    var address by remember { mutableStateOf("") }
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(

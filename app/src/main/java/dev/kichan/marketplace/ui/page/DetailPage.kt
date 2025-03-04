@@ -19,6 +19,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.theme.PretendardFamily
-import androidx.compose.material3.Button
-import androidx.compose.ui.window.Dialog
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
 
 @Composable
 fun ImageSlider() {
@@ -65,7 +65,7 @@ fun ImageSlider() {
 }
 
 @Composable
-fun DetailContent() {
+fun DetailContent(data: MarketDetailRes) {
     var isBookMark by remember { mutableStateOf(false) }
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -76,12 +76,10 @@ fun DetailContent() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "수제버거 브라더즈",
-                fontWeight = FontWeight(600),
-                lineHeight = 28.sp,
-                fontSize = 19.sp,
-                color = Color(0xFF121212),
-                fontFamily = PretendardFamily
+                text = data.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.weight(1f)
             )
             Image(
                 painter = painterResource(id = R.drawable.bookmark),
@@ -376,7 +374,6 @@ fun DetailPage(navController: NavController) {
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -416,8 +413,6 @@ fun DetailPage(navController: NavController) {
 
                 KakaoMapSearchBox()
             }
-
-            // 이미지를 덮는 위치에 뒤로 가기 버튼 배치
             BackButtonHeader(navController)
         }
     }
