@@ -1,8 +1,8 @@
-package dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
 import Bookmark
 import Carbon_bookmark
-import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,9 +35,10 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import dev.kichan.marketplace.ui.data.Event
+import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.data.event.Event
+import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import kotlin.math.log
 
 @Composable
 fun EventBox(
@@ -48,11 +52,11 @@ fun EventBox(
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(event.url)
+                .data("https://marketplace.inuappcenter.kr/image/${event.url}")
                 .crossfade(true)
                 .build(),
-            contentDescription = "Event Thumnail",
-            contentScale = ContentScale.Crop,
+            contentDescription = "Image from URL",
+            contentScale = ContentScale.Crop, // 이미지 비율 조정
             modifier = modifier
         )
 
@@ -78,14 +82,14 @@ fun EventBox(
                 .padding(12.dp)
         ) {
             Text(
-                text = event.subTitle,
-                color = Color(0xffffffff),
+                text = event.eventName,
+                color = Color(0xffC7C7C7),
                 fontFamily = PretendardFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
             )
             Text(
-                text = event.title,
+                text = event.eventName,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -98,11 +102,17 @@ fun EventBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
-    val event = Event(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png")
+    val market = Event(
+        marketName = "Bette Sheppard",
+        eventName = "Bernard Bullock",
+        defaultPrice = 4136,
+        eventPrice = 4187,
+        imageRes = 4367,
+        id = "sdas"
+    )
+
     EventBox(
-        modifier = Modifier
-            .fillMaxWidth(0.7f)
-            .aspectRatio(1f / 1),
-        event = event
+        modifier = Modifier.fillMaxWidth(0.7f).aspectRatio(1f/1),
+        event = market
     )
 }

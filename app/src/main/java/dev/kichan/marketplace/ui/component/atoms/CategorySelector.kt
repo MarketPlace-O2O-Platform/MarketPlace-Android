@@ -1,5 +1,6 @@
-package dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
+import LargeCategory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -20,32 +21,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.kichan.marketplace.common.LargeCategory
 
 @Composable
 fun CategorySelector(
-    selectedCategory: LargeCategory,
+    selectedCategorys: List<LargeCategory>,
     onChange: (LargeCategory) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
     Column {
-//        Text(
-//            text = "나만의 큐레이션",
-//            fontSize = 18.sp,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 24.dp),
-//            fontWeight = FontWeight.SemiBold
-//        )
-//
-//        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "나만의 큐레이션",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .horizontalScroll(scrollState)
-                .padding(horizontal = 20.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -54,7 +54,7 @@ fun CategorySelector(
             val categoryShape = RoundedCornerShape(50.dp)
 
             categories.forEachIndexed { index, category ->
-                val isSelected = selectedCategory == category
+                val isSelected = selectedCategorys.any { it == category }
 
                 // todo: 카테고리 칩을 컴포넌트로 따로 빼서 boolean 파라미터 받는거로 변경하기
                 Surface(

@@ -1,7 +1,6 @@
-package dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
 import Carbon_bookmark
-import Download
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
@@ -34,7 +32,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun CouponListItemWithDownload(
+fun EventListItem(
     imageRes: Int,
     title: String,
     couponDescription: String,
@@ -106,12 +104,8 @@ fun CouponListItemWithDownload(
                         style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                     )
                 }
-                IconButton(
-                    onClick = {}
-                ) {
-                    //todo: 아 몰라 나중에 해 아이콘 변경
-                    Icon(imageVector = Download, contentDescription = null)
-                }
+
+                Icon(imageVector = Carbon_bookmark, contentDescription = null)
             }
         }
     }
@@ -119,9 +113,9 @@ fun CouponListItemWithDownload(
 
 @Preview(showBackground = true)
 @Composable
-fun CouponListItemWithDownloadPreview() {
+fun EventCardPreview() {
     MarketPlaceTheme {
-        CouponListItemWithDownload(
+        EventListItem(
             imageRes = R.drawable.desert,
             title = "참피온삼겹살 트리플 스트리트점",
             couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
