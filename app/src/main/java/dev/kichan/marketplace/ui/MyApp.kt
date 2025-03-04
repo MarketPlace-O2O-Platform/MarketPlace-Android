@@ -53,7 +53,6 @@ fun MyApp(authViewModel: AuthViewModel) {
                 )
             }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
-
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
                     DetailPage(navController, authViewModel, id)
