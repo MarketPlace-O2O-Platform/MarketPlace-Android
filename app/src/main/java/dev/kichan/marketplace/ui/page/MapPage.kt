@@ -253,7 +253,6 @@ fun SheetContent(
                     modifier = Modifier
                         .clickable { onDetailClick(it.id) }
                         .padding(12.dp),
-                    imageRes = R.drawable.desert,
                     title = it.name,
                     couponDescription = it.description,
                     location = it.address,

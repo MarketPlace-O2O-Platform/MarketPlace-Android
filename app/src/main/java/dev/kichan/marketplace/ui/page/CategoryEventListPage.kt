@@ -68,7 +68,6 @@ fun EventListPage(navController: NavController, category: LargeCategory) {
                 ) {
                     items(50) {
                         CouponListItemWithBookmark(
-                            imageRes = R.drawable.desert,
                             title = "참피온삼겹살 트리플 스트리트점",
                             couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
                             location = "송도",
