@@ -12,7 +12,6 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.page.EventListPage
-import dev.kichan.marketplace.ui.page.DetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
@@ -20,6 +19,7 @@ import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.CategoryEventListPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.CouponPage
+import dev.kichan.marketplace.ui.page.MarketDetailPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -55,7 +55,7 @@ fun MyApp(authViewModel: AuthViewModel) {
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
-                    DetailPage(navController, authViewModel, id)
+                    MarketDetailPage(navController, id.toLong())
                 }
             }
         }

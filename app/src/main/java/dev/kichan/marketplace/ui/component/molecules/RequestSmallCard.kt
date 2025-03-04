@@ -1,6 +1,5 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules
+package dev.kichan.marketplace.ui.component.molecules
 
-import Button
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.kichan.marketplace.ui.component.atoms.Button
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.like.LikeRequest
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate

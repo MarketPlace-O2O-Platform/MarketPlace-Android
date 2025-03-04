@@ -1,8 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,8 +42,8 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.lik
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestCard
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
+import dev.kichan.marketplace.ui.component.molecules.RequestCard
+import dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import java.time.LocalDate
 
