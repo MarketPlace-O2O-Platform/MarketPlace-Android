@@ -19,7 +19,7 @@ import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.CategoryEventListPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.CouponPage
-import dev.kichan.marketplace.ui.page.MarketDetailPage
+import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable

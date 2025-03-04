@@ -19,7 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.event.Event
+import dev.kichan.marketplace.SingleTonViewModel
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
+import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
