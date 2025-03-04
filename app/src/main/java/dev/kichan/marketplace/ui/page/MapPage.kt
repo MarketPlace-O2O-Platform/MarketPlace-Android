@@ -73,6 +73,7 @@ import kotlin.math.sin
 
 @Composable
 fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel = SingleTonViewModel()) {
+    //제발되게 해주세요ㅕ 제발요
     val marketService = NetworkModule.getService(MarketService::class.java)
     val kakaoService = NetworkModule.getKakaoService()
 
