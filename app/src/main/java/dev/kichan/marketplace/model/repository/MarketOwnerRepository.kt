@@ -1,20 +1,18 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository
+package dev.kichan.marketplace.model.repository
 
-import android.content.Context
-import android.net.Uri
-import dev.kichan.marketplace.model.data.ResponseTemplate
-import dev.kichan.marketplace.model.data.market.Market
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketUpdateReq
-import retrofit2.Response
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.market.MarketCreateReq
+import dev.kichan.marketplace.model.data.market.MarketUpdateReq
+import dev.kichan.marketplace.model.service.MarketOwnerService
+import okhttp3.MultipartBody
 
-interface MarketOwnerRepository {
-    suspend fun getMarket(id: Int): Response<ResponseTemplate<Market>>
-    suspend fun updateMarket(id: Int, body: MarketUpdateReq): Response<ResponseTemplate<Market>>
-    suspend fun deleteMarket(id: Int)
-    suspend fun createMarket(
-        context : Context,
-        body: MarketCreateReq,
-        image : Uri,
-    ): Response<ResponseTemplate<Market>>
+class MarketOwnerRepository {
+    private val service: MarketOwnerService =
+        NetworkModule.getService(MarketOwnerService::class.java)
+
+    suspend fun getMarket(marketId: Int) = service.getMarket(marketId)
+    suspend fun updateMarket(marketId: Int, body: MarketUpdateReq) = service.updateMarket(marketId, body)
+    suspend fun deleteMarket(marketId: Int) = service.deleteMarket(marketId)
+    suspend fun createMarket(body: MarketCreateReq, images: List<MultipartBody.Part>) =
+        service.createMarket(body, images)
 }

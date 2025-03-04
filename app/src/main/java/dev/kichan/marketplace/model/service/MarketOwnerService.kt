@@ -1,9 +1,9 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service
+package dev.kichan.marketplace.model.service
 
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.market.Market
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketCreateReq
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketUpdateReq
+import dev.kichan.marketplace.model.data.market.MarketCreateReq
+import dev.kichan.marketplace.model.data.market.MarketUpdateReq
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body

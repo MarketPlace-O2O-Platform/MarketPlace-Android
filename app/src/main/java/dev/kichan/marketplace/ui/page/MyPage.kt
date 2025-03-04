@@ -1,22 +1,16 @@
 package dev.kichan.marketplace.ui.page
 
-import LargeCategory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,37 +25,35 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.event.Event2
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategorySelector
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MyPageCard
+import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun MyPage(navController: NavController, viewModel : AuthViewModel) {
-    val member = viewModel.member.observeAsState()
-    val myCuration = viewModel.myCuration.observeAsState()
+fun MyPage(navController: NavController) {
+//    val member = viewModel.member.observeAsState()
+//    val myCuration = viewModel.myCuration.observeAsState()
 
     var selectedCategory by remember {
         mutableStateOf(mutableListOf(LargeCategory.All))
     }
 
     val onLogout = {
-        viewModel.logout(
-            onSuccess = {
-                navController.popBackStack()
-                navController.navigate(Page.Login.name)
-            },
-            onFail = {
-                // 로그아웃 실패 시 처리 로직을 추가
-                // 예를 들어, 오류 메시지를 표시할 수 있습니다.
-                // 예: showError("로그아웃 실패")
-            }
-        )
+//        viewModel.logout(
+//            onSuccess = {
+//                navController.popBackStack()
+//                navController.navigate(Page.Login.name)
+//            },
+//            onFail = {
+//                // 로그아웃 실패 시 처리 로직을 추가
+//                // 예를 들어, 오류 메시지를 표시할 수 있습니다.
+//                // 예: showError("로그아웃 실패")
+//            }
+//        )
     }
 
     LaunchedEffect(Unit) {
@@ -121,7 +113,7 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
                             .background(Color(0xFFF9F9F9), shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(text = "${member.value?.studentId}님", fontSize = 16.sp, lineHeight = 22.4.sp, fontWeight = FontWeight.Bold, fontFamily = PretendardFamily)
+                    Text(text = "${202401598}님", fontSize = 16.sp, lineHeight = 22.4.sp, fontWeight = FontWeight.Bold, fontFamily = PretendardFamily)
 
                     Spacer(modifier = Modifier.width(12.dp))
 
@@ -163,55 +155,55 @@ fun MyPage(navController: NavController, viewModel : AuthViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // 나만의 큐레이션과 카테고리 선택 버튼
-            CategorySelector(
-                selectedCategorys = selectedCategory,
-                onChange = { }
-            )
+//            CategorySelector(
+//                selectedCategory = selectedCategory,
+//                onChange = { }
+//            )
             Spacer(modifier = Modifier.height(20.dp))
 
             // MyPageCard를 세로로 나열하는 리스트, 각 카드 사이에 구분선 추가
-            if(myCuration.value.isNullOrEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
-                }
-            }
-            else {
-                LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
-                ) {
-                    items(myCuration.value ?: listOf()) { event ->
-                        Column {
-                            MyPageCard(event = event)
-                            Divider(
-                                color = Color(0xFFF4F4F4),
-                                thickness = 1.dp,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-                }
-            }
+//            if(myCuration.value.isNullOrEmpty()) {
+//                Box(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
+//                }
+//            }
+//            else {
+//                LazyColumn(
+//                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+//                    verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
+//                ) {
+//                    items(myCuration.value ?: listOf()) { event ->
+//                        Column {
+//                            MyPageCard(event = event)
+//                            Divider(
+//                                color = Color(0xFFF4F4F4),
+//                                thickness = 1.dp,
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }
 
-@Preview
-@Composable
-private fun CategorySelectorPreview() {
-    MarketPlaceTheme {
-        CategorySelector(
-            selectedCategorys = listOf(LargeCategory.All),
-            {}
-        )
-    }
-}
+//@Preview
+//@Composable
+//private fun CategorySelectorPreview() {
+//    MarketPlaceTheme {
+//        CategorySelector(
+//            selectedCategory = listOf(LargeCategory.All),
+//            {}
+//        )
+//    }
+//}
 
 @Preview(showBackground = true)
 @Composable
 fun MyPagePreview() {
-    MyPage(navController = rememberNavController(), viewModel = AuthViewModel())
+    MyPage(navController = rememberNavController())
 }

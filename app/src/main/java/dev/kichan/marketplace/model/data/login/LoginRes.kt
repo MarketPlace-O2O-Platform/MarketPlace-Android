@@ -1,5 +1,5 @@
 package dev.kichan.marketplace.model.data.login
 
 data class LoginRes(
-    val studentId : Int,
+    val studentId : Long,
 )

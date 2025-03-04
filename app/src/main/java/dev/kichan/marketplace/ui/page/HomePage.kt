@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,7 +12,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,24 +21,73 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.event.Event
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.coupon.CouponPagination
+import dev.kichan.marketplace.model.data.coupon.CouponRes
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
+import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CategorySelector
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.organisms.CouponBanner
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.ui.component.organisms.CategorySelector
+import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
+import dev.kichan.marketplace.ui.component.organisms.BannerItem
+import dev.kichan.marketplace.ui.component.organisms.CouponBanner
+import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun HomePage(navController: NavController, viewModel: AuthViewModel) {
-    val top20 = viewModel.top20Coupon.observeAsState()
-    val newEvent = viewModel.newEvent.observeAsState()
+fun HomePage(
+    navController: NavController,
+    singleTonViewModel: SingleTonViewModel = SingleTonViewModel()
+) {
+    val couponRepo = CouponRepository()
+    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>?>(emptyList()) }
+    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>?>(listOf()) }
+
+    val getPopularCoupon = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = couponRepo.getPopularCoupon(
+                singleTonViewModel.currentMember.value!!.studentId,
+                null,
+                20
+            )
+            withContext(Dispatchers.Main) {
+                if (res.isSuccessful) {
+                    popularCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
+                } else {
+
+                }
+            }
+        }
+    }
+
+    val getLatestCoupon = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = couponRepo.getLatestCoupon(
+                singleTonViewModel.currentMember.value!!.studentId,
+                null,
+                null,
+                20,
+            )
+            withContext(Dispatchers.Main) {
+                if (res.isSuccessful) {
+                    latestCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
+                } else {
+
+                }
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
-        viewModel.getTop20Market()
-        viewModel.getNewEvent()
+        getPopularCoupon();
+        getLatestCoupon();
     }
 
     Scaffold(
@@ -55,7 +106,18 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
-                    CouponBanner()
+                    if(popularCoupons.value != null) {
+                        CouponBanner(
+                            bannerList = (1..10).toList().map {
+                                BannerItem(
+                                    title = "${it}번째 배너",
+                                    subTitle = "${it}번째 소재목",
+                                    description = "2024.12.01~2025.12.01",
+                                    imageUrl = "https://github.com/kichan05/kichan05/blob/main/assets/banner_2.png?raw=true"
+                                )
+                            }
+                        )
+                    }
                 }
 
                 // 카테고리 섹션
@@ -76,52 +138,30 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
                     EventList(
                         navController = navController,
                         title = "Top 20 인기 페이지",
-                        eventList = top20.value?.map { Event(
-                            id = it.id.toString(),
-                            marketName = it.marketName,
-                            eventName = it.name,
-                            defaultPrice = 30000,
-                            eventPrice = 1000,
-                            imageRes = R.drawable.cafe,
-                            url = it.thumbnail
-                        ) } ?: listOf(
+                        eventList = popularCoupons.value?.map {
                             Event(
-                                id = "elit",
-                                marketName = "Arlene McLean",
-                                eventName = "Edward Puckett",
-                                defaultPrice = 4755,
-                                eventPrice = 9653,
-                                imageRes = 7417,
-                                url = "https://www.cosinkorea.com/data/photos/20220936/art_16623477281141_06fd91.jp"
-                            ),
-                            Event(
-                                id = "elit",
-                                marketName = "Arlene McLean",
-                                eventName = "Edward Puckett",
-                                defaultPrice = 4755,
-                                eventPrice = 9653,
-                                imageRes = 7417,
-                                url = "https://www.cosinkorea.com/data/photos/20220936/art_16623477281141_06fd91.jp"
+                                id = it.id.toString(),
+                                title = it.name,
+                                subTitle = it.marketName,
+                                url = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
                             )
-                        )
+                        } ?: listOf()
                     )
                 }
-
-                // 최신 제휴 이벤트
+//                // 최신 제휴 이벤트
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     EventList(
                         navController = navController,
                         title = "이번달 신규 이벤트",
-                        eventList = newEvent.value?.map { Event(
-                            id = it.id.toString(),
-                            marketName = it.marketName,
-                            eventName = it.name,
-                            defaultPrice = 30000,
-                            eventPrice = 1000,
-                            imageRes = R.drawable.cafe,
-                            url = it.thumbnail
-                        ) } ?: listOf()
+                        eventList = latestCoupons.value?.map {
+                            Event(
+                                id = it.id.toString(),
+                                subTitle = it.marketName,
+                                title = it.name,
+                                url = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
+                            )
+                        } ?: listOf()
                     )
                 }
 
@@ -137,6 +177,6 @@ fun HomePage(navController: NavController, viewModel: AuthViewModel) {
 @Composable
 fun HomePagePreview() {
     MarketPlaceTheme {
-        HomePage(rememberNavController(), AuthViewModel())
+        HomePage(rememberNavController())
     }
 }
