@@ -18,10 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import dev.kichan.marketplace.ui.data.Event
+import dev.kichan.marketplace.model.data.event.Event
+import dev.kichan.marketplace.model.data.market.Market
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.atoms.EventBox
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.EventBox
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MoreViewTitle
 
 @Composable
@@ -29,10 +30,7 @@ fun EventList(
     modifier: Modifier = Modifier,
     navController: NavController,
     title: String,
-    eventList: List<Event>,
-//    onFavoriteClick: (Event, Boolean) -> Unit = { event, isFavorite ->
-//
-//    }
+    eventList: List<Event>
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -56,7 +54,7 @@ fun EventList(
         }
         else {
             LazyRow(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 7.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
             ) {

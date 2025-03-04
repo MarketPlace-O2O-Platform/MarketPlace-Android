@@ -35,50 +35,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.model.repository.MarkerLikeRepository
+import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.like.LikeRequest
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.atoms.CategorySelector
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
+import dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
 @Composable
 fun LikePage(navController: NavController) {
     var searchKey by remember { mutableStateOf("") }
-    val repository = MarkerLikeRepository()
-
-    val getTempMarket = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getTempMarkets(
-                202401598,
-                20,
-            )
-            withContext(Dispatchers.Main) {
-
-            }
-        }
-    }
-
-    val getTempMArketSearch = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getMarketSearch(
-                202401598,
-                searchKey,
-            )
-            withContext(Dispatchers.Main) {
-
-            }
-        }
-    }
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
@@ -93,31 +64,24 @@ fun LikePage(navController: NavController) {
                     key = searchKey
                 ) { searchKey = it }
             }
-            if(searchKey.isEmpty()) {
-                item {
-                    MyHeartCount()
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(Color(0xFFEEEEEE))
-                    )
-                }
-                item {
-                    //todo: 컴포넌트 명 변경
-                    DeadLineOGoitssm()
-                }
-
-                item {
-                    Jigum()
-                }
+            item {
+                MyHeartCount()
             }
-            else {
-                item {
-                    Text("대충 검색")
-                }
+            item {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Color(0xFFEEEEEE))
+                )
+            }
+            item {
+                //todo: 컴포넌트 명 변경
+                DeadLineOGoitssm()
+            }
+
+            item {
+                Jigum()
             }
         }
     }
@@ -125,13 +89,23 @@ fun LikePage(navController: NavController) {
 
 @Composable
 private fun Jigum() {
-    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
+    var selectedCategorys by remember {
+        mutableStateOf(mutableListOf(LargeCategory.All, LargeCategory.Food))
+    }
 
+    val state = LikeRequest(
+        marketName = "콜드케이스 인하대점",
+        likeCount = 9,
+        imageRes = R.drawable.cafe,
+        isMyDone = false,
+        isRequestDone = false,
+        deadLine = LocalDate.of(2025, 3, 12)
+    )
     SpaceTitle(title = "지금 공감하면 할인권을 드려요", badgeTitle = "EVENT")
     Spacer(modifier = Modifier.height(20.dp))
     CategorySelector(
-        selectedCategory = selectedCategory,
-        onChange = { selectedCategory = it }
+        selectedCategorys = selectedCategorys,
+        onChange = {}
     )
     Spacer(modifier = Modifier.height(20.dp))
     Column(
@@ -142,24 +116,8 @@ private fun Jigum() {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                RequestSmallCard(
-                    modifier = Modifier.weight(1.0f),
-                    marketName = "콜드케이스 인하대점",
-                    likeCount = 9,
-                    isMyDone = false,
-                    isRequestDone = false,
-                    thumbnail = "https://picsum.photos/1000"
-//                    deadLine = LocalDate.of(2025, 3, 12)
-                )
-                RequestSmallCard(
-                    modifier = Modifier.weight(1.0f),
-                    marketName = "콜드케이스 인하대점",
-                    likeCount = 9,
-                    isMyDone = false,
-                    isRequestDone = false,
-                    thumbnail = "https://picsum.photos/1000"
-//                    deadLine = LocalDate.of(2025, 3, 12)
-                )
+                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
+                RequestSmallCard(modifier = Modifier.weight(1.0f), state = state)
             }
         }
     }
@@ -216,14 +174,19 @@ private fun DeadLineOGoitssm() {
             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val state = LikeRequest(
+                marketName = "콜드케이스 인하대점",
+                likeCount = 100,
+                imageRes = R.drawable.cafe,
+                isMyDone = false,
+                isRequestDone = false,
+                deadLine = LocalDate.of(2025, 3, 12)
+            )
+
             items(10) {
                 RequestCard(
                     modifier = Modifier.width(284.dp),
-                    marketName = "콜드케이스 인하대점",
-                    likeCount = 9,
-                    isMyDone = false,
-                    isRequestDone = false,
-                    thumbnail = "https://picsum.photos/1000"
+                    state = state
                 )
             }
         }
@@ -251,7 +214,7 @@ private fun MyHeartCount() {
             )
             Spacer(modifier = Modifier.width(11.dp))
             Text(
-                text = "내 공감권",
+                text = "내 공감권 3개",
                 style = TextStyle(
                     fontSize = 16.sp,
                     lineHeight = 26.sp,

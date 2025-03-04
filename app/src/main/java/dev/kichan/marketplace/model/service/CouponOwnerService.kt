@@ -1,10 +1,10 @@
-package dev.kichan.marketplace.model.service
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service
 
-import dev.kichan.marketplace.model.data.coupon.CouponPagination
 import dev.kichan.marketplace.model.data.ResponseTemplate
-import dev.kichan.marketplace.model.data.coupon.CouponRes
-import dev.kichan.marketplace.model.data.coupon.CouponCreateReq
-import dev.kichan.marketplace.model.data.coupon.CouponUpdateReq
+import dev.kichan.marketplace.model.data.coupon.Coupon
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponHiddenRes
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponCreateReq
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponUpdateReq
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -18,13 +18,13 @@ interface CouponOwnerService {
     @GET("/api/owners/coupons/{couponId}")
     suspend fun getCoupon(
         @Path("couponId") couponId: Long,
-    ): Response<ResponseTemplate<CouponRes>>
+    ): Response<ResponseTemplate<Coupon>>
 
     @PUT("/api/owners/coupons/{couponId}")
     suspend fun updateCoupon(
         @Path("couponId") couponId: Long,
         @Body body: CouponUpdateReq
-    ): Response<ResponseTemplate<CouponRes>>
+    ): Response<ResponseTemplate<Coupon>>
 
     @DELETE("/api/owners/coupons/{couponId}")
     suspend fun deleteCoupon(
@@ -34,16 +34,11 @@ interface CouponOwnerService {
     @PUT("/api/owners/coupons/hidden/{couponId}")
     suspend fun updateHiddenCoupon(
         @Path("couponId") couponId: Long,
-    )
-
-    @GET("/api/owners/coupons/coupons")
-    suspend fun getAllCouponByMarket(
-        @Query("marketId") marketId: Int
-    ) : Response<ResponseTemplate<CouponPagination<CouponRes>>>
+    ): Response<ResponseTemplate<CouponHiddenRes>>
 
     @POST("/api/owners/coupons")
     suspend fun createCoupon(
         @Body body: CouponCreateReq,
         @Query("marketId") marketId: Int,
-    ): Response<ResponseTemplate<CouponRes>>
+    ): Response<ResponseTemplate<Coupon>>
 }

@@ -1,26 +1,33 @@
 package dev.kichan.marketplace.ui.page
 
-import Bookmark
 import Carbon_bookmark
-import android.widget.Space
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,9 +37,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
@@ -43,11 +52,9 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.coupon.CouponRes
-import dev.kichan.marketplace.model.data.market.MarketDetailRes
-import dev.kichan.marketplace.model.data.market.MarketRes
-import dev.kichan.marketplace.model.service.CouponOwnerService
-import dev.kichan.marketplace.model.service.MarketService
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market.MarketDetailRes
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.MarketService
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,10 +81,6 @@ fun ImageSlider(iamgeList: List<String>) {
             )
         }
     }
-}
-
-@Composable
-fun DetailContent() {
 }
 
 @Composable
@@ -125,7 +128,7 @@ fun MarketDetailPage(
 
     val getData = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = service.getMarket(id)
+            val res = service.getMarketDetail(id.toString())
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
                     data.value = res.body()!!.response
@@ -226,7 +229,7 @@ private fun BusinessInfo(data: MutableState<MarketDetailRes?>) {
         )
         Spacer(modifier = Modifier.height(12.dp))
         BusinessInfoRow("시간", data.value!!.operationHours)
-        BusinessInfoRow("휴무일", data.value!!.closedDays)
+        BusinessInfoRow("휴무일", data.value!!.closedDay)
         BusinessInfoRow("매장 전화번호", data.value!!.phoneNumber)
         BusinessInfoRow("주소", data.value!!.address)
     }
