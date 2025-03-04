@@ -1,6 +1,6 @@
-package dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
 
-import dev.kichan.marketplace.common.LargeCategory
+import LargeCategory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues

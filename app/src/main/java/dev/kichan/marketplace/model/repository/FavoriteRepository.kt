@@ -1,11 +1,11 @@
-package dev.kichan.marketplace.model.repository
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.repository
 
-import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.service.FavoritesService
+import dev.kichan.marketplace.model.data.ResponseTemplate
+import retrofit2.Response
 
-class FavoriteRepository {
-    private val service = NetworkModule.getService(FavoritesService::class.java)
-
-    suspend fun favorite(memberId: Long, marketId: Long)
-        = service.favorites(memberId, marketId)
+interface FavoriteRepository {
+    suspend fun favoriteToggle(
+        memberId: String,
+        marketId: String,
+    ) : Response<ResponseTemplate<Unit>>
 }

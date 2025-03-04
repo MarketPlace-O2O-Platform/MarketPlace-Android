@@ -1,5 +1,3 @@
-package dev.kichan.marketplace.common
-
 import androidx.annotation.DrawableRes
 import dev.kichan.marketplace.R
 

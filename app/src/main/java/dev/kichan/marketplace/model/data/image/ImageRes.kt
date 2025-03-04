@@ -1,7 +1,9 @@
-package dev.kichan.marketplace.model.data.image
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.image
+
+import com.google.gson.annotations.SerializedName
 
 data class ImageRes(
-    val imageId: String,
-    val sequence: String,
+    @SerializedName("imageId") val id: Long,
+    val sequence: Int,
     val name: String
 )

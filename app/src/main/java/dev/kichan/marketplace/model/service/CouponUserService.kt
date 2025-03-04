@@ -1,38 +1,31 @@
-package dev.kichan.marketplace.model.service
+package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service
 
 import dev.kichan.marketplace.model.data.ResponseTemplate
-import dev.kichan.marketplace.model.data.coupon.CouponHandleRes
-import dev.kichan.marketplace.model.data.coupon.CouponPagination
-import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
+import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.coupon.CouponMember
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CouponUserService {
-    @PUT("/api/members/coupons")
-    suspend fun useCoupon(
-        @Query("memberCouponId") memberCouponId: Long
-    ) : Response<ResponseTemplate<CouponHandleRes>>
+    @GET("api/coupons")
+    suspend fun getCouponList(
+        @Query("marketId") marketId: String
+    ): Response<ResponseTemplate<List<CouponMember>>>
 
-    @POST("/api/members/coupons/{couponId}")
-    suspend fun createUserCoupon(
-        @Query("memberId") memberId: Long,
-        @Path("couponId") couponId: Long,
-    )
+    @GET("api/coupons/latest")
+    suspend fun getLatestCoupon(
+        @Query("lastPageIndex") lastPageIndex: Int,
+        @Query("lastModified") lastModified: String,
+        @Query("pageSize") pageSize: Int
+    ): Response<ResponseTemplate<List<CouponMember>>>
 
-    @GET("/api/members/coupons/{memberCouponId}")
-    suspend fun getMemberCoupon(
-        @Path("memberCouponId") memberCouponId: Long
-    ) : Response<ResponseTemplate<IssuedCouponRes>>
+    @GET("api/coupons/latest/tops")
+    suspend fun getLatestTopCoupon(
+        @Query("count") count: Int
+    ): Response<ResponseTemplate<List<CouponMember>>>
 
-    @GET("/api/members/coupons/valid")
-    suspend fun getMemberCoupons(
-        @Query("memberId") memberId: Long,
-        @Query("type") type: String?,
-        @Query("memberCouponId") lastMemberCouponId: Long?,
-        @Query("size") pageSize: Int?
-    ) : Response<ResponseTemplate<CouponPagination<IssuedCouponRes>>>
+    @GET("api/coupons/closing")
+    suspend fun getClosingCoupon(
+        @Query("count") count: Int
+    ): Response<ResponseTemplate<List<CouponMember>>>
 }
