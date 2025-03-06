@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.ui.component.atoms
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

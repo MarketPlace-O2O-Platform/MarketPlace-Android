@@ -32,14 +32,8 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.repository.FavoriteRepository
-import dev.kichan.marketplace.model.service.FavoritesService
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun CouponListItemWithBookmark(

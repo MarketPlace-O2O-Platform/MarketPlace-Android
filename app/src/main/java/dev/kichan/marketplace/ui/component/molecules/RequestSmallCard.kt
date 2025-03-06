@@ -1,6 +1,5 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules
+package dev.kichan.marketplace.ui.component.molecules
 
-import Button
 import android.graphics.ColorSpace.Model
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import dev.kichan.marketplace.ui.component.atoms.Button
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
 

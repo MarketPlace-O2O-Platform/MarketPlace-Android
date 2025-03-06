@@ -42,7 +42,7 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
+import dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
