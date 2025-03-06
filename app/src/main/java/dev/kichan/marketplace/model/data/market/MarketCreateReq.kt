@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.market
+package dev.kichan.marketplace.model.data.market
 
 import com.google.gson.annotations.SerializedName
 

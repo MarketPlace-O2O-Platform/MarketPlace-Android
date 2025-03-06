@@ -1,6 +1,5 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui
+package dev.kichan.marketplace.ui
 
-import LargeCategory
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -9,27 +8,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.AuthViewModel
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.page.EventListPage
+import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.ui.page.EventListPage
+import dev.kichan.marketplace.ui.page.MarketDetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
-import dev.kichan.marketplace.ui.page.CategoryEventListPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
-fun MyApp(authViewModel: AuthViewModel) {
-
+fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Page.Login.name,
+        startDestination = Page.Main.name,
         enterTransition = {
             EnterTransition.None
         },
@@ -41,7 +38,7 @@ fun MyApp(authViewModel: AuthViewModel) {
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
-                    viewModel = authViewModel
+                    singleTonViewModel = singlethone,
                 )
             }
             composable(Page.Like.name) { LikePage(navController = navController) }
@@ -49,10 +46,10 @@ fun MyApp(authViewModel: AuthViewModel) {
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
-                    viewModel = authViewModel
                 )
             }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
+
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
                     MarketDetailPage(navController, id.toLong())
@@ -60,14 +57,13 @@ fun MyApp(authViewModel: AuthViewModel) {
             }
         }
         composable(route = Page.Login.name) {
-            LoginPage(navController = navController, authViewModel = authViewModel)
+            LoginPage(navController = navController, singleTon = singlethone)
         }
 
         composable("${Page.CategoryEventList.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
-                CategoryEventListPage(
+                EventListPage(
                     navController = navController,
-                    viewModel = authViewModel,
                     category = LargeCategory.valueOf(category)
                 )
             }
@@ -78,6 +74,10 @@ fun MyApp(authViewModel: AuthViewModel) {
                 EventListPage(navController = navController, title = title)
             }
         }
+
+//        composable(Page.LocalApiTestPage.name) {
+//            ApiTestPage(couponViewModel)
+//        }
     }
 }
 
@@ -85,6 +85,6 @@ fun MyApp(authViewModel: AuthViewModel) {
 @Composable
 fun MyAppPreview() {
     MarketPlaceTheme {
-        MyApp(AuthViewModel())
+        MyApp()
     }
 }

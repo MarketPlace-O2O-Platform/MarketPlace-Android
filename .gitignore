@@ -11,15 +11,3 @@ local.properties
 local.defaults.properties
 /.idea/*
 /secrets.properties
-
-# Google 서비스 관련 (✅ 보안 파일 보호)
-google-services.json
-/secrets.properties
-
-# Firebase 관련 (✅ Firebase 설정 파일 보호)
-app/google-services.json
-
-# Android Studio 관련 (✅ 환경 설정 및 로컬 파일 보호)
-local.properties
-local.defaults.properties
-/.idea/*
