@@ -23,6 +23,7 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.SingleTonViewModel
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
@@ -56,7 +57,9 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
 
             withContext(Dispatchers.Main) {
                 if(res.isSuccessful) {
-                    singleTon.loginToken.value = res.body()!!.response
+                    val token = res.body()!!.response
+                    singleTon.loginToken.value = token
+                    NetworkModule.updateToken(token)
                     navController.popBackStack()
                     navController.navigate(Page.Main.name)
                 }

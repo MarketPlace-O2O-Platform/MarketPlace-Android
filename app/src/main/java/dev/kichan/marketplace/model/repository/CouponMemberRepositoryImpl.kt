@@ -5,7 +5,7 @@ import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.repository.CouponMemberRepository
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.memberCoupon.MemberCoupon
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.data.memberCoupon.MemberCouponUseRes
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.model.service.CouponMembersService
+import dev.kichan.marketplace.model.service.CouponMembersService
 import retrofit2.Response
 
 class CouponMemberRepositoryImpl : CouponMemberRepository {
