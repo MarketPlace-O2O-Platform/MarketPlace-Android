@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import dev.kichan.marketplace.ui.bottomNavItem
@@ -45,8 +46,9 @@ fun HomePage(
     singleTonViewModel: SingleTonViewModel = SingleTonViewModel()
 ) {
     val couponRepo = CouponRepository()
-    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>?>(emptyList()) }
-    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>?>(listOf()) }
+    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>>(emptyList()) }
+    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>>(listOf()) }
+    val closingCoupons = remember { mutableStateOf<List<ClosingCouponRes>>(listOf()) }
 
     val getPopularCoupon = {
         CoroutineScope(Dispatchers.IO).launch {
@@ -83,9 +85,24 @@ fun HomePage(
         }
     }
 
+    val getClosingCoupon = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = couponRepo.getClosingCoupon(10)
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    closingCoupons.value = res.body()?.response ?: listOf()
+                }
+                else {
+
+                }
+            }
+        }
+    }
+
     LaunchedEffect(Unit) {
         getPopularCoupon();
         getLatestCoupon();
+        getClosingCoupon();
     }
 
     Scaffold(
@@ -104,18 +121,16 @@ fun HomePage(
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
-                    if(popularCoupons.value != null) {
-                        CouponBanner(
-                            bannerList = (1..10).toList().map {
-                                BannerItem(
-                                    title = "${it}번째 배너",
-                                    subTitle = "${it}번째 소재목",
-                                    description = "2024.12.01~2025.12.01",
-                                    imageUrl = "https://github.com/kichan05/kichan05/blob/main/assets/banner_2.png?raw=true"
-                                )
-                            }
-                        )
-                    }
+                    CouponBanner(
+                        bannerList = closingCoupons.value.map {
+                            BannerItem(
+                                title = it.name,
+                                subTitle = it.marketName,
+                                description = it.deadline,
+                                imageUrl = NetworkModule.getImage(it.thumbnail)
+                            )
+                        }
+                    )
                 }
 
                 // 카테고리 섹션
@@ -141,7 +156,7 @@ fun HomePage(
                                 id = it.id.toString(),
                                 title = it.name,
                                 subTitle = it.marketName,
-                                url = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
+                                url = NetworkModule.getImage(it.thumbnail)
                             )
                         } ?: listOf()
                     )
@@ -157,7 +172,7 @@ fun HomePage(
                                 id = it.id.toString(),
                                 subTitle = it.marketName,
                                 title = it.name,
-                                url = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
+                                url = NetworkModule.getImage(it.thumbnail)
                             )
                         } ?: listOf()
                     )

@@ -26,7 +26,7 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
 
     NavHost(
         navController = navController,
-        startDestination = Page.Main.name,
+        startDestination = Page.Login.name,
         enterTransition = {
             EnterTransition.None
         },

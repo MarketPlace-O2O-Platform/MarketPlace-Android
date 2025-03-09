@@ -2,34 +2,56 @@ package dev.kichan.marketplace.model
 
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.service.KakaoLocalService
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 
+class AuthInterceptor(
+    private val token: String?
+) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val originalRequest = chain.request()
+        val newRequest = originalRequest.newBuilder()
+            .addHeader("Authorization", "Bearer $token")
+            .build()
+        return chain.proceed(newRequest)
+    }
+}
+
 object NetworkModule {
-    const val BASE_URL = BuildConfig.API_BASE_URL
-    const val KAKAO_API_BASE_URL = "https://dapi.kakao.com/"
+    private const val BASE_URL = BuildConfig.API_BASE_URL
+    private const val KAKAO_API_BASE_URL = "https://dapi.kakao.com/"
 
     private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(interceptor)
-        .addNetworkInterceptor(interceptor)
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build()
+    private var authInterceptor = AuthInterceptor(null)
 
-    private val retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(BASE_URL)
-        .client(client)
-        .build()
+    fun updateToken(token: String?) {
+        authInterceptor = AuthInterceptor(token)
+    }
+
+    private val client: OkHttpClient
+        get() = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .addInterceptor(authInterceptor)
+            .addNetworkInterceptor(interceptor)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+
+    private val retrofit: Retrofit
+        get() = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .client(client)
+            .build()
 
     private val kakaoRetrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
@@ -44,4 +66,6 @@ object NetworkModule {
     fun getKakaoService(): KakaoLocalService {
         return kakaoRetrofit.create(KakaoLocalService::class.java)
     }
+
+    fun getImage(id: String): String = "${NetworkModule.BASE_URL}image/${id}"
 }
