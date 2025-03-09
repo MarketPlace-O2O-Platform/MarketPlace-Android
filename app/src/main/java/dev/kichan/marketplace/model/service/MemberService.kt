@@ -11,7 +11,7 @@ import retrofit2.http.Path
 
 interface MemberService {
     @POST("api/members")
-    suspend fun login(@Body body : LoginReq) : Response<ResponseTemplate<LoginRes>>
+    suspend fun login(@Body body : LoginReq) : Response<ResponseTemplate<String>>
 
     @GET("api/members/{memberId}")
     suspend fun getUserData(

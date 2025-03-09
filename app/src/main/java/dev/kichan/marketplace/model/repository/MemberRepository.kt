@@ -6,6 +6,6 @@ import dev.kichan.marketplace.model.data.login.LoginRes
 import retrofit2.Response
 
 interface MemberRepository {
-    suspend fun login(body : LoginReq) : Response<ResponseTemplate<LoginRes>>
+    suspend fun login(body : LoginReq) : Response<ResponseTemplate<String>>
     suspend fun getMemberData(id : Int) : Response<ResponseTemplate<LoginRes>>
 }

@@ -56,7 +56,7 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
 
             withContext(Dispatchers.Main) {
                 if(res.isSuccessful) {
-                    singleTon.currentMember.value = res.body()!!.response
+                    singleTon.loginToken.value = res.body()!!.response
                     navController.popBackStack()
                     navController.navigate(Page.Main.name)
                 }

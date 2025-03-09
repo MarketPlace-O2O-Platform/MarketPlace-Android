@@ -10,7 +10,7 @@ import retrofit2.Response
 class MemberRepositoryImpl : MemberRepository {
     private val service = NetworkModule.getService(MemberService::class.java)
 
-    override suspend fun login(body: LoginReq): Response<ResponseTemplate<LoginRes>>
+    override suspend fun login(body: LoginReq): Response<ResponseTemplate<String>>
         = service.login(body)
 
     override suspend fun getMemberData(id: Int): Response<ResponseTemplate<LoginRes>>
