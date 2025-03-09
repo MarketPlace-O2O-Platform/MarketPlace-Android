@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.SingleTonViewModel
+import dev.kichan.marketplace.common.toLocalDateTime
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
@@ -39,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomePage(
@@ -123,12 +126,22 @@ fun HomePage(
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
                         bannerList = closingCoupons.value.map {
-                            BannerItem(
-                                title = it.name,
-                                subTitle = it.marketName,
-                                description = it.deadline,
-                                imageUrl = NetworkModule.getImage(it.thumbnail)
-                            )
+                            try {
+                                val deadLine = it.deadline.toLocalDateTime()
+                                Log.d("deadlien", deadLine.toString())
+                                val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+
+                                BannerItem(
+                                    title = it.name,
+                                    subTitle = it.marketName,
+                                    description = "~ " + formatter.format(deadLine),
+                                    imageUrl = NetworkModule.getImage(it.thumbnail)
+                                )
+                            }
+                            catch (e : Exception) {
+                                Log.e("deadline", it.toString())
+                                throw e
+                            }
                         }
                     )
                 }
