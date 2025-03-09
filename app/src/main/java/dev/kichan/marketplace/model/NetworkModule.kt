@@ -10,8 +10,8 @@ import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 object NetworkModule {
-    const val BASE_URL = BuildConfig.API_BASE_URL
-    const val KAKAO_API_BASE_URL = "https://dapi.kakao.com/"
+    private const val BASE_URL = BuildConfig.API_BASE_URL
+    private const val KAKAO_API_BASE_URL = "https://dapi.kakao.com/"
 
     private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -44,4 +44,6 @@ object NetworkModule {
     fun getKakaoService(): KakaoLocalService {
         return kakaoRetrofit.create(KakaoLocalService::class.java)
     }
+
+    fun getImage(id: String): String = "${NetworkModule.BASE_URL}image/${id}"
 }

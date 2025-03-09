@@ -252,7 +252,7 @@ fun SheetContent(
                     location = it.address,
                     likes = 10,
                     category = LargeCategory.Food.nameKo,
-                    thumbnail = "${NetworkModule.BASE_URL}image/${it.thumbnail}"
+                    thumbnail = NetworkModule.getImage(it.thumbnail)
                 )
 
                 HorizontalDivider(
