@@ -32,7 +32,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.molecules.EventList
+import dev.kichan.marketplace.ui.component.molecules.EventList
 import dev.kichan.marketplace.ui.component.organisms.BannerItem
 import dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.ui.data.Event

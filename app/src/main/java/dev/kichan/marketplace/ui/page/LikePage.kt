@@ -47,6 +47,7 @@ import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
+import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
@@ -60,8 +61,23 @@ import kotlinx.coroutines.withContext
 fun LikePage(navController: NavController) {
     val repository = MarkerLikeRepository()
     var searchKey by remember { mutableStateOf("") }
-    val tempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
+
+    val tempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
+    val cheerTempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
+
+    val getCheerTempMarket = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = repository.getCheerMarket(
+                202401598,
+            )
+            withContext(Dispatchers.Main) {
+                if (res.isSuccessful) {
+                    cheerTempMarkets.value = res.body()!!.response.marketResDtos
+                }
+            }
+        }
+    }
 
     val getTempMarket = {
         CoroutineScope(Dispatchers.IO).launch {
@@ -90,7 +106,8 @@ fun LikePage(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        getTempMarket()
+        getTempMarket();
+        getCheerTempMarket();
     }
 
     Scaffold(
@@ -120,8 +137,29 @@ fun LikePage(navController: NavController) {
                     )
                 }
                 item {
-                    //todo: 컴포넌트 명 변경
-                    DeadLineOGoitssm()
+                    SpaceTitle(title = "달성 임박", badgeTitle = "HOT \uD83D\uDD25")
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+                item {
+                    if(cheerTempMarkets.value.isEmpty()) {
+                        EmptyMessage()
+                    }
+                    else {
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(items = cheerTempMarkets.value) {
+                                RequestCard(
+                                    marketName = it.name,
+                                    likeCount = it.cheerCount,
+                                    thumbnail = NetworkModule.getImage(it.thumbnail, true),
+                                    isMyDone = false,
+                                    isRequestDone = false
+                                )
+                            }
+                        }
+                    }
                 }
                 item {
                     SpaceTitle(title = "지금 공감하면 할인권을 드려요", badgeTitle = "EVENT")
@@ -136,11 +174,11 @@ fun LikePage(navController: NavController) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = PAGE_HORIZONTAL_PADDING),
+                            .padding(horizontal = PAGE_HORIZONTAL_PADDING, vertical = 10.dp),
                         horizontalArrangement = Arrangement.spacedBy(11.dp)
                     ) {
                         val market1 = tempMarkets.value[it * 2]
-                        RequestSmallCard(
+                        RequestCard(
                             modifier = Modifier
                                 .weight(1f),
                             marketName = market1.name,
@@ -152,7 +190,7 @@ fun LikePage(navController: NavController) {
 
                         if (it * 2 + 1 < tempMarkets.value.size) {
                             val market2 = tempMarkets.value[it * 2 + 1]
-                            RequestSmallCard(
+                            RequestCard(
                                 modifier = Modifier
                                     .weight(1f),
                                 marketName = market2.name,
@@ -173,13 +211,6 @@ fun LikePage(navController: NavController) {
             }
         }
     }
-}
-
-@Composable
-private fun Jigum(
-    tempMarkets: List<TempMarketRes>,
-) {
-
 }
 
 @Composable
@@ -215,34 +246,6 @@ fun SpaceTitle(modifier: Modifier = Modifier, title: String, badgeTitle: String)
                     textAlign = TextAlign.Center,
                 )
             )
-        }
-    }
-}
-
-@Composable
-private fun DeadLineOGoitssm() {
-    Column(
-        modifier = Modifier.padding(
-            top = 24.dp,
-            bottom = 32.dp
-        )
-    ) {
-        SpaceTitle(title = "달성 임박", badgeTitle = "HOT \uD83D\uDD25")
-        Spacer(modifier = Modifier.height(12.dp))
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(10) {
-                RequestCard(
-                    modifier = Modifier.width(284.dp),
-                    marketName = "콜드케이스 인하대점",
-                    likeCount = 9,
-                    isMyDone = false,
-                    isRequestDone = false,
-                    thumbnail = "https://picsum.photos/1000"
-                )
-            }
         }
     }
 }

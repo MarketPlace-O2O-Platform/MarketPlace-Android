@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="17">
       <module name="Android.MarketPlace-Android.MarketPlace.app" target="21" />
       <module name="MarketPlace-Android.MarketPlace.app" target="21" />
+      <module name="MarketPlace.app~1" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.molecules
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,11 +45,13 @@ fun RequestCard(
     isMyDone : Boolean,
     isRequestDone: Boolean,
 ) {
+    Log.d("thumbnail", thumbnail)
+    
     Column(
         modifier = modifier
     ) {
         AsyncImage(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().aspectRatio(1f),
             model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Banner Image",
             contentScale = ContentScale.Crop,
