@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,19 +40,22 @@ import java.time.LocalDate
 fun RequestCard(
     //todo: 나중에 더 좋은 이름으로 변경
     modifier: Modifier = Modifier,
-    marketName : String,
-    likeCount : Int,
+    marketName: String,
+    likeCount: Int,
     thumbnail: String,
-    isMyDone : Boolean,
+    isMyDone: Boolean,
     isRequestDone: Boolean,
+    onCheer: () -> Unit,
 ) {
     Log.d("thumbnail", thumbnail)
-    
+
     Column(
         modifier = modifier
     ) {
         AsyncImage(
-            modifier = Modifier.fillMaxSize().aspectRatio(1f),
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(1f),
             model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Banner Image",
             contentScale = ContentScale.Crop,
@@ -97,7 +101,12 @@ fun RequestCard(
                     Text(text = likeCount.toString())
                     Spacer(modifier = Modifier.width(4.dp))
                     //todo: 아이콘 변경
-                    Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like")
+                    if(isMyDone) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Like")
+                    }
+                    else {
+                        Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like")
+                    }
                 }
             }
 
@@ -115,8 +124,11 @@ fun RequestCard(
             val buttonModifier = Modifier.fillMaxWidth()
 
             if (isRequestDone) {
-                Button(text = "제휴 컨텍중", isDisable = true, modifier = buttonModifier) {
-
+                Button(
+                    text = "제휴 컨텍중",
+                    isDisable = true,
+                    modifier = buttonModifier
+                ) {
                 }
             } else {
                 Button(
@@ -124,7 +136,7 @@ fun RequestCard(
                     icon = Icons.Default.FavoriteBorder,
                     modifier = buttonModifier
                 ) {
-
+                    onCheer()
                 }
             }
         }

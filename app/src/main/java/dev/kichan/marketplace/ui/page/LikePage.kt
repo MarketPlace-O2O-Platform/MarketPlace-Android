@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -41,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.like.TempMarketRes
 import dev.kichan.marketplace.model.repository.MarkerLikeRepository
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
@@ -56,10 +58,30 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
+import retrofit2.http.POST
+import retrofit2.http.Query
+
+interface CheerService {
+    @POST("/api/cheer")
+    suspend fun cheer(
+        @Query("tempMarketId") marketId: Long,
+    ): Response<ResponseTemplate<Unit>>
+}
+
+class CheerRepository {
+    val service = NetworkModule.getService(CheerService::class.java)
+
+    suspend fun cheer(
+        marketId: Long
+    ) = service.cheer(marketId)
+}
 
 @Composable
 fun LikePage(navController: NavController) {
     val repository = MarkerLikeRepository()
+    val cheerRepository = CheerRepository()
+
     var searchKey by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
@@ -105,6 +127,22 @@ fun LikePage(navController: NavController) {
         }
     }
 
+    val onCheer: (Long) -> Unit = { id ->
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = cheerRepository.cheer(id)
+
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    getTempMarket();
+                    getCheerTempMarket();
+                }
+                else {
+                    throw Exception(res.errorBody().toString())
+                }
+            }
+        }
+    }
+
     LaunchedEffect(Unit) {
         getTempMarket();
         getCheerTempMarket();
@@ -141,10 +179,9 @@ fun LikePage(navController: NavController) {
                     Spacer(modifier = Modifier.height(12.dp))
                 }
                 item {
-                    if(cheerTempMarkets.value.isEmpty()) {
+                    if (cheerTempMarkets.value.isEmpty()) {
                         EmptyMessage()
-                    }
-                    else {
+                    } else {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -155,13 +192,17 @@ fun LikePage(navController: NavController) {
                                     likeCount = it.cheerCount,
                                     thumbnail = NetworkModule.getImage(it.thumbnail, true),
                                     isMyDone = false,
-                                    isRequestDone = false
+                                    isRequestDone = false,
+                                    onCheer = { onCheer(it.id) }
                                 )
                             }
                         }
                     }
                 }
                 item {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    HorizontalDivider(color = Color(0xffeeeeee), thickness = 4.dp)
+                    Spacer(modifier = Modifier.height(20.dp))
                     SpaceTitle(title = "지금 공감하면 할인권을 드려요", badgeTitle = "EVENT")
                     Spacer(modifier = Modifier.height(20.dp))
                     CategorySelector(
@@ -174,7 +215,11 @@ fun LikePage(navController: NavController) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = PAGE_HORIZONTAL_PADDING, vertical = 10.dp),
+                            .padding(
+                                start = PAGE_HORIZONTAL_PADDING,
+                                end = PAGE_HORIZONTAL_PADDING,
+                                bottom = 10.dp
+                            ),
                         horizontalArrangement = Arrangement.spacedBy(11.dp)
                     ) {
                         val market1 = tempMarkets.value[it * 2]
@@ -185,7 +230,8 @@ fun LikePage(navController: NavController) {
                             likeCount = market1.cheerCount,
                             thumbnail = NetworkModule.getImage(market1.thumbnail, true),
                             isMyDone = market1.isCheer,
-                            isRequestDone = false
+                            isRequestDone = false,
+                            onCheer = { onCheer(market1.id) }
                         )
 
                         if (it * 2 + 1 < tempMarkets.value.size) {
@@ -197,7 +243,8 @@ fun LikePage(navController: NavController) {
                                 likeCount = market2.cheerCount,
                                 thumbnail = NetworkModule.getImage(market2.thumbnail, true),
                                 isMyDone = market2.isCheer,
-                                isRequestDone = false
+                                isRequestDone = false,
+                                onCheer = { onCheer(market2.id) }
                             )
                         } else {
                             Box(Modifier.weight(1f))

@@ -30,17 +30,6 @@ fun CategorySelector(
     val scrollState = rememberScrollState()
 
     Column {
-//        Text(
-//            text = "나만의 큐레이션",
-//            fontSize = 18.sp,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 24.dp),
-//            fontWeight = FontWeight.SemiBold
-//        )
-//
-//        Spacer(modifier = Modifier.height(8.dp))
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
