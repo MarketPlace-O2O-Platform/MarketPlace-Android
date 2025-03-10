@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.component.molecules
 
 import android.graphics.ColorSpace.Model
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,13 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.component.atoms.Button
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
@@ -47,17 +46,14 @@ fun RequestSmallCard(
     isRequestDone: Boolean,
 //    deadLine = LocalDate.of(2025, 3, 12)
 ) {
+    Log.d("url", thumbnail)
     Column(
         modifier = modifier
     ) {
-        coil3.compose.AsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(thumbnail)
-                .crossfade(true)
-                .build(),
-            contentDescription = "Banner Image",
-            contentScale = ContentScale.Crop,
+        AsyncImage(
+            modifier = Modifier.fillMaxSize(),//.aspectRatio(1f),
+            model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
+            contentDescription = "Adsda",
         )
 
         Spacer(modifier = Modifier.height(16.dp))

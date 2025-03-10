@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.component.atoms.Button
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
@@ -48,10 +49,7 @@ fun RequestCard(
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(thumbnail)
-                .crossfade(true)
-                .build(),
+            model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Banner Image",
             contentScale = ContentScale.Crop,
         )
