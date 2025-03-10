@@ -78,7 +78,7 @@ fun InputLabel(
 @Composable
 fun InputLabelPreview() {
     MarketPlaceTheme {
-        InputLabel(
+        dev.kichan.marketplace.ui.component.atoms.InputLabel(
             value = "",
             onChange = {},
             label = "이름",
@@ -97,7 +97,7 @@ fun InputLabelErrorPreview() {
     MarketPlaceTheme {
         val input = remember { mutableStateOf("") }
 
-        InputLabel(
+        dev.kichan.marketplace.ui.component.atoms.InputLabel(
             value = input.value,
             onChange = { input.value = it },
             label = "이름",

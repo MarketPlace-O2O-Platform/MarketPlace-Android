@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,7 +26,9 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.login.LoginReq
+import dev.kichan.marketplace.model.getAuthToken
 import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
+import dev.kichan.marketplace.model.saveAuthToken
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -38,6 +41,7 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) {
+    val context = LocalContext.current
     val memberRepo = MemberRepositoryImpl()
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
@@ -48,6 +52,8 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
     var expanded by remember { mutableStateOf(false) }
     var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
     val schools = listOf("학교 A", "학교 B", "학교 C")
+
+    val authToken = getAuthToken(context).collectAsState(null)
 
 
     val onLogin: (String, String) -> Unit = { id, password ->
@@ -60,6 +66,8 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
                     val token = res.body()!!.response
                     singleTon.loginToken.value = token
                     NetworkModule.updateToken(token)
+                    saveAuthToken(context, token)
+
                     navController.popBackStack()
                     navController.navigate(Page.Main.name)
                 }
@@ -68,13 +76,18 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
                 }
             }
         }
-//        if (selectedSchool == "학교를 선택해주세요") {
-//            message = "학교를 선택해주세요."
-//            showError = true
-//        } else if (id.isBlank() || password.isBlank()) {
-//            message = "ID와 비밀번호를 입력해주세요."
-//            showError = true
-//        }
+    }
+
+    if(!authToken.value.isNullOrEmpty()) {
+        singleTon.loginToken.value = authToken.value
+        NetworkModule.updateToken(authToken.value)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            saveAuthToken(context, authToken.value.toString())
+        }
+
+        navController.popBackStack()
+        navController.navigate(Page.Main.name)
     }
 
     if (showError) {
