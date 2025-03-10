@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -26,7 +27,6 @@ class MainActivity : ComponentActivity() {
         Log.i("GlobalApplication", keyHash)
 
         KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_API_KEY)
-
         setContent {
             MarketPlaceTheme {
                 MyApp(singleTon)
