@@ -8,7 +8,6 @@ import retrofit2.http.Query
 interface FavoritesService {
     @POST("/api/favorites")
     suspend fun favorites(
-        @Query("memberId") memberId : Long,
         @Query("marketId") marketId: Long,
     ): Response<ResponseTemplate<Any>>
 }

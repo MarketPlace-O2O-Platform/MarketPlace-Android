@@ -32,8 +32,12 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import dev.kichan.marketplace.model.repository.FavoritesRepository
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun CouponListItemWithBookmark(
@@ -44,8 +48,15 @@ fun CouponListItemWithBookmark(
     likes: Int,
     category: String,
     thumbnail: String,
-    onFavoriteClick: () -> Unit = {}
 ) {
+    val repository = FavoritesRepository()
+
+    val onFavoriteClick: () -> Unit = {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            repository.favorites()
+//        }
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()

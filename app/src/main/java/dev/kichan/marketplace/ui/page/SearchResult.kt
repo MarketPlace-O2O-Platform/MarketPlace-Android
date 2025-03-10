@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.page.searchresult
+package dev.kichan.marketplace.ui.page
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -22,15 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-
-class SearchResultActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            SearchResultUI()
-        }
-    }
-}
 
 @Composable
 fun SearchResultUI() {
@@ -64,32 +55,6 @@ fun SearchHeader() {
             SearchBar()
         }
         Divider(color = Color(0xFF303030), thickness = 1.dp)
-    }
-}
-
-@Composable
-fun SearchBar() {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(32.dp)
-            .background(color = Color(0xFFFAFAFA), shape = RoundedCornerShape(size = 50.dp)),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier = Modifier.width(4.dp))
-        Image(
-            painter = painterResource(id = R.drawable.search2),
-            contentDescription = "Search",
-            modifier = Modifier
-                .width(18.dp)
-                .height(18.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "가고 싶은 매장을 찾아보세요",
-            fontSize = 12.sp,
-            color = Color(0xFFB0B0B0),
-        )
     }
 }
 

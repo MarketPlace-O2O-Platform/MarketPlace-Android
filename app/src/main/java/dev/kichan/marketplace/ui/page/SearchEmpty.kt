@@ -1,8 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -19,15 +16,6 @@ import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.ui.component.atoms.Button
-
-class SearchEmptyActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            SearchEmptyUI()
-        }
-    }
-}
 
 @Composable
 fun SearchEmptyUI() {
@@ -48,7 +36,7 @@ fun SearchEmptyUI() {
                     .padding(1.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            dev.kichan.marketplace.ui.page.searchresult.SearchBar()
+            SearchBar()
         }
         Divider(color = Color(0xFF303030), thickness = 1.dp)
         Spacer(modifier = Modifier.height(40.dp))
