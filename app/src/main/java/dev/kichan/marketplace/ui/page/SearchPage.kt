@@ -25,15 +25,6 @@ import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MarketplaceUI()
-        }
-    }
-}
-
 @Composable
 fun MarketplaceUI() {
     Column(modifier = Modifier.fillMaxSize()) {
