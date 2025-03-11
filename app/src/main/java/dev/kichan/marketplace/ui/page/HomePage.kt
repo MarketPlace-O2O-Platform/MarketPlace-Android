@@ -56,7 +56,6 @@ fun HomePage(
     val getPopularCoupon = {
         CoroutineScope(Dispatchers.IO).launch {
             val res = couponRepo.getPopularCoupon(
-                singleTonViewModel.currentMember.value!!.studentId,
                 null,
                 20
             )
@@ -73,7 +72,6 @@ fun HomePage(
     val getLatestCoupon = {
         CoroutineScope(Dispatchers.IO).launch {
             val res = couponRepo.getLatestCoupon(
-                singleTonViewModel.currentMember.value!!.studentId,
                 null,
                 null,
                 20,
