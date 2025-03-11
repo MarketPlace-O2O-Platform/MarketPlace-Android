@@ -12,7 +12,6 @@ import retrofit2.http.Query
 interface MarketService {
     @GET("/api/markets")
     suspend fun getMarkets(
-        @Query("memberId") memberId : Long,
         @Query("lastPageIndex") lastMarketId: String?,
         @Query("category") category: String?,
         @Query("pageSize") pageSize : Int?,
@@ -32,13 +31,11 @@ interface MarketService {
 
     @GET("/api/markets/my-favorite")
     suspend fun getFavoriteMarket(
-        @Query("memberId") memberId : Long,
         @Query("lastPageIndex") lastMarketId: String?,
         @Query("pageSize") pageSize : Int?,
     ): Response<ResponseTemplate<MarketPageNationRes<MarketRes>>>
 
     suspend fun getMarketByAddress(
-        @Query("memberId") memberId : Long,
         @Query("address") address: String,
         @Query("lastPageIndex") lastMarketId: String?,
         @Query("category") category: String?,

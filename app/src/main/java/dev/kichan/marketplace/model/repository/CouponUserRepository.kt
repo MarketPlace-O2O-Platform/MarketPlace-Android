@@ -7,8 +7,8 @@ class CouponUserRepository {
     private val service: CouponUserService = NetworkModule.getService(CouponUserService::class.java)
 
     suspend fun useCoupon(memberCouponId: Long) = service.useCoupon(memberCouponId)
-    suspend fun createUserCoupon(memberId: Long, couponId: Long) = service.createUserCoupon(memberId, couponId)
+    suspend fun createUserCoupon(couponId: Long) = service.createUserCoupon(couponId)
     suspend fun getMemberCoupon(memberCouponId: Long) = service.getMemberCoupon(memberCouponId)
-    suspend fun getMemberCoupons(memberId: Long, type: String?, lastMemberCouponId: Long?, pageSize: Int?) =
-        service.getMemberCoupons(memberId, type, lastMemberCouponId, pageSize)
+    suspend fun getMemberCoupons(type: String?, lastMemberCouponId: Long?, pageSize: Int?) =
+        service.getMemberCoupons(type, lastMemberCouponId, pageSize)
 }

@@ -13,7 +13,6 @@ import retrofit2.http.Query
 interface CouponService {
     @GET("/api/coupons")
     suspend fun getCouponList(
-        @Query("memberId") memberId: Long,
         @Query("marketId") marketId: Long,
         @Query("couponId") lastCouponId: Long?,
         @Query("size") pageSize: Long?
@@ -21,14 +20,12 @@ interface CouponService {
 
     @GET("/api/coupons/popular")
     suspend fun getPopularCoupon(
-        @Query("memberId") memberId: Long,
         @Query("lastCouponId") lastCouponId: Long?,
         @Query("pageSize") pageSize: Long?
     ): Response<ResponseTemplate<CouponPagination<PopularCouponRes>>>
 
     @GET("/api/coupons/latest")
     suspend fun getLatestCoupon(
-        @Query("memberId") memberId: Long,
         @Query("lastCreatedAt") lastCreatedAt: String?,
         @Query("lastCouponId") lastCouponId: Long?,
         @Query("pageSize") pageSize: Int

@@ -19,7 +19,6 @@ interface CouponUserService {
 
     @POST("/api/members/coupons/{couponId}")
     suspend fun createUserCoupon(
-        @Query("memberId") memberId: Long,
         @Path("couponId") couponId: Long,
     )
 
@@ -30,7 +29,6 @@ interface CouponUserService {
 
     @GET("/api/members/coupons/valid")
     suspend fun getMemberCoupons(
-        @Query("memberId") memberId: Long,
         @Query("type") type: String?,
         @Query("memberCouponId") lastMemberCouponId: Long?,
         @Query("size") pageSize: Int?

@@ -13,6 +13,6 @@ class MemberRepositoryImpl : MemberRepository {
     override suspend fun login(body: LoginReq): Response<ResponseTemplate<String>>
         = service.login(body)
 
-    override suspend fun getMemberData(id: Int): Response<ResponseTemplate<LoginRes>>
-        = service.getUserData(id)
+    override suspend fun getMemberData(): Response<ResponseTemplate<LoginRes>>
+        = service.getUserData()
 }

@@ -76,7 +76,6 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
     val getMarkets = {
         CoroutineScope(Dispatchers.IO).launch {
             val res = marketService.getMarkets(
-                singleTonViewModel.currentMember.value!!.studentId,
                 null,
                 null,
                 null,
