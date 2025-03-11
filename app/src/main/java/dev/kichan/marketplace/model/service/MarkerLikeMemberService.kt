@@ -10,18 +10,15 @@ import retrofit2.http.Query
 interface MarkerLikeMemberService {
     @GET("/api/tempMarkets")
     suspend fun getTempMarkets(
-        @Query("memberId") memberId: Long,
         @Query("count") count: Long?
     ): Response<ResponseTemplate<MarketPageNationRes<TempMarketRes>>>
 
     @GET("/api/tempMarkets/search")
     suspend fun getMarketSearch(
-        @Query("memberId") memberId: Long,
         @Query("name") keyword: String,
     ): Response<ResponseTemplate<MarketPageNationRes<TempMarketRes>>>
 
     @GET("/api/tempMarkets/cheer")
     suspend fun getCheerMarket(
-        @Query("memberId") memberId: Long,
     ): Response<ResponseTemplate<MarketPageNationRes<TempMarketRes>>>
 }

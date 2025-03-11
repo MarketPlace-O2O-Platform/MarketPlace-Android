@@ -90,9 +90,7 @@ fun LikePage(navController: NavController) {
 
     val getCheerTempMarket = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getCheerMarket(
-                202401598,
-            )
+            val res = repository.getCheerMarket()
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
                     cheerTempMarkets.value = res.body()!!.response.marketResDtos
@@ -103,10 +101,7 @@ fun LikePage(navController: NavController) {
 
     val getTempMarket = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getTempMarkets(
-                202401598,
-                20,
-            )
+            val res = repository.getTempMarkets(20,)
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
                     tempMarkets.value = res.body()!!.response.marketResDtos
@@ -117,10 +112,7 @@ fun LikePage(navController: NavController) {
 
     val getTempMArketSearch = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getMarketSearch(
-                202401598,
-                searchKey,
-            )
+            val res = repository.getMarketSearch(searchKey)
             withContext(Dispatchers.Main) {
 
             }
