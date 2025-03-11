@@ -26,13 +26,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.MarketPageNationRes
 import dev.kichan.marketplace.ui.component.atoms.Button
+import dev.kichan.marketplace.ui.page.MarketplaceUI
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
 
@@ -47,8 +51,6 @@ fun RequestCard(
     isRequestDone: Boolean,
     onCheer: () -> Unit,
 ) {
-    Log.d("thumbnail", thumbnail)
-
     Column(
         modifier = modifier
     ) {
@@ -56,7 +58,6 @@ fun RequestCard(
             modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1f),
-            //todo : 이미지 크기
             model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Banner Image",
             contentScale = ContentScale.Crop,
@@ -141,5 +142,20 @@ fun RequestCard(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RequestCardPrev() {
+    MarketPlaceTheme {
+        RequestCard(
+            modifier = Modifier.fillMaxWidth(),
+            marketName = "인천대학교",
+            likeCount = 100120,
+            thumbnail = "https://fakeimg.pl/1200",
+            isMyDone = false,
+            isRequestDone = false
+        ) {  }
     }
 }
