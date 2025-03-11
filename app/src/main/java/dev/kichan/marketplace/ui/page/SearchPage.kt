@@ -29,12 +29,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun SearchPage(modifier: Modifier = Modifier) {
     var key by remember { mutableStateOf<String>("") }
+    var recentKeywords by remember {
+        mutableStateOf(
+            listOf(
+                "신복관",
+                "송쭈집",
+                "우정소갈비",
+                "디저트39",
+                "헬스장",
+                "필라테스"
+            )
+        )
+    }
+    var result by remember { mutableStateOf<List<MarketRes>>(listOf()) }
 
     Scaffold {
         Column(
@@ -46,21 +60,8 @@ fun SearchPage(modifier: Modifier = Modifier) {
             Divider(color = Color(0xFF303030), thickness = 1.dp)
 
             Spacer(modifier = Modifier.height(30.dp))
+            RecentKeyword(recentKeywords)
 
-            Text(
-                text = "최근 검색어",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 20.dp, bottom = 8.dp)
-            )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(listOf("신복관", "송쭈집", "우정소갈비", "디저트39", "헬스장", "필라테스")) { keyword ->
-                    Chip(text = keyword)
-                }
-            }
             Text(
                 text = "인기 혜택",
                 fontSize = 15.sp,
@@ -78,6 +79,26 @@ fun SearchPage(modifier: Modifier = Modifier) {
                     BenefitCard()
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun RecentKeyword(
+    keywords: List<String>
+) {
+    Text(
+        text = "최근 검색어",
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(start = 20.dp, bottom = 8.dp)
+    )
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(items = keywords) { keyword ->
+            Chip(text = keyword)
         }
     }
 }
