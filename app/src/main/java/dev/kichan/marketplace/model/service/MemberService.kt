@@ -14,8 +14,6 @@ interface MemberService {
     suspend fun login(@Body body : LoginReq) : Response<ResponseTemplate<String>>
 
     @GET("api/members/{memberId}")
-    suspend fun getUserData(
-        @Path("memberId") id : Int
-    ) : Response<ResponseTemplate<LoginRes>>
+    suspend fun getUserData() : Response<ResponseTemplate<LoginRes>>
 }
 
