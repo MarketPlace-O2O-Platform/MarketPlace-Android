@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.molecules
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.component.atoms.Button
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
@@ -37,21 +40,24 @@ import java.time.LocalDate
 fun RequestCard(
     //todo: 나중에 더 좋은 이름으로 변경
     modifier: Modifier = Modifier,
-    marketName : String,
-    likeCount : Int,
+    marketName: String,
+    likeCount: Int,
     thumbnail: String,
-    isMyDone : Boolean,
+    isMyDone: Boolean,
     isRequestDone: Boolean,
+    onCheer: () -> Unit,
 ) {
+    Log.d("thumbnail", thumbnail)
+
     Column(
         modifier = modifier
     ) {
         AsyncImage(
-            modifier = Modifier.fillMaxSize(),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(thumbnail)
-                .crossfade(true)
-                .build(),
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(1f),
+            //todo : 이미지 크기
+            model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Banner Image",
             contentScale = ContentScale.Crop,
         )
@@ -96,7 +102,12 @@ fun RequestCard(
                     Text(text = likeCount.toString())
                     Spacer(modifier = Modifier.width(4.dp))
                     //todo: 아이콘 변경
-                    Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like")
+                    if(isMyDone) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Like")
+                    }
+                    else {
+                        Icon(Icons.Filled.FavoriteBorder, contentDescription = "Like")
+                    }
                 }
             }
 
@@ -114,8 +125,11 @@ fun RequestCard(
             val buttonModifier = Modifier.fillMaxWidth()
 
             if (isRequestDone) {
-                Button(text = "제휴 컨텍중", isDisable = true, modifier = buttonModifier) {
-
+                Button(
+                    text = "제휴 컨텍중",
+                    isDisable = true,
+                    modifier = buttonModifier
+                ) {
                 }
             } else {
                 Button(
@@ -123,7 +137,7 @@ fun RequestCard(
                     icon = Icons.Default.FavoriteBorder,
                     modifier = buttonModifier
                 ) {
-
+                    onCheer()
                 }
             }
         }

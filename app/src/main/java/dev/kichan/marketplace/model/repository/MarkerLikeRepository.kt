@@ -1,10 +1,10 @@
 package dev.kichan.marketplace.model.repository
 
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.service.MarkerLikeService
+import dev.kichan.marketplace.model.service.MarkerLikeMemberService
 
 class MarkerLikeRepository {
-    private val service: MarkerLikeService = NetworkModule.getService(MarkerLikeService::class.java)
+    private val service: MarkerLikeMemberService = NetworkModule.getService(MarkerLikeMemberService::class.java)
 
     suspend fun getTempMarkets(memberId: Long, count: Long?) = service.getTempMarkets(memberId, count)
 

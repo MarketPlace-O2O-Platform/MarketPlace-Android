@@ -1,17 +1,22 @@
 package dev.kichan.marketplace.model
 
+import coil3.network.NetworkHeaders
+import coil3.network.httpHeaders
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.service.KakaoLocalService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
+import org.junit.runner.manipulation.Ordering.Context
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class AuthInterceptor(
-    private val token: String?
+    val token: String?
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
@@ -67,5 +72,15 @@ object NetworkModule {
         return kakaoRetrofit.create(KakaoLocalService::class.java)
     }
 
-    fun getImage(id: String): String = "${NetworkModule.BASE_URL}image/${id}"
+    fun getImage(id: String, isTempMarket : Boolean = false): String =
+        if(isTempMarket)
+            "${BASE_URL}image/tempMarket/${id}"
+        else
+            "${BASE_URL}image/${id}"
+
+    fun getImageModel(context: android.content.Context, url: String): ImageRequest =
+        ImageRequest.Builder(context)
+            .data(url)
+            .crossfade(true)
+            .build()
 }

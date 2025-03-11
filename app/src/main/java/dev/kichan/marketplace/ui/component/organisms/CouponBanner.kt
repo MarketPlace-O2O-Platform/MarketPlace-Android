@@ -27,6 +27,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.PagerCounter
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -56,10 +57,7 @@ fun CouponBanner(modifier: Modifier = Modifier, bannerList: List<BannerItem>) {
             ) {
                 AsyncImage(
                     modifier = Modifier.fillMaxSize(),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.imageUrl)
-                        .crossfade(true)
-                        .build(),
+                    model =  NetworkModule.getImageModel(LocalContext.current, item.imageUrl),
                     contentDescription = "Banner Image",
                     contentScale = ContentScale.Crop,
                 )
