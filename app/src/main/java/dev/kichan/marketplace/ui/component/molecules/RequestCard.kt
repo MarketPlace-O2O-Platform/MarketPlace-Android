@@ -56,6 +56,7 @@ fun RequestCard(
             modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1f),
+            //todo : 이미지 크기
             model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Banner Image",
             contentScale = ContentScale.Crop,

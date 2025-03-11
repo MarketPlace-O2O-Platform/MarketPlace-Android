@@ -137,7 +137,7 @@ fun LikePage(navController: NavController) {
                     getCheerTempMarket();
                 }
                 else {
-                    throw Exception(res.errorBody().toString())
+//                    throw Exception(res.errorBody().toString())
                 }
             }
         }
