@@ -35,14 +35,15 @@ fun SearchResultItem(title: String, description: String, imageUrl:String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp)
+            .padding(20.dp)
     ) {
         AsyncImage(
             model = NetworkModule.getImageModel(LocalContext.current, imageUrl),
             contentDescription = null,
             modifier = Modifier
                 .width(110.dp)
-                .height(110.dp),
+                .height(110.dp)
+                .clip(RoundedCornerShape(4.dp)),
             contentScale = ContentScale.Crop
         )
         Column(modifier = Modifier.fillMaxWidth()) {

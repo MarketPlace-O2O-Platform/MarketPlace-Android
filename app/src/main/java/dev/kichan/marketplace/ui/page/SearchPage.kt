@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
+import dev.kichan.marketplace.ui.component.atoms.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +60,7 @@ fun SearchPage(modifier: Modifier = Modifier) {
             )
         )
     }
+    var isFirst by remember { mutableStateOf(true) }
     var result by remember {
         mutableStateOf<List<MarketRes>>(listOf())
     }
@@ -67,7 +70,12 @@ fun SearchPage(modifier: Modifier = Modifier) {
             val res = marketRepository.searchMarket(it, null, 20)
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
-                    result = res.body()?.response?.marketResDtos ?: listOf()
+                    val _result = res.body()?.response?.marketResDtos ?: listOf()
+                    result = _result
+
+                    if (_result.isNotEmpty()) {
+                        isFirst = false
+                    }
                 }
             }
         }
@@ -86,18 +94,30 @@ fun SearchPage(modifier: Modifier = Modifier) {
                     onSearch(it)
                 }
             })
-            Divider(color = Color(0xFF303030), thickness = 1.dp)
-//            Spacer(modifier = Modifier.height(30.dp))
-//            RecentKeyword(recentKeywords)
-//            PopularBenefitsList()
-            LazyColumn {
-                items(items = result) {
-                    SearchResultItem(
-                        title = it.name,
-                        description = it.description,
-                        imageUrl = NetworkModule.getImage(id = it.thumbnail)
-                    )
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Color(0xff000000))
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            if (result.isNotEmpty()) {
+                LazyColumn {
+                    items(items = result) {
+                        SearchResultItem(
+                            title = it.name,
+                            description = it.description,
+                            imageUrl = NetworkModule.getImage(id = it.thumbnail)
+                        )
+                    }
                 }
+            } else if (key.isBlank() || isFirst) {
+                RecentKeyword(recentKeywords)
+                PopularBenefitsList()
+            } else {
+                SearchResultEmpty()
             }
         }
     }
@@ -292,6 +312,45 @@ fun BenefitCard() {
                 color = Color(0xFF000000),
             )
         }
+    }
+}
+
+@Composable
+fun SearchResultEmpty() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xffeeeee)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(40.dp))
+        Text(
+            text = "검색 결과가 없어요.\n찾으시는 매장이 없으신가요?",
+            style = TextStyle(
+                fontSize = 14.sp,
+                lineHeight = 21.sp,
+                fontFamily = PretendardFamily,
+                fontWeight = FontWeight(500),
+                color = Color(0xFF5E5E5E),
+                textAlign = TextAlign.Center,
+            )
+        )
+        Spacer(modifier = Modifier.height(26.dp))
+        Text(
+            text = "매장 요청하기를 해보세요!",
+            style = TextStyle(
+                fontSize = 15.sp,
+                lineHeight = 22.5.sp,
+                fontFamily = PretendardFamily,
+                fontWeight = FontWeight(600),
+                color = Color(0xFF303030),
+                textAlign = TextAlign.Center,
+            )
+        )
+        Spacer(modifier = Modifier.height(45.dp))
+        Image(painter = painterResource(R.drawable.img_online_stats), null)
+        Spacer(modifier = Modifier.height(31.dp))
+        Button("요청하기", modifier = Modifier.width(240.dp)) { }
     }
 }
 
