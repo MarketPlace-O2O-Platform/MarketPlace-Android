@@ -18,6 +18,7 @@ import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.SingleTonViewModel
+import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
@@ -49,6 +50,7 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
                 )
             }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
+            composable(Page.Search.name) { SearchPage() }
 
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->

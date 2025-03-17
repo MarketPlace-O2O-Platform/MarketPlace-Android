@@ -35,7 +35,6 @@ import coil3.request.crossfade
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.MarketPageNationRes
 import dev.kichan.marketplace.ui.component.atoms.Button
-import dev.kichan.marketplace.ui.page.MarketplaceUI
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate

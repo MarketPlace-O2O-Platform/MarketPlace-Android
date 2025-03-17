@@ -1,8 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,13 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.javafaker.Faker
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.ui.component.atoms.SearchResultItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import java.util.Locale
 
 @Composable
 fun SearchPage(modifier: Modifier = Modifier) {
+    val faker = Faker(Locale.KOREAN)
     var key by remember { mutableStateOf<String>("") }
     var recentKeywords by remember {
         mutableStateOf(
@@ -48,7 +49,20 @@ fun SearchPage(modifier: Modifier = Modifier) {
             )
         )
     }
-    var result by remember { mutableStateOf<List<MarketRes>>(listOf()) }
+    var result by remember { mutableStateOf<List<MarketRes>>(
+        List<MarketRes>(10) {
+            MarketRes(
+                id = it.toLong(),
+                name = faker.company().name(),
+                description = faker.lorem().paragraph(),
+                address = faker.address().fullAddress(),
+                thumbnail = faker.avatar().image(),
+                isFavorite = false,
+                isNewCoupon = false,
+                favoriteModifiedAt = ""
+            )
+        }
+    ) }
 
     Scaffold {
         Column(
@@ -58,27 +72,39 @@ fun SearchPage(modifier: Modifier = Modifier) {
         ) {
             SearchBar(key, { key = it })
             Divider(color = Color(0xFF303030), thickness = 1.dp)
-
-            Spacer(modifier = Modifier.height(30.dp))
-            RecentKeyword(recentKeywords)
-
-            Text(
-                text = "인기 혜택",
-                fontSize = 15.sp,
-                lineHeight = 26.sp,
-                fontFamily = PretendardFamily,
-                fontWeight = FontWeight(600),
-                color = Color(0xFF000000),
-                modifier = Modifier.padding(start = 21.dp, top = 48.dp, bottom = 10.dp)
-            )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(4) {
-                    BenefitCard()
+//            Spacer(modifier = Modifier.height(30.dp))
+//            RecentKeyword(recentKeywords)
+//            PopularBenefitsList()
+            LazyColumn {
+                items(items = result) {
+                    SearchResultItem(
+                        title = it.name,
+                        description = it.description,
+                        imageUrl = it.thumbnail
+                    )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun PopularBenefitsList() {
+    Text(
+        text = "인기 혜택",
+        fontSize = 15.sp,
+        lineHeight = 26.sp,
+        fontFamily = PretendardFamily,
+        fontWeight = FontWeight(600),
+        color = Color(0xFF000000),
+        modifier = Modifier.padding(start = 21.dp, top = 48.dp, bottom = 10.dp)
+    )
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(4) {
+            BenefitCard()
         }
     }
 }

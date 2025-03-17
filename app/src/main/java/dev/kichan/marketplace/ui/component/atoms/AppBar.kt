@@ -72,7 +72,11 @@ fun LogoAppBar(@DrawableRes logo: Int, vararg icons: Pair<ImageVector, () -> Uni
 }
 
 @Composable
-fun HomeAppBar(@DrawableRes logo: Int, onSearch : (String) -> Unit, vararg icons: Pair<ImageVector, () -> Unit>) {
+fun HomeAppBar(
+    @DrawableRes logo: Int,
+    onSearch: () -> Unit,
+    vararg icons: Pair<ImageVector, () -> Unit>
+) {
     Row(
         modifier = appBarModifier,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
@@ -84,7 +88,7 @@ fun HomeAppBar(@DrawableRes logo: Int, onSearch : (String) -> Unit, vararg icons
             modifier = Modifier.width(56.dp)
         )
 
-        SearchBar(modifier = Modifier.weight(1f), onSearch = onSearch)
+        SearchBar(modifier = Modifier.weight(1f), onClick = onSearch)
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -132,6 +136,6 @@ fun NavAppBarPreview() {
 @Composable
 private fun HomeAppBarPreview() {
     MarketPlaceTheme {
-        HomeAppBar(R.drawable.logo, {})
+        HomeAppBar(logo = R.drawable.logo, onSearch = {})
     }
 }
