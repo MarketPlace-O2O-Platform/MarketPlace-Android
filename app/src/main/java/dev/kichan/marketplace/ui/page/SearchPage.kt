@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,13 +29,20 @@ import androidx.compose.ui.unit.sp
 import com.github.javafaker.Faker
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.component.atoms.SearchResultItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 @Composable
 fun SearchPage(modifier: Modifier = Modifier) {
+    val marketRepository = MarketRepository()
+
     val faker = Faker(Locale.KOREAN)
     var key by remember { mutableStateOf<String>("") }
     var recentKeywords by remember {
@@ -49,20 +57,33 @@ fun SearchPage(modifier: Modifier = Modifier) {
             )
         )
     }
-    var result by remember { mutableStateOf<List<MarketRes>>(
-        List<MarketRes>(10) {
-            MarketRes(
-                id = it.toLong(),
-                name = faker.company().name(),
-                description = faker.lorem().paragraph(),
-                address = faker.address().fullAddress(),
-                thumbnail = faker.avatar().image(),
-                isFavorite = false,
-                isNewCoupon = false,
-                favoriteModifiedAt = ""
-            )
+    var result by remember {
+        mutableStateOf<List<MarketRes>>(
+            List<MarketRes>(10) {
+                MarketRes(
+                    id = it.toLong(),
+                    name = faker.company().name(),
+                    description = faker.lorem().paragraph(),
+                    address = faker.address().fullAddress(),
+                    thumbnail = faker.avatar().image(),
+                    isFavorite = false,
+                    isNewCoupon = false,
+                    favoriteModifiedAt = ""
+                )
+            }
+        )
+    }
+
+    val onSearch: (String) -> Unit = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = marketRepository.searchMarket(it, null, 20)
+            withContext(Dispatchers.Main) {
+                if (res.isSuccessful) {
+                    Log.d("searchResult", res.body().toString())
+                }
+            }
         }
-    ) }
+    }
 
     Scaffold {
         Column(
@@ -70,7 +91,13 @@ fun SearchPage(modifier: Modifier = Modifier) {
                 .padding(it)
                 .fillMaxSize()
         ) {
-            SearchBar(key, { key = it })
+            SearchBar(key, {
+                key = it
+
+                if (it.length >= 2) {
+                    onSearch(it)
+                }
+            })
             Divider(color = Color(0xFF303030), thickness = 1.dp)
 //            Spacer(modifier = Modifier.height(30.dp))
 //            RecentKeyword(recentKeywords)
@@ -154,7 +181,8 @@ fun SearchBar(
 
         BasicTextField(
             value = value,
-            onValueChange = { onChange(it) }
+            onValueChange = { onChange(it) },
+            maxLines = 1,
         ) { innerTextField ->
             Row(
                 Modifier
@@ -197,9 +225,8 @@ fun SearchBar(
                         fontWeight = FontWeight(400),
                         color = Color(0xFFB0B0B0),
                     )
-                } else {
-                    innerTextField()
                 }
+                innerTextField()
             }
         }
     }
