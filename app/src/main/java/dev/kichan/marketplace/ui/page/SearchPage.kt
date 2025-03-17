@@ -58,20 +58,7 @@ fun SearchPage(modifier: Modifier = Modifier) {
         )
     }
     var result by remember {
-        mutableStateOf<List<MarketRes>>(
-            List<MarketRes>(10) {
-                MarketRes(
-                    id = it.toLong(),
-                    name = faker.company().name(),
-                    description = faker.lorem().paragraph(),
-                    address = faker.address().fullAddress(),
-                    thumbnail = faker.avatar().image(),
-                    isFavorite = false,
-                    isNewCoupon = false,
-                    favoriteModifiedAt = ""
-                )
-            }
-        )
+        mutableStateOf<List<MarketRes>>(listOf())
     }
 
     val onSearch: (String) -> Unit = {
@@ -79,7 +66,7 @@ fun SearchPage(modifier: Modifier = Modifier) {
             val res = marketRepository.searchMarket(it, null, 20)
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
-                    Log.d("searchResult", res.body().toString())
+                    result = res.body()?.response?.marketResDtos ?: listOf()
                 }
             }
         }
@@ -216,17 +203,21 @@ fun SearchBar(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                if (value.isBlank()) {
-                    Text(
-                        text = "가고 싶은 매장을 찾아보세요",
-                        fontSize = 12.sp,
-                        lineHeight = 26.sp,
-                        fontFamily = PretendardFamily,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFB0B0B0),
-                    )
+                Box(
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    if (value.isBlank()) {
+                        Text(
+                            text = "가고 싶은 매장을 찾아보세요",
+                            fontSize = 12.sp,
+                            lineHeight = 26.sp,
+                            fontFamily = PretendardFamily,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFB0B0B0),
+                        )
+                    }
+                    innerTextField()
                 }
-                innerTextField()
             }
         }
     }
