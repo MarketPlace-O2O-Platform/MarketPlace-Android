@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.javafaker.Faker
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.component.atoms.SearchResultItem
@@ -94,7 +95,7 @@ fun SearchPage(modifier: Modifier = Modifier) {
                     SearchResultItem(
                         title = it.name,
                         description = it.description,
-                        imageUrl = it.thumbnail
+                        imageUrl = NetworkModule.getImage(id = it.thumbnail)
                     )
                 }
             }

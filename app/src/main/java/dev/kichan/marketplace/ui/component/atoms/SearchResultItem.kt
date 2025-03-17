@@ -1,11 +1,13 @@
 package dev.kichan.marketplace.ui.component.atoms
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,12 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -34,19 +37,14 @@ fun SearchResultItem(title: String, description: String, imageUrl:String) {
             .fillMaxWidth()
             .padding(vertical = 20.dp)
     ) {
-        Box(
+        AsyncImage(
+            model = NetworkModule.getImageModel(LocalContext.current, imageUrl),
+            contentDescription = null,
             modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(Color.White) // 배경 추가
-        ) {
-            AsyncImage(
-                model = NetworkModule.getImageModel(LocalContext.current, imageUrl),
-                contentDescription = null,
-                modifier = Modifier
-                    .width(110.dp)
-                    .height(110.dp)
-            )
-        }
+                .width(110.dp)
+                .height(110.dp),
+            contentScale = ContentScale.Crop
+        )
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = title,
