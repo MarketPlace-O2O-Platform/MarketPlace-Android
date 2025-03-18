@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.page
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -31,6 +32,7 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.model.repository.CouponRepository
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
 import dev.kichan.marketplace.ui.component.molecules.EventList
 import dev.kichan.marketplace.ui.component.organisms.BannerItem
@@ -108,7 +110,11 @@ fun HomePage(
 
     Scaffold(
         topBar = {
-            HomeAppBar(logo = R.drawable.logo, {}, Icons.Outlined.Notifications to {})
+            HomeAppBar(
+                logo = R.drawable.logo,
+                onSearch = { navController.navigate(Page.Search.name) },
+                Icons.Outlined.Notifications to {}
+            )
         },
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
@@ -162,14 +168,14 @@ fun HomePage(
                     EventList(
                         navController = navController,
                         title = "Top 20 인기 페이지",
-                        eventList = popularCoupons.value?.map {
+                        eventList = popularCoupons.value.map {
                             Event(
                                 id = it.id.toString(),
                                 title = it.name,
                                 subTitle = it.marketName,
                                 url = NetworkModule.getImage(it.thumbnail)
                             )
-                        } ?: listOf()
+                        }
                     )
                 }
 //                // 최신 제휴 이벤트

@@ -5,14 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -36,22 +34,11 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun SearchBar(modifier: Modifier = Modifier, onSearch : (String) -> Unit) {
-    var searchText by remember { mutableStateOf(TextFieldValue("")) }
-    var isDialogShow by remember { mutableStateOf(false) }
-
-    if(isDialogShow) {
-        Dialog(onDismissRequest = {isDialogShow = false}) {
-            Box() {
-                Text("쿠폰을 사용하시겠습니까?")
-            }
-        }
-    }
-
-
+fun SearchBar(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
         modifier = modifier
             .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(24.dp))
+            .clickable { onClick() }
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
     ) {
@@ -63,7 +50,7 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch : (String) -> Unit) {
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search Icon",
                 tint = Color(0xff121212),
-                modifier = Modifier.size(16.dp).clickable { onSearch(searchText.text) }
+                modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
 
@@ -76,31 +63,19 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch : (String) -> Unit) {
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            BasicTextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Normal),
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) { innerTextField ->
-                Box(
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    if (searchText.text.isEmpty()) {
-                        Text(
-                            text = "가고 싶은 매장을 찾아보세요",
-                            style = TextStyle(
-                                fontSize = 8.31.sp,
-                                lineHeight = 18.sp,
-                                fontFamily = PretendardFamily,
-                                fontWeight = FontWeight(400),
-                                color = Color(0xFFB0B0B0),
-                            )
-                        )
-                    }
-                    innerTextField()
-                }
+            Box(
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = "가고 싶은 매장을 찾아보세요",
+                    style = TextStyle(
+                        fontSize = 8.31.sp,
+                        lineHeight = 18.sp,
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFB0B0B0),
+                    )
+                )
             }
         }
     }

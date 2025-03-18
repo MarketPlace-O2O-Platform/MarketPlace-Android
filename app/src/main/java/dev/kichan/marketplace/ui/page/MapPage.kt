@@ -56,7 +56,7 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.atoms.CouponListItemWithBookmark
+import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
@@ -242,16 +242,14 @@ fun SheetContent(
                 }
             }
             items(markets) {
-                CouponListItemWithBookmark(
+                MarketListItem(
                     modifier = Modifier
                         .clickable { onDetailClick(it.id) }
                         .padding(12.dp),
                     title = it.name,
                     couponDescription = it.description,
                     location = it.address,
-                    likes = 10,
-                    category = LargeCategory.Food.nameKo,
-                    thumbnail = NetworkModule.getImage(it.thumbnail)
+                    imageUrl = NetworkModule.getImage(it.thumbnail)
                 )
 
                 HorizontalDivider(

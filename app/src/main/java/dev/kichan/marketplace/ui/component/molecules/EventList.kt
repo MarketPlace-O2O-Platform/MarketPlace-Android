@@ -28,9 +28,6 @@ fun EventList(
     navController: NavController,
     title: String,
     eventList: List<Event>,
-//    onFavoriteClick: (Event, Boolean) -> Unit = { event, isFavorite ->
-//
-//    }
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),

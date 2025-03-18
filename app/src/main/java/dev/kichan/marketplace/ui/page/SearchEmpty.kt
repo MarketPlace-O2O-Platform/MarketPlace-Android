@@ -36,7 +36,7 @@ fun SearchEmptyUI() {
                     .padding(1.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            SearchBar()
+//            SearchBars()
         }
         Divider(color = Color(0xFF303030), thickness = 1.dp)
         Spacer(modifier = Modifier.height(40.dp))

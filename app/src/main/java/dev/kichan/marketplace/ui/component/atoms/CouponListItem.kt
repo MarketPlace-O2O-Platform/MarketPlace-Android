@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.component.atoms
 
-import Carbon_bookmark
 import Download
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -34,13 +33,11 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun CouponListItemWithDownload(
+fun CouponListItem(
     imageRes: Int,
     title: String,
     couponDescription: String,
     location: String,
-    likes: Int,
-    category: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -121,13 +118,11 @@ fun CouponListItemWithDownload(
 @Composable
 fun CouponListItemWithDownloadPreview() {
     MarketPlaceTheme {
-        CouponListItemWithDownload(
+        CouponListItem(
             imageRes = R.drawable.desert,
             title = "참피온삼겹살 트리플 스트리트점",
             couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
             location = "송도",
-            likes = 440,
-            category = "음식&주점",
             modifier = Modifier
         )
     }

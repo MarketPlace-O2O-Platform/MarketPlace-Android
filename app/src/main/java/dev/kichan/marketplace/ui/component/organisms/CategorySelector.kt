@@ -39,7 +39,7 @@ fun CategorySelector(navController: NavController) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally, // 버튼과 텍스트를 가운데 정렬
                         modifier = Modifier.clickable {
-                            navController.navigate("${Page.CategoryEventList.name}/${category.name}")
+//                            navController.navigate("${Page.CategoryEventList.name}/${category.name}")
                         }
                     ) {
                         Image(

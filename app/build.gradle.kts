@@ -68,6 +68,8 @@ android {
 dependencies {
     implementation(libs.androidx.datastore.preferences)
 
+    implementation(libs.javafaker)
+
     implementation(libs.play.services.location)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.volley)

@@ -8,11 +8,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
+import com.github.javafaker.Faker
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import java.util.Locale
+
+val faker = Faker(Locale.KOREAN)
 
 class MainActivity : ComponentActivity() {
     private val singleTon : SingleTonViewModel by viewModels()
