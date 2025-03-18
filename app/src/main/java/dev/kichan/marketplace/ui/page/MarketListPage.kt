@@ -25,6 +25,7 @@ import dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
+import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +71,11 @@ fun MarketListPage(
         onLoadData(category, true)
     }
 
-    Scaffold {
+    Scaffold(
+        topBar = {
+            NavAppBar("카테고리") { nacController.popBackStack() }
+        }
+    ) {
         Column(
             modifier = Modifier.padding(it)
         ) {
