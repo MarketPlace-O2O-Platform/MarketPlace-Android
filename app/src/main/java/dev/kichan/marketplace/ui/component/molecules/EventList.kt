@@ -36,7 +36,7 @@ fun EventList(
             modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
             title = title
         ) {
-            navController.navigate("${Page.EventList.name}/${title}")
+//            navController.navigate("${Page.EventList.name}/${title}")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

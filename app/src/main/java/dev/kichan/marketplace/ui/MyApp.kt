@@ -2,14 +2,10 @@ package dev.kichan.marketplace.ui
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.ui.page.EventListPage
 import dev.kichan.marketplace.ui.page.MarketDetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
@@ -20,6 +16,11 @@ import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.ui.page.ApiTestPage
+import dev.kichan.marketplace.ui.page.MarketListPage
 
 @Composable
 fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
@@ -61,6 +62,14 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
         composable(route = Page.Login.name) {
             LoginPage(navController = navController, singleTon = singlethone)
         }
+        composable(route = "${Page.MarketListPage.name}/{category}") {
+            it.arguments?.getString("category")?.let { category ->
+                MarketListPage(
+                    nacController = navController,
+                    _category = LargeCategory.valueOf(category)
+                )
+            }
+        }
 
 //        composable("${Page.CategoryEventList.name}/{category}") {
 //            it.arguments?.getString("category")?.let { category ->
@@ -71,15 +80,15 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
 //            }
 //        }
 
-        composable("${Page.EventList.name}/{title}") {
-            it.arguments?.getString("title")?.let { title ->
-                EventListPage(navController = navController, title = title)
-            }
-        }
-
-//        composable(Page.LocalApiTestPage.name) {
-//            ApiTestPage(couponViewModel)
+//        composable("${Page.EventList.name}/{title}") {
+//            it.arguments?.getString("title")?.let { title ->
+//                EventListPage(navController = navController, title = title)
+//            }
 //        }
+
+        composable(Page.LocalApiTestPage.name) {
+            ApiTestPage()
+        }
     }
 }
 
