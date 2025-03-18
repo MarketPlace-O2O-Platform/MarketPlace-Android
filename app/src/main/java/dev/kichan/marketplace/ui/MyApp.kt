@@ -19,6 +19,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
 
 @Composable
@@ -27,7 +28,7 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
 
     NavHost(
         navController = navController,
-        startDestination = Page.Login.name,
+        startDestination = Page.LocalApiTestPage.name,
         enterTransition = {
             EnterTransition.None
         },
@@ -85,9 +86,9 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
 //            }
 //        }
 
-//        composable(Page.LocalApiTestPage.name) {
-//            ApiTestPage(couponViewModel)
-//        }
+        composable(Page.LocalApiTestPage.name) {
+            ApiTestPage()
+        }
     }
 }
 
