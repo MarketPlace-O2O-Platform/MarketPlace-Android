@@ -62,14 +62,14 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
             LoginPage(navController = navController, singleTon = singlethone)
         }
 
-        composable("${Page.CategoryEventList.name}/{category}") {
-            it.arguments?.getString("category")?.let { category ->
-                EventListPage(
-                    navController = navController,
-                    category = LargeCategory.valueOf(category)
-                )
-            }
-        }
+//        composable("${Page.CategoryEventList.name}/{category}") {
+//            it.arguments?.getString("category")?.let { category ->
+//                EventListPage(
+//                    navController = navController,
+//                    category = LargeCategory.valueOf(category)
+//                )
+//            }
+//        }
 
         composable("${Page.EventList.name}/{title}") {
             it.arguments?.getString("title")?.let { title ->

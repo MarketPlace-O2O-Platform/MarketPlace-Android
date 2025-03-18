@@ -168,14 +168,14 @@ fun HomePage(
                     EventList(
                         navController = navController,
                         title = "Top 20 인기 페이지",
-                        eventList = popularCoupons.value?.map {
+                        eventList = popularCoupons.value.map {
                             Event(
                                 id = it.id.toString(),
                                 title = it.name,
                                 subTitle = it.marketName,
                                 url = NetworkModule.getImage(it.thumbnail)
                             )
-                        } ?: listOf()
+                        }
                     )
                 }
 //                // 최신 제휴 이벤트

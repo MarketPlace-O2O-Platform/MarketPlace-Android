@@ -30,12 +30,9 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.model.data.coupon.CouponRes
 import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
-import dev.kichan.marketplace.ui.component.atoms.CouponListItemWithBookmark
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
@@ -76,29 +73,6 @@ fun MyPage(navController: NavController) {
                 .padding(innerPadding)
         ) {
             Spacer(modifier = Modifier.height(21.dp))
-
-            /* 없어진듯
-            // 상단 로그아웃 버튼
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(end = 20.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "로그아웃",
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.clickable {
-                        onLogout()
-                    }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(imageVector = Icons.Outlined.Info, contentDescription = "로그아웃")
-            }
-            */
-            Spacer(modifier = Modifier.height(4.dp))
 
             // 아이콘과 사용자 이름, 쿠폰함 버튼
             Row(

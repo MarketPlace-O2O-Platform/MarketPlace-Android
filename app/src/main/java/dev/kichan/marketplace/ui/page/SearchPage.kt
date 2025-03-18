@@ -45,8 +45,6 @@ import java.util.Locale
 @Composable
 fun SearchPage(modifier: Modifier = Modifier) {
     val marketRepository = MarketRepository()
-
-    val faker = Faker(Locale.KOREAN)
     var key by remember { mutableStateOf<String>("") }
     var recentKeywords by remember {
         mutableStateOf(
