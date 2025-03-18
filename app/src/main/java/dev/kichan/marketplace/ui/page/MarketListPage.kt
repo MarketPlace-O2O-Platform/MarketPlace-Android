@@ -50,14 +50,14 @@ fun MarketListPage(
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
                     val body = res.body()!!.response.marketResDtos
-                    marketData += body
+                    marketData = body
                 }
             }
         }
     }
 
-    LaunchedEffect(Unit) {
-        onLoadData(_category)
+    LaunchedEffect(category) {
+        onLoadData(category)
     }
 
     Scaffold {
