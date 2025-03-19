@@ -1,6 +1,8 @@
 package dev.kichan.marketplace.model.data.coupon
 
 import com.google.gson.annotations.SerializedName
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
 
 data class LatestCouponRes(
     @SerializedName("couponId") val id: Long,
@@ -12,4 +14,12 @@ data class LatestCouponRes(
     val isAvailable: Boolean,
     val isMemberIssued: Boolean,
     val couponCreatedAt: String,
-)
+) {
+    fun toCouponListItemProps(): CouponListItemProps = CouponListItemProps(
+        name = this.name,
+        marketName = this.marketName,
+        imageUrl = NetworkModule.getImage(this.thumbnail),
+        address = this.address,
+        isDownload = false
+    )
+}

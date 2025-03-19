@@ -28,9 +28,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.javafaker.Bool
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+
+data class CouponListItemProps(
+    val name: String,
+    val marketName: String,
+    val imageUrl : String,
+    val address: String,
+    val isDownload: Boolean
+)
 
 @Composable
 fun CouponListItem(
