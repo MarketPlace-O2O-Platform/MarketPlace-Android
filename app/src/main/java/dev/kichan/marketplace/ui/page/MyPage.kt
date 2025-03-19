@@ -31,18 +31,20 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
+import dev.kichan.marketplace.model.repository.CouponMemberRepositoryImpl
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun MyPage(navController: NavController) {
-//    val member = viewModel.member.observeAsState()
+    val repo = CouponMemberRepositoryImpl()
     var myCuration by remember { mutableStateOf<List<IssuedCouponRes>>(listOf()) }
-
-    var selectedCategory by remember {
-        mutableStateOf(LargeCategory.All)
-    }
+    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     val onLogout = {
 //        viewModel.logout(
@@ -56,6 +58,17 @@ fun MyPage(navController: NavController) {
 //                // 예: showError("로그아웃 실패")
 //            }
 //        )
+    }
+
+    val onGetMyCulation = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = repo.getMemberCoupon()
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    res.body()!!.response
+                }
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -161,21 +174,6 @@ fun MyPage(navController: NavController) {
                 ) {
                     items(items = myCuration) { coupon ->
                         Text(coupon.toString())
-//                        CouponListItemWithBookmark(
-//                            title = coupon.couponName,
-//                            couponDescription = coupon.description,
-//                            location = "위치를 추...",
-//                            likes = 0,
-//                            category = LargeCategory.All.toString(),
-//                            thumbnail = coupon.
-//                        )
-//                        Column {
-//                            Divider(
-//                                color = Color(0xFFF4F4F4),
-//                                thickness = 1.dp,
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                        }
                     }
                 }
             }

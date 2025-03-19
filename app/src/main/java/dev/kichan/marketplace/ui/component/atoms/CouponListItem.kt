@@ -42,9 +42,10 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 data class CouponListItemProps(
     val name: String,
     val marketName: String,
+    val marketId: Long,
     val imageUrl : String,
     val address: String,
-    val isDownload: Boolean
+    val isDownload: Boolean,
 )
 
 @Composable
@@ -135,7 +136,8 @@ fun CouponListItemWithDownloadPreview() {
                 marketName = faker.company().name(),
                 imageUrl = faker.company().logo(),
                 address = faker.address().fullAddress(),
-                isDownload = false
+                isDownload = false,
+                marketId = 1L
             )
         )
     }
