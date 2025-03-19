@@ -247,7 +247,7 @@ fun SheetContent(
                         .clickable { onDetailClick(it.id) }
                         .padding(12.dp),
                     title = it.name,
-                    couponDescription = it.description,
+                    description = it.description,
                     location = it.address,
                     imageUrl = NetworkModule.getImage(it.thumbnail)
                 )

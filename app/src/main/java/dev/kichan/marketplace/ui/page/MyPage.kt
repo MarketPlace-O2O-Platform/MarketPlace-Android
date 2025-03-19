@@ -30,10 +30,12 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
-import dev.kichan.marketplace.model.repository.CouponMemberRepositoryImpl
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
+import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,8 +44,8 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun MyPage(navController: NavController) {
-//    val repo = CouponMemberRepositoryImpl()
-    var myCuration by remember { mutableStateOf<List<IssuedCouponRes>>(listOf()) }
+    val repo = MarketRepository()
+    var myCuration by remember { mutableStateOf<List<MarketRes>>(listOf()) }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     val onLogout = {
@@ -60,19 +62,22 @@ fun MyPage(navController: NavController) {
 //        )
     }
 
-//    val onGetMyCulation = {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val res = repo.getMemberCoupon()
-//            withContext(Dispatchers.Main) {
-//                if(res.isSuccessful) {
-//                    res.body()!!.response
-//                }
-//            }
-//        }
-//    }
+    val onGetMyCulation = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = repo.getFavoriteMarket(
+                lastMarketId = null,
+                pageSize = 100000
+            )
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    myCuration = res.body()!!.response.marketResDtos
+                }
+            }
+        }
+    }
 
-    LaunchedEffect(Unit) {
-//        viewModel.getMyCuration()
+    LaunchedEffect(selectedCategory) {
+        onGetMyCulation()
     }
 
     Scaffold(
@@ -169,11 +174,15 @@ fun MyPage(navController: NavController) {
                 }
             } else {
                 LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
                 ) {
-                    items(items = myCuration) { coupon ->
-                        Text(coupon.toString())
+                    items(items = myCuration) { market ->
+                        MarketListItem(
+                            title = market.name,
+                            description = market.description,
+                            location = market.address,
+                            imageUrl = NetworkModule.getImage(market.thumbnail)
+                        )
                     }
                 }
             }

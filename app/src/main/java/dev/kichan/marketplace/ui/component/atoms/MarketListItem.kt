@@ -38,7 +38,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 fun MarketListItem(
     modifier: Modifier = Modifier,
     title: String,
-    couponDescription: String,
+    description: String,
     location: String,
     imageUrl: String,
 ) {
@@ -80,7 +80,7 @@ fun MarketListItem(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = couponDescription,
+                    text = description,
                     fontFamily = PretendardFamily,
                     fontSize = 13.sp,
                     fontWeight = FontWeight(500),
@@ -129,7 +129,7 @@ fun EventCardPreview() {
     MarketPlaceTheme {
         MarketListItem(
             title = "참피온삼겹살 트리플 스트리트점",
-            couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
+            description = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
             location = "송도",
             modifier = Modifier,
             imageUrl = faker.company().logo(),
