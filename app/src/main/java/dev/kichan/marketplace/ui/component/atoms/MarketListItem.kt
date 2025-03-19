@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.atoms
 
+import Bookmark
 import Carbon_bookmark
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,13 +13,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material3.DismissibleDrawerSheet
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +44,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun MarketListItem(
@@ -50,12 +57,15 @@ fun MarketListItem(
     isFavorite: Boolean,
 ) {
     val repo = FavoritesRepository()
+    var _isFavorite by remember { mutableStateOf(isFavorite) }
 
     val onFavorite = {
         CoroutineScope(Dispatchers.IO).launch {
             val res = repo.favorites(marketId)
-            if(res.isSuccessful) {
-
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    _isFavorite = !_isFavorite
+                }
             }
         }
     }
@@ -132,9 +142,14 @@ fun MarketListItem(
                 }
 
                 IconButton(
-                    onClick = {  }
+                    onClick = { onFavorite() }
                 ) {
-                    Icon(imageVector = Carbon_bookmark, contentDescription = null)
+                    if(_isFavorite) {
+                        Icon(imageVector = Icons.Default.Favorite, contentDescription = null)
+                    }
+                    else {
+                        Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null)
+                    }
                 }
             }
         }
