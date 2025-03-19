@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.network.NetworkRequestBody
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketCreateReq
@@ -91,7 +89,7 @@ fun ApiTestPage() {
                     operationHours = "121",
                     closedDays = "12",
                     phoneNumber = faker.phoneNumber().phoneNumber(),
-                    major = LargeCategory.entries.random().backendLable,
+                    major = LargeCategory.entries.random().backendLabel,
                     address = "인천광역시 연수구"
                 )
                 val res = repo.createMarket(market, imageParts)

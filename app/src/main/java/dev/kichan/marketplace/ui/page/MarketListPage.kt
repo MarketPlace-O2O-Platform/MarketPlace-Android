@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,12 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.github.javafaker.Bool
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.model.repository.MarketRepository
-import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
@@ -53,7 +50,7 @@ fun MarketListPage(
         CoroutineScope(Dispatchers.IO).launch {
             val res = marketRepository.getMarkets(
                 lastMarketId = if(isInit) null else pagenation.lastId.toString(),
-                category = if (it == LargeCategory.All) null else it.backendLable,
+                category = if (it == LargeCategory.All) null else it.backendLabel,
                 pageSize = 2002
             )
 
@@ -87,7 +84,7 @@ fun MarketListPage(
                 items(marketData) {market ->
                     MarketListItem(
                         title = market.name,
-                        couponDescription = market.description,
+                        description = market.description,
                         location = market.address,
                         imageUrl = NetworkModule.getImage(market.thumbnail)
                     )

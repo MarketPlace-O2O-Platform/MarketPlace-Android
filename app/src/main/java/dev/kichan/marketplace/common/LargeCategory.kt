@@ -5,12 +5,12 @@ import dev.kichan.marketplace.R
 
 enum class LargeCategory(
     val nameKo: String,
-    val backendLable: String,
+    val backendLabel: String?,
     @DrawableRes val icon : Int,
 ) {
     All(
         "전체",
-        "ALL",
+        null,
         R.drawable.ic_category_all
     ),
     Food(
