@@ -42,7 +42,7 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun MyPage(navController: NavController) {
-    val repo = CouponMemberRepositoryImpl()
+//    val repo = CouponMemberRepositoryImpl()
     var myCuration by remember { mutableStateOf<List<IssuedCouponRes>>(listOf()) }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
@@ -60,16 +60,16 @@ fun MyPage(navController: NavController) {
 //        )
     }
 
-    val onGetMyCulation = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = repo.getMemberCoupon()
-            withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
-                    res.body()!!.response
-                }
-            }
-        }
-    }
+//    val onGetMyCulation = {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val res = repo.getMemberCoupon()
+//            withContext(Dispatchers.Main) {
+//                if(res.isSuccessful) {
+//                    res.body()!!.response
+//                }
+//            }
+//        }
+//    }
 
     LaunchedEffect(Unit) {
 //        viewModel.getMyCuration()
