@@ -130,22 +130,16 @@ fun HomePage(
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
                         bannerList = closingCoupons.value.map {
-                            try {
-                                val deadLine = it.deadline.toLocalDateTime()
-                                Log.d("deadlien", deadLine.toString())
-                                val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                            val deadLine = it.deadline.toLocalDateTime()
+                            Log.d("deadlien", deadLine.toString())
+                            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
-                                BannerItem(
-                                    title = it.name,
-                                    subTitle = it.marketName,
-                                    description = "~ " + formatter.format(deadLine),
-                                    imageUrl = NetworkModule.getImage(it.thumbnail)
-                                )
-                            }
-                            catch (e : Exception) {
-                                Log.e("deadline", it.toString())
-                                throw e
-                            }
+                            BannerItem(
+                                title = it.name,
+                                subTitle = it.marketName,
+                                description = "~ " + formatter.format(deadLine),
+                                imageUrl = NetworkModule.getImage(it.thumbnail)
+                            )
                         }
                     )
                 }
@@ -164,34 +158,34 @@ fun HomePage(
 
                 // Top 20 인기 페이지"
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
                     EventList(
                         navController = navController,
                         title = "Top 20 인기 페이지",
-                        eventList = popularCoupons.value.map {
+                        couponList = popularCoupons.value.map {
                             Event(
                                 id = it.id.toString(),
                                 title = it.name,
                                 subTitle = it.marketName,
                                 url = NetworkModule.getImage(it.thumbnail)
                             )
-                        }
+                        },
+                        onMoreClick = { navController.navigate("${Page.CouponListPage}/popular") },
                     )
                 }
 //                // 최신 제휴 이벤트
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
                     EventList(
                         navController = navController,
                         title = "이번달 신규 이벤트",
-                        eventList = latestCoupons.value?.map {
+                        couponList = latestCoupons.value.map {
                             Event(
                                 id = it.id.toString(),
                                 subTitle = it.marketName,
                                 title = it.name,
                                 url = NetworkModule.getImage(it.thumbnail)
                             )
-                        } ?: listOf()
+                        },
+                        onMoreClick = { navController.navigate("${Page.CouponListPage}/latest") },
                     )
                 }
 

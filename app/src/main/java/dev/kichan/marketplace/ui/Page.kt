@@ -18,5 +18,6 @@ enum class Page(
     EventDetail(pageName = "이벤트 정보"),
     CouponHam(pageName = "쿠폰함페이지"),
 
-    MarketListPage(pageName = "매장 목록")
+    MarketListPage(pageName = "매장 목록"),
+    CouponListPage(pageName = "쿠폰 목록")
 }

@@ -71,6 +71,19 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
             }
         }
 
+        composable(route = "${Page.CouponListPage.name}/{type}") {
+            it.arguments?.getString("type")?.let { type ->
+                if(!listOf("popular", "latest").contains(type)) {
+                    throw Exception("Invalid type")
+                }
+
+                CouponListPage(
+                    navController = navController,
+                    type = type
+                )
+            }
+        }
+
 //        composable("${Page.CategoryEventList.name}/{category}") {
 //            it.arguments?.getString("category")?.let { category ->
 //                EventListPage(
