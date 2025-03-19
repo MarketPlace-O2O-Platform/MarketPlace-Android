@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,8 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 fun MoreViewTitle(modifier: Modifier = Modifier, title: String, onMoreClick: () -> Unit) {
     Row(
         modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onMoreClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -41,7 +42,6 @@ fun MoreViewTitle(modifier: Modifier = Modifier, title: String, onMoreClick: () 
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { onMoreClick() }
         ) {
             Text(
                 text = "더보기",
