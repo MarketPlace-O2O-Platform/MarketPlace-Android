@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +34,7 @@ import coil3.compose.AsyncImage
 import com.github.javafaker.Bool
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -53,6 +55,7 @@ fun CouponListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .padding(vertical = 20.dp, horizontal = PAGE_HORIZONTAL_PADDING)
     ) {
         AsyncImage(
             model = NetworkModule.getImageModel(LocalContext.current, props.imageUrl),
@@ -74,18 +77,18 @@ fun CouponListItem(
                 Text(
                     text = props.marketName,
                     fontFamily = PretendardFamily,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xff4b4b4b),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = props.name,
                     fontFamily = PretendardFamily,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight(500),
-                    color = Color(0xff7d7d7d),
-                    maxLines = 2,
-                    lineHeight = 18.sp,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xff4b4b4b),
+                    maxLines = 1,
                 )
             }
 

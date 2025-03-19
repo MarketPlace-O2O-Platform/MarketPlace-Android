@@ -20,6 +20,7 @@ import dev.kichan.marketplace.model.data.coupon.Coupon
 import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.ui.component.atoms.CouponListItem
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
+import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ fun CouponListPage(
     type: String,
 ) {
     val repo = CouponRepository()
+    val title = if(type == "popular") "인기 쿠폰" else "x월 신규" //todo: 월 추가
     var couponList by remember { mutableStateOf<List<CouponListItemProps>>(listOf()) }
 
     val onLoadCoupon = {
@@ -66,7 +68,11 @@ fun CouponListPage(
         onLoadCoupon()
     }
 
-    Scaffold {
+    Scaffold(
+        topBar = {
+            NavAppBar("$title | 멤버십 혜택") { navController.popBackStack() }
+        }
+    ) {
         LazyColumn (
             modifier = Modifier.padding(it)
         ) {
