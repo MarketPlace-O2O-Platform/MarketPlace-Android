@@ -30,6 +30,7 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CouponCard
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.model.data.CouponResponse
+import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun ReceivedCouponsScreen(navController: NavHostController) {
@@ -71,40 +72,37 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(21.dp))
 
-        // 상단 제목
+        // ✅ 중앙 정렬된 타이틀
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(44.dp)
+                .height(48.dp)
                 .background(color = Color.White),
             contentAlignment = Alignment.Center
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // 뒤로 가기 아이콘
-                Icon(
-                    painter = painterResource(R.drawable.left),
-                    contentDescription = "Back Icon",
-                    tint = Color(0xFF838A94),
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(start = 8.dp)
-                        .clickable {
-                            navController.navigate(Page.My.name)
-                        }
-                )
+            Text(
+                text = "받은 쿠폰함",
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(600),
+                    color = Color(0xFF000000),
+                    fontFamily = PretendardFamily
+                ),
+                textAlign = TextAlign.Center
+            )
 
-                // 타이틀
-                Text(
-                    text = "받은 쿠폰함",
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold),
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            // 뒤로 가기 아이콘 (왼쪽 상단 배치)
+            Icon(
+                painter = painterResource(R.drawable.left),
+                contentDescription = "Back Icon",
+                tint = Color(0xFF838A94),
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.CenterStart)
+                    .padding(start = 12.dp)
+                    .clickable { navController.navigate(Page.My.name) }
+            )
         }
-
         // 탭 레이아웃
         TabRow(
             modifier = Modifier.border(width = 1.dp, color = Color(0xFFE0E0E0)),
@@ -152,46 +150,69 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
         DebugCouponList(coupons)
     }
 
-    // ✅ 쿠폰 사용 다이얼로그 (사용 후 UI 업데이트)
+// ✅ 쿠폰 사용 다이얼로그 (UI 개선)
     if (isDialogShow && selectedCoupon != null) {
         Dialog(onDismissRequest = { isDialogShow = false }) {
             Column(
                 modifier = Modifier
-                    .width(300.dp)
-                    .background(Color.White, shape = RoundedCornerShape(12.dp))
-                    .padding(16.dp),
+                    .width(320.dp)
+                    .background(Color.White, shape = RoundedCornerShape(8.dp))
+                    .padding(horizontal = 32.dp, vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "쿠폰을 사용하시겠습니까?", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                // ✅ 쿠폰명 포함한 제목
+                Text(
+                    text = "${selectedCoupon?.couponName} 쿠폰을 사용하시겠습니까?",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                    Button(
-                        onClick = {
-                            selectedCoupon?.let {
-                                viewModel.useCoupon(token, it.memberCouponId)
-                            }
-                            isDialogShow = false
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("예")
-                    }
+                // ✅ 버튼 스타일 및 UI 변경
+                Button(
+                    onClick = {
+                        selectedCoupon?.let {
+                            viewModel.useCoupon(token, it.memberCouponId)
+                        }
+                        isDialogShow = false
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+                ) {
+                    Text(text = "Text",
+                        fontSize = 12.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight(500),
+                        fontFamily = PretendardFamily
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    )
+                }
 
-                    OutlinedButton(
-                        onClick = { isDialogShow = false },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("아니오")
-                    }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedButton(
+                    onClick = { isDialogShow = false },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black),
+                    border = ButtonDefaults.outlinedButtonBorder
+                ) {
+                    Text(
+                        text = "Text",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(500),
+                        fontFamily = PretendardFamily
+                    )
                 }
             }
         }
     }
 }
+
 
 
 @Composable
