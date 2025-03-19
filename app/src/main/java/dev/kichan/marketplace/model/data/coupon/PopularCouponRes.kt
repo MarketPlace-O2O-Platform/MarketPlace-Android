@@ -22,6 +22,7 @@ data class PopularCouponRes(
         marketName = this.marketName,
         imageUrl = NetworkModule.getImage(this.thumbnail),
         address = this.address,
-        isDownload = false
+        isDownload = false,
+        marketId = this.marketId
     )
 }
