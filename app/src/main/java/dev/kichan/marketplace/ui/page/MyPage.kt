@@ -181,7 +181,9 @@ fun MyPage(navController: NavController) {
                             title = market.name,
                             description = market.description,
                             location = market.address,
-                            imageUrl = NetworkModule.getImage(market.thumbnail)
+                            imageUrl = NetworkModule.getImage(market.thumbnail),
+                            marketId = market.id,
+                            isFavorite = market.isFavorite,
                         )
                     }
                 }

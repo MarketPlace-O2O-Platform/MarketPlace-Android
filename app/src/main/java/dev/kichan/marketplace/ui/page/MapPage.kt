@@ -249,7 +249,9 @@ fun SheetContent(
                     title = it.name,
                     description = it.description,
                     location = it.address,
-                    imageUrl = NetworkModule.getImage(it.thumbnail)
+                    imageUrl = NetworkModule.getImage(it.thumbnail),
+                    marketId = it.id,
+                    isFavorite = it.isFavorite,
                 )
 
                 HorizontalDivider(

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material3.DismissibleDrawerSheet
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,9 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.repository.FavoritesRepository
 import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun MarketListItem(
@@ -41,7 +46,20 @@ fun MarketListItem(
     description: String,
     location: String,
     imageUrl: String,
+    marketId: Long,
+    isFavorite: Boolean,
 ) {
+    val repo = FavoritesRepository()
+
+    val onFavorite = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = repo.favorites(marketId)
+            if(res.isSuccessful) {
+
+            }
+        }
+    }
+
     Row(
         modifier = modifier
             .padding(
@@ -133,6 +151,8 @@ fun EventCardPreview() {
             location = "송도",
             modifier = Modifier,
             imageUrl = faker.company().logo(),
+            marketId = 1,
+            isFavorite = false
         )
     }
 }
