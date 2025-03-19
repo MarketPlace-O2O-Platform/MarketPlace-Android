@@ -31,17 +31,13 @@ fun EventList(
     onMoreClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         MoreViewTitle(
-            modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
             title = title
         ) {
             onMoreClick()
-//            navController.navigate("${Page.EventList.name}/${title}")
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         if(couponList.isEmpty()) {
             EmptyMessage()

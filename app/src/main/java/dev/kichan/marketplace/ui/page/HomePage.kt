@@ -158,7 +158,6 @@ fun HomePage(
 
                 // Top 20 인기 페이지"
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
                     EventList(
                         navController = navController,
                         title = "Top 20 인기 페이지",
@@ -175,7 +174,6 @@ fun HomePage(
                 }
 //                // 최신 제휴 이벤트
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
                     EventList(
                         navController = navController,
                         title = "이번달 신규 이벤트",
