@@ -71,13 +71,9 @@ fun CouponListPage(
             modifier = Modifier.padding(it)
         ) {
             items(couponList) {
-//                CouponListItem(
-//                    imageRes = R.drawable.cafe,
-//                    title = it.name,
-//                    couponDescription = it.,
-//                    location = it.,
-//                    modifier = TODO()
-//                )
+                CouponListItem(
+                    props = it
+                )
             }
         }
     }

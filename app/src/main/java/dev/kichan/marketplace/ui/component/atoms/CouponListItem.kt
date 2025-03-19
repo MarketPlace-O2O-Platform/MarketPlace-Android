@@ -23,13 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.github.javafaker.Bool
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -43,23 +47,18 @@ data class CouponListItemProps(
 
 @Composable
 fun CouponListItem(
-    imageRes: Int,
-    title: String,
-    couponDescription: String,
-    location: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    props : CouponListItemProps
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource(imageRes),
+        AsyncImage(
+            model = NetworkModule.getImageModel(LocalContext.current, props.imageUrl),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(110.dp)
-                .clip(RoundedCornerShape(4.dp))
+            modifier = Modifier.size(110.dp).clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -73,14 +72,14 @@ fun CouponListItem(
         ) {
             Column {
                 Text(
-                    text = title,
+                    text = props.marketName,
                     fontFamily = PretendardFamily,
                     fontSize = 16.sp,
                     fontWeight = FontWeight(600),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = couponDescription,
+                    text = props.name,
                     fontFamily = PretendardFamily,
                     fontSize = 13.sp,
                     fontWeight = FontWeight(500),
@@ -108,7 +107,7 @@ fun CouponListItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = location,
+                        text = props.address,
                         style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                     )
                 }
@@ -128,11 +127,13 @@ fun CouponListItem(
 fun CouponListItemWithDownloadPreview() {
     MarketPlaceTheme {
         CouponListItem(
-            imageRes = R.drawable.desert,
-            title = "참피온삼겹살 트리플 스트리트점",
-            couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
-            location = "송도",
-            modifier = Modifier
+            props = CouponListItemProps(
+                name = faker.name().title(),
+                marketName = faker.company().name(),
+                imageUrl = faker.company().logo(),
+                address = faker.address().fullAddress(),
+                isDownload = false
+            )
         )
     }
 }
