@@ -37,7 +37,7 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
     var selectedTab by remember { mutableStateOf(0) }
     var isDialogShow by remember { mutableStateOf(false) }
     var selectedCouponId by remember { mutableStateOf<Long?>(null) }
-    val token = "Bearer YOUR_ACCESS_TOKEN" // ⚠️ 실제 토큰으로 변경 필요
+    val token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMDIyMDE0NjkiLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MjM4ODA5MCwiZXhwIjoxNzQ0OTgwMDkwfQ.anjETPfYxY_qQFhj6abyk4GYurt67hnEwve5YhvyhpU"
 
     // API 데이터 관찰
     val coupons by viewModel.coupons.observeAsState(initial = emptyList())
@@ -55,16 +55,18 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
     }
 
     // ✅ 쿠폰 사용 후 UI 업데이트 (쿠폰이 사용되면 다시 API 호출)
-    LaunchedEffect(couponUsed) {
-        if (couponUsed) {
-            viewModel.fetchCoupons(token, when (selectedTab) {
-                0 -> "ISSUED"
-                1 -> "USED"
-                2 -> "EXPIRED"
-                else -> "ISSUED"
-            })
+    LaunchedEffect(selectedTab, token) {
+        val type = when (selectedTab) {
+            0 -> "ISSUED" // ✅ 사용 가능 쿠폰
+            1 -> "USED" // ✅ 사용 완료 쿠폰
+            2 -> "EXPIRED" // ✅ 기간 만료 쿠폰
+            else -> "ISSUED"
         }
+
+        Log.d("CouponPage", "쿠폰 리스트 요청: type=$type") // ✅ API 요청 로그 추가
+        viewModel.fetchCoupons(token, type)
     }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(21.dp))
@@ -122,12 +124,19 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(8.dp))
 
         // ✅ 쿠폰 리스트 (로그 출력 추가)
+        val filteredCoupons = when (selectedTab) {
+            0 -> coupons.filter { !it.used } // ✅ 사용 가능한 쿠폰
+            1 -> coupons.filter { it.used } // ✅ 사용 완료된 쿠폰
+            2 -> coupons // ✅ 기간 만료 쿠폰
+            else -> coupons
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(coupons, key = { it.memberCouponId }) { coupon: CouponResponse ->
-                Log.d("CouponPage", "쿠폰 ID: ${coupon.memberCouponId}, 이름: ${coupon.couponName}, 사용 여부: ${coupon.used}")
+            items(filteredCoupons, key = { it.memberCouponId }) { coupon ->
+                Log.d("CouponPage", "쿠폰 표시: ID=${coupon.memberCouponId}, 사용 여부=${coupon.used}")
 
                 CouponCard(
                     onClick = {
@@ -138,6 +147,7 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
                 )
             }
         }
+
 
         // ✅ 디버깅용 쿠폰 데이터 UI 추가
         DebugCouponList(coupons)

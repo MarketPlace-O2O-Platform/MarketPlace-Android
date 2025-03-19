@@ -15,9 +15,10 @@ data class CouponResponse(
 )
 
 data class CouponListResponse(
-    @SerializedName("couponResDtos") val couponResDtos: List<CouponResponse>,
+    @SerializedName("couponResDtos") val couponResDtos: List<CouponResponse> = emptyList(), // ✅ 기본값 추가!
     @SerializedName("hasNext") val hasNext: Boolean
 )
+
 
 data class CouponUseResponse(
     @SerializedName("couponId") val couponId: Long,
