@@ -15,13 +15,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.model.data.CouponResponse
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun CouponCard(onClick: () -> Unit, status: String) {
-    // status 값에 따라 배경 이미지 변경
+fun CouponCard(coupon: CouponResponse, onClick: () -> Unit) {
+    // 상태 값 설정
+    val status = when {
+        coupon.used -> "사용 완료"
+        LocalDate.parse(coupon.deadLine.substring(0, 10)) < LocalDate.now() -> "기간 만료"
+        else -> "사용 가능"
+    }
+
+    // 배경 이미지 설정
     val backgroundImage = when (status) {
-        "사용 완료", "기간 만료" -> R.drawable.subtract2 // 사용 완료 또는 기간 만료 시 subtract2.png 사용
-        else -> R.drawable.component // 기본 component.png 사용
+        "사용 완료", "기간 만료" -> R.drawable.subtract2
+        else -> R.drawable.component
     }
 
     Box(
@@ -30,7 +40,7 @@ fun CouponCard(onClick: () -> Unit, status: String) {
             .height(120.dp)
             .clickable { onClick() }
     ) {
-        // 배경 이미지 설정
+        // 배경 이미지
         Image(
             painter = painterResource(id = backgroundImage),
             contentDescription = "Coupon Background",
@@ -41,10 +51,10 @@ fun CouponCard(onClick: () -> Unit, status: String) {
             modifier = Modifier.matchParentSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 헤어 이미지
+            // 쿠폰 대표 이미지 (임시로 고정)
             Image(
-                painter = painterResource(id = R.drawable.hair),
-                contentDescription = "Hair Image",
+                painter = painterResource(id = R.drawable.hair), // TODO: coupon.imageUrl이 있으면 변경
+                contentDescription = "Coupon Image",
                 modifier = Modifier.size(102.dp)
             )
 
@@ -53,28 +63,28 @@ fun CouponCard(onClick: () -> Unit, status: String) {
             // 쿠폰 정보
             Column {
                 Text(
-                    text = "70%",
+                    text = coupon.couponName,
                     fontSize = 28.sp,
                     lineHeight = 42.sp,
                     fontFamily = PretendardFamily,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight(600),
                     color = Color(0xFF121212),
                 )
                 Text(
-                    text = "붙임머리 할인",
+                    text = coupon.description,
                     fontSize = 15.sp,
                     lineHeight = 24.sp,
                     fontFamily = PretendardFamily,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight(600),
                     color = Color(0xFF121212),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "2024년 10월 31일까지",
+                    text = "${formatDate(coupon.deadLine)}",
                     fontSize = 13.sp,
                     lineHeight = 22.sp,
                     fontFamily = PretendardFamily,
-                    fontWeight = FontWeight.Normal,
+                    fontWeight = FontWeight(400),
                     color = Color(0xFF545454),
                 )
             }
@@ -98,15 +108,41 @@ fun CouponCard(onClick: () -> Unit, status: String) {
     }
 }
 
+/**
+ * 쿠폰 만료 날짜를 보기 좋은 형태로 변환
+ */
+fun formatDate(dateString: String): String {
+    return try {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val parsedDate = LocalDate.parse(dateString.substring(0, 10), formatter)
+        parsedDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일까지"))
+    } catch (e: Exception) {
+        "날짜 오류"
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewCouponCard() {
     Column {
-        CouponCard(onClick = {}, status = "사용 가능")
+        val sampleCoupon = CouponResponse(
+            memberCouponId = 1,
+            couponId = 101,
+            couponName = "커피 1+1 쿠폰",
+            description = "모든 매장에서 사용 가능",
+            deadLine = "2025-03-30T23:59:59.999",
+            used = false
+        )
+
+        CouponCard(coupon = sampleCoupon, onClick = {})
         Spacer(modifier = Modifier.height(16.dp))
-        CouponCard(onClick = {}, status = "사용 완료")
+
+        val expiredCoupon = sampleCoupon.copy(deadLine = "2024-03-10T23:59:59.999")
+        CouponCard(coupon = expiredCoupon, onClick = {})
+
         Spacer(modifier = Modifier.height(16.dp))
-        CouponCard(onClick = {}, status = "기간 만료")
+
+        val usedCoupon = sampleCoupon.copy(used = true)
+        CouponCard(coupon = usedCoupon, onClick = {})
     }
 }

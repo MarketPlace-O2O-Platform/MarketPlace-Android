@@ -36,7 +36,7 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
     val viewModel: CouponViewModel = viewModel()
     var selectedTab by remember { mutableStateOf(0) }
     var isDialogShow by remember { mutableStateOf(false) }
-    var selectedCouponId by remember { mutableStateOf<Long?>(null) }
+    var selectedCoupon by remember { mutableStateOf<CouponResponse?>(null) }
     val token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMDIyMDE0NjkiLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc0MjM4ODA5MCwiZXhwIjoxNzQ0OTgwMDkwfQ.anjETPfYxY_qQFhj6abyk4GYurt67hnEwve5YhvyhpU"
 
     // API 데이터 관찰
@@ -139,22 +139,21 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
                 Log.d("CouponPage", "쿠폰 표시: ID=${coupon.memberCouponId}, 사용 여부=${coupon.used}")
 
                 CouponCard(
+                    coupon = coupon, // ✅ CouponResponse 객체 전달
                     onClick = {
-                        selectedCouponId = coupon.memberCouponId
+                        selectedCoupon = coupon
                         isDialogShow = true
-                    },
-                    status = if (coupon.used) "사용 완료" else "사용 가능"
+                    }
                 )
             }
         }
-
 
         // ✅ 디버깅용 쿠폰 데이터 UI 추가
         DebugCouponList(coupons)
     }
 
     // ✅ 쿠폰 사용 다이얼로그 (사용 후 UI 업데이트)
-    if (isDialogShow) {
+    if (isDialogShow && selectedCoupon != null) {
         Dialog(onDismissRequest = { isDialogShow = false }) {
             Column(
                 modifier = Modifier
@@ -170,8 +169,8 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
                 Row(horizontalArrangement = Arrangement.SpaceEvenly) {
                     Button(
                         onClick = {
-                            selectedCouponId?.let {
-                                viewModel.useCoupon(token, it)
+                            selectedCoupon?.let {
+                                viewModel.useCoupon(token, it.memberCouponId)
                             }
                             isDialogShow = false
                         },
@@ -193,6 +192,7 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
         }
     }
 }
+
 
 @Composable
 fun DebugCouponList(coupons: List<CouponResponse>) {
