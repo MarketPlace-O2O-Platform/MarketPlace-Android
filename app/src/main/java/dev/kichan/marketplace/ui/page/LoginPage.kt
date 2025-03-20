@@ -78,7 +78,7 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
         }
     }
 
-    if(!authToken.value.isNullOrEmpty()) {
+    if(!authToken.value.isNullOrBlank()) {
         singleTon.loginToken.value = authToken.value
         NetworkModule.updateToken(authToken.value)
 

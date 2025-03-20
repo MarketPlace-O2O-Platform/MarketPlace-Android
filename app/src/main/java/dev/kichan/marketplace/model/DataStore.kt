@@ -16,6 +16,12 @@ suspend fun saveAuthToken(context: Context, token: String) {
     }
 }
 
+suspend fun removeAuthToken(context: Context) {
+    context.dataStore.edit { preferences ->
+        preferences[AUTH_TOKEN] = ""
+    }
+}
+
 fun getAuthToken(context: Context) : Flow<String?> = context.dataStore.data.map { preferences ->
     preferences[AUTH_TOKEN]
 }
