@@ -60,6 +60,7 @@ fun MarketListItem(
     var _isFavorite by remember { mutableStateOf(isFavorite) }
 
     val onFavorite = {
+        //todo: 버그 있음..
         CoroutineScope(Dispatchers.IO).launch {
             val res = repo.favorites(marketId)
             withContext(Dispatchers.Main) {
