@@ -20,31 +20,26 @@ import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.EventBox
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.MoreViewTitle
+import dev.kichan.marketplace.ui.component.atoms.MoreViewTitle
 
 @Composable
 fun EventList(
     modifier: Modifier = Modifier,
     navController: NavController,
     title: String,
-    eventList: List<Event>,
-//    onFavoriteClick: (Event, Boolean) -> Unit = { event, isFavorite ->
-//
-//    }
+    couponList: List<Event>, //todo: Event -> Coupon으로 변경
+    onMoreClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         MoreViewTitle(
-            modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
             title = title
         ) {
-            navController.navigate("${Page.EventList.name}/${title}")
+            onMoreClick()
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if(eventList.isEmpty()) {
+        if(couponList.isEmpty()) {
             EmptyMessage()
         }
         else {
@@ -53,7 +48,7 @@ fun EventList(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
             ) {
-                items(eventList) {
+                items(couponList) {
                     EventBox(
                         modifier = Modifier
                             .clickable {

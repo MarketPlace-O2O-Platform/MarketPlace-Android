@@ -1,10 +1,11 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -26,7 +28,9 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 fun MoreViewTitle(modifier: Modifier = Modifier, title: String, onMoreClick: () -> Unit) {
     Row(
         modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onMoreClick() }
+            .padding(vertical = 20.dp, horizontal = PAGE_HORIZONTAL_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -41,7 +45,6 @@ fun MoreViewTitle(modifier: Modifier = Modifier, title: String, onMoreClick: () 
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { onMoreClick() }
         ) {
             Text(
                 text = "더보기",

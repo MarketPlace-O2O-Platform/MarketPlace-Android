@@ -3,6 +3,8 @@ package dev.kichan.marketplace.ui.page
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -28,19 +30,23 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun MyPage(navController: NavController) {
-//    val member = viewModel.member.observeAsState()
-//    val myCuration = viewModel.myCuration.observeAsState()
-
-    var selectedCategory by remember {
-        mutableStateOf(mutableListOf(LargeCategory.All))
-    }
+    val repo = MarketRepository()
+    var myCuration by remember { mutableStateOf<List<MarketRes>>(listOf()) }
+    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     val onLogout = {
 //        viewModel.logout(
@@ -56,8 +62,22 @@ fun MyPage(navController: NavController) {
 //        )
     }
 
-    LaunchedEffect(Unit) {
-//        viewModel.getMyCuration()
+    val onGetMyCulation = {
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = repo.getFavoriteMarket(
+                lastMarketId = null,
+                pageSize = 100000
+            )
+            withContext(Dispatchers.Main) {
+                if(res.isSuccessful) {
+                    myCuration = res.body()!!.response.marketResDtos
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(selectedCategory) {
+        onGetMyCulation()
     }
 
     Scaffold(
@@ -71,29 +91,6 @@ fun MyPage(navController: NavController) {
                 .padding(innerPadding)
         ) {
             Spacer(modifier = Modifier.height(21.dp))
-
-            /* 없어진듯
-            // 상단 로그아웃 버튼
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(end = 20.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "로그아웃",
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.clickable {
-                        onLogout()
-                    }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(imageVector = Icons.Outlined.Info, contentDescription = "로그아웃")
-            }
-            */
-            Spacer(modifier = Modifier.height(4.dp))
 
             // 아이콘과 사용자 이름, 쿠폰함 버튼
             Row(
@@ -113,7 +110,13 @@ fun MyPage(navController: NavController) {
                             .background(Color(0xFFF9F9F9), shape = CircleShape)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(text = "${202401598}님", fontSize = 16.sp, lineHeight = 22.4.sp, fontWeight = FontWeight.Bold, fontFamily = PretendardFamily)
+                    Text(
+                        text = "${202401598}님",
+                        fontSize = 16.sp,
+                        lineHeight = 22.4.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = PretendardFamily
+                    )
 
                     Spacer(modifier = Modifier.width(12.dp))
 
@@ -155,52 +158,37 @@ fun MyPage(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // 나만의 큐레이션과 카테고리 선택 버튼
-//            CategorySelector(
-//                selectedCategory = selectedCategory,
-//                onChange = { }
-//            )
+            CategorySelector(
+                selectedCategory = selectedCategory,
+                onChange = { selectedCategory = it }
+            )
             Spacer(modifier = Modifier.height(20.dp))
 
             // MyPageCard를 세로로 나열하는 리스트, 각 카드 사이에 구분선 추가
-//            if(myCuration.value.isNullOrEmpty()) {
-//                Box(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
-//                }
-//            }
-//            else {
-//                LazyColumn(
-//                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-//                    verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
-//                ) {
-//                    items(myCuration.value ?: listOf()) { event ->
-//                        Column {
-//                            MyPageCard(event = event)
-//                            Divider(
-//                                color = Color(0xFFF4F4F4),
-//                                thickness = 1.dp,
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-//                        }
-//                    }
-//                }
-//            }
+            if (myCuration.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
+                }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
+                ) {
+                    items(items = myCuration) { market ->
+                        MarketListItem(
+                            title = market.name,
+                            description = market.description,
+                            location = market.address,
+                            imageUrl = NetworkModule.getImage(market.thumbnail)
+                        )
+                    }
+                }
+            }
         }
     }
 }
-
-//@Preview
-//@Composable
-//private fun CategorySelectorPreview() {
-//    MarketPlaceTheme {
-//        CategorySelector(
-//            selectedCategory = listOf(LargeCategory.All),
-//            {}
-//        )
-//    }
-//}
 
 @Preview(showBackground = true)
 @Composable

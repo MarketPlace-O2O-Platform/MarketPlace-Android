@@ -8,6 +8,6 @@ data class MarketCreateReq(
     val operationHours: String,
     val closedDays: String,
     val phoneNumber: String,
-    val major : String,
+    val major : String?,
     val address : String,
 )

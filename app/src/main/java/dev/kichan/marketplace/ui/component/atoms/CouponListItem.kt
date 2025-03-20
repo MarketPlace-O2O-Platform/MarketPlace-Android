@@ -1,6 +1,6 @@
 package dev.kichan.marketplace.ui.component.atoms
 
-import Carbon_bookmark
+import Download
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,13 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,45 +31,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import dev.kichan.marketplace.model.repository.FavoritesRepository
+import com.github.javafaker.Bool
+import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
+import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
+data class CouponListItemProps(
+    val name: String,
+    val marketName: String,
+    val marketId: Long,
+    val imageUrl : String,
+    val address: String,
+    val isDownload: Boolean,
+)
 
 @Composable
-fun CouponListItemWithBookmark(
+fun CouponListItem(
     modifier: Modifier = Modifier,
-    title: String,
-    couponDescription: String,
-    location: String,
-    likes: Int,
-    category: String,
-    thumbnail: String,
+    props : CouponListItemProps
 ) {
-    val repository = FavoritesRepository()
-
-    val onFavoriteClick: () -> Unit = {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            repository.favorites()
-//        }
-    }
-
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .padding(vertical = 20.dp, horizontal = PAGE_HORIZONTAL_PADDING)
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(thumbnail)
-                .crossfade(true)
-                .build(),
-            contentDescription = "Event Thumnail",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(110.dp)
+            model = NetworkModule.getImageModel(LocalContext.current, props.imageUrl),
+            contentDescription = null,
+            modifier = Modifier.size(110.dp).clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -82,20 +76,20 @@ fun CouponListItemWithBookmark(
         ) {
             Column {
                 Text(
-                    text = title,
+                    text = props.marketName,
                     fontFamily = PretendardFamily,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xff4b4b4b),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = couponDescription,
+                    text = props.name,
                     fontFamily = PretendardFamily,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight(500),
-                    color = Color(0xff7d7d7d),
-                    maxLines = 2,
-                    lineHeight = 18.sp,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xff4b4b4b),
+                    maxLines = 1,
                 )
             }
 
@@ -117,15 +111,15 @@ fun CouponListItemWithBookmark(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = location,
+                        text = props.address,
                         style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                     )
                 }
-
                 IconButton(
-                    onClick = { onFavoriteClick() }
+                    onClick = {}
                 ) {
-                    Icon(imageVector = Carbon_bookmark, contentDescription = null)
+                    //todo: 아 몰라 나중에 해 아이콘 변경
+                    Icon(imageVector = Download, contentDescription = null)
                 }
             }
         }
@@ -134,16 +128,17 @@ fun CouponListItemWithBookmark(
 
 @Preview(showBackground = true)
 @Composable
-fun EventCardPreview() {
+fun CouponListItemWithDownloadPreview() {
     MarketPlaceTheme {
-        CouponListItemWithBookmark(
-            title = "참피온삼겹살 트리플 스트리트점",
-            couponDescription = "방탈출 카페 2인 이용권\n스머프와 함께 즐기는 미디어아트 보드게임!",
-            location = "송도",
-            likes = 440,
-            category = "음식&주점",
-            modifier = Modifier,
-            thumbnail = "",
+        CouponListItem(
+            props = CouponListItemProps(
+                name = faker.name().title(),
+                marketName = faker.company().name(),
+                imageUrl = faker.company().logo(),
+                address = faker.address().fullAddress(),
+                isDownload = false,
+                marketId = 1L
+            )
         )
     }
 }
