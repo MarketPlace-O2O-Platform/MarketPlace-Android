@@ -95,13 +95,12 @@ fun ApiTestPage() {
                     address = "인천광역시 연수구"
                 )
                 val res = repo.createMarket(market, imageParts)
-                if(res.isSuccessful) {
+                if (res.isSuccessful) {
                     Log.i("dummy", "성공 $i")
-                }
-                else {
+                } else {
                     Log.e("dummy", "실패(${res.code()}) $i")
                 }
-                if(i % 5 == 0) {
+                if (i % 5 == 0) {
                     delay(300)
                 }
             }
@@ -127,15 +126,37 @@ fun ApiTestPage() {
                     body = coupon,
                     marketId = 7
                 )
-                if(res.isSuccessful) {
+                if (res.isSuccessful) {
                     Log.i("dummy", "성공 $i")
-                }
-                else {
+                } else {
                     Log.e("dummy", "실패(${res.code()}) $i")
                 }
-                if(i % 5 == 0) {
+                if (i % 5 == 0) {
                     delay(300)
                 }
+            }
+        }
+    }
+
+    val ondummyCouponShow = {
+        val repo = CouponOwnerRepository()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val coupoonLsit = repo.getAllCouponByMarket(7, 200).body()!!.response.couponResDtos
+
+            var count = 0
+
+            coupoonLsit.forEach {
+                val res = repo.updateHiddenCoupon(it.id)
+                if (res.isSuccessful) {
+                    Log.i("dummy", "성공")
+                } else {
+                    Log.e("dummy", "실패(${res.code()})")
+                }
+//                if (count % 5 == 0) {
+//                    delay(300)
+//                }
+                count += 1
             }
         }
     }
@@ -162,6 +183,8 @@ fun ApiTestPage() {
             Button("매장 더미데이터 생성") { onDummyMarketData() }
 
             Button("쿠폰 더미데이터 생성") { onDummyCoupon() }
+
+            Button("쿠폰 보여주기") { ondummyCouponShow() }
 
             selectedImageUris.forEach { uri ->
                 Text(text = "선택된 이미지: $uri")
