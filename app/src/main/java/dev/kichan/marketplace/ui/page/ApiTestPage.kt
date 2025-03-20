@@ -24,8 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.coupon.CouponCreateReq
 import dev.kichan.marketplace.model.data.market.MarketCreateReq
 import dev.kichan.marketplace.model.getAuthToken
+import dev.kichan.marketplace.model.repository.CouponOwnerRepository
 import dev.kichan.marketplace.model.repository.MarketOwnerRepository
 import dev.kichan.marketplace.ui.component.atoms.Button
 import dev.kichan.marketplace.ui.faker
@@ -109,6 +111,35 @@ fun ApiTestPage() {
         }
     }
 
+    val onDummyCoupon = {
+        val repo = CouponOwnerRepository()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            for (i in 1..100) {
+                val coupon = CouponCreateReq(
+                    name = faker.name().title(),
+                    description = faker.lorem().sentence(5),
+                    deadline = "2025-12-20T09:55:00.976Z",
+                    stock = 1000
+                )
+
+                val res = repo.createCoupon(
+                    body = coupon,
+                    marketId = 7
+                )
+                if(res.isSuccessful) {
+                    Log.i("dummy", "성공 $i")
+                }
+                else {
+                    Log.e("dummy", "실패(${res.code()}) $i")
+                }
+                if(i % 5 == 0) {
+                    delay(300)
+                }
+            }
+        }
+    }
+
     val setToken = {
         if (!token.value.isNullOrEmpty()) {
             NetworkModule.updateToken(token.value)
@@ -124,11 +155,13 @@ fun ApiTestPage() {
                 Text("로딩중")
             }
 
-            Button("이미지 선택하기") { imagePickerLauncher.launch("image/*") }
+//            Button("이미지 선택하기") { imagePickerLauncher.launch("image/*") }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button("매장 더미데이터 생성") { onDummyMarketData() }
+
+            Button("쿠폰 더미데이터 생성") { onDummyCoupon() }
 
             selectedImageUris.forEach { uri ->
                 Text(text = "선택된 이미지: $uri")
