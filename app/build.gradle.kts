@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation("com.google.firebase:firebase-messaging:24.1.0")
     val mapsComposeVersion = "4.4.1"
     implementation("com.google.maps.android:maps-compose:$mapsComposeVersion")
     // Google Maps Compose utility library
