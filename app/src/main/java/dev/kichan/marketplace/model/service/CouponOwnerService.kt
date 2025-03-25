@@ -34,11 +34,12 @@ interface CouponOwnerService {
     @PUT("/api/owners/coupons/hidden/{couponId}")
     suspend fun updateHiddenCoupon(
         @Path("couponId") couponId: Long,
-    )
+    ) : Response<ResponseTemplate<Any>>
 
-    @GET("/api/owners/coupons/coupons")
+    @GET("/api/owners/coupons")
     suspend fun getAllCouponByMarket(
-        @Query("marketId") marketId: Int
+        @Query("marketId") marketId: Int,
+        @Query("size") size: Int? = null,
     ) : Response<ResponseTemplate<CouponPagination<CouponRes>>>
 
     @POST("/api/owners/coupons")
