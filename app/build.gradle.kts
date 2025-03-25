@@ -1,7 +1,7 @@
 import java.util.Properties
 
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
+//val properties = Properties()
+//properties.load(project.rootProject.file("local.properties").inputStream())
 
 plugins {
     alias(libs.plugins.android.application)

@@ -11,7 +11,9 @@ data class CouponResponse(
     @SerializedName("couponName") val couponName: String,
     @SerializedName("description") val description: String,
     @SerializedName("deadLine") val deadLine: String,  // ISO 8601 형식
-    @SerializedName("used") val used: Boolean
+    @SerializedName("used") val used: Boolean,
+
+    @SerializedName("imageUrl") val imageUrl: String? = null
 )
 
 data class CouponListResponse(
