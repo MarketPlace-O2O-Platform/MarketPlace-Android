@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
@@ -37,6 +38,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,18 +50,22 @@ fun MyPage(navController: NavController) {
     var myCuration by remember { mutableStateOf<List<MarketRes>>(listOf()) }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
+    // 드롭다운 메뉴 열림 여부
+    var showMenu by remember { mutableStateOf(false) }
+    val authViewModel: AuthViewModel = viewModel()
+
     val onLogout = {
-//        viewModel.logout(
-//            onSuccess = {
-//                navController.popBackStack()
-//                navController.navigate(Page.Login.name)
-//            },
-//            onFail = {
-//                // 로그아웃 실패 시 처리 로직을 추가
-//                // 예를 들어, 오류 메시지를 표시할 수 있습니다.
-//                // 예: showError("로그아웃 실패")
-//            }
-//        )
+        // 실제 로그아웃 로직
+        // 예: viewModel.logout(
+        //         onSuccess = {
+        //             navController.popBackStack()
+        //             navController.navigate(Page.Login.name)
+        //         },
+        //         onFail = {
+        //             // 로그아웃 실패 시 처리 로직
+        //         }
+        //     )
+        println("로그아웃 버튼 클릭됨")
     }
 
     val onGetMyCulation = {
@@ -69,7 +75,7 @@ fun MyPage(navController: NavController) {
                 pageSize = 100000
             )
             withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
+                if (res.isSuccessful) {
                     myCuration = res.body()!!.response.marketResDtos
                 }
             }
@@ -118,17 +124,41 @@ fun MyPage(navController: NavController) {
                         fontFamily = PretendardFamily
                     )
 
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                    // Dropdown Icon
-                    Icon(
-                        painter = painterResource(id = R.drawable.down),
-                        contentDescription = "드롭다운",
-                        tint = Color(0xFF838A94),
-                        modifier = Modifier.size(24.dp)
-                    )
+                    // 드롭다운 아이콘 (터치 가능하도록 IconButton 사용)
+                    IconButton(onClick = { showMenu = !showMenu }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.down),
+                            contentDescription = "드롭다운",
+                            tint = Color(0xFF838A94),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("로그아웃") },
+                            onClick = {
+                                authViewModel.logout(
+                                    onSuccess = {
+                                        // 로그아웃 성공 시 로그인 화면으로 이동
+                                        navController.popBackStack()
+                                        navController.navigate(Page.Login.name)
+                                    },
+                                    onFail = {
+                                        // 실패 시 처리(예: 에러 메시지 출력)
+                                        println("로그아웃 실패: ${it.message}")
+                                    }
+                                )
+                                showMenu = false
+                            }
+                        )
+                    }
                 }
-
                 // 받은 쿠폰함 버튼
                 Button(
                     onClick = {
@@ -164,7 +194,7 @@ fun MyPage(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            // MyPageCard를 세로로 나열하는 리스트, 각 카드 사이에 구분선 추가
+            // MyPageCard를 세로로 나열하는 리스트
             if (myCuration.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -189,6 +219,7 @@ fun MyPage(navController: NavController) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
