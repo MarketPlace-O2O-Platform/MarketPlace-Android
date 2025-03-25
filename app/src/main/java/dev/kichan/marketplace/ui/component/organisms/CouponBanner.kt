@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.component.organisms
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -37,6 +38,7 @@ data class BannerItem(
     val subTitle: String,
     val description: String,
     val imageUrl: String,
+    val onClick : () -> Unit
 )
 
 @Composable
@@ -54,6 +56,7 @@ fun CouponBanner(modifier: Modifier = Modifier, bannerList: List<BannerItem>) {
                 modifier = modifier
                     .fillMaxWidth()
                     .aspectRatio(335.0f / 360) // 배너 이미지 비율
+                    .clickable { item.onClick() }
             ) {
                 AsyncImage(
                     modifier = Modifier.fillMaxSize(),

@@ -138,7 +138,8 @@ fun HomePage(
                                 title = it.name,
                                 subTitle = it.marketName,
                                 description = "~ " + formatter.format(deadLine),
-                                imageUrl = NetworkModule.getImage(it.thumbnail)
+                                imageUrl = NetworkModule.getImage(it.thumbnail),
+                                onClick = { navController.navigate("${Page.EventDetail.name}/${it.marketId}") }
                             )
                         }
                     )

@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui
 
+import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.navigation.compose.NavHost
@@ -55,6 +56,7 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
 
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
+                    Log.d("eventDetail", "id : $id")
                     MarketDetailPage(navController, id.toLong())
                 }
             }
