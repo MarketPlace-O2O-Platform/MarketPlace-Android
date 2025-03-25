@@ -31,7 +31,7 @@ fun CouponCard(coupon: CouponResponse, onClick: () -> Unit) {
     // 배경 이미지 설정
     val backgroundImage = when (status) {
         "사용 완료", "기간 만료" -> R.drawable.subtract2
-        else -> R.drawable.component
+        else -> R.drawable.component2
     }
 
     Box(
