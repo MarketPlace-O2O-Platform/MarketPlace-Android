@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -78,6 +79,7 @@ fun CouponListPage(
         ) {
             items(couponList) {
                 CouponListItem(
+                    modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${it.marketId}") },
                     props = it
                 )
             }
