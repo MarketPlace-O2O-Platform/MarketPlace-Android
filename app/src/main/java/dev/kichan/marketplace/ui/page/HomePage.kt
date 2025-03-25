@@ -167,10 +167,11 @@ fun HomePage(
                                 id = it.id.toString(),
                                 title = it.name,
                                 subTitle = it.marketName,
-                                url = NetworkModule.getImage(it.thumbnail)
+                                url = NetworkModule.getImage(it.thumbnail),
+                                marketId = it.marketId,
                             )
                         },
-                        onMoreClick = { navController.navigate("${Page.CouponListPage}/popular") },
+                        onMoreClick = { navController.navigate("${Page.CouponListPage.name}/popular") },
                     )
                 }
 //                // 최신 제휴 이벤트
@@ -183,10 +184,11 @@ fun HomePage(
                                 id = it.id.toString(),
                                 subTitle = it.marketName,
                                 title = it.name,
-                                url = NetworkModule.getImage(it.thumbnail)
+                                url = NetworkModule.getImage(it.thumbnail),
+                                marketId = it.marketId,
                             )
                         },
-                        onMoreClick = { navController.navigate("${Page.CouponListPage}/latest") },
+                        onMoreClick = { navController.navigate("${Page.CouponListPage.name}/latest") },
                     )
                 }
 

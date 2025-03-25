@@ -52,7 +52,7 @@ fun EventList(
                     EventBox(
                         modifier = Modifier
                             .clickable {
-                                navController.navigate("${Page.EventDetail.name}/${it.id}")
+                                navController.navigate("${Page.EventDetail.name}/${it.marketId}")
                             }
                             .fillParentMaxSize(0.8f)
                             .aspectRatio(1f / 1),
