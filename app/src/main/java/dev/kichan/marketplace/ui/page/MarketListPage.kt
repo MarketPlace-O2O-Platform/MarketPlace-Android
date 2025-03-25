@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.model.repository.MarketRepository
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
@@ -83,6 +85,7 @@ fun MarketListPage(
             ) {
                 items(marketData) {market ->
                     MarketListItem(
+                        modifier = Modifier.clickable { nacController.navigate("${Page.EventDetail}/${market.id}") },
                         title = market.name,
                         description = market.description,
                         location = market.address,

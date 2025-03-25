@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1001743150569:android:3eb9135d08ed3f3a46ef78",
+        "mobilesdk_app_id": "1:1001743150569:android:c3dde94de32af22e46ef78",
         "android_client_info": {
-          "package_name": "com.company.currumi"
+          "package_name": "dev.kichan.marketplace"
         }
       },
       "oauth_client": [],

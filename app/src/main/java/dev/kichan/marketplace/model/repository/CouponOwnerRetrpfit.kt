@@ -12,6 +12,6 @@ class CouponOwnerRepository {
     suspend fun updateCoupon(couponId: Long, body: CouponUpdateReq) = service.updateCoupon(couponId, body)
     suspend fun deleteCoupon(couponId: Long) = service.deleteCoupon(couponId)
     suspend fun updateHiddenCoupon(couponId: Long) = service.updateHiddenCoupon(couponId)
-    suspend fun getAllCouponByMarket(marketId: Int) = service.getAllCouponByMarket(marketId)
+    suspend fun getAllCouponByMarket(marketId: Int, size: Int? = null) = service.getAllCouponByMarket(marketId, size)
     suspend fun createCoupon(body: CouponCreateReq, marketId: Int) = service.createCoupon(body, marketId)
 }
