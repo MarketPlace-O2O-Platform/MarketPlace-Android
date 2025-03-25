@@ -68,6 +68,7 @@ fun MyPage(navController: NavController) {
         println("로그아웃 버튼 클릭됨")
     }
 
+
     val onGetMyCulation = {
         CoroutineScope(Dispatchers.IO).launch {
             val res = repo.getFavoriteMarket(
@@ -117,7 +118,7 @@ fun MyPage(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "${202401598}님",
+                        text = "${202201469}님",
                         fontSize = 16.sp,
                         lineHeight = 22.4.sp,
                         fontWeight = FontWeight.Bold,
