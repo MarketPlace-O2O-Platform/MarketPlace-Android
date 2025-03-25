@@ -171,7 +171,7 @@ fun MarketDetailPage(
                 )
             )
         ) {
-            item { ImageSlider(List(5) { "https://picsum.photos/2000" }) }
+            item { ImageSlider(data.value!!.imageResList.map { NetworkModule.getImage(it.name) } ) }
             item { MainInfo(data) }
             item {
                 HorizontalDivider(
