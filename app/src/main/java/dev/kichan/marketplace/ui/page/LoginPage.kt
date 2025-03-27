@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.page
 
 import android.app.Application
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -79,7 +80,9 @@ fun LoginPage(
     }
 
     when (state) {
-        is LoginUiState.Error -> {}
+        is LoginUiState.Error -> {
+            Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+        }
         LoginUiState.Idle -> {}
         LoginUiState.Loading -> {}
         LoginUiState.Success -> {
