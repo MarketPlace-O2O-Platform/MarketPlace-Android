@@ -4,31 +4,35 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.login.LoginReq
+import dev.kichan.marketplace.model.getAuthToken
 import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
 import dev.kichan.marketplace.model.saveAuthToken
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
 
-sealed class LoginPageState {
-    data class LoginPageIdle(val inputId: String, val inputPassword: String) : LoginPageState()
+sealed class LoginUiState {
+    data object Idle : LoginUiState()
+    data object Loading : LoginUiState()
+    data object Success : LoginUiState()
+    data class Error(val message: String) : LoginUiState()
 }
 
 class AuthViewModel(private val application: Application = Application()) : AndroidViewModel(application) {
     private val authRepository = AuthRepositoryImpl(application.applicationContext)
 
-    val loginPageState : MutableStateFlow<LoginPageState> = MutableStateFlow(LoginPageState.LoginPageIdle(
-        inputId = "",
-        inputPassword = ""
-    ))
+    var loginState by mutableStateOf<LoginUiState>(LoginUiState.Idle)
 
     fun login(
         id: String,
         password: String,
-        onSuccess: () -> Unit,
-        onFail: () -> Unit
     ) {
         viewModelScope.launch {
             try {
@@ -44,11 +48,12 @@ class AuthViewModel(private val application: Application = Application()) : Andr
                 val token = res.body()!!.response
                 NetworkModule.updateToken(token)
                 saveAuthToken(application.applicationContext, token)
-                onSuccess()
+
+                loginState = LoginUiState.Success
             }
             catch (e: Exception) {
                 Log.e("error", e.message.toString())
-                onFail()
+                loginState = LoginUiState.Error(e.message.toString())
             }
         }
     }

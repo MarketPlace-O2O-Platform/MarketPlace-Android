@@ -34,6 +34,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -44,11 +45,12 @@ import kotlinx.coroutines.withContext
 @Composable
 fun LoginPage(
     navController: NavHostController,
-    singleTon : SingleTonViewModel,
+    singleTon: SingleTonViewModel,
     authViewModel: AuthViewModel = AuthViewModel()
 ) {
     val context = LocalContext.current
-    val memberRepo = AuthRepositoryImpl(Application())
+    val state = authViewModel.loginState
+
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
@@ -66,46 +68,37 @@ fun LoginPage(
         authViewModel.login(
             id = id,
             password = password,
-            onSuccess = {
-                navController.popBackStack()
-                navController.navigate(Page.Main.name)
-            },
-            onFail = {
-                //todo : 로그인 실패 처리
-            }
-        )
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val req = LoginReq(id, password)
-//            val res = memberRepo.login(req)
-//
-//            withContext(Dispatchers.Main) {
-//                if(res.isSuccessful) {
-//                    val token = res.body()!!.response
-//                    singleTon.loginToken.value = token
-//                    NetworkModule.updateToken(token)
-//                    saveAuthToken(context, token)
-//
-//                    navController.popBackStack()
-//                    navController.navigate(Page.Main.name)
-//                }
-//                else {
-//                    showError = true
-//                }
+//            onSuccess = {
+//                navController.popBackStack()
+//                navController.navigate(Page.Main.name)
+//            },
+//            onFail = {
+//                //todo : 로그인 실패 처리
 //            }
-//        }
+        )
     }
 
-    if(!authToken.value.isNullOrBlank()) {
-        singleTon.loginToken.value = authToken.value
-        NetworkModule.updateToken(authToken.value)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            saveAuthToken(context, authToken.value.toString())
+    when (state) {
+        is LoginUiState.Error -> {}
+        LoginUiState.Idle -> {}
+        LoginUiState.Loading -> {}
+        LoginUiState.Success -> {
+            navController.popBackStack()
+            navController.navigate(Page.Main.name)
         }
-
-        navController.popBackStack()
-        navController.navigate(Page.Main.name)
     }
+
+//    if(!authToken.value.isNullOrBlank()) {
+//        singleTon.loginToken.value = authToken.value
+//        NetworkModule.updateToken(authToken.value)
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            saveAuthToken(context, authToken.value.toString())
+//        }
+//
+//        navController.popBackStack()
+//        navController.navigate(Page.Main.name)
+//    }
 
     if (showError) {
         LaunchedEffect(Unit) {
@@ -127,7 +120,7 @@ fun LoginPage(
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
+            ) {
             Spacer(modifier = Modifier.height(100.dp))
 
             Row(
