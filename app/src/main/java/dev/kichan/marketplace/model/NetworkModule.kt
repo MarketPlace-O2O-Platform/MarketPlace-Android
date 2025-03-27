@@ -16,13 +16,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class AuthInterceptor(
-    val token: String?
-) : Interceptor {
+object TokenStore {
+    var token: String? = null
+}
+
+class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val newRequest = originalRequest.newBuilder()
-            .addHeader("Authorization", "Bearer $token")
+            .addHeader("Authorization", "Bearer ${TokenStore.token}")
             .build()
         return chain.proceed(newRequest)
     }
@@ -36,10 +38,11 @@ object NetworkModule {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private var authInterceptor = AuthInterceptor(null)
+    private val authInterceptor : AuthInterceptor
+        get() = AuthInterceptor()
 
     fun updateToken(token: String?) {
-        authInterceptor = AuthInterceptor(token)
+        TokenStore.token = token
     }
 
     private val client: OkHttpClient

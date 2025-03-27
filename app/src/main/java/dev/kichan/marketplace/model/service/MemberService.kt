@@ -13,7 +13,7 @@ interface MemberService {
     @POST("api/members")
     suspend fun login(@Body body : LoginReq) : Response<ResponseTemplate<String>>
 
-    @GET("api/members/{memberId}")
+    @GET("api/members")
     suspend fun getUserData() : Response<ResponseTemplate<LoginRes>>
 }
 

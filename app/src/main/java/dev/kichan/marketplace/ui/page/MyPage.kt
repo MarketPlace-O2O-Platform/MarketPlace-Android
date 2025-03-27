@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.app.Application
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -46,27 +47,30 @@ import kotlinx.coroutines.withContext
 import dev.kichan.marketplace.model.service.MemberService
 
 @Composable
-fun MyPage(navController: NavController) {
+fun MyPage(
+    navController: NavController,
+    authViewModel: AuthViewModel
+) {
     val repo = MarketRepository()
     var myCuration by remember { mutableStateOf<List<MarketRes>>(listOf()) }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     // 드롭다운 메뉴 열림 여부
     var showMenu by remember { mutableStateOf(false) }
-    val authViewModel: AuthViewModel = viewModel()
 
     val onLogout = {
-        // 실제 로그아웃 로직
-        // 예: viewModel.logout(
-        //         onSuccess = {
-        //             navController.popBackStack()
-        //             navController.navigate(Page.Login.name)
-        //         },
-        //         onFail = {
-        //             // 로그아웃 실패 시 처리 로직
-        //         }
-        //     )
-        println("로그아웃 버튼 클릭됨")
+        authViewModel.logout(
+            onSuccess = {
+                // 로그아웃 성공 시 로그인 화면으로 이동
+                navController.popBackStack()
+                navController.navigate(Page.Login.name)
+            },
+            onFail = {
+                // 실패 시 처리(예: 에러 메시지 출력)
+                println("로그아웃 실패: ${it.message}")
+            }
+        )
+        showMenu = false
     }
 
 
@@ -145,18 +149,7 @@ fun MyPage(navController: NavController) {
                         DropdownMenuItem(
                             text = { Text("로그아웃") },
                             onClick = {
-                                authViewModel.logout(
-                                    onSuccess = {
-                                        // 로그아웃 성공 시 로그인 화면으로 이동
-                                        navController.popBackStack()
-                                        navController.navigate(Page.Login.name)
-                                    },
-                                    onFail = {
-                                        // 실패 시 처리(예: 에러 메시지 출력)
-                                        println("로그아웃 실패: ${it.message}")
-                                    }
-                                )
-                                showMenu = false
+                                onLogout()
                             }
                         )
                     }
@@ -226,5 +219,5 @@ fun MyPage(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun MyPagePreview() {
-    MyPage(navController = rememberNavController())
+    MyPage(navController = rememberNavController(), authViewModel = AuthViewModel())
 }

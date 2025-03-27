@@ -1,5 +1,7 @@
 package dev.kichan.marketplace.ui.page
 
+import android.app.Application
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,11 +29,13 @@ import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.getAuthToken
-import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
+import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
 import dev.kichan.marketplace.model.saveAuthToken
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -40,9 +44,14 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) {
+fun LoginPage(
+    navController: NavHostController,
+    singleTon: SingleTonViewModel,
+    authViewModel: AuthViewModel = AuthViewModel()
+) {
     val context = LocalContext.current
-    val memberRepo = MemberRepositoryImpl()
+    val state = authViewModel.loginState
+
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
@@ -53,41 +62,23 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
     var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
     val schools = listOf("학교 A", "학교 B", "학교 C")
 
-    val authToken = getAuthToken(context).collectAsState(null)
-
-
     val onLogin: (String, String) -> Unit = { id, password ->
-        CoroutineScope(Dispatchers.IO).launch {
-            val req = LoginReq(id, password)
-            val res = memberRepo.login(req)
-
-            withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
-                    val token = res.body()!!.response
-                    singleTon.loginToken.value = token
-                    NetworkModule.updateToken(token)
-                    saveAuthToken(context, token)
-
-                    navController.popBackStack()
-                    navController.navigate(Page.Main.name)
-                }
-                else {
-                    showError = true
-                }
-            }
-        }
+        authViewModel.login(
+            id = id,
+            password = password,
+        )
     }
 
-    if(!authToken.value.isNullOrBlank()) {
-        singleTon.loginToken.value = authToken.value
-        NetworkModule.updateToken(authToken.value)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            saveAuthToken(context, authToken.value.toString())
+    when (state) {
+        is LoginUiState.Error -> {
+            Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
         }
-
-        navController.popBackStack()
-        navController.navigate(Page.Main.name)
+        LoginUiState.Idle -> {}
+        LoginUiState.Loading -> {}
+        LoginUiState.Success -> {
+            navController.popBackStack()
+            navController.navigate(Page.Main.name)
+        }
     }
 
     if (showError) {
@@ -110,7 +101,7 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
+            ) {
             Spacer(modifier = Modifier.height(100.dp))
 
             Row(
