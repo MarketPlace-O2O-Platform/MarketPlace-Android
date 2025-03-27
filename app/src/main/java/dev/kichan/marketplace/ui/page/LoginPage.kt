@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +28,7 @@ import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.getAuthToken
-import dev.kichan.marketplace.model.repository.MemberRepositoryImpl
+import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
 import dev.kichan.marketplace.model.saveAuthToken
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
@@ -42,7 +43,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) {
     val context = LocalContext.current
-    val memberRepo = MemberRepositoryImpl()
+    val memberRepo = AuthRepositoryImpl(Application())
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }

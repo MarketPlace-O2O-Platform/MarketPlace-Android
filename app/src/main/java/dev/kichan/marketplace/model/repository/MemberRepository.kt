@@ -7,5 +7,6 @@ import retrofit2.Response
 
 interface MemberRepository {
     suspend fun login(body : LoginReq) : Response<ResponseTemplate<String>>
+    suspend fun logout()
     suspend fun getMemberData() : Response<ResponseTemplate<LoginRes>>
 }
