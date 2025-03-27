@@ -81,18 +81,6 @@ fun LoginPage(
         }
     }
 
-//    if(!authToken.value.isNullOrBlank()) {
-//        singleTon.loginToken.value = authToken.value
-//        NetworkModule.updateToken(authToken.value)
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            saveAuthToken(context, authToken.value.toString())
-//        }
-//
-//        navController.popBackStack()
-//        navController.navigate(Page.Main.name)
-//    }
-
     if (showError) {
         LaunchedEffect(Unit) {
             message = "다시 입력해주세요."

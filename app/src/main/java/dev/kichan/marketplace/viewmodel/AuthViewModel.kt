@@ -25,8 +25,7 @@ sealed class LoginUiState {
     data class Error(val message: String) : LoginUiState()
 }
 
-class AuthViewModel(private val application: Application = Application()) :
-    AndroidViewModel(application) {
+class AuthViewModel(private val application: Application = Application()) :AndroidViewModel(application) {
     private val authRepository = AuthRepositoryImpl(application.applicationContext)
 
     var loginState by mutableStateOf<LoginUiState>(LoginUiState.Idle)
@@ -87,7 +86,7 @@ class AuthViewModel(private val application: Application = Application()) :
 
                 NetworkModule.updateToken(token)
                 val res = authRepository.getMemberData()
-                if(!res.isSuccessful) {
+                if (!res.isSuccessful) {
                     NetworkModule.updateToken(null)
                     return@collect
                 }
