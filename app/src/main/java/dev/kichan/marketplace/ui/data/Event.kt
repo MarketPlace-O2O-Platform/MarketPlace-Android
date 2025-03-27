@@ -5,4 +5,5 @@ data class Event(
     val title: String,
     val subTitle : String,
     val url : String,
+    val marketId: Long
 )

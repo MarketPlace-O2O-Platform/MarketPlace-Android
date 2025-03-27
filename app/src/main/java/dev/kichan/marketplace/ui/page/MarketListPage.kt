@@ -85,7 +85,7 @@ fun MarketListPage(
             ) {
                 items(marketData) {market ->
                     MarketListItem(
-                        modifier = Modifier.clickable { nacController.navigate("${Page.EventDetail}/${market.id}") },
+                        modifier = Modifier.clickable { nacController.navigate("${Page.EventDetail.name}/${market.id}") },
                         title = market.name,
                         description = market.description,
                         location = market.address,
