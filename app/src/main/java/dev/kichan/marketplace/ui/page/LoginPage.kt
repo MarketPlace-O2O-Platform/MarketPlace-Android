@@ -33,6 +33,7 @@ import dev.kichan.marketplace.model.saveAuthToken
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -41,7 +42,11 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) {
+fun LoginPage(
+    navController: NavHostController,
+    singleTon : SingleTonViewModel,
+    authViewModel: AuthViewModel = AuthViewModel()
+) {
     val context = LocalContext.current
     val memberRepo = AuthRepositoryImpl(Application())
     var inputId by remember { mutableStateOf("") }
@@ -58,25 +63,36 @@ fun LoginPage(navController: NavHostController, singleTon : SingleTonViewModel) 
 
 
     val onLogin: (String, String) -> Unit = { id, password ->
-        CoroutineScope(Dispatchers.IO).launch {
-            val req = LoginReq(id, password)
-            val res = memberRepo.login(req)
-
-            withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
-                    val token = res.body()!!.response
-                    singleTon.loginToken.value = token
-                    NetworkModule.updateToken(token)
-                    saveAuthToken(context, token)
-
-                    navController.popBackStack()
-                    navController.navigate(Page.Main.name)
-                }
-                else {
-                    showError = true
-                }
+        authViewModel.login(
+            id = id,
+            password = password,
+            onSuccess = {
+                navController.popBackStack()
+                navController.navigate(Page.Main.name)
+            },
+            onFail = {
+                //todo : 로그인 실패 처리
             }
-        }
+        )
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val req = LoginReq(id, password)
+//            val res = memberRepo.login(req)
+//
+//            withContext(Dispatchers.Main) {
+//                if(res.isSuccessful) {
+//                    val token = res.body()!!.response
+//                    singleTon.loginToken.value = token
+//                    NetworkModule.updateToken(token)
+//                    saveAuthToken(context, token)
+//
+//                    navController.popBackStack()
+//                    navController.navigate(Page.Main.name)
+//                }
+//                else {
+//                    showError = true
+//                }
+//            }
+//        }
     }
 
     if(!authToken.value.isNullOrBlank()) {

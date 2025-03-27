@@ -49,7 +49,9 @@ fun MyApp(
                     singleTonViewModel = singlethone,
                 )
             }
-            composable(Page.Like.name) { LikePage(navController = navController) }
+            composable(Page.Like.name) {
+                LikePage(navController = navController)
+            }
             composable(Page.Map.name) { MapPage(navController = navController) }
             composable(Page.My.name) {
                 MyPage(
@@ -68,7 +70,7 @@ fun MyApp(
             }
         }
         composable(route = Page.Login.name) {
-            LoginPage(navController = navController, singleTon = singlethone)
+            LoginPage(navController = navController, singleTon = singlethone, authViewModel = authViewModel)
         }
         composable(route = "${Page.MarketListPage.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
