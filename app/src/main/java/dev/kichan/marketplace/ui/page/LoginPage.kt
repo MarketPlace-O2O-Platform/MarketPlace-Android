@@ -62,20 +62,10 @@ fun LoginPage(
     var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
     val schools = listOf("학교 A", "학교 B", "학교 C")
 
-    val authToken = getAuthToken(context).collectAsState(null)
-
-
     val onLogin: (String, String) -> Unit = { id, password ->
         authViewModel.login(
             id = id,
             password = password,
-//            onSuccess = {
-//                navController.popBackStack()
-//                navController.navigate(Page.Main.name)
-//            },
-//            onFail = {
-//                //todo : 로그인 실패 처리
-//            }
         )
     }
 

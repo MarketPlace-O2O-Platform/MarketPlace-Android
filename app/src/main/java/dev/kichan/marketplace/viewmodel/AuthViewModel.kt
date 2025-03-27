@@ -25,10 +25,15 @@ sealed class LoginUiState {
     data class Error(val message: String) : LoginUiState()
 }
 
-class AuthViewModel(private val application: Application = Application()) : AndroidViewModel(application) {
+class AuthViewModel(private val application: Application = Application()) :
+    AndroidViewModel(application) {
     private val authRepository = AuthRepositoryImpl(application.applicationContext)
 
     var loginState by mutableStateOf<LoginUiState>(LoginUiState.Idle)
+
+    init {
+        autoLogin()
+    }
 
     fun login(
         id: String,
@@ -39,7 +44,7 @@ class AuthViewModel(private val application: Application = Application()) : Andr
                 val body = LoginReq(id, password)
                 val res = authRepository.login(body)
 
-                if(!res.isSuccessful) {
+                if (!res.isSuccessful) {
                     val errorBody = res.errorBody()?.string()
                     val message = JSONObject(errorBody ?: "{}").optString("message", "로그인 실패")
                     throw Exception(message)
@@ -50,8 +55,7 @@ class AuthViewModel(private val application: Application = Application()) : Andr
                 saveAuthToken(application.applicationContext, token)
 
                 loginState = LoginUiState.Success
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 Log.e("error", e.message.toString())
                 loginState = LoginUiState.Error(e.message.toString())
             }
@@ -68,6 +72,26 @@ class AuthViewModel(private val application: Application = Application()) : Andr
                 onSuccess()
             } catch (e: Exception) {
                 onFail(e)
+            }
+        }
+    }
+
+    private fun autoLogin() {
+        viewModelScope.launch {
+            getAuthToken(application.applicationContext).collect { token ->
+                if (token.isNullOrBlank()) {
+                    return@collect
+                }
+
+                Log.d("token", token)
+
+                NetworkModule.updateToken(token)
+                val res = authRepository.getMemberData()
+                if(!res.isSuccessful) {
+                    NetworkModule.updateToken(null)
+                    return@collect
+                }
+                loginState = LoginUiState.Success
             }
         }
     }
