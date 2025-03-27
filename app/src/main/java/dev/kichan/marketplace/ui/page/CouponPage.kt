@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +45,7 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
     val coupons by viewModel.coupons.observeAsState(initial = emptyList())
     val couponUsed by viewModel.couponUsed.observeAsState(initial = false)
 
-    // ✅ 쿠폰 목록을 가져오는 로직을 개선
+    // ✅ 쿠폰 목록 가져오기 + 로깅 → 한 번만 호출
     LaunchedEffect(selectedTab, token) {
         val type = when (selectedTab) {
             0 -> "ISSUED"
@@ -52,22 +53,11 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
             2 -> "EXPIRED"
             else -> "ISSUED"
         }
+        Log.d("CouponPage", "쿠폰 리스트 요청: type=$type")
+
+        // 실제 API 호출
         viewModel.fetchCoupons(token, type)
     }
-
-    // ✅ 쿠폰 사용 후 UI 업데이트 (쿠폰이 사용되면 다시 API 호출)
-    LaunchedEffect(selectedTab, token) {
-        val type = when (selectedTab) {
-            0 -> "ISSUED" // ✅ 사용 가능 쿠폰
-            1 -> "USED" // ✅ 사용 완료 쿠폰
-            2 -> "EXPIRED" // ✅ 기간 만료 쿠폰
-            else -> "ISSUED"
-        }
-
-        Log.d("CouponPage", "쿠폰 리스트 요청: type=$type") // ✅ API 요청 로그 추가
-        viewModel.fetchCoupons(token, type)
-    }
-
 
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(21.dp))
@@ -103,6 +93,7 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
                     .clickable { navController.navigate(Page.My.name) }
             )
         }
+
         // 탭 레이아웃
         TabRow(
             modifier = Modifier.border(width = 1.dp, color = Color(0xFFE0E0E0)),
@@ -123,14 +114,16 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
 
         // ✅ 쿠폰 리스트 (로그 출력 추가)
         val filteredCoupons = when (selectedTab) {
-            0 -> coupons.filter { !it.used } // ✅ 사용 가능한 쿠폰
-            1 -> coupons.filter { it.used } // ✅ 사용 완료된 쿠폰
-            2 -> coupons // ✅ 기간 만료 쿠폰
+            0 -> coupons.filter { !it.used }  // 사용 가능한 쿠폰
+            1 -> coupons.filter { it.used }   // 사용 완료 쿠폰
+            2 -> coupons                      // 기간 만료 쿠폰
             else -> coupons
         }
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(filteredCoupons, key = { it.memberCouponId }) { coupon ->
@@ -150,26 +143,32 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
         DebugCouponList(coupons)
     }
 
-// ✅ 쿠폰 사용 다이얼로그 (UI 개선)
+    // ✅ 쿠폰 사용 다이얼로그 (UI 개선)
     if (isDialogShow && selectedCoupon != null) {
         Dialog(onDismissRequest = { isDialogShow = false }) {
             Column(
                 modifier = Modifier
-                    .width(320.dp)
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-                    .padding(horizontal = 32.dp, vertical = 16.dp),
+                    .width(320.dp) // 다이얼로그 가로 크기
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(12.dp) // 모서리 둥글게
+                    )
+                    .padding(horizontal = 24.dp, vertical = 20.dp), // 안쪽 여백
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // ✅ 쿠폰명 포함한 제목
+                // 다이얼로그 제목
                 Text(
                     text = "${selectedCoupon?.couponName} 쿠폰을 사용하시겠습니까?",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 20.sp,
+                    lineHeight = 30.sp,
+                    fontWeight = FontWeight(700),
+                    textAlign = TextAlign.Center,
+                    fontFamily = PretendardFamily
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                // ✅ 버튼 스타일 및 UI 변경
+                // [사용하기] 검은색 버튼
                 Button(
                     onClick = {
                         selectedCoupon?.let {
@@ -179,31 +178,41 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                    shape = RoundedCornerShape(4.dp)
                 ) {
-                    Text(text = "Text",
+                    Text(
+                        text = "사용하기",
                         fontSize = 12.sp,
+                        lineHeight = 16.8.sp,
                         color = Color.White,
                         fontWeight = FontWeight(500),
+                        textAlign = TextAlign.Center,
                         fontFamily = PretendardFamily
-
                     )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // [취소] 흰색 버튼(검은색 테두리)
                 OutlinedButton(
                     onClick = { isDialogShow = false },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black),
-                    border = ButtonDefaults.outlinedButtonBorder
+                        .height(48.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.White, // 흰 배경
+                        contentColor = Color.Black    // 텍스트/아이콘 검은색
+                    ),
+                    border = ButtonDefaults.outlinedButtonBorder, // 기본 테두리 = 1dp
+                    shape = RoundedCornerShape(4.dp)
                 ) {
                     Text(
-                        text = "Text",
-                        fontSize = 16.sp,
+                        text = "취소",
+                        fontSize = 12.sp,
+                        lineHeight = 16.8.sp,
+                        textAlign = TextAlign.Center,
                         fontWeight = FontWeight(500),
                         fontFamily = PretendardFamily
                     )
@@ -212,8 +221,6 @@ fun ReceivedCouponsScreen(navController: NavHostController) {
         }
     }
 }
-
-
 
 @Composable
 fun DebugCouponList(coupons: List<CouponResponse>) {

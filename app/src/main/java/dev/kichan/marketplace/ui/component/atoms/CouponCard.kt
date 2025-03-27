@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.atoms
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,21 +20,42 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.model.data.CouponResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 
 @Composable
-fun CouponCard(coupon: CouponResponse, onClick: () -> Unit) {
-    // 상태 값 설정
+fun CouponCard(
+    coupon: CouponResponse,
+    onClick: () -> Unit
+) {
+    Log.d("CouponCard", "쿠폰 객체: $coupon")
+    // 상태 텍스트
     val status = when {
         coupon.used -> "사용 완료"
         LocalDate.parse(coupon.deadLine.substring(0, 10)) < LocalDate.now() -> "기간 만료"
         else -> "사용 가능"
     }
 
-    // 배경 이미지 설정
+    // 배경 이미지
     val backgroundImage = when (status) {
         "사용 완료", "기간 만료" -> R.drawable.subtract2
         else -> R.drawable.component
     }
+
+    // 여기서 imageUrl 찍어보기
+    val imageUrl = coupon.imageUrl ?: ""
+    Log.d("CouponCard", "로딩할 이미지 URL: $imageUrl")
+
+    // Coil로 로딩
+    val context = LocalContext.current
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(imageUrl)
+            .crossfade(true)
+            .build()
+        // placeholder = painterResource(R.drawable.placeholder),
+        // error = painterResource(R.drawable.error_image),
+    )
 
     Box(
         modifier = Modifier
@@ -40,7 +63,7 @@ fun CouponCard(coupon: CouponResponse, onClick: () -> Unit) {
             .height(120.dp)
             .clickable { onClick() }
     ) {
-        // 배경 이미지
+        // 배경
         Image(
             painter = painterResource(id = backgroundImage),
             contentDescription = "Coupon Background",
@@ -48,69 +71,70 @@ fun CouponCard(coupon: CouponResponse, onClick: () -> Unit) {
         )
 
         Row(
-            modifier = Modifier.matchParentSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 쿠폰 대표 이미지 (임시로 고정)
+            // 왼쪽 서버 이미지
             Image(
-                painter = painterResource(id = R.drawable.hair), // TODO: coupon.imageUrl이 있으면 변경
+                painter = painter,
                 contentDescription = "Coupon Image",
-                modifier = Modifier.size(102.dp)
+                modifier = Modifier
+                    .width(80.dp)
+                    .fillMaxHeight()
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // 쿠폰 정보
-            Column {
+            // 가운데 쿠폰 정보
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
                     text = coupon.couponName,
-                    fontSize = 28.sp,
-                    lineHeight = 42.sp,
+                    fontSize = 20.sp,
+                    lineHeight = 28.sp,
+                    fontWeight = FontWeight.Bold,
                     fontFamily = PretendardFamily,
-                    fontWeight = FontWeight(600),
                     color = Color(0xFF121212),
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
-                    text = coupon.description,
-                    fontSize = 15.sp,
-                    lineHeight = 24.sp,
+                    text = formatDate(coupon.deadLine),
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
                     fontFamily = PretendardFamily,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF121212),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "${formatDate(coupon.deadLine)}",
-                    fontSize = 13.sp,
-                    lineHeight = 22.sp,
-                    fontFamily = PretendardFamily,
-                    fontWeight = FontWeight(400),
+                    fontWeight = FontWeight.Normal,
                     color = Color(0xFF545454),
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            // 상태 표시 (사용 가능, 사용 완료, 기간 만료 등)
-            Text(
-                text = status,
-                fontSize = 13.sp,
-                lineHeight = 30.sp,
-                fontFamily = PretendardFamily,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                letterSpacing = 0.26.sp,
+            // 오른쪽 상태 표시
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(end = 18.dp)
-            )
+                    .width(60.dp)
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = status,
+                    fontSize = 13.sp,
+                    lineHeight = 30.sp,
+                    fontWeight = FontWeight(700),
+                    color = Color.White,
+                    fontFamily = PretendardFamily
+                )
+            }
         }
     }
 }
 
-/**
- * 쿠폰 만료 날짜를 보기 좋은 형태로 변환
- */
+// 날짜 포맷
 fun formatDate(dateString: String): String {
     return try {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
