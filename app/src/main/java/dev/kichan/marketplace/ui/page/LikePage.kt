@@ -1,10 +1,8 @@
 package dev.kichan.marketplace.ui.page
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,8 +48,7 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
-import dev.kichan.marketplace.ui.component.molecules.RequestSmallCard
+import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope

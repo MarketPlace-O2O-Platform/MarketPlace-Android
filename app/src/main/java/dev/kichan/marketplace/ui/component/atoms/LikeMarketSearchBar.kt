@@ -1,28 +1,19 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -94,23 +85,6 @@ fun LikeMarketSearchBar(modifier: Modifier = Modifier, key: String, onChange: (S
                 it()
             }
         }
-//        TextField(
-//            value = key,
-//            onValueChange = { key = it },
-//            placeholder = {
-//                Text(
-//                    text = "제휴 할인받고 싶은 매장을 알려주세요",
-//                    color = Color(0xffBDB6B6),
-//                    fontSize = 15.sp,
-//                    fontWeight = FontWeight.Thin
-//                )
-//            },
-//            trailingIcon = {
-//                Icon(imageVector = Icons.Default.Search, contentDescription = null)
-//            },
-//            shape = RoundedCornerShape(7.dp),
-//            modifier = Modifier.fillMaxWidth()
-//        )
     }
 }
 
