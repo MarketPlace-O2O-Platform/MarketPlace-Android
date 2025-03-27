@@ -8,7 +8,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 
 
-class AuthViewModel(application: Application) : AndroidViewModel(application) {
+class AuthViewModel(application: Application = Application()) : AndroidViewModel(application) {
     // application.applicationContext를 통해 Context를 전달합니다.
     private val authRepository = AuthRepository(application.applicationContext)
 

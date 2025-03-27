@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -22,9 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 
 @Composable
-fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
+fun MyApp(
+    singlethone: SingleTonViewModel = SingleTonViewModel(),
+    authViewModel: AuthViewModel = AuthViewModel(), //todo: 언젠가는 DI 적용
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -49,6 +54,7 @@ fun MyApp(singlethone: SingleTonViewModel = SingleTonViewModel()) {
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
+                    authViewModel = authViewModel
                 )
             }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }
