@@ -56,15 +56,26 @@ import kotlinx.coroutines.withContext
 import dev.kichan.marketplace.ui.component.atoms.DetailCoupon
 import dev.kichan.marketplace.model.data.CouponResponse
 
+
+import androidx.compose.foundation.clickable
+
+import androidx.compose.material3.*
+
+import androidx.compose.ui.text.style.TextAlign
+
+import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavHostController
+
+
 @Composable
-fun ImageSlider(iamgeList: List<String>) {
+fun ImageSlider(imageList: List<String>) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(280.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(iamgeList) {
+        items(imageList) {
             AsyncImage(
                 modifier = Modifier.size(280.dp),
                 model = ImageRequest.Builder(LocalContext.current)
@@ -80,6 +91,7 @@ fun ImageSlider(iamgeList: List<String>) {
 
 @Composable
 fun DetailContent() {
+    // 기타 상세 내용
 }
 
 @Composable
@@ -89,13 +101,13 @@ fun KakaoMapSearchBox() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .height(48.dp)
-            .clip(RoundedCornerShape(12.dp)) // 둥근 모서리 설정
+            .clip(RoundedCornerShape(12.dp))
             .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
             .background(Color.White),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.search), // search.png 불러오기
+            painter = painterResource(id = R.drawable.search),
             contentDescription = null,
             modifier = Modifier
                 .padding(start = 12.dp)
@@ -111,7 +123,7 @@ fun KakaoMapSearchBox() {
                 append(" 인하대점 검색")
             },
             fontSize = 14.sp,
-            color = Color(0xFF545454), // 텍스트 색상 #545454로 설정
+            color = Color(0xFF545454),
             fontWeight = FontWeight.Normal
         )
     }
@@ -119,12 +131,12 @@ fun KakaoMapSearchBox() {
 
 @Composable
 fun MarketDetailPage(
-    navController: NavController,
+    navController: NavHostController,
     id: Long
 ) {
+    // 기존 마켓 상세 API 호출 등 관련 코드
     val service = NetworkModule.getService(MarketService::class.java)
     val data = remember { mutableStateOf<MarketDetailRes?>(null) }
-
     val getData = {
         CoroutineScope(Dispatchers.IO).launch {
             val res = service.getMarket(id)
@@ -135,14 +147,23 @@ fun MarketDetailPage(
             }
         }
     }
-
     LaunchedEffect(Unit) {
         getData()
     }
+    if (data.value == null) return
 
-    if (data.value == null) {
-        return
-    }
+    // 쿠폰 받기 다이얼로그 상태 변수
+    var isCouponDialogShow by remember { mutableStateOf(false) }
+    var selectedCoupon by remember { mutableStateOf<CouponResponse?>(null) }
+    // 예시용 임시 쿠폰 데이터 (실제 데이터가 있다면 그 데이터를 사용)
+    val sampleCoupon = CouponResponse(
+        memberCouponId = 1,
+        couponId = 101,
+        couponName = "커피 1+1 쿠폰",
+        description = "모든 매장에서 사용 가능",
+        deadLine = "2025-03-30T23:59:59.999",
+        used = false
+    )
 
     Scaffold(
         topBar = {
@@ -152,10 +173,10 @@ fun MarketDetailPage(
                     .padding(8.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
-                IconButton(onClick = {}) {
+                IconButton(onClick = { /* 뒤로가기 처리 */ }) {
                     Icon(
                         modifier = Modifier.size(32.dp),
-                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        imageVector = androidx.compose.material.icons.Icons.Default.KeyboardArrowLeft,
                         contentDescription = null,
                         tint = Color.White,
                     )
@@ -173,7 +194,9 @@ fun MarketDetailPage(
                 )
             )
         ) {
-            item { ImageSlider(data.value!!.imageResList.map { NetworkModule.getImage(it.name) } ) }
+            item {
+                ImageSlider(data.value!!.imageResList.map { NetworkModule.getImage(it.name) })
+            }
             item { MainInfo(data) }
             item {
                 HorizontalDivider(
@@ -182,6 +205,7 @@ fun MarketDetailPage(
                         .background(Color(0xffeeeee))
                 )
             }
+            // 쿠폰 섹션: "이벤트 쿠폰" 타이틀과 함께 DetailCoupon 표시
             item {
                 Column(
                     modifier = Modifier.padding(20.dp)
@@ -192,18 +216,16 @@ fun MarketDetailPage(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp
                     )
-                    // 여기에 DetailCoupon 컴포저블을 삽입합니다.
-                    // 임시 데이터 예시입니다.
-                    val sampleCoupon = CouponResponse(
-                        memberCouponId = 1,
-                        couponId = 101,
-                        couponName = "커피 1+1 쿠폰",
-                        description = "모든 매장에서 사용 가능",
-                        deadLine = "2025-03-30T23:59:59.999",
-                        used = false
+                    Spacer(modifier = Modifier.height(20.dp))
+                    // DetailCoupon의 오른쪽(혹은 전체)을 누르면 쿠폰 받기 다이얼로그 노출
+// 예시: DetailCoupon 호출 부분
+                    DetailCoupon(
+                        coupon = sampleCoupon,
+                        onClick = {
+                            selectedCoupon = sampleCoupon
+                            isCouponDialogShow = true
+                        }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    DetailCoupon(coupon = sampleCoupon)
                 }
             }
             item {
@@ -215,6 +237,72 @@ fun MarketDetailPage(
             }
             item { BusinessInfo(data) }
             item { KakaoMapSearchBox() }
+        }
+    }
+
+    // 쿠폰 받기 다이얼로그
+    if (isCouponDialogShow && selectedCoupon != null) {
+        Dialog(onDismissRequest = { isCouponDialogShow = false }) {
+            Column(
+                modifier = Modifier
+                    .width(320.dp)
+                    .background(Color.White, shape = RoundedCornerShape(12.dp))
+                    .padding(horizontal = 24.dp, vertical = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${selectedCoupon?.couponName} 쿠폰을 받으시겠습니까?",
+                    fontSize = 20.sp,
+                    lineHeight = 30.sp,
+                    fontWeight = FontWeight(700),
+                    textAlign = TextAlign.Center,
+                    fontFamily = PretendardFamily
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = {
+                        // 실제 쿠폰 받기 API 호출 등 처리
+                        isCouponDialogShow = false
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "받기",
+                        fontSize = 12.sp,
+                        lineHeight = 16.8.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight(500),
+                        textAlign = TextAlign.Center,
+                        fontFamily = PretendardFamily
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedButton(
+                    onClick = { isCouponDialogShow = false },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    ),
+                    border = ButtonDefaults.outlinedButtonBorder,
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "취소",
+                        fontSize = 12.sp,
+                        lineHeight = 16.8.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight(500),
+                        fontFamily = PretendardFamily
+                    )
+                }
+            }
         }
     }
 }
@@ -262,7 +350,7 @@ private fun MainInfo(data: MutableState<MarketDetailRes?>) {
             )
         }
         Spacer(modifier = Modifier.width(12.dp))
-        IconButton({}) {
+        IconButton({ /* 즐겨찾기 처리 */ }) {
             Icon(imageVector = Carbon_bookmark, contentDescription = null)
         }
     }

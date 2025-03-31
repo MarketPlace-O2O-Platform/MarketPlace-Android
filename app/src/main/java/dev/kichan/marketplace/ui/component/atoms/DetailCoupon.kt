@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,12 +21,15 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun DetailCoupon(
-    coupon: CouponResponse
+    coupon: CouponResponse,
+    onClick: () -> Unit, // onClick 콜백 추가
 ) {
     Box(
+        // CouponCard처럼 Box 전체에 클릭 영역 부여
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp) // 원하는 높이로 조절
+            .height(180.dp)
+            .clickable { onClick() } // 클릭 이벤트
     ) {
         // 배경 이미지
         Image(
@@ -85,5 +89,8 @@ fun PreviewDetailCoupon() {
         deadLine = "2025-03-21T23:59:59.999",
         used = false
     )
-    DetailCoupon(coupon = sampleCoupon)
+    DetailCoupon(
+        coupon = sampleCoupon,
+        onClick = {}
+    )
 }
