@@ -53,6 +53,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import dev.kichan.marketplace.ui.component.atoms.DetailCoupon
+import dev.kichan.marketplace.model.data.CouponResponse
 
 @Composable
 fun ImageSlider(iamgeList: List<String>) {
@@ -190,14 +192,18 @@ fun MarketDetailPage(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 20.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("쿠폰 만들 예정", fontSize = 10.sp)
-                    }
+                    // 여기에 DetailCoupon 컴포저블을 삽입합니다.
+                    // 임시 데이터 예시입니다.
+                    val sampleCoupon = CouponResponse(
+                        memberCouponId = 1,
+                        couponId = 101,
+                        couponName = "커피 1+1 쿠폰",
+                        description = "모든 매장에서 사용 가능",
+                        deadLine = "2025-03-30T23:59:59.999",
+                        used = false
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    DetailCoupon(coupon = sampleCoupon)
                 }
             }
             item {
