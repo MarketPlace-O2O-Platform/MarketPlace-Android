@@ -12,7 +12,7 @@ import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.model.service.CouponApiService
-import kotlinx.coroutines.CoroutineScope
+import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,11 +26,18 @@ data class HomeUiState(
     val errorMessage: String? = null,
 )
 
+data class CouponListPageState(
+    val couponList: List<CouponListItemProps> = emptyList(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
+)
+
 class CouponViewModel : ViewModel() {
     private val couponService: CouponApiService = NetworkModule.getCouponService()
     private val couponRepo = CouponRepository()
 
-    var homeState by mutableStateOf<HomeUiState>(HomeUiState())
+    var homeState by mutableStateOf(HomeUiState())
+    var couponListPageState by mutableStateOf(CouponListPageState())
 
 
     fun getClosingCoupon() {
@@ -119,6 +126,46 @@ class CouponViewModel : ViewModel() {
                 homeState = homeState.copy(
                     errorMessage = "네트워크 오류: ${e.message}",
                     isLoading = false
+                )
+            }
+        }
+    }
+
+    fun getCouponList(type: String) {
+        viewModelScope.launch {
+            couponListPageState = couponListPageState.copy(isLoading = true, errorMessage = null)
+
+            try {
+                val newCoupon: List<CouponListItemProps> = if (type == "popular") {
+                    val res = couponRepo.getPopularCoupon(null, 20)
+                    if (!res.isSuccessful) {
+                        throw Exception("실패!")
+                    }
+                    res.body()!!
+                        .response.couponResDtos.map {
+                            it.toCouponListItemProps()
+                        }
+                } else {
+                    val res = couponRepo.getLatestCoupon(null, null, 20)
+                    if (!res.isSuccessful) {
+                        throw Exception("실패!")
+                    }
+                    res.body()!!
+                        .response.couponResDtos.map {
+                            it.toCouponListItemProps()
+                        }
+                }
+
+                Log.d("newCoupon", newCoupon.toString())
+
+                couponListPageState = couponListPageState.copy(
+                    couponList = newCoupon.map { it.copy() },
+                    isLoading = false
+                )
+            } catch (e: Exception) {
+                couponListPageState = couponListPageState.copy(
+                    isLoading = false,
+                    errorMessage = e.message ?: "알 수 없는 오류"
                 )
             }
         }

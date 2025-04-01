@@ -94,6 +94,7 @@ fun MyApp(
 
                 CouponListPage(
                     navController = navController,
+                    couponViewModel = couponViewModel,
                     type = type
                 )
             }
