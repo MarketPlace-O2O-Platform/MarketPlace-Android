@@ -184,7 +184,7 @@ class CouponViewModel : ViewModel() {
 
             couponListPageState = couponListPageState.copy(
                 couponList = couponListPageState.couponList.map {
-                    if(id == it.id) it.copy(isDownload = !it.isDownload)
+                    if(id == it.id) it.copy(isMemberIssued = !it.isMemberIssued)
                     else it
                 }
             )

@@ -21,7 +21,8 @@ data class LatestCouponRes(
         marketName = this.marketName,
         imageUrl = NetworkModule.getImage(this.thumbnail),
         address = this.address,
-        isDownload = false,
+        isAvailable = this.isAvailable,
+        isMemberIssued = this.isMemberIssued,
         marketId = this.marketId
     )
 }
