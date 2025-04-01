@@ -8,6 +8,8 @@ import androidx.lifecycle.*
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.CouponResponse
 import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
+import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.model.service.CouponApiService
 import kotlinx.coroutines.CoroutineScope
@@ -16,70 +18,48 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-sealed class HomeUiState {
-    data object Idle : HomeUiState()
-    data object Loading : HomeUiState()
-    data class Success(
-        val closingCoupon : List<ClosingCouponRes>
-    ) : HomeUiState()
-    data class Error(val message: String) : HomeUiState()
-}
+data class HomeUiState(
+    val closingCoupon : List<ClosingCouponRes> = emptyList(),
+    val popularCoupons: List<PopularCouponRes> = emptyList(),
+    val latestCoupons: List<LatestCouponRes> = emptyList(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+)
 
 class CouponViewModel : ViewModel() {
     private val couponService: CouponApiService = NetworkModule.getCouponService()
     private val couponRepo = CouponRepository()
 
-    var homeState by mutableStateOf<HomeUiState>(HomeUiState.Idle)
+    var homeState by mutableStateOf<HomeUiState>(HomeUiState())
 
-//    val getPopularCoupon = {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val res = couponRepo.getPopularCoupon(
-//                null,
-//                20
-//            )
-//            withContext(Dispatchers.Main) {
-//                if (res.isSuccessful) {
-//                    popularCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
-//                } else {
-//
-//                }
-//            }
-//        }
-//    }
-//
-//    val getLatestCoupon = {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val res = couponRepo.getLatestCoupon(
-//                null,
-//                null,
-//                20,
-//            )
-//            withContext(Dispatchers.Main) {
-//                if (res.isSuccessful) {
-//                    latestCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
-//                } else {
-//
-//                }
-//            }
-//        }
-//    }
 
     fun getClosingCoupon() {
         viewModelScope.launch {
-            val res = couponRepo.getClosingCoupon(10)
-            withContext(Dispatchers.Main) {
-                if(!res.isSuccessful) {
+            try {
+                homeState = homeState.copy(isLoading = true, errorMessage = null)
 
+                val res = withContext(Dispatchers.IO) {
+                    couponRepo.getClosingCoupon(10)
                 }
 
-                val coupons = res.body()!!.response
+                if (!res.isSuccessful) {
+                    homeState = homeState.copy(
+                        isLoading = false,
+                        errorMessage = "마감 임박 쿠폰을 불러오는 데 실패했어요."
+                    )
+                    return@launch
+                }
 
-                if(homeState is HomeUiState.Success) {
-                    homeState = (homeState as HomeUiState.Success).copy(closingCoupon = coupons)
-                }
-                else {
-                    homeState = HomeUiState.Success(closingCoupon = coupons)
-                }
+                val coupons = res.body()?.response ?: emptyList()
+                homeState = homeState.copy(
+                    closingCoupon = coupons,
+                    isLoading = false
+                )
+            } catch (e: Exception) {
+                homeState = homeState.copy(
+                    isLoading = false,
+                    errorMessage = "에러 발생: ${e.message}"
+                )
             }
         }
     }

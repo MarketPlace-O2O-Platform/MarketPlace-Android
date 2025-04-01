@@ -84,34 +84,21 @@ fun HomePage(
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
-                    when(state) {
-                        is HomeUiState.Success -> {
-                            CouponBanner(
-                                bannerList = state.closingCoupon.map {
-                                    val deadLine = it.deadline.toLocalDateTime()
-                                    Log.d("deadlien", deadLine.toString())
-                                    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                    CouponBanner(
+                        bannerList = state.closingCoupon.map {
+                            val deadLine = it.deadline.toLocalDateTime()
+                            Log.d("deadlien", deadLine.toString())
+                            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
-                                    BannerItem(
-                                        title = it.name,
-                                        subTitle = it.marketName,
-                                        description = "~ " + formatter.format(deadLine),
-                                        imageUrl = NetworkModule.getImage(it.thumbnail),
-                                        onClick = { navController.navigate("${Page.EventDetail.name}/${it.marketId}") }
-                                    )
-                                }
+                            BannerItem(
+                                title = it.name,
+                                subTitle = it.marketName,
+                                description = "~ " + formatter.format(deadLine),
+                                imageUrl = NetworkModule.getImage(it.thumbnail),
+                                onClick = { navController.navigate("${Page.EventDetail.name}/${it.marketId}") }
                             )
                         }
-                        is HomeUiState.Loading -> {
-                            Text("로딩중")
-                        }
-
-                        is HomeUiState.Error -> {
-
-                        }
-
-                        else -> { /* Idle 상태 */ }
-                    }
+                    )
                 }
 
                 // 카테고리 섹션
