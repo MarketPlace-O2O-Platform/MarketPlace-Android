@@ -9,5 +9,5 @@ interface FavoritesService {
     @POST("/api/favorites")
     suspend fun favorites(
         @Query("marketId") marketId: Long,
-    ): Response<ResponseTemplate<Any>>
+    ): Response<ResponseTemplate<Unit>>
 }

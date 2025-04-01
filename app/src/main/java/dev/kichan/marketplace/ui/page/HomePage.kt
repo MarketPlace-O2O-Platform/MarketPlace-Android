@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.common.toLocalDateTime
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
@@ -51,15 +50,9 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HomePage(
     navController: NavController,
-    singleTonViewModel: SingleTonViewModel = SingleTonViewModel(),
     couponViewModel: CouponViewModel = CouponViewModel()
 ) {
     val state = couponViewModel.homeState
-
-//    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>>(emptyList()) }
-//    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>>(listOf()) }
-//    val closingCoupons = remember { mutableStateOf<List<ClosingCouponRes>>(listOf()) }
-
     LaunchedEffect(Unit) {
         couponViewModel.getClosingCoupon()
         couponViewModel.getLatestCoupon()
