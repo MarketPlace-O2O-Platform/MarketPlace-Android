@@ -49,7 +49,7 @@ fun MarketListPage(
     var category by remember { mutableStateOf(_category) }
 
     LaunchedEffect(category) {
-        marketViewModel.loadMarketData(category, true, null)
+        marketViewModel.getMarketData(category, true, null)
     }
 
     Scaffold(

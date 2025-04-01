@@ -71,43 +71,7 @@ fun MapPage(
     singleTonViewModel: SingleTonViewModel = SingleTonViewModel(),
     marketViewModel: MarketViewModel = MarketViewModel()
 ) {
-    //제발되게 해주세요ㅕ 제발요 2222
-    val marketService = NetworkModule.getService(MarketService::class.java)
-    val kakaoService = NetworkModule.getKakaoService()
-
-    val marketList = remember { mutableStateOf<List<MarketRes>>(listOf()) }
-    val marketPositionList = remember { mutableStateOf<List<LatLng>>(listOf()) }
-
-    val getMarkets = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = marketService.getMarkets(
-                null,
-                null,
-                null,
-            )
-
-            val marketData = res.body()!!.response.marketResDtos
-
-            val positionList = marketData.map { kakaoService.getAddress(query = it.address) }
-                .filter { it.isSuccessful }
-                .map { it.body()!!.documents }
-                .filter { it.isNotEmpty() }
-                .map {
-                    Log.d("Position", it.toString())
-                    it[0]
-                }
-                .map { LatLng(it.y.toDouble(), it.x.toDouble()) }
-
-            Log.d("PositionList", positionList.toString())
-
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    marketList.value = marketData
-                    marketPositionList.value = positionList
-                }
-            }
-        }
-    }
+    val state = marketViewModel.mapPageState
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -125,7 +89,7 @@ fun MapPage(
     }
 
     LaunchedEffect(Unit) {
-        getMarkets()
+        marketViewModel.getMarketByAddress("인천광역시 연수구")
     }
 
     Scaffold(
@@ -141,7 +105,7 @@ fun MapPage(
                 SheetContent(
                     modifier = Modifier.height(expandedHeight),
                     isExpended = bottomSheetState.isExpanded,
-                    markets = marketList.value,
+                    markets = state.marketData,
                     onCloseSheet = { scope.launch { bottomSheetState.collapse() } },
                     onDetailClick = { navController.navigate("${Page.EventDetail}/$it") },
                     onFavorite = { marketViewModel.favorite(it) }
@@ -167,7 +131,7 @@ fun MapPage(
                     onMapClick = {
                     }
                 ) {
-                    for (p in marketPositionList.value) {
+                    for (p in state.positionList) {
                         Marker(
                             state = MarkerState(position = p)
                         )
@@ -184,7 +148,7 @@ fun MapPage(
 
                 IconButton(
                     onClick = {
-
+                        marketViewModel.getMarketByAddress("인천광역시 연수구")
                     },
                     modifier = Modifier
                         .align(Alignment.TopEnd)

@@ -7,16 +7,24 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketRes
 import dev.kichan.marketplace.model.repository.FavoritesRepository
 import dev.kichan.marketplace.model.repository.MarketRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.google.android.gms.maps.model.LatLng
 
 data class MarketPageUiState(
     val marketData: List<MarketRes> = emptyList(),
-    val data: List<MarketRes> = emptyList(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
+)
+
+data class MapPageUiState(
+    val marketData: List<MarketRes> = emptyList(),
+    val positionList: List<LatLng> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -24,10 +32,12 @@ data class MarketPageUiState(
 class MarketViewModel : ViewModel() {
     private val marketRepository = MarketRepository()
     private val favoriteRepository = FavoritesRepository()
+    private val kakaoService = NetworkModule.getKakaoService()
 
     var marketPageUiState by mutableStateOf(MarketPageUiState())
+    var mapPageState by mutableStateOf(MapPageUiState())
 
-    fun loadMarketData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
+    fun getMarketData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
         viewModelScope.launch {
             marketPageUiState = marketPageUiState.copy(isLoading = true)
 
@@ -58,6 +68,35 @@ class MarketViewModel : ViewModel() {
                     errorMessage = e.message ?: "알 수 없는 오류"
                 )
             }
+        }
+    }
+
+    fun getMarketByAddress(address: String) {
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                marketRepository.getMarketByAddress(
+                    address = address,
+                    lastMarketId = null,
+                    category = null,
+                    pageSize = null
+                )
+            }
+
+            val newMarket = res.body()!!.response.marketResDtos
+            val positionList = newMarket.map { kakaoService.getAddress(query = it.address) }
+                .filter { it.isSuccessful }
+                .map { it.body()!!.documents }
+                .filter { it.isNotEmpty() }
+                .map {
+                    Log.d("Position", it.toString())
+                    it[0]
+                }
+                .map { LatLng(it.y.toDouble(), it.x.toDouble()) }
+
+            mapPageState = mapPageState.copy(
+                marketData = newMarket,
+                positionList = positionList
+            )
         }
     }
 

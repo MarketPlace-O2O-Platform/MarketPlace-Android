@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface KakaoLocalService {
     @GET("/v2/local/search/keyword.json")
     suspend fun searchKeyword(
-        @Header("Authorization") key: String = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}",
+        @Header("Authorizaation") key: String = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}",
         @Query("query") query: String,
         @Query("x") x: String,
         @Query("y") y: String,

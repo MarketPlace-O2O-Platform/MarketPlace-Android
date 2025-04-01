@@ -14,4 +14,7 @@ class MarketRepository {
         service.searchMarket(name, lastMarketId, pageSize)
     suspend fun getFavoriteMarket(lastMarketId: String?, pageSize: Int?) =
         service.getFavoriteMarket(lastMarketId, pageSize)
+
+    suspend fun getMarketByAddress(address: String, lastMarketId: String?, category: String?, pageSize: Int?)
+        = service.getMarketByAddress(address, lastMarketId, category, pageSize)
 }
