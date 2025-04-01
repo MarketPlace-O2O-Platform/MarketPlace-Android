@@ -54,7 +54,8 @@ fun CouponListPage(
             items(state.couponList) {
                 CouponListItem(
                     modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${it.marketId}") },
-                    props = it
+                    props = it,
+                    onDownloadClick = {id -> couponViewModel.downloadCoupon(id)}
                 )
             }
         }

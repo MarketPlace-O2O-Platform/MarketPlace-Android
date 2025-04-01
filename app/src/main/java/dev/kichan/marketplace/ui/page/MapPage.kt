@@ -92,6 +92,10 @@ fun MapPage(
         marketViewModel.getMarketByAddress("인천광역시 연수구")
     }
 
+    LaunchedEffect(state.marketData) {
+        Log.d("Market", state.marketData.toString())
+    }
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(

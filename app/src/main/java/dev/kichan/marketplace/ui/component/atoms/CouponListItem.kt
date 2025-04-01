@@ -41,6 +41,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 data class CouponListItemProps(
+    val id: Long,
     val name: String,
     val marketName: String,
     val marketId: Long,
@@ -52,7 +53,8 @@ data class CouponListItemProps(
 @Composable
 fun CouponListItem(
     modifier: Modifier = Modifier,
-    props : CouponListItemProps
+    props : CouponListItemProps,
+    onDownloadClick: (Long) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -117,7 +119,7 @@ fun CouponListItem(
                     )
                 }
                 IconButton(
-                    onClick = {}
+                    onClick = { onDownloadClick(props.id) }
                 ) {
                     //todo: 아 몰라 나중에 해 아이콘 변경
                     Icon(imageVector = Download, contentDescription = null)
@@ -138,8 +140,10 @@ fun CouponListItemWithDownloadPreview() {
                 imageUrl = faker.company().logo(),
                 address = faker.address().fullAddress(),
                 isDownload = false,
-                marketId = 1L
-            )
+                marketId = 1L,
+                id = 1L
+            ),
+            onDownloadClick = {}
         )
     }
 }

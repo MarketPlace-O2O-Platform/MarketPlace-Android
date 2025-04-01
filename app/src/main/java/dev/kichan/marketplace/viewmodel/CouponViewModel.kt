@@ -10,6 +10,7 @@ import dev.kichan.marketplace.model.data.CouponResponse
 import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
+import dev.kichan.marketplace.model.repository.CouponMemberRepositoryImpl
 import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.model.service.CouponApiService
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
@@ -34,7 +35,8 @@ data class CouponListPageState(
 
 class CouponViewModel : ViewModel() {
     private val couponService: CouponApiService = NetworkModule.getCouponService()
-    private val couponRepo = CouponRepository()
+    private val couponRepository = CouponRepository()
+    private val couponMemberRepository = CouponMemberRepositoryImpl()
 
     var homeState by mutableStateOf(HomeUiState())
     var couponListPageState by mutableStateOf(CouponListPageState())
@@ -46,7 +48,7 @@ class CouponViewModel : ViewModel() {
                 homeState = homeState.copy(isLoading = true, errorMessage = null)
 
                 val res = withContext(Dispatchers.IO) {
-                    couponRepo.getClosingCoupon(10)
+                    couponRepository.getClosingCoupon(10)
                 }
 
                 if (!res.isSuccessful) {
@@ -77,7 +79,7 @@ class CouponViewModel : ViewModel() {
                 homeState = homeState.copy(isLoading = true)
 
                 val res = withContext(Dispatchers.IO) {
-                    couponRepo.getPopularCoupon(null, 20)
+                    couponRepository.getPopularCoupon(null, 20)
                 }
 
                 if (res.isSuccessful) {
@@ -107,7 +109,7 @@ class CouponViewModel : ViewModel() {
                 homeState = homeState.copy(isLoading = true)
 
                 val res = withContext(Dispatchers.IO) {
-                    couponRepo.getLatestCoupon(null, null, 20)
+                    couponRepository.getLatestCoupon(null, null, 20)
                 }
 
                 if (res.isSuccessful) {
@@ -137,7 +139,7 @@ class CouponViewModel : ViewModel() {
 
             try {
                 val newCoupon: List<CouponListItemProps> = if (type == "popular") {
-                    val res = couponRepo.getPopularCoupon(null, 20)
+                    val res = couponRepository.getPopularCoupon(null, 20)
                     if (!res.isSuccessful) {
                         throw Exception("실패!")
                     }
@@ -146,7 +148,7 @@ class CouponViewModel : ViewModel() {
                             it.toCouponListItemProps()
                         }
                 } else {
-                    val res = couponRepo.getLatestCoupon(null, null, 20)
+                    val res = couponRepository.getLatestCoupon(null, null, 20)
                     if (!res.isSuccessful) {
                         throw Exception("실패!")
                     }
@@ -168,6 +170,24 @@ class CouponViewModel : ViewModel() {
                     errorMessage = e.message ?: "알 수 없는 오류"
                 )
             }
+        }
+    }
+
+    fun downloadCoupon(id: Long) {
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                couponMemberRepository.issuanceCoupon(
+                    couponId = id,
+                    memberId = 1 //todo: 나중에 지우기
+                )
+            }
+
+            couponListPageState = couponListPageState.copy(
+                couponList = couponListPageState.couponList.map {
+                    if(id == it.id) it.copy(isDownload = !it.isDownload)
+                    else it
+                }
+            )
         }
     }
 
@@ -208,10 +228,8 @@ class CouponViewModel : ViewModel() {
 
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
-                        // ResponseTemplate<CouponListResponse> 구조에서
-                        // body.response 가 실제 CouponListResponse
-                        val couponList = body.response?.couponResDtos ?: emptyList()
-                        val next = body.response?.hasNext ?: false
+                        val couponList = body.response.couponResDtos
+                        val next = body.response.hasNext
 
                         _coupons.postValue(couponList)
                         _hasNext.postValue(next)

@@ -18,6 +18,7 @@ data class PopularCouponRes(
     val issuedCount: Int,
 ) {
     fun toCouponListItemProps(): CouponListItemProps = CouponListItemProps(
+        id = this.id,
         name = this.name,
         marketName = this.marketName,
         imageUrl = NetworkModule.getImage(this.thumbnail),
