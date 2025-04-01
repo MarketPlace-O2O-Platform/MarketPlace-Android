@@ -21,6 +21,7 @@ import dev.kichan.marketplace.MyFirebaseMessagingService
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.CouponViewModel
 import java.util.Locale
 
 
@@ -28,6 +29,7 @@ val faker = Faker(Locale.KOREAN)
 
 class MainActivity : ComponentActivity() {
     private val singleTon: SingleTonViewModel by viewModels()
+    private val couponViewModel : CouponViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
 
     private fun getFCMToken() {

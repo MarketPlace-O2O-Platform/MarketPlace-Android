@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,8 @@ import dev.kichan.marketplace.ui.component.organisms.BannerItem
 import dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.viewmodel.CouponViewModel
+import dev.kichan.marketplace.viewmodel.HomeUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,64 +51,19 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HomePage(
     navController: NavController,
-    singleTonViewModel: SingleTonViewModel = SingleTonViewModel()
+    singleTonViewModel: SingleTonViewModel = SingleTonViewModel(),
+    couponViewModel: CouponViewModel = CouponViewModel()
 ) {
-    val couponRepo = CouponRepository()
-    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>>(emptyList()) }
-    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>>(listOf()) }
-    val closingCoupons = remember { mutableStateOf<List<ClosingCouponRes>>(listOf()) }
+    val state = couponViewModel.homeState
 
-    val getPopularCoupon = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = couponRepo.getPopularCoupon(
-                null,
-                20
-            )
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    popularCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
-                } else {
-
-                }
-            }
-        }
-    }
-
-    val getLatestCoupon = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = couponRepo.getLatestCoupon(
-                null,
-                null,
-                20,
-            )
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    latestCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
-                } else {
-
-                }
-            }
-        }
-    }
-
-    val getClosingCoupon = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = couponRepo.getClosingCoupon(10)
-            withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
-                    closingCoupons.value = res.body()?.response ?: listOf()
-                }
-                else {
-
-                }
-            }
-        }
-    }
+//    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>>(emptyList()) }
+//    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>>(listOf()) }
+//    val closingCoupons = remember { mutableStateOf<List<ClosingCouponRes>>(listOf()) }
 
     LaunchedEffect(Unit) {
-        getPopularCoupon();
-        getLatestCoupon();
-        getClosingCoupon();
+        couponViewModel.getClosingCoupon()
+        couponViewModel.getLatestCoupon()
+        couponViewModel.getPopularCoupon()
     }
 
     Scaffold(
@@ -129,7 +87,7 @@ fun HomePage(
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
-                        bannerList = closingCoupons.value.map {
+                        bannerList = state.closingCoupon.map {
                             val deadLine = it.deadline.toLocalDateTime()
                             Log.d("deadlien", deadLine.toString())
                             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
@@ -162,7 +120,7 @@ fun HomePage(
                     EventList(
                         navController = navController,
                         title = "Top 20 인기 페이지",
-                        couponList = popularCoupons.value.map {
+                        couponList = state.popularCoupons.map {
                             Event(
                                 id = it.id.toString(),
                                 title = it.name,
@@ -179,7 +137,7 @@ fun HomePage(
                     EventList(
                         navController = navController,
                         title = "이번달 신규 이벤트",
-                        couponList = latestCoupons.value.map {
+                        couponList = state.latestCoupons.map {
                             Event(
                                 id = it.id.toString(),
                                 subTitle = it.marketName,
