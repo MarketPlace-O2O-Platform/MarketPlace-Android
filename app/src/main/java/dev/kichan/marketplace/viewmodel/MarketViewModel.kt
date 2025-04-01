@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.market.MarketRes
+import dev.kichan.marketplace.model.repository.FavoritesRepository
 import dev.kichan.marketplace.model.repository.MarketRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,9 +23,11 @@ data class MarketPageUiState(
 
 class MarketViewModel : ViewModel() {
     private val marketRepository = MarketRepository()
+    private val favoriteRepository = FavoritesRepository()
+
     var marketPageUiState by mutableStateOf(MarketPageUiState())
 
-    fun loadMarketData(category : LargeCategory, isInit: Boolean, lastMarketId: String?) {
+    fun loadMarketData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
         viewModelScope.launch {
             marketPageUiState = marketPageUiState.copy(isLoading = true)
 
@@ -54,6 +58,37 @@ class MarketViewModel : ViewModel() {
                     errorMessage = e.message ?: "알 수 없는 오류"
                 )
             }
+        }
+    }
+
+    fun favorite(marketId: Long) {
+        marketPageUiState = marketPageUiState.copy(isLoading = true)
+        try {
+            viewModelScope.launch {
+                val res = withContext(Dispatchers.IO) {
+                    favoriteRepository.favorites(marketId)
+                }
+
+                if (!res.isSuccessful) {
+                    Log.e("FAVORITE", "실패!")
+                    return@launch
+                }
+                val newMarketData = marketPageUiState.marketData.map {
+                    if (it.id == marketId) {
+                        it.copy(isFavorite = !it.isNewCoupon)
+                    } else it
+                }
+
+                Log.d("FAVORITE", "favorite: $newMarketData")
+
+                marketPageUiState = marketPageUiState.copy(
+                    marketData = newMarketData
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("FAVORITE", "favorite: $e")
+        } finally {
+            marketPageUiState = marketPageUiState.copy(isLoading = false)
         }
     }
 }

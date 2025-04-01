@@ -71,7 +71,9 @@ fun MarketListPage(
                         title = market.name,
                         description = market.description,
                         location = market.address,
-                        imageUrl = NetworkModule.getImage(market.thumbnail)
+                        imageUrl = NetworkModule.getImage(market.thumbnail),
+                        isFavorite = market.isFavorite,
+                        onLikeClick = { marketViewModel.favorite(market.id) }
                     )
                 }
             }

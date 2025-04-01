@@ -249,7 +249,9 @@ fun SheetContent(
                     title = it.name,
                     description = it.description,
                     location = it.address,
-                    imageUrl = NetworkModule.getImage(it.thumbnail)
+                    imageUrl = NetworkModule.getImage(it.thumbnail),
+                    isFavorite = it.isFavorite,
+                    onLikeClick = { /*todo: 추가*/ }
                 )
 
                 HorizontalDivider(

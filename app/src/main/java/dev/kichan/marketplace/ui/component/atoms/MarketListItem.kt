@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.component.atoms
 
+import Bookmark
 import Carbon_bookmark
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.github.javafaker.Bool
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -41,6 +43,8 @@ fun MarketListItem(
     description: String,
     location: String,
     imageUrl: String,
+    isFavorite: Boolean,
+    onLikeClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -114,9 +118,12 @@ fun MarketListItem(
                 }
 
                 IconButton(
-                    onClick = {  }
+                    onClick = { onLikeClick() }
                 ) {
-                    Icon(imageVector = Carbon_bookmark, contentDescription = null)
+                    Icon(
+                        imageVector = if (!isFavorite) Carbon_bookmark else Bookmark,
+                        contentDescription = null
+                    )
                 }
             }
         }
@@ -133,6 +140,8 @@ fun EventCardPreview() {
             location = "송도",
             modifier = Modifier,
             imageUrl = faker.company().logo(),
+            isFavorite = true,
+            onLikeClick = {},
         )
     }
 }

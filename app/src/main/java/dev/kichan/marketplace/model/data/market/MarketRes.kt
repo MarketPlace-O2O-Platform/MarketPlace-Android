@@ -10,5 +10,5 @@ data class MarketRes(
     val thumbnail: String,
     val isFavorite: Boolean,
     val isNewCoupon: Boolean,
-    val favoriteModifiedAt: String,
+    val favoriteModifiedAt: String?,
 )
