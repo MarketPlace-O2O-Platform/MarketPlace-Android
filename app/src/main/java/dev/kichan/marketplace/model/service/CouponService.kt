@@ -4,6 +4,7 @@ import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
 import dev.kichan.marketplace.model.data.coupon.CouponPagination
 import dev.kichan.marketplace.model.data.coupon.CouponRes
+import dev.kichan.marketplace.model.data.coupon.IssuedCouponListResponse
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import retrofit2.Response
@@ -16,7 +17,7 @@ interface CouponService {
         @Query("marketId") marketId: Long,
         @Query("couponId") lastCouponId: Long?,
         @Query("size") pageSize: Long?
-    ): Response<ResponseTemplate<CouponPagination<CouponRes>>>
+    ): Response<ResponseTemplate<IssuedCouponListResponse>>
 
     @GET("/api/coupons/popular")
     suspend fun getPopularCoupon(

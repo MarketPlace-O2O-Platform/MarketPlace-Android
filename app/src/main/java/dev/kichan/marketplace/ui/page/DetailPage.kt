@@ -218,7 +218,7 @@ fun MarketDetailPage(
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     // DetailCoupon의 오른쪽(혹은 전체)을 누르면 쿠폰 받기 다이얼로그 노출
-// 예시: DetailCoupon 호출 부분
+                    // 예시: DetailCoupon 호출 부분
                     DetailCoupon(
                         coupon = sampleCoupon,
                         onClick = {
