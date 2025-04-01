@@ -59,13 +59,18 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.viewmodel.MarketViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel = SingleTonViewModel()) {
+fun MapPage(
+    navController: NavController,
+    singleTonViewModel: SingleTonViewModel = SingleTonViewModel(),
+    marketViewModel: MarketViewModel = MarketViewModel()
+) {
     //제발되게 해주세요ㅕ 제발요 2222
     val marketService = NetworkModule.getService(MarketService::class.java)
     val kakaoService = NetworkModule.getKakaoService()
@@ -87,16 +92,16 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                 .filter { it.isSuccessful }
                 .map { it.body()!!.documents }
                 .filter { it.isNotEmpty() }
-                .map{
+                .map {
                     Log.d("Position", it.toString())
                     it[0]
                 }
-                .map{ LatLng(it.y.toDouble(), it.x.toDouble()) }
+                .map { LatLng(it.y.toDouble(), it.x.toDouble()) }
 
             Log.d("PositionList", positionList.toString())
 
             withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
+                if (res.isSuccessful) {
                     marketList.value = marketData
                     marketPositionList.value = positionList
                 }
@@ -138,7 +143,8 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                     isExpended = bottomSheetState.isExpanded,
                     markets = marketList.value,
                     onCloseSheet = { scope.launch { bottomSheetState.collapse() } },
-                    onDetailClick = { navController.navigate("${Page.EventDetail}/$it") }
+                    onDetailClick = { navController.navigate("${Page.EventDetail}/$it") },
+                    onFavorite = { marketViewModel.favorite(it) }
                 )
             },
             scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState),
@@ -186,11 +192,17 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                         .background(color = Color(0xffffffff), shape = CircleShape)
                         .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
                 ) {
-                    Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, tint = Color(0xff545454))
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = null,
+                        tint = Color(0xff545454)
+                    )
                 }
 
                 IconChip(
-                    modifier = Modifier.align(Alignment.TopCenter).padding(52.dp),
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(52.dp),
                     onClick = { /*TODO*/ },
                     icon = Icons.Default.Menu,
                     title = "현 지도에서 검색",
@@ -219,6 +231,7 @@ fun SheetContent(
     onDetailClick: (id: Long) -> Unit,
     isExpended: Boolean,
     markets: List<MarketRes>,
+    onFavorite: (Long) -> Unit,
     onCloseSheet: () -> Unit
 ) {
     Box(modifier = Modifier) {
@@ -251,7 +264,7 @@ fun SheetContent(
                     location = it.address,
                     imageUrl = NetworkModule.getImage(it.thumbnail),
                     isFavorite = it.isFavorite,
-                    onLikeClick = { /*todo: 추가*/ }
+                    onLikeClick = { onFavorite(it.id) }
                 )
 
                 HorizontalDivider(
@@ -278,7 +291,12 @@ fun SheetContent(
 @Composable
 fun SheetContentPreview() {
     MarketPlaceTheme {
-        SheetContent(isExpended = true, markets = listOf(), onCloseSheet = {}, onDetailClick = {})
+        SheetContent(
+            isExpended = true,
+            markets = listOf(),
+            onCloseSheet = {},
+            onDetailClick = {},
+            onFavorite = {})
     }
 }
 

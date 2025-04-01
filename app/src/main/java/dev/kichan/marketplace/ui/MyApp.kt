@@ -56,7 +56,7 @@ fun MyApp(
             composable(Page.Like.name) {
                 LikePage(navController = navController)
             }
-            composable(Page.Map.name) { MapPage(navController = navController) }
+            composable(Page.Map.name) { MapPage(navController = navController, marketViewModel = marketViewModel) }
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
