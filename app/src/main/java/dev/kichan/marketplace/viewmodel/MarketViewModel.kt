@@ -114,14 +114,22 @@ class MarketViewModel : ViewModel() {
                 }
                 val newMarketData = marketPageUiState.marketData.map {
                     if (it.id == marketId) {
-                        it.copy(isFavorite = !it.isNewCoupon)
+                        it.copy(isFavorite = !it.isFavorite)
                     } else it
                 }
 
-                Log.d("FAVORITE", "favorite: $newMarketData")
-
                 marketPageUiState = marketPageUiState.copy(
                     marketData = newMarketData
+                )
+
+                //todo: 이름 수정
+                val newMarketData2 = mapPageState.marketData.map {
+                    if (it.id == marketId) {
+                        it.copy(isFavorite = !it.isFavorite)
+                    } else it
+                }
+                mapPageState = mapPageState.copy(
+                    marketData = newMarketData2
                 )
             }
         } catch (e: Exception) {
