@@ -41,7 +41,7 @@ fun MarketListPage(
     nacController: NavHostController = rememberNavController(),
     _category: LargeCategory
 ) {
-    val marketRepository = MarketRepository()
+//    val marketRepository = MarketRepository()
 
     val listState = rememberLazyListState()
     var marketData by remember { mutableStateOf<List<MarketRes>>(listOf()) }

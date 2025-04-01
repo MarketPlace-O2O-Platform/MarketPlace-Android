@@ -48,7 +48,6 @@ fun MyApp(
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
-                    singleTonViewModel = singlethone,
                     couponViewModel = couponViewModel
                 )
             }
