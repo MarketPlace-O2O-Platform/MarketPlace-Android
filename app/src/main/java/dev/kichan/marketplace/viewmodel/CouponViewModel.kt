@@ -1,16 +1,91 @@
 package dev.kichan.marketplace.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.CouponResponse
+import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
+import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.model.service.CouponApiService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class CouponViewModel : ViewModel() {
+sealed class HomeUiState {
+    data object Idle : HomeUiState()
+    data object Loading : HomeUiState()
+    data class Success(
+        val closingCoupon : List<ClosingCouponRes>
+    ) : HomeUiState()
+    data class Error(val message: String) : HomeUiState()
+}
 
+class CouponViewModel : ViewModel() {
     private val couponService: CouponApiService = NetworkModule.getCouponService()
+    private val couponRepo = CouponRepository()
+
+    var homeState by mutableStateOf<HomeUiState>(HomeUiState.Idle)
+
+//    val getPopularCoupon = {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val res = couponRepo.getPopularCoupon(
+//                null,
+//                20
+//            )
+//            withContext(Dispatchers.Main) {
+//                if (res.isSuccessful) {
+//                    popularCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
+//                } else {
+//
+//                }
+//            }
+//        }
+//    }
+//
+//    val getLatestCoupon = {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val res = couponRepo.getLatestCoupon(
+//                null,
+//                null,
+//                20,
+//            )
+//            withContext(Dispatchers.Main) {
+//                if (res.isSuccessful) {
+//                    latestCoupons.value = res.body()?.response?.couponResDtos ?: listOf()
+//                } else {
+//
+//                }
+//            }
+//        }
+//    }
+
+    fun getClosingCoupon() {
+        viewModelScope.launch {
+            val res = couponRepo.getClosingCoupon(10)
+            withContext(Dispatchers.Main) {
+                if(!res.isSuccessful) {
+
+                }
+
+                val coupons = res.body()!!.response
+
+                if(homeState is HomeUiState.Success) {
+                    homeState = (homeState as HomeUiState.Success).copy(closingCoupon = coupons)
+                }
+                else {
+                    homeState = HomeUiState.Success(closingCoupon = coupons)
+                }
+            }
+        }
+    }
+
+
+    /////////////////////////////////////////
 
     // 1) 쿠폰 목록
     private val _coupons = MutableLiveData<List<CouponResponse>>(emptyList())

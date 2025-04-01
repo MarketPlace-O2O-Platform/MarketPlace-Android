@@ -24,11 +24,13 @@ import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.CouponViewModel
 
 @Composable
 fun MyApp(
     singlethone: SingleTonViewModel = SingleTonViewModel(),
     authViewModel: AuthViewModel = AuthViewModel(), //todo: 언젠가는 DI 적용
+    couponViewModel: CouponViewModel = CouponViewModel()
 ) {
     val navController = rememberNavController()
 
@@ -47,6 +49,7 @@ fun MyApp(
                 HomePage(
                     navController = navController,
                     singleTonViewModel = singlethone,
+                    couponViewModel = couponViewModel
                 )
             }
             composable(Page.Like.name) {
