@@ -56,12 +56,14 @@ fun HomePage(
 ) {
     val state = couponViewModel.homeState
 
-    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>>(emptyList()) }
-    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>>(listOf()) }
+//    val latestCoupons = remember { mutableStateOf<List<LatestCouponRes>>(emptyList()) }
+//    val popularCoupons = remember { mutableStateOf<List<PopularCouponRes>>(listOf()) }
 //    val closingCoupons = remember { mutableStateOf<List<ClosingCouponRes>>(listOf()) }
 
     LaunchedEffect(Unit) {
         couponViewModel.getClosingCoupon()
+        couponViewModel.getLatestCoupon()
+        couponViewModel.getPopularCoupon()
     }
 
     Scaffold(
@@ -118,7 +120,7 @@ fun HomePage(
                     EventList(
                         navController = navController,
                         title = "Top 20 인기 페이지",
-                        couponList = popularCoupons.value.map {
+                        couponList = state.popularCoupons.map {
                             Event(
                                 id = it.id.toString(),
                                 title = it.name,
@@ -135,7 +137,7 @@ fun HomePage(
                     EventList(
                         navController = navController,
                         title = "이번달 신규 이벤트",
-                        couponList = latestCoupons.value.map {
+                        couponList = state.latestCoupons.map {
                             Event(
                                 id = it.id.toString(),
                                 subTitle = it.marketName,

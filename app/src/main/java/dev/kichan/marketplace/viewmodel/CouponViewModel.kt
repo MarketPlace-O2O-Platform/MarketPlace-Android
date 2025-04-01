@@ -64,6 +64,66 @@ class CouponViewModel : ViewModel() {
         }
     }
 
+    fun getPopularCoupon() {
+        viewModelScope.launch {
+            try {
+                homeState = homeState.copy(isLoading = true)
+
+                val res = withContext(Dispatchers.IO) {
+                    couponRepo.getPopularCoupon(null, 20)
+                }
+
+                if (res.isSuccessful) {
+                    val data = res.body()?.response?.couponResDtos ?: emptyList()
+                    homeState = homeState.copy(
+                        popularCoupons = data,
+                        isLoading = false
+                    )
+                } else {
+                    homeState = homeState.copy(
+                        errorMessage = "인기 쿠폰을 불러오지 못했어요.",
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                homeState = homeState.copy(
+                    errorMessage = "네트워크 오류: ${e.message}",
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+    fun getLatestCoupon() {
+        viewModelScope.launch {
+            try {
+                homeState = homeState.copy(isLoading = true)
+
+                val res = withContext(Dispatchers.IO) {
+                    couponRepo.getLatestCoupon(null, null, 20)
+                }
+
+                if (res.isSuccessful) {
+                    val data = res.body()?.response?.couponResDtos ?: emptyList()
+                    homeState = homeState.copy(
+                        latestCoupons = data,
+                        isLoading = false
+                    )
+                } else {
+                    homeState = homeState.copy(
+                        errorMessage = "최신 쿠폰을 불러오지 못했어요.",
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                homeState = homeState.copy(
+                    errorMessage = "네트워크 오류: ${e.message}",
+                    isLoading = false
+                )
+            }
+        }
+    }
+
 
     /////////////////////////////////////////
 
