@@ -15,27 +15,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.data.CouponResponse
+import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun DetailCoupon(
-    coupon: CouponResponse,
+    coupon: IssuedCouponRes,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit, // onClick 콜백 추가
 ) {
     Box(
         // CouponCard처럼 Box 전체에 클릭 영역 부여
         modifier = Modifier
-            .fillMaxWidth()
-            .height(180.dp)
+            .width(335.dp)
+            .height(88.dp)
             .clickable { onClick() } // 클릭 이벤트
     ) {
         // 배경 이미지
         Image(
             painter = painterResource(id = R.drawable.coupon_black),
             contentDescription = "Coupon Background",
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .width(335.dp)
+                .height(88.dp)
         )
 
         // 쿠폰명과 마감 기한 텍스트
@@ -81,13 +85,13 @@ fun formatDate2(dateString: String): String {
 @Preview(showBackground = true)
 @Composable
 fun PreviewDetailCoupon() {
-    val sampleCoupon = CouponResponse(
-        memberCouponId = 1,
+    val sampleCoupon = IssuedCouponRes(
         couponId = 101,
         couponName = "스트리트 치킨 30% 할인",
         description = "매장에서 사용 가능",
         deadLine = "2025-03-21T23:59:59.999",
-        used = false
+        isAvailable =true,
+        isMemberIssued = true
     )
     DetailCoupon(
         coupon = sampleCoupon,
