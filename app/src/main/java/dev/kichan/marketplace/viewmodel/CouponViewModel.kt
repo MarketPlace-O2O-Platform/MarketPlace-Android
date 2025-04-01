@@ -1,16 +1,198 @@
 package dev.kichan.marketplace.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.CouponResponse
+import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
+import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
+import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
+import dev.kichan.marketplace.model.repository.CouponMemberRepositoryImpl
+import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.model.service.CouponApiService
+import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class CouponViewModel : ViewModel() {
+data class HomeUiState(
+    val closingCoupon : List<ClosingCouponRes> = emptyList(),
+    val popularCoupons: List<PopularCouponRes> = emptyList(),
+    val latestCoupons: List<LatestCouponRes> = emptyList(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+)
 
+data class CouponListPageState(
+    val couponList: List<CouponListItemProps> = emptyList(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
+)
+
+class CouponViewModel : ViewModel() {
     private val couponService: CouponApiService = NetworkModule.getCouponService()
+    private val couponRepository = CouponRepository()
+    private val couponMemberRepository = CouponMemberRepositoryImpl()
+
+    var homeState by mutableStateOf(HomeUiState())
+    var couponListPageState by mutableStateOf(CouponListPageState())
+
+
+    fun getClosingCoupon() {
+        viewModelScope.launch {
+            try {
+                homeState = homeState.copy(isLoading = true, errorMessage = null)
+
+                val res = withContext(Dispatchers.IO) {
+                    couponRepository.getClosingCoupon(10)
+                }
+
+                if (!res.isSuccessful) {
+                    homeState = homeState.copy(
+                        isLoading = false,
+                        errorMessage = "마감 임박 쿠폰을 불러오는 데 실패했어요."
+                    )
+                    return@launch
+                }
+
+                val coupons = res.body()?.response ?: emptyList()
+                homeState = homeState.copy(
+                    closingCoupon = coupons,
+                    isLoading = false
+                )
+            } catch (e: Exception) {
+                homeState = homeState.copy(
+                    isLoading = false,
+                    errorMessage = "에러 발생: ${e.message}"
+                )
+            }
+        }
+    }
+
+    fun getPopularCoupon() {
+        viewModelScope.launch {
+            try {
+                homeState = homeState.copy(isLoading = true)
+
+                val res = withContext(Dispatchers.IO) {
+                    couponRepository.getPopularCoupon(null, 20)
+                }
+
+                if (res.isSuccessful) {
+                    val data = res.body()?.response?.couponResDtos ?: emptyList()
+                    homeState = homeState.copy(
+                        popularCoupons = data,
+                        isLoading = false
+                    )
+                } else {
+                    homeState = homeState.copy(
+                        errorMessage = "인기 쿠폰을 불러오지 못했어요.",
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                homeState = homeState.copy(
+                    errorMessage = "네트워크 오류: ${e.message}",
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+    fun getLatestCoupon() {
+        viewModelScope.launch {
+            try {
+                homeState = homeState.copy(isLoading = true)
+
+                val res = withContext(Dispatchers.IO) {
+                    couponRepository.getLatestCoupon(null, null, 20)
+                }
+
+                if (res.isSuccessful) {
+                    val data = res.body()?.response?.couponResDtos ?: emptyList()
+                    homeState = homeState.copy(
+                        latestCoupons = data,
+                        isLoading = false
+                    )
+                } else {
+                    homeState = homeState.copy(
+                        errorMessage = "최신 쿠폰을 불러오지 못했어요.",
+                        isLoading = false
+                    )
+                }
+            } catch (e: Exception) {
+                homeState = homeState.copy(
+                    errorMessage = "네트워크 오류: ${e.message}",
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+    fun getCouponList(type: String) {
+        viewModelScope.launch {
+            couponListPageState = couponListPageState.copy(isLoading = true, errorMessage = null)
+
+            try {
+                val newCoupon: List<CouponListItemProps> = if (type == "popular") {
+                    val res = couponRepository.getPopularCoupon(null, 20)
+                    if (!res.isSuccessful) {
+                        throw Exception("실패!")
+                    }
+                    res.body()!!
+                        .response.couponResDtos.map {
+                            it.toCouponListItemProps()
+                        }
+                } else {
+                    val res = couponRepository.getLatestCoupon(null, null, 20)
+                    if (!res.isSuccessful) {
+                        throw Exception("실패!")
+                    }
+                    res.body()!!
+                        .response.couponResDtos.map {
+                            it.toCouponListItemProps()
+                        }
+                }
+
+                Log.d("newCoupon", newCoupon.toString())
+
+                couponListPageState = couponListPageState.copy(
+                    couponList = newCoupon.map { it.copy() },
+                    isLoading = false
+                )
+            } catch (e: Exception) {
+                couponListPageState = couponListPageState.copy(
+                    isLoading = false,
+                    errorMessage = e.message ?: "알 수 없는 오류"
+                )
+            }
+        }
+    }
+
+    fun downloadCoupon(id: Long) {
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                couponMemberRepository.issuanceCoupon(
+                    couponId = id,
+                    memberId = 1 //todo: 나중에 지우기
+                )
+            }
+
+            couponListPageState = couponListPageState.copy(
+                couponList = couponListPageState.couponList.map {
+                    if(id == it.id) it.copy(isMemberIssued = !it.isMemberIssued)
+                    else it
+                }
+            )
+        }
+    }
+
+
+    /////////////////////////////////////////
 
     // 1) 쿠폰 목록
     private val _coupons = MutableLiveData<List<CouponResponse>>(emptyList())
@@ -46,10 +228,8 @@ class CouponViewModel : ViewModel() {
 
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
-                        // ResponseTemplate<CouponListResponse> 구조에서
-                        // body.response 가 실제 CouponListResponse
-                        val couponList = body.response?.couponResDtos ?: emptyList()
-                        val next = body.response?.hasNext ?: false
+                        val couponList = body.response.couponResDtos
+                        val next = body.response.hasNext
 
                         _coupons.postValue(couponList)
                         _hasNext.postValue(next)

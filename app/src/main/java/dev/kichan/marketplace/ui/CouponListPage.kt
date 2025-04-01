@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import dev.kichan.marketplace.ui.component.atoms.CouponListItem
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.viewmodel.CouponViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,42 +33,14 @@ import kotlinx.coroutines.withContext
 @Composable
 fun CouponListPage(
     navController: NavHostController = rememberNavController(),
+    couponViewModel: CouponViewModel = CouponViewModel(),
     type: String,
 ) {
-    val repo = CouponRepository()
+    val state = couponViewModel.couponListPageState
     val title = if(type == "popular") "인기 쿠폰" else "x월 신규" //todo: 월 추가
-    var couponList by remember { mutableStateOf<List<CouponListItemProps>>(listOf()) }
-
-    val onLoadCoupon = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val _couponList: List<CouponListItemProps> = if (type == "popular") {
-                val res = repo.getPopularCoupon(null, 20)
-                if (!res.isSuccessful) {
-                    throw Exception("실패!")
-                }
-                res.body()!!
-                    .response.couponResDtos.map {
-                        it.toCouponListItemProps()
-                    }
-            } else {
-                val res = repo.getLatestCoupon(null, null, 20)
-                if (!res.isSuccessful) {
-                    throw Exception("실패!")
-                }
-                res.body()!!
-                    .response.couponResDtos.map {
-                        it.toCouponListItemProps()
-                    }
-            }
-
-            withContext(Dispatchers.Main) {
-                couponList += _couponList
-            }
-        }
-    }
 
     LaunchedEffect(Unit) {
-        onLoadCoupon()
+        couponViewModel.getCouponList(type)
     }
 
     Scaffold(
@@ -77,10 +51,11 @@ fun CouponListPage(
         LazyColumn (
             modifier = Modifier.padding(it)
         ) {
-            items(couponList) {
+            items(state.couponList) {
                 CouponListItem(
                     modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${it.marketId}") },
-                    props = it
+                    props = it,
+                    onDownloadClick = {id -> couponViewModel.downloadCoupon(id)}
                 )
             }
         }

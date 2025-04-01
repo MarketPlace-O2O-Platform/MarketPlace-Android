@@ -59,50 +59,19 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.viewmodel.MarketViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel = SingleTonViewModel()) {
-    //제발되게 해주세요ㅕ 제발요 2222
-    val marketService = NetworkModule.getService(MarketService::class.java)
-    val kakaoService = NetworkModule.getKakaoService()
-
-    val marketList = remember { mutableStateOf<List<MarketRes>>(listOf()) }
-    val marketPositionList = remember { mutableStateOf<List<LatLng>>(listOf()) }
-
-    val getMarkets = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = marketService.getMarkets(
-                null,
-                null,
-                null,
-            )
-
-            val marketData = res.body()!!.response.marketResDtos
-
-            val positionList = marketData.map { kakaoService.getAddress(query = it.address) }
-                .filter { it.isSuccessful }
-                .map { it.body()!!.documents }
-                .filter { it.isNotEmpty() }
-                .map{
-                    Log.d("Position", it.toString())
-                    it[0]
-                }
-                .map{ LatLng(it.y.toDouble(), it.x.toDouble()) }
-
-            Log.d("PositionList", positionList.toString())
-
-            withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
-                    marketList.value = marketData
-                    marketPositionList.value = positionList
-                }
-            }
-        }
-    }
+fun MapPage(
+    navController: NavController,
+    singleTonViewModel: SingleTonViewModel = SingleTonViewModel(),
+    marketViewModel: MarketViewModel = MarketViewModel()
+) {
+    val state = marketViewModel.mapPageState
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -120,7 +89,11 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
     }
 
     LaunchedEffect(Unit) {
-        getMarkets()
+        marketViewModel.getMarketByAddress("인천광역시 연수구")
+    }
+
+    LaunchedEffect(state.marketData) {
+        Log.d("Market", state.marketData.toString())
     }
 
     Scaffold(
@@ -136,9 +109,10 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                 SheetContent(
                     modifier = Modifier.height(expandedHeight),
                     isExpended = bottomSheetState.isExpanded,
-                    markets = marketList.value,
+                    markets = state.marketData,
                     onCloseSheet = { scope.launch { bottomSheetState.collapse() } },
-                    onDetailClick = { navController.navigate("${Page.EventDetail}/$it") }
+                    onDetailClick = { navController.navigate("${Page.EventDetail}/$it") },
+                    onFavorite = { marketViewModel.favorite(it) }
                 )
             },
             scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState),
@@ -161,7 +135,7 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                     onMapClick = {
                     }
                 ) {
-                    for (p in marketPositionList.value) {
+                    for (p in state.positionList) {
                         Marker(
                             state = MarkerState(position = p)
                         )
@@ -178,7 +152,7 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
 
                 IconButton(
                     onClick = {
-
+                        marketViewModel.getMarketByAddress("인천광역시 연수구")
                     },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -186,11 +160,17 @@ fun MapPage(navController: NavController, singleTonViewModel: SingleTonViewModel
                         .background(color = Color(0xffffffff), shape = CircleShape)
                         .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
                 ) {
-                    Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, tint = Color(0xff545454))
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = null,
+                        tint = Color(0xff545454)
+                    )
                 }
 
                 IconChip(
-                    modifier = Modifier.align(Alignment.TopCenter).padding(52.dp),
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(52.dp),
                     onClick = { /*TODO*/ },
                     icon = Icons.Default.Menu,
                     title = "현 지도에서 검색",
@@ -219,6 +199,7 @@ fun SheetContent(
     onDetailClick: (id: Long) -> Unit,
     isExpended: Boolean,
     markets: List<MarketRes>,
+    onFavorite: (Long) -> Unit,
     onCloseSheet: () -> Unit
 ) {
     Box(modifier = Modifier) {
@@ -249,7 +230,9 @@ fun SheetContent(
                     title = it.name,
                     description = it.description,
                     location = it.address,
-                    imageUrl = NetworkModule.getImage(it.thumbnail)
+                    imageUrl = NetworkModule.getImage(it.thumbnail),
+                    isFavorite = it.isFavorite,
+                    onLikeClick = { onFavorite(it.id) }
                 )
 
                 HorizontalDivider(
@@ -276,7 +259,12 @@ fun SheetContent(
 @Composable
 fun SheetContentPreview() {
     MarketPlaceTheme {
-        SheetContent(isExpended = true, markets = listOf(), onCloseSheet = {}, onDetailClick = {})
+        SheetContent(
+            isExpended = true,
+            markets = listOf(),
+            onCloseSheet = {},
+            onDetailClick = {},
+            onFavorite = {})
     }
 }
 

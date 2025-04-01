@@ -35,6 +35,7 @@ interface MarketService {
         @Query("pageSize") pageSize : Int?,
     ): Response<ResponseTemplate<MarketPageNationRes<MarketRes>>>
 
+    @GET("/api/markets/map")
     suspend fun getMarketByAddress(
         @Query("address") address: String,
         @Query("lastPageIndex") lastMarketId: String?,

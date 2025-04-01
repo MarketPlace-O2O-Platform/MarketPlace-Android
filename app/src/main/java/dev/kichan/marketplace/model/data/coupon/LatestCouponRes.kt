@@ -16,11 +16,13 @@ data class LatestCouponRes(
     val couponCreatedAt: String,
 ) {
     fun toCouponListItemProps(): CouponListItemProps = CouponListItemProps(
+        id = this.id,
         name = this.name,
         marketName = this.marketName,
         imageUrl = NetworkModule.getImage(this.thumbnail),
         address = this.address,
-        isDownload = false,
+        isAvailable = this.isAvailable,
+        isMemberIssued = this.isMemberIssued,
         marketId = this.marketId
     )
 }

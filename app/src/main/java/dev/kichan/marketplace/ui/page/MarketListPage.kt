@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
@@ -26,6 +27,7 @@ import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.viewmodel.MarketViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,35 +41,15 @@ data class Pagenation<T>(
 @Composable
 fun MarketListPage(
     nacController: NavHostController = rememberNavController(),
+    marketViewModel: MarketViewModel = MarketViewModel(),
     _category: LargeCategory
 ) {
-    val marketRepository = MarketRepository()
-
     val listState = rememberLazyListState()
-    var marketData by remember { mutableStateOf<List<MarketRes>>(listOf()) }
+    val state = marketViewModel.marketPageUiState
     var category by remember { mutableStateOf(_category) }
-    var pagenation by remember { mutableStateOf(Pagenation<Long>(null, true)) }
-
-    val onLoadData: (LargeCategory, Boolean) -> Unit = {it, isInit ->
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = marketRepository.getMarkets(
-                lastMarketId = if(isInit) null else pagenation.lastId.toString(),
-                category = if (it == LargeCategory.All) null else it.backendLabel,
-                pageSize = 2002
-            )
-
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    val body = res.body()!!.response.marketResDtos
-                    marketData = body
-                    listState.scrollToItem(0)
-                }
-            }
-        }
-    }
 
     LaunchedEffect(category) {
-        onLoadData(category, true)
+        marketViewModel.getMarketData(category, true, null)
     }
 
     Scaffold(
@@ -83,13 +65,15 @@ fun MarketListPage(
             LazyColumn(
                 state = listState
             ) {
-                items(marketData) {market ->
+                items(state.marketData) {market ->
                     MarketListItem(
                         modifier = Modifier.clickable { nacController.navigate("${Page.EventDetail.name}/${market.id}") },
                         title = market.name,
                         description = market.description,
                         location = market.address,
-                        imageUrl = NetworkModule.getImage(market.thumbnail)
+                        imageUrl = NetworkModule.getImage(market.thumbnail),
+                        isFavorite = market.isFavorite,
+                        onLikeClick = { marketViewModel.favorite(market.id) }
                     )
                 }
             }

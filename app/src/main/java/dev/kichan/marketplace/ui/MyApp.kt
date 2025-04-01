@@ -24,11 +24,15 @@ import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.CouponViewModel
+import dev.kichan.marketplace.viewmodel.MarketViewModel
 
 @Composable
 fun MyApp(
     singlethone: SingleTonViewModel = SingleTonViewModel(),
     authViewModel: AuthViewModel = AuthViewModel(), //todo: 언젠가는 DI 적용
+    couponViewModel: CouponViewModel = CouponViewModel(),
+    marketViewModel: MarketViewModel = MarketViewModel()
 ) {
     val navController = rememberNavController()
 
@@ -46,13 +50,13 @@ fun MyApp(
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
-                    singleTonViewModel = singlethone,
+                    couponViewModel = couponViewModel
                 )
             }
             composable(Page.Like.name) {
                 LikePage(navController = navController)
             }
-            composable(Page.Map.name) { MapPage(navController = navController) }
+            composable(Page.Map.name) { MapPage(navController = navController, marketViewModel = marketViewModel) }
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
@@ -76,6 +80,7 @@ fun MyApp(
             it.arguments?.getString("category")?.let { category ->
                 MarketListPage(
                     nacController = navController,
+                    marketViewModel = marketViewModel,
                     _category = LargeCategory.valueOf(category)
                 )
             }
@@ -89,6 +94,7 @@ fun MyApp(
 
                 CouponListPage(
                     navController = navController,
+                    couponViewModel = couponViewModel,
                     type = type
                 )
             }

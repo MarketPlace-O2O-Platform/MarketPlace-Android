@@ -1,8 +1,6 @@
 package dev.kichan.marketplace.ui.component.atoms
 
 import Download
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,14 +25,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.github.javafaker.Bool
-import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.faker
@@ -41,86 +37,96 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 data class CouponListItemProps(
+    val id: Long,
     val name: String,
     val marketName: String,
     val marketId: Long,
-    val imageUrl : String,
+    val imageUrl: String,
     val address: String,
-    val isDownload: Boolean,
+    val isAvailable: Boolean,
+    val isMemberIssued: Boolean
 )
 
 @Composable
 fun CouponListItem(
     modifier: Modifier = Modifier,
-    props : CouponListItemProps
+    props: CouponListItemProps,
+    onDownloadClick: (Long) -> Unit
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 20.dp, horizontal = PAGE_HORIZONTAL_PADDING)
-    ) {
-        AsyncImage(
-            model = NetworkModule.getImageModel(LocalContext.current, props.imageUrl),
-            contentDescription = null,
-            modifier = Modifier.size(110.dp).clip(RoundedCornerShape(8.dp)),
-            contentScale = ContentScale.Crop
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        // 텍스트 섹션
-        Column(
-            modifier = Modifier
-                .height(110.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.SpaceBetween
+    with(props) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 20.dp, horizontal = PAGE_HORIZONTAL_PADDING)
         ) {
-            Column {
-                Text(
-                    text = props.marketName,
-                    fontFamily = PretendardFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xff4b4b4b),
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = props.name,
-                    fontFamily = PretendardFamily,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xff4b4b4b),
-                    maxLines = 1,
-                )
-            }
+            AsyncImage(
+                model = NetworkModule.getImageModel(LocalContext.current, imageUrl),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(110.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
 
+            Spacer(modifier = Modifier.width(16.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
+            Column(
+                modifier = Modifier
+                    .height(110.dp)
+                    .weight(1f),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // 위치
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Place,
-                        contentDescription = "위치",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
+                Column {
                     Text(
-                        text = props.address,
-                        style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
+                        text = marketName,
+                        fontFamily = PretendardFamily,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xff4b4b4b),
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = name,
+                        fontFamily = PretendardFamily,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xff4b4b4b),
+                        maxLines = 1,
                     )
                 }
-                IconButton(
-                    onClick = {}
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    //todo: 아 몰라 나중에 해 아이콘 변경
-                    Icon(imageVector = Download, contentDescription = null)
+                    // 위치
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Place,
+                            contentDescription = "위치",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = address,
+                            style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
+                        )
+                    }
+                    IconButton(
+                        onClick = { onDownloadClick(id) },
+                        enabled = !isMemberIssued
+                    ) {
+                        Icon(
+                            imageVector =
+                            if (!isMemberIssued) Icons.Default.FavoriteBorder
+                            else Download,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }
@@ -137,9 +143,12 @@ fun CouponListItemWithDownloadPreview() {
                 marketName = faker.company().name(),
                 imageUrl = faker.company().logo(),
                 address = faker.address().fullAddress(),
-                isDownload = false,
-                marketId = 1L
-            )
+                isAvailable = false,
+                marketId = 1L,
+                id = 1L,
+                isMemberIssued = false
+            ),
+            onDownloadClick = {}
         )
     }
 }
