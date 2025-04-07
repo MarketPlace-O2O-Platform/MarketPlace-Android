@@ -1,11 +1,11 @@
 package dev.kichan.marketplace.ui.page
 
 import android.util.Log
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,28 +14,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -51,8 +49,8 @@ import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketRes
-import dev.kichan.marketplace.model.service.MarketService
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.ThreeStepBottomSheet
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -60,11 +58,9 @@ import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.MarketViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MapPage(
     navController: NavController,
@@ -72,7 +68,6 @@ fun MapPage(
     marketViewModel: MarketViewModel = MarketViewModel()
 ) {
     val state = marketViewModel.mapPageState
-
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             LatLng(
@@ -82,11 +77,11 @@ fun MapPage(
         )
     }
     val bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
-    val scope = rememberCoroutineScope()
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val sheetHeights = listOf(100.dp, 220.dp, screenHeight - 50.dp)
+    val sheetState = rememberSwipeableState(initialValue = 0)
 
-    val expandedHeight = with(LocalDensity.current) {
-        LocalConfiguration.current.screenHeightDp.dp * 0.8f
-    }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         marketViewModel.getMarketByAddress("인천광역시 연수구")
@@ -96,6 +91,7 @@ fun MapPage(
         Log.d("Market", state.marketData.toString())
     }
 
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -104,92 +100,107 @@ fun MapPage(
             )
         },
     ) {
-        BottomSheetScaffold(
+        ThreeStepBottomSheet(
+            modifier = Modifier.padding(it),
+            sheetHeightDp = sheetHeights,
+            swipeState = sheetState,
             sheetContent = {
                 SheetContent(
-                    modifier = Modifier.height(expandedHeight),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(screenHeight),
                     isExpended = bottomSheetState.isExpanded,
                     markets = state.marketData,
-                    onCloseSheet = { scope.launch { bottomSheetState.collapse() } },
+                    onCloseSheet = {
+                        scope.launch { sheetState.animateTo(0) };
+                    },
                     onDetailClick = { navController.navigate("${Page.EventDetail}/$it") },
                     onFavorite = { marketViewModel.favorite(it) }
                 )
             },
-            scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState),
-            modifier = Modifier.padding(it),
-            sheetPeekHeight = 200.dp,
-            sheetShape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp),
-            sheetElevation = 3.dp
-        ) { innerPadding ->
-            Box {
-                GoogleMap(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize(),
-                    onMapLoaded = { },
-                    cameraPositionState = cameraPositionState,
-                    uiSettings = MapUiSettings(
-                        zoomControlsEnabled = false,
-                        myLocationButtonEnabled = true,
-                    ),
-                    onMapClick = {
+            overlayContent = {
+//                Box(
+//                    contentAlignment = Alignment.BottomCenter
+//                ){
+//                    IconChip(
+//                        modifier = Modifier
+//                            .padding(bottom = 200.dp),
+//                        onClick = { scope.launch { sheetState.animateTo(2) } },
+//                        icon = Icons.Default.Menu,
+//                        title = "목록 보기",
+//                        contentColor = Color(0xff545454),
+//                        backgroundColor = Color(0xffffffff)
+//                    )
+//                }
+            },
+            mainContent = {
+                Box {
+                    GoogleMap(
+                        onMapLoaded = { },
+                        cameraPositionState = cameraPositionState,
+                        uiSettings = MapUiSettings(
+                            zoomControlsEnabled = false,
+                            myLocationButtonEnabled = true,
+                        ),
+                        onMapClick = {
+                        }
+                    ) {
+                        for (p in state.positionList) {
+                            Marker(
+                                state = MarkerState(position = p)
+                            )
+                        }
                     }
-                ) {
-                    for (p in state.positionList) {
-                        Marker(
-                            state = MarkerState(position = p)
+
+                    CategoryTap(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter),
+                        selectedCategory = LargeCategory.All,
+                        onSelected = { }
+                    )
+
+                    IconButton(
+                        onClick = {
+                            marketViewModel.getMarketByAddress("인천광역시 연수구")
+                        },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 52.dp, end = 12.dp)
+                            .background(color = Color(0xffffffff), shape = CircleShape)
+                            .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Settings,
+                            contentDescription = null,
+                            tint = Color(0xff545454)
                         )
                     }
-                }
 
-                CategoryTap(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.TopCenter),
-                    selectedCategory = LargeCategory.All,
-                    onSelected = { }
-                )
+                    IconChip(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(52.dp),
+                        onClick = { /*TODO*/ },
+                        icon = Icons.Default.Menu,
+                        title = "현 지도에서 검색",
+                        contentColor = Color(0xFF545454),
+                        backgroundColor = Color(0xFFffffff)
+                    )
 
-                IconButton(
-                    onClick = {
-                        marketViewModel.getMarketByAddress("인천광역시 연수구")
-                    },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 52.dp, end = 12.dp)
-                        .background(color = Color(0xffffffff), shape = CircleShape)
-                        .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        contentDescription = null,
-                        tint = Color(0xff545454)
+                    IconChip(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 200.dp),
+                        onClick = { scope.launch { sheetState.animateTo(2) } },
+                        icon = Icons.Default.Menu,
+                        title = "목록 보기",
+                        contentColor = Color(0xff545454),
+                        backgroundColor = Color(0xffffffff)
                     )
                 }
-
-                IconChip(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(52.dp),
-                    onClick = { /*TODO*/ },
-                    icon = Icons.Default.Menu,
-                    title = "현 지도에서 검색",
-                    contentColor = Color(0xFF545454),
-                    backgroundColor = Color(0xFFffffff)
-                )
-
-                IconChip(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 220.dp),
-                    onClick = { scope.launch { bottomSheetState.expand() } },
-                    icon = Icons.Default.Menu,
-                    title = "목록 보기",
-                    contentColor = Color(0xff545454),
-                    backgroundColor = Color(0xffffffff)
-                )
             }
-        }
+        )
     }
 }
 
@@ -245,7 +256,7 @@ fun SheetContent(
         IconChip(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp),
+                .padding(bottom = 60.dp),
             onClick = { onCloseSheet() },
             icon = Icons.Default.LocationOn,
             title = "지도 닫기",

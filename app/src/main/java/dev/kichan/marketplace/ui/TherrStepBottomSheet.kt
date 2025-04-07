@@ -1,9 +1,7 @@
 package dev.kichan.marketplace.ui
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,17 +11,13 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.SwipeableState
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +31,10 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ThreeStepBottomSheet(
+    modifier: Modifier = Modifier,
     sheetHeightDp: List<Dp>,
+    swipeState: SwipeableState<Int>,
+    overlayContent: @Composable () -> Unit,
     sheetContent: @Composable () -> Unit,
     mainContent: @Composable () -> Unit,
 ) {
@@ -45,19 +42,23 @@ fun ThreeStepBottomSheet(
     val screenHeightPx = with(LocalDensity.current) {
         screenHeightDp.toPx()
     }
-//    val sheetHeightDp = listOf(200.dp, 500.dp, screenHeightDp - 50.dp)
-    val sheetHeightPx = sheetHeightDp.map { with(LocalDensity.current) { it.toPx() } }
+    val sheetHeightsPx = sheetHeightDp.map { with(LocalDensity.current) { it.toPx() } }
     val anchors = mapOf(
-        (screenHeightPx - sheetHeightPx[0]) to 0,
-        (screenHeightPx - sheetHeightPx[1]) to 1,
-        (screenHeightPx - sheetHeightPx[2]) to 2,
+        (screenHeightPx - sheetHeightsPx[0]) to 0,
+        (screenHeightPx - sheetHeightsPx[1]) to 1,
+        (screenHeightPx - sheetHeightsPx[2]) to 2,
     )
-    val swipeState = rememberSwipeableState(initialValue = 0)
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         mainContent()
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(swipeState.offset.value.dp)
+        ) { overlayContent() }
 
         Box(
             modifier = Modifier
@@ -83,16 +84,20 @@ fun ThreeStepBottomSheet(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable
 fun ThreeStepBottomSheetPreview() {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
     val sheetHeightDp = listOf(60.dp, 200.dp, screenHeightDp - 50.dp)
+    val swipeState = rememberSwipeableState(initialValue = 0)
 
-    MarketPlaceTheme() {
+    MarketPlaceTheme {
         ThreeStepBottomSheet(
-            sheetHeightDp,
-            {
+            sheetHeightDp = sheetHeightDp,
+            swipeState = swipeState,
+            overlayContent = {},
+            sheetContent = {
                 Column {
                     for (i in 1..10) {
                         MarketListItem(
@@ -105,7 +110,7 @@ fun ThreeStepBottomSheetPreview() {
                     }
                 }
             },
-            {
+            mainContent = {
                 Box(Modifier.fillMaxSize().background(Color.Blue)) {
                     Text("대충 지도")
                 }
