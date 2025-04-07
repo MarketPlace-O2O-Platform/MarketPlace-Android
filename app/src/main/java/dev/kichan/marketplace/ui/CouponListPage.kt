@@ -23,6 +23,7 @@ import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.ui.component.atoms.CouponListItem
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
+import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +52,11 @@ fun CouponListPage(
         LazyColumn (
             modifier = Modifier.padding(it)
         ) {
+            if(state.isLoading) {
+                items(15) {
+                    MarketListLoadingItem()
+                }
+            }
             items(state.couponList) {
                 CouponListItem(
                     modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${it.marketId}") },

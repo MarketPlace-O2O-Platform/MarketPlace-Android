@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.window.isPopupLayout
 import androidx.lifecycle.*
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.CouponResponse
@@ -15,6 +16,7 @@ import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.model.service.CouponApiService
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -23,7 +25,9 @@ data class HomeUiState(
     val closingCoupon : List<ClosingCouponRes> = emptyList(),
     val popularCoupons: List<PopularCouponRes> = emptyList(),
     val latestCoupons: List<LatestCouponRes> = emptyList(),
-    val isLoading: Boolean = false,
+    val isClosingLoading: Boolean = false,
+    val isPopularLoading: Boolean = false,
+    val isLatestLoading: Boolean = false,
     val errorMessage: String? = null,
 )
 
@@ -45,15 +49,17 @@ class CouponViewModel : ViewModel() {
     fun getClosingCoupon() {
         viewModelScope.launch {
             try {
-                homeState = homeState.copy(isLoading = true, errorMessage = null)
+                homeState = homeState.copy(isClosingLoading = true, errorMessage = null)
 
                 val res = withContext(Dispatchers.IO) {
                     couponRepository.getClosingCoupon(10)
                 }
 
+                delay(1500)
+
                 if (!res.isSuccessful) {
                     homeState = homeState.copy(
-                        isLoading = false,
+                        isClosingLoading = false,
                         errorMessage = "마감 임박 쿠폰을 불러오는 데 실패했어요."
                     )
                     return@launch
@@ -62,11 +68,11 @@ class CouponViewModel : ViewModel() {
                 val coupons = res.body()?.response ?: emptyList()
                 homeState = homeState.copy(
                     closingCoupon = coupons,
-                    isLoading = false
+                    isClosingLoading = false
                 )
             } catch (e: Exception) {
                 homeState = homeState.copy(
-                    isLoading = false,
+                    isClosingLoading = false,
                     errorMessage = "에러 발생: ${e.message}"
                 )
             }
@@ -76,7 +82,7 @@ class CouponViewModel : ViewModel() {
     fun getPopularCoupon() {
         viewModelScope.launch {
             try {
-                homeState = homeState.copy(isLoading = true)
+                homeState = homeState.copy(isPopularLoading = true)
 
                 val res = withContext(Dispatchers.IO) {
                     couponRepository.getPopularCoupon(null, 20)
@@ -86,18 +92,18 @@ class CouponViewModel : ViewModel() {
                     val data = res.body()?.response?.couponResDtos ?: emptyList()
                     homeState = homeState.copy(
                         popularCoupons = data,
-                        isLoading = false
+                        isPopularLoading = false
                     )
                 } else {
                     homeState = homeState.copy(
                         errorMessage = "인기 쿠폰을 불러오지 못했어요.",
-                        isLoading = false
+                        isPopularLoading = false
                     )
                 }
             } catch (e: Exception) {
                 homeState = homeState.copy(
                     errorMessage = "네트워크 오류: ${e.message}",
-                    isLoading = false
+                    isPopularLoading = false
                 )
             }
         }
@@ -106,7 +112,7 @@ class CouponViewModel : ViewModel() {
     fun getLatestCoupon() {
         viewModelScope.launch {
             try {
-                homeState = homeState.copy(isLoading = true)
+                homeState = homeState.copy(isLatestLoading = true)
 
                 val res = withContext(Dispatchers.IO) {
                     couponRepository.getLatestCoupon(null, null, 20)
@@ -116,18 +122,18 @@ class CouponViewModel : ViewModel() {
                     val data = res.body()?.response?.couponResDtos ?: emptyList()
                     homeState = homeState.copy(
                         latestCoupons = data,
-                        isLoading = false
+                        isLatestLoading = false
                     )
                 } else {
                     homeState = homeState.copy(
                         errorMessage = "최신 쿠폰을 불러오지 못했어요.",
-                        isLoading = false
+                        isLatestLoading = false
                     )
                 }
             } catch (e: Exception) {
                 homeState = homeState.copy(
                     errorMessage = "네트워크 오류: ${e.message}",
-                    isLoading = false
+                    isLatestLoading = false
                 )
             }
         }

@@ -54,9 +54,11 @@ fun HomePage(
 ) {
     val state = couponViewModel.homeState
     LaunchedEffect(Unit) {
-        couponViewModel.getClosingCoupon()
-        couponViewModel.getLatestCoupon()
-        couponViewModel.getPopularCoupon()
+        if(state.popularCoupons.isEmpty()) {
+            couponViewModel.getClosingCoupon()
+            couponViewModel.getLatestCoupon()
+            couponViewModel.getPopularCoupon()
+        }
     }
 
     Scaffold(
@@ -80,9 +82,9 @@ fun HomePage(
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
+                        isLoading = state.isClosingLoading,
                         bannerList = state.closingCoupon.map {
                             val deadLine = it.deadline.toLocalDateTime()
-                            Log.d("deadlien", deadLine.toString())
                             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
                             BannerItem(
@@ -122,6 +124,7 @@ fun HomePage(
                                 marketId = it.marketId,
                             )
                         },
+                        isLoading =  state.isPopularLoading,
                         onMoreClick = { navController.navigate("${Page.CouponListPage.name}/popular") },
                     )
                 }
@@ -139,6 +142,7 @@ fun HomePage(
                                 marketId = it.marketId,
                             )
                         },
+                        isLoading = state.isLatestLoading,
                         onMoreClick = { navController.navigate("${Page.CouponListPage.name}/latest") },
                     )
                 }

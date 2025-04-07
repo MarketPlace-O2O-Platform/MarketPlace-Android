@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.delay
 
 data class MarketPageUiState(
     val marketData: List<MarketRes> = emptyList(),
@@ -49,6 +50,8 @@ class MarketViewModel : ViewModel() {
                         pageSize = 20
                     )
                 }
+
+                delay(1500)
 
                 if (res.isSuccessful) {
                     val body = res.body()?.response?.marketResDtos ?: emptyList()
