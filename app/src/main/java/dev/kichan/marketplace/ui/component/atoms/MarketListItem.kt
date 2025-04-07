@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.github.javafaker.Bool
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -145,3 +144,4 @@ fun EventCardPreview() {
         )
     }
 }
+
