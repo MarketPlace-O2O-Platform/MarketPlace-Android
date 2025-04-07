@@ -26,6 +26,7 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
+import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.MarketViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -75,6 +76,12 @@ fun MarketListPage(
                         isFavorite = market.isFavorite,
                         onLikeClick = { marketViewModel.favorite(market.id) }
                     )
+                }
+
+                if(state.isLoading) {
+                    items(count = 15) {
+                        MarketListLoadingItem()
+                    }
                 }
             }
         }

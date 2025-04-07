@@ -54,9 +54,11 @@ fun HomePage(
 ) {
     val state = couponViewModel.homeState
     LaunchedEffect(Unit) {
-        couponViewModel.getClosingCoupon()
-        couponViewModel.getLatestCoupon()
-        couponViewModel.getPopularCoupon()
+        if(state.popularCoupons.isEmpty()) {
+            couponViewModel.getClosingCoupon()
+            couponViewModel.getLatestCoupon()
+            couponViewModel.getPopularCoupon()
+        }
     }
 
     Scaffold(

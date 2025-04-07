@@ -16,6 +16,7 @@ import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.model.service.CouponApiService
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -53,6 +54,8 @@ class CouponViewModel : ViewModel() {
                 val res = withContext(Dispatchers.IO) {
                     couponRepository.getClosingCoupon(10)
                 }
+
+                delay(1500)
 
                 if (!res.isSuccessful) {
                     homeState = homeState.copy(
