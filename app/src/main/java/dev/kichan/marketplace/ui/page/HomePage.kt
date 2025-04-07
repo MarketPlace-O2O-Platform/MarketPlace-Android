@@ -80,9 +80,9 @@ fun HomePage(
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
+                        isLoading = state.isClosingLoading,
                         bannerList = state.closingCoupon.map {
                             val deadLine = it.deadline.toLocalDateTime()
-                            Log.d("deadlien", deadLine.toString())
                             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
                             BannerItem(

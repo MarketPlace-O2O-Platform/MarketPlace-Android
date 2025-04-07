@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.component.organisms
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -20,16 +19,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
+import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.PagerCounter
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -38,12 +34,27 @@ data class BannerItem(
     val subTitle: String,
     val description: String,
     val imageUrl: String,
-    val onClick : () -> Unit
+    val onClick: () -> Unit
 )
 
 @Composable
-fun CouponBanner(modifier: Modifier = Modifier, bannerList: List<BannerItem>) {
+fun CouponBanner(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean,
+    bannerList: List<BannerItem>
+) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { bannerList.size })
+
+    if (isLoading) {
+        return SkeletonItem(
+            Modifier
+                .padding(horizontal = PAGE_HORIZONTAL_PADDING)
+                .clip(shape = RoundedCornerShape(12.dp))
+                .fillMaxWidth()
+                .aspectRatio(335.0f / 360)
+                .background(Color.Gray)
+        )
+    }
 
     Box(
         Modifier
@@ -60,7 +71,7 @@ fun CouponBanner(modifier: Modifier = Modifier, bannerList: List<BannerItem>) {
             ) {
                 AsyncImage(
                     modifier = Modifier.fillMaxSize(),
-                    model =  NetworkModule.getImageModel(LocalContext.current, item.imageUrl),
+                    model = NetworkModule.getImageModel(LocalContext.current, item.imageUrl),
                     contentDescription = "Banner Image",
                     contentScale = ContentScale.Crop,
                 )
