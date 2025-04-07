@@ -1,7 +1,6 @@
 package dev.kichan.marketplace.ui
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,13 +10,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.javafaker.Faker
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
-import dev.kichan.marketplace.MyFirebaseMessagingService
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.AuthViewModel

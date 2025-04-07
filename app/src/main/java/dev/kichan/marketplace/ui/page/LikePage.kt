@@ -177,6 +177,7 @@ fun LikePage(navController: NavController) {
                         ) {
                             items(items = cheerTempMarkets.value) {
                                 RequestCard(
+                                    modifier = Modifier.width(284.dp),
                                     marketName = it.name,
                                     likeCount = it.cheerCount,
                                     thumbnail = NetworkModule.getImage(it.thumbnail, true),
