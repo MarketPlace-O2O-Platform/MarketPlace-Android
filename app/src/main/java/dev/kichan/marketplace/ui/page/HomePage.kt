@@ -122,6 +122,7 @@ fun HomePage(
                                 marketId = it.marketId,
                             )
                         },
+                        isLoading =  state.isPopularLoading,
                         onMoreClick = { navController.navigate("${Page.CouponListPage.name}/popular") },
                     )
                 }
@@ -139,6 +140,7 @@ fun HomePage(
                                 marketId = it.marketId,
                             )
                         },
+                        isLoading = state.isLatestLoading,
                         onMoreClick = { navController.navigate("${Page.CouponListPage.name}/latest") },
                     )
                 }
