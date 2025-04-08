@@ -86,6 +86,9 @@ class MarketViewModel : ViewModel() {
             }
 
             val newMarket = res.body()!!.response.marketResDtos
+            for (marketRes in newMarket) {
+                Log.d("address", marketRes.address)
+            }
             val positionList = newMarket.map { kakaoService.getAddress(query = it.address) }
                 .filter { it.isSuccessful }
                 .map { it.body()!!.documents }

@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -76,21 +77,15 @@ fun MapPage(
             ), 14f
         )
     }
-    val bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val sheetHeights = listOf(100.dp, 220.dp, screenHeight - 50.dp)
-    val sheetState = rememberSwipeableState(initialValue = 0)
+    val sheetState = rememberSwipeableState(initialValue = 1)
 
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         marketViewModel.getMarketByAddress("인천광역시 연수구")
     }
-
-    LaunchedEffect(state.marketData) {
-        Log.d("Market", state.marketData.toString())
-    }
-
 
     Scaffold(
         bottomBar = {
@@ -109,30 +104,16 @@ fun MapPage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(screenHeight),
-                    isExpended = bottomSheetState.isExpanded,
+                    isExpended = sheetState.currentValue == 2,
                     markets = state.marketData,
                     onCloseSheet = {
-                        scope.launch { sheetState.animateTo(0) };
+                        scope.launch { sheetState.animateTo(1) };
                     },
                     onDetailClick = { navController.navigate("${Page.EventDetail}/$it") },
                     onFavorite = { marketViewModel.favorite(it) }
                 )
             },
-            overlayContent = {
-//                Box(
-//                    contentAlignment = Alignment.BottomCenter
-//                ){
-//                    IconChip(
-//                        modifier = Modifier
-//                            .padding(bottom = 200.dp),
-//                        onClick = { scope.launch { sheetState.animateTo(2) } },
-//                        icon = Icons.Default.Menu,
-//                        title = "목록 보기",
-//                        contentColor = Color(0xff545454),
-//                        backgroundColor = Color(0xffffffff)
-//                    )
-//                }
-            },
+            overlayContent = {},
             mainContent = {
                 Box {
                     GoogleMap(
