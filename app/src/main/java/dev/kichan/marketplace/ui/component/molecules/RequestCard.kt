@@ -135,6 +135,7 @@ fun RequestCard(
                 Button(
                     text = "공감 하기",
                     icon = Icons.Default.FavoriteBorder,
+                    isDisable = isMyDone,
                     modifier = buttonModifier
                 ) {
                     onCheer()
