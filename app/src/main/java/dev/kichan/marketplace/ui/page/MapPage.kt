@@ -137,9 +137,7 @@ fun MapPage(
                     )
 
                     IconButton(
-                        onClick = {
-//                            marketViewModel.getMarketByPosition()
-                        },
+                        onClick = { /*todo*/ },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(top = 52.dp, end = 12.dp)
@@ -157,7 +155,10 @@ fun MapPage(
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                             .padding(52.dp),
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            val position = cameraPositionState.position.target
+                            marketViewModel.getMarketByPosition(position)
+                        },
                         icon = Icons.Default.Menu,
                         title = "현 지도에서 검색",
                         contentColor = Color(0xFF545454),

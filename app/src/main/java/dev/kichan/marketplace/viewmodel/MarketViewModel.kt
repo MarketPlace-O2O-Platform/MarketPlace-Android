@@ -134,9 +134,6 @@ class MarketViewModel : ViewModel() {
             }
 
             val newMarket = res.body()!!.response.marketResDtos
-            for (marketRes in newMarket) {
-                Log.d("address", marketRes.address)
-            }
             val positionList = newMarket.map { kakaoService.getAddress(query = it.address) }
                 .filter { it.isSuccessful }
                 .map { it.body()!!.documents }
@@ -148,8 +145,8 @@ class MarketViewModel : ViewModel() {
                 .map { LatLng(it.y.toDouble(), it.x.toDouble()) }
 
             mapPageState = mapPageState.copy(
-                marketData = newMarket,
-                positionList = positionList
+                marketData = newMarket + mapPageState.marketData,
+                positionList = positionList + mapPageState.positionList,
             )
         }
     }

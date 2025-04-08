@@ -56,16 +56,6 @@ object NetworkModule {
             .build()
     }
 
-//    private val client: OkHttpClient
-//        get() = OkHttpClient.Builder()
-//            .addInterceptor(interceptor)
-//            .addInterceptor(authInterceptor)
-//            .addNetworkInterceptor(interceptor)
-//            .connectTimeout(30, TimeUnit.SECONDS)
-//            .readTimeout(30, TimeUnit.SECONDS)
-//            .writeTimeout(30, TimeUnit.SECONDS)
-//            .build()
-
     private val retrofit: Retrofit
         get() = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
