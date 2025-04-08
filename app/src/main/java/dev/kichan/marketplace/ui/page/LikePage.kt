@@ -185,7 +185,7 @@ fun LikePage(navController: NavController) {
                                     marketName = it.name,
                                     likeCount = it.cheerCount,
                                     thumbnail = NetworkModule.getImage(it.thumbnail, true),
-                                    isMyDone = false,
+                                    isMyDone = it.isCheer,
                                     isRequestDone = false,
                                     onCheer = { onCheer(it.id) }
                                 )
