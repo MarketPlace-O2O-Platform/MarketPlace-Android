@@ -31,8 +31,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastCbrt
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.github.javafaker.Bool
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -51,6 +53,7 @@ import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
+import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.MarketViewModel
 import kotlinx.coroutines.launch
@@ -100,6 +103,7 @@ fun MapPage(
                         .fillMaxWidth()
                         .height(screenHeight),
                     isExpended = sheetState.currentValue == 2,
+                    isLoading = state.isLoading,
                     markets = state.marketData,
                     onCloseSheet = {
                         scope.launch { sheetState.animateTo(1) };
@@ -186,13 +190,14 @@ fun SheetContent(
     modifier: Modifier = Modifier,
     onDetailClick: (id: Long) -> Unit,
     isExpended: Boolean,
+    isLoading: Boolean,
     markets: List<MarketRes>,
     onFavorite: (Long) -> Unit,
     onCloseSheet: () -> Unit
 ) {
-    Box(modifier = Modifier) {
+    Box(modifier = modifier) {
         LazyColumn(
-            modifier = modifier,
+            modifier = Modifier.fillMaxWidth(),
             userScrollEnabled = isExpended
         ) {
             item {
@@ -208,6 +213,11 @@ fun SheetContent(
                             .height(5.dp)
                             .background(Color(0xffc7c7c7), RoundedCornerShape(12.dp))
                     ) {}
+                }
+            }
+            if(isLoading) {
+                items(10) {
+                    MarketListLoadingItem()
                 }
             }
             items(markets) {
@@ -249,10 +259,12 @@ fun SheetContentPreview() {
     MarketPlaceTheme {
         SheetContent(
             isExpended = true,
+            isLoading = false,
             markets = listOf(),
             onCloseSheet = {},
             onDetailClick = {},
-            onFavorite = {})
+            onFavorite = {}
+        )
     }
 }
 

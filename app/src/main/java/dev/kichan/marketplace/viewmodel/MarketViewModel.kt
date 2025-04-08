@@ -118,6 +118,9 @@ class MarketViewModel : ViewModel() {
     }
 
     fun getMarketByPosition(position : LatLng) {
+        mapPageState = mapPageState.copy(
+            isLoading = true
+        )
         viewModelScope.launch {
             val address = formatProvinceDistrict(getAddress(position).address)
             val res = withContext(Dispatchers.IO) {
@@ -134,6 +137,8 @@ class MarketViewModel : ViewModel() {
             }
 
             val newMarket = res.body()!!.response.marketResDtos
+                .filter { !mapPageState.marketData.contains(it) }
+
             val positionList = newMarket.map { kakaoService.getAddress(query = it.address) }
                 .filter { it.isSuccessful }
                 .map { it.body()!!.documents }
@@ -147,6 +152,7 @@ class MarketViewModel : ViewModel() {
             mapPageState = mapPageState.copy(
                 marketData = newMarket + mapPageState.marketData,
                 positionList = positionList + mapPageState.positionList,
+                isLoading = false
             )
         }
     }
