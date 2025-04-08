@@ -12,7 +12,6 @@ import retrofit2.http.Query
 interface KakaoLocalService {
     @GET("/v2/local/search/keyword.json")
     suspend fun searchKeyword(
-        @Header("Authorizaation") key: String = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}",
         @Query("query") query: String,
         @Query("x") x: String,
         @Query("y") y: String,
@@ -20,10 +19,14 @@ interface KakaoLocalService {
         @Query("page") page: Int = 1
     ): Response<KakaoLocal<Place>>
 
+    @GET("/v2/local/geo/coord2address.json")
+    suspend fun coord2Address(
+        @Query("x") x: String,
+        @Query("y") y: String,
+    ): Response<KakaoLocal<Address>>
+
     @GET("/v2/local/search/address.json")
     suspend fun getAddress(
-        @Header("Authorization") key: String = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}",
-        @Header("KA") ka : String = "sdk/1.0 os/Android lang/ko-KR origin/DVNfC6O5d5Ju6J8nIvBXxisENpc=",
         @Query("query") query: String,
     ): Response<KakaoLocal<Address>>
 }

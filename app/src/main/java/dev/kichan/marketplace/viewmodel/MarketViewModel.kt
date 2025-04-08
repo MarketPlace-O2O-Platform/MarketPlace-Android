@@ -15,7 +15,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.google.android.gms.maps.model.LatLng
+import dev.kichan.marketplace.model.data.kakao.adress.Address
+import dev.kichan.marketplace.model.data.kakao.adress.LotNumberAddress
 import kotlinx.coroutines.delay
+import kotlin.math.log
 
 data class MarketPageUiState(
     val marketData: List<MarketRes> = emptyList(),
@@ -74,8 +77,52 @@ class MarketViewModel : ViewModel() {
         }
     }
 
-    fun getMarketByAddress(address: String) {
+    private suspend fun getAddress(position: LatLng) : Address {
+        val res = kakaoService.coord2Address(
+            x = position.longitude.toString(),
+            y = position.latitude.toString()
+        )
+
+        if(!res.isSuccessful)
+            throw Exception("주소 가져오는 문제")
+
+        return res.body()!!.documents[0]
+    }
+
+    private fun formatProvinceDistrict(addr: LotNumberAddress): String {
+        val suffixMap = mapOf(
+            "서울" to "특별자치도",
+            "부산" to "광역시",
+            "대구" to "광역시",
+            "인천" to "광역시",
+            "광주" to "광역시",
+            "대전" to "광역시",
+            "울산" to "광역시",
+            "세종" to "특별자치시",
+            "경기" to "도",
+            "강원" to "도",
+            "충북" to "도",
+            "충남" to "도",
+            "전북" to "도",
+            "전남" to "도",
+            "경북" to "도",
+            "경남" to "도",
+            "제주" to "특별자치도"
+        )
+
+        val province = addr.region_1depth_name
+        val provinceSuffix = suffixMap[province]
+            ?: throw IllegalArgumentException("알 수 없는 시·도: $province")
+
+        return "$province$provinceSuffix ${addr.region_2depth_name}"
+    }
+
+    fun getMarketByPosition(position : LatLng) {
+        mapPageState = mapPageState.copy(
+            isLoading = true
+        )
         viewModelScope.launch {
+            val address = formatProvinceDistrict(getAddress(position).address)
             val res = withContext(Dispatchers.IO) {
                 marketRepository.getMarketByAddress(
                     address = address,
@@ -85,7 +132,13 @@ class MarketViewModel : ViewModel() {
                 )
             }
 
+            if(!res.isSuccessful){
+                throw Exception(res.message().toString())
+            }
+
             val newMarket = res.body()!!.response.marketResDtos
+                .filter { !mapPageState.marketData.contains(it) }
+
             val positionList = newMarket.map { kakaoService.getAddress(query = it.address) }
                 .filter { it.isSuccessful }
                 .map { it.body()!!.documents }
@@ -97,8 +150,9 @@ class MarketViewModel : ViewModel() {
                 .map { LatLng(it.y.toDouble(), it.x.toDouble()) }
 
             mapPageState = mapPageState.copy(
-                marketData = newMarket,
-                positionList = positionList
+                marketData = newMarket + mapPageState.marketData,
+                positionList = positionList + mapPageState.positionList,
+                isLoading = false
             )
         }
     }

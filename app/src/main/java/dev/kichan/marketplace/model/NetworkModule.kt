@@ -20,15 +20,19 @@ object TokenStore {
     var token: String? = null
 }
 
-class AuthInterceptor : Interceptor {
+class AuthInterceptor(val type : String = "default") : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
+        val token = if(type == "default") "Bearer ${TokenStore.token}" else "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
+
         val newRequest = originalRequest.newBuilder()
-            .addHeader("Authorization", "Bearer ${TokenStore.token}")
+            .addHeader("Authorization", token)
             .build()
         return chain.proceed(newRequest)
     }
 }
+
+//todo: 나중에 토큰 가져오는 이거 좀...
 
 object NetworkModule {
     private const val BASE_URL = BuildConfig.API_BASE_URL
@@ -38,35 +42,32 @@ object NetworkModule {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val authInterceptor : AuthInterceptor
-        get() = AuthInterceptor()
-
     fun updateToken(token: String?) {
         TokenStore.token = token
     }
 
-    private val client: OkHttpClient
-        get() = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .addInterceptor(authInterceptor)
+    private fun getClient(type : String = "default") : OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor(type))
             .addNetworkInterceptor(interceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
+    }
 
     private val retrofit: Retrofit
         get() = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BASE_URL)
-            .client(client)
+            .client(getClient())
             .build()
 
 
     private val kakaoRetrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(KAKAO_API_BASE_URL)
-        .client(client)
+        .client(getClient("kakao"))
         .build()
 
     fun <T> getService(service: Class<T>): T {

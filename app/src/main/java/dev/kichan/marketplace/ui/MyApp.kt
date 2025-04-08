@@ -35,7 +35,6 @@ fun MyApp(
     marketViewModel: MarketViewModel = MarketViewModel()
 ) {
     val navController = rememberNavController()
-
     NavHost(
         navController = navController,
         startDestination = Page.Login.name,
