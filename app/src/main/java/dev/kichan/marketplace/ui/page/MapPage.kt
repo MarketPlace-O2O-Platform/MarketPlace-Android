@@ -1,7 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.util.Log
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,23 +12,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,12 +63,13 @@ fun MapPage(
     marketViewModel: MarketViewModel = MarketViewModel()
 ) {
     val state = marketViewModel.mapPageState
+    val initialPosition = LatLng(
+        37.376651978907326,
+        126.63425891507083,
+    )
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            LatLng(
-                37.376651978907326,
-                126.63425891507083,
-            ), 14f
+            initialPosition, 14f
         )
     }
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -84,7 +79,7 @@ fun MapPage(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        marketViewModel.getMarketByAddress("인천광역시 연수구")
+        marketViewModel.getMarketByPosition(initialPosition)
     }
 
     Scaffold(
@@ -143,7 +138,7 @@ fun MapPage(
 
                     IconButton(
                         onClick = {
-                            marketViewModel.getMarketByAddress("인천광역시 연수구")
+//                            marketViewModel.getMarketByPosition()
                         },
                         modifier = Modifier
                             .align(Alignment.TopEnd)

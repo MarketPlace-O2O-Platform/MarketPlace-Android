@@ -19,6 +19,12 @@ interface KakaoLocalService {
         @Query("page") page: Int = 1
     ): Response<KakaoLocal<Place>>
 
+    @GET("/v2/local/geo/coord2address.json")
+    suspend fun coord2Address(
+        @Query("x") x: String,
+        @Query("y") y: String,
+    ): Response<KakaoLocal<Address>>
+
     @GET("/v2/local/search/address.json")
     suspend fun getAddress(
         @Query("query") query: String,

@@ -48,7 +48,6 @@ object NetworkModule {
 
     private fun getClient(type : String = "default") : OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
             .addInterceptor(AuthInterceptor(type))
             .addNetworkInterceptor(interceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
