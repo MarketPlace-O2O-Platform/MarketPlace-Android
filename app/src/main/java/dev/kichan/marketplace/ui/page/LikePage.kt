@@ -44,6 +44,7 @@ import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.like.TempMarketRes
 import dev.kichan.marketplace.model.repository.MarkerLikeRepository
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
+import dev.kichan.marketplace.ui.TempMarketSearchLiseItem
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
@@ -84,6 +85,7 @@ fun LikePage(navController: NavController) {
 
     val tempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
     val cheerTempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
+    var searchMarket by remember { mutableStateOf<List<TempMarketRes>>(emptyList()) }
 
     val getCheerTempMarket = {
         CoroutineScope(Dispatchers.IO).launch {
@@ -107,11 +109,11 @@ fun LikePage(navController: NavController) {
         }
     }
 
-    val getTempMArketSearch = {
+    val getTempMarketSearch = {
         CoroutineScope(Dispatchers.IO).launch {
             val res = repository.getMarketSearch(searchKey)
             withContext(Dispatchers.Main) {
-
+                searchMarket = res.body()?.response?.marketResDtos ?: listOf()
             }
         }
     }
@@ -153,7 +155,12 @@ fun LikePage(navController: NavController) {
                 LikeMarketSearchBar(
                     modifier = Modifier.fillMaxWidth(),
                     key = searchKey
-                ) { searchKey = it }
+                ) {
+                    searchKey = it;
+                    if(it.length >= 2) {
+                        getTempMarketSearch()
+                    }
+                }
             }
             if (searchKey.isEmpty()) {
                 item {
@@ -246,8 +253,17 @@ fun LikePage(navController: NavController) {
                     }
                 }
             } else {
-                item {
-                    Text("대충 검색")
+                if(searchMarket.size == 0) {
+                    item {
+                        Text("검색 결과 없음")
+                    }
+                }
+                items(searchMarket) {
+                    TempMarketSearchLiseItem(
+                        market = it
+                    ) { marketId, _ ->
+                        onCheer(marketId)
+                    }
                 }
             }
         }
