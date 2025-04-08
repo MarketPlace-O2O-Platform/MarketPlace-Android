@@ -98,7 +98,7 @@ fun LikePage(navController: NavController) {
 
     val getTempMarket = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getTempMarkets(20,)
+            val res = repository.getTempMarkets(20, selectedCategory)
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
                     tempMarkets.value = res.body()!!.response.marketResDtos
@@ -135,6 +135,10 @@ fun LikePage(navController: NavController) {
     LaunchedEffect(Unit) {
         getTempMarket();
         getCheerTempMarket();
+    }
+
+    LaunchedEffect(selectedCategory) {
+        getTempMarket()
     }
 
     Scaffold(
