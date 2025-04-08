@@ -2,6 +2,7 @@ package dev.kichan.marketplace.model.repository
 
 import android.content.Context
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.Member.SaveFCMTokenReq
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
@@ -24,4 +25,7 @@ class AuthRepositoryImpl(
 
     override suspend fun getMemberData(): Response<ResponseTemplate<LoginRes>>
         = service.getUserData()
+
+    override suspend fun saveFCMToken(token: String): Response<ResponseTemplate<Unit>>
+        = service.saveFcmToken(SaveFCMTokenReq(token))
 }

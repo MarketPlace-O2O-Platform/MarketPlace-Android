@@ -42,7 +42,8 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val token = task.result
-                Log.d("FCM", "Refreshed token: $token")
+                authViewModel.saveFcmToken(token)
+                Log.d("FCM", "FCM token: $token")
             }
     }
 
