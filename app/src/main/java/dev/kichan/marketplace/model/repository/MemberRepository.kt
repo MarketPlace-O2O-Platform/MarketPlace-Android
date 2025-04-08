@@ -9,4 +9,8 @@ interface MemberRepository {
     suspend fun login(body : LoginReq) : Response<ResponseTemplate<String>>
     suspend fun logout()
     suspend fun getMemberData() : Response<ResponseTemplate<LoginRes>>
+
+    suspend fun saveFCMToken(
+        token: String
+    ): Response<ResponseTemplate<Unit>>
 }

@@ -14,8 +14,10 @@ import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.getAuthToken
 import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
 import dev.kichan.marketplace.model.saveAuthToken
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 sealed class LoginUiState {
@@ -91,6 +93,18 @@ class AuthViewModel(private val application: Application = Application()) :Andro
                     return@collect
                 }
                 loginState = LoginUiState.Success
+            }
+        }
+    }
+
+    fun saveFcmToken(token: String) {
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                authRepository.saveFCMToken(token)
+            }
+
+            if(!res.isSuccessful) {
+                throw Exception("FCM 토큰 저장 실패")
             }
         }
     }
