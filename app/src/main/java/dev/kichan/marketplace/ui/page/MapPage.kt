@@ -24,17 +24,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCbrt
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.javafaker.Bool
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -56,6 +60,8 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.MarketViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -65,6 +71,7 @@ fun MapPage(
     singleTonViewModel: SingleTonViewModel = SingleTonViewModel(),
     marketViewModel: MarketViewModel = MarketViewModel()
 ) {
+    val context = LocalContext.current
     val state = marketViewModel.mapPageState
     val initialPosition = LatLng(
         37.376651978907326,
@@ -80,6 +87,24 @@ fun MapPage(
     val sheetState = rememberSwipeableState(initialValue = 1)
 
     val scope = rememberCoroutineScope()
+    val fusedLocationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    val onMoveCurrentPosition = {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { position ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    position?.let {
+                        val userLatLng = LatLng(position.latitude, position.longitude)
+                        cameraPositionState.animate(
+                            update = CameraUpdateFactory.newLatLngZoom(userLatLng, 15f),
+                            durationMs = 1000
+                        )
+                    }
+                }
+            }
+    }
 
     LaunchedEffect(Unit) {
         marketViewModel.getMarketByPosition(initialPosition)
@@ -120,7 +145,9 @@ fun MapPage(
                         cameraPositionState = cameraPositionState,
                         uiSettings = MapUiSettings(
                             zoomControlsEnabled = false,
-                            myLocationButtonEnabled = true,
+                            myLocationButtonEnabled = false,
+                            mapToolbarEnabled = true
+                            //todo: 참고 https://developers.google.com/maps/documentation/android-sdk/reference/com/google/android/libraries/maps/UiSettings?hl=ko
                         ),
                         onMapClick = {
                         }
@@ -141,7 +168,7 @@ fun MapPage(
                     )
 
                     IconButton(
-                        onClick = { /*todo*/ },
+                        onClick = { onMoveCurrentPosition() },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(top = 52.dp, end = 12.dp)
