@@ -22,7 +22,7 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.model.data.CouponResponse
-import dev.kichan.marketplace.ui.component.atoms.CouponUI
+import dev.kichan.marketplace.ui.component.atoms.CouponItem
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
@@ -97,7 +97,7 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(items = state.couponList) { coupon ->
-                CouponUI(coupon)
+                CouponItem(coupon)
             }
         }
     }
