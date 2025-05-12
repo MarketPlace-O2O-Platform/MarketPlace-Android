@@ -181,8 +181,8 @@ fun LikePage(navController: NavController) {
                                     marketName = it.name,
                                     likeCount = it.cheerCount,
                                     thumbnail = NetworkModule.getImage(it.thumbnail, true),
-                                    isMyDone = false,
-                                    isRequestDone = false,
+                                    isMyDone = it.isCheer,
+                                    isRequestDone = it.dueDate == 0,
                                     duDate = it.dueDate,
                                     onCheer = { onCheer(it.id) }
                                 )
@@ -221,7 +221,7 @@ fun LikePage(navController: NavController) {
                             likeCount = market1.cheerCount,
                             thumbnail = NetworkModule.getImage(market1.thumbnail, true),
                             isMyDone = market1.isCheer,
-                            isRequestDone = false,
+                            isRequestDone = market1.dueDate == 0,
                             duDate = market1.dueDate,
                             onCheer = { onCheer(market1.id) }
                         )
@@ -235,7 +235,7 @@ fun LikePage(navController: NavController) {
                                 likeCount = market2.cheerCount,
                                 thumbnail = NetworkModule.getImage(market2.thumbnail, true),
                                 isMyDone = market2.isCheer,
-                                isRequestDone = false,
+                                isRequestDone = market2.dueDate == 0,
                                 duDate = market2.dueDate,
                                 onCheer = { onCheer(market2.id) }
                             )
