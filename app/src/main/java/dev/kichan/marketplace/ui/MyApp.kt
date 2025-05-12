@@ -53,9 +53,17 @@ fun MyApp(
                 )
             }
             composable(Page.Like.name) {
-                LikePage(navController = navController)
+                LikePage(
+                    navController = navController,
+                    authViewModel = authViewModel
+                )
             }
-            composable(Page.Map.name) { MapPage(navController = navController, marketViewModel = marketViewModel) }
+            composable(Page.Map.name) {
+                MapPage(
+                    navController = navController,
+                    marketViewModel = marketViewModel
+                )
+            }
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
@@ -73,7 +81,11 @@ fun MyApp(
             }
         }
         composable(route = Page.Login.name) {
-            LoginPage(navController = navController, singleTon = singlethone, authViewModel = authViewModel)
+            LoginPage(
+                navController = navController,
+                singleTon = singlethone,
+                authViewModel = authViewModel
+            )
         }
         composable(route = "${Page.MarketListPage.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
@@ -87,7 +99,7 @@ fun MyApp(
 
         composable(route = "${Page.CouponListPage.name}/{type}") {
             it.arguments?.getString("type")?.let { type ->
-                if(!listOf("popular", "latest").contains(type)) {
+                if (!listOf("popular", "latest").contains(type)) {
                     throw Exception("Invalid type")
                 }
 

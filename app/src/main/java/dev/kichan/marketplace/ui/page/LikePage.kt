@@ -51,15 +51,19 @@ import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun LikePage(navController: NavController) {
+fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
     val repository = MarkerLikeRepository()
     val cheerRepository = CheerRepository()
+
+    val authState = authViewModel.loginState
 
     var searchKey by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
@@ -135,7 +139,7 @@ fun LikePage(navController: NavController) {
             }
             if (searchKey.isEmpty()) {
                 item {
-                    MyHeartCount()
+                    MyHeartCount((authState as LoginUiState.Success).member.cheerTicket)
                 }
                 item {
                     Spacer(
@@ -274,7 +278,7 @@ fun SpaceTitle(modifier: Modifier = Modifier, title: String, badgeTitle: String)
 
 //todo: 더 좋은 이름으로 수정
 @Composable
-private fun MyHeartCount() {
+private fun MyHeartCount(tiekctCount: Int) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -302,7 +306,7 @@ private fun MyHeartCount() {
                 )
             )
             Spacer(modifier = Modifier.width(11.dp))
-            Text(text = "1개", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(text = "${tiekctCount}개", fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
         Text(
             text = "공감권은 매일 자정에 충전됩니다.",
@@ -315,10 +319,10 @@ private fun MyHeartCount() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LikePagePreview() {
-    MarketPlaceTheme {
-        LikePage(rememberNavController())
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LikePagePreview() {
+//    MarketPlaceTheme {
+//        LikePage(rememberNavController())
+//    }
+//}
