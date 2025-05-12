@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui
 
-import android.app.Application
 import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -14,7 +13,6 @@ import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.LoginPage
-import dev.kichan.marketplace.ui.page.CouponPage
 import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
@@ -23,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
+import dev.kichan.marketplace.ui.page.ReceivedCouponsScreen
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.viewmodel.MarketViewModel
@@ -71,7 +70,12 @@ fun MyApp(
                     marketViewModel = marketViewModel
                 )
             }
-            composable(Page.CouponHam.name) { CouponPage(navController = navController) }
+            composable(Page.CouponHam.name) {
+                ReceivedCouponsScreen(
+                    navController = navController,
+                    couponViewModel = couponViewModel
+                )
+            }
             composable(Page.Search.name) { SearchPage() }
 
             composable("${Page.EventDetail.name}/{id}") {

@@ -5,6 +5,7 @@ import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
 import dev.kichan.marketplace.model.data.coupon.CouponPagination
 import dev.kichan.marketplace.model.data.coupon.CouponRes
 import dev.kichan.marketplace.model.data.coupon.IssuedCouponListResponse
+import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
 import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import retrofit2.Response
@@ -36,4 +37,7 @@ interface CouponService {
     suspend fun getClosingCoupon(
         @Query("pageSize") pageSize: Int
     ): Response<ResponseTemplate<List<ClosingCouponRes>>>
+
+    @GET("/api/members/coupons")
+    suspend fun getDownloadCouponList() : Response<ResponseTemplate<CouponPagination<IssuedCouponRes>>>
 }

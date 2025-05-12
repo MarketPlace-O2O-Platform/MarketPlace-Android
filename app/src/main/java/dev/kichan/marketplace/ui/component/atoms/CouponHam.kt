@@ -22,10 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun CouponUI() {
+fun CouponUI(coupon : IssuedCouponRes) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,7 +66,7 @@ fun CouponUI() {
                     color = Color(0xFF121212),
                 )
                 Text(
-                    text = "붙임머리 할인",
+                    text = coupon.couponName,
                     fontSize = 15.sp,
                     lineHeight = 24.sp,
                     fontFamily = PretendardFamily,
@@ -75,7 +76,7 @@ fun CouponUI() {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "2024년 10월 31일까지",
+                    text = coupon.deadLine,
                     fontSize = 13.sp,
                     lineHeight = 22.sp,
                     fontFamily = PretendardFamily,
@@ -102,11 +103,3 @@ fun CouponUI() {
         }
     }
 }
-
-@Preview
-@Composable
-fun PreviewCouponUI() {
-    CouponUI()
-}
-
-

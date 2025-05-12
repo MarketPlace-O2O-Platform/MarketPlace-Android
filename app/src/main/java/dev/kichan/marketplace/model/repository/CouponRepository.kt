@@ -16,4 +16,6 @@ class CouponRepository {
         service.getLatestCoupon(lastCreatedAt, lastCouponId, pageSize)
 
     suspend fun getClosingCoupon(pageSize: Int) = service.getClosingCoupon(pageSize)
+
+    suspend fun getDownloadCouponList() = service.getDownloadCouponList()
 }
