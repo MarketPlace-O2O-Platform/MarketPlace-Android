@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import dev.kichan.marketplace.model.repository.CheerRepository
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.like.TempMarketRes
 import dev.kichan.marketplace.model.repository.MarkerLikeRepository
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
@@ -55,24 +55,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Response
-import retrofit2.http.POST
-import retrofit2.http.Query
-
-interface CheerService {
-    @POST("/api/cheer")
-    suspend fun cheer(
-        @Query("tempMarketId") marketId: Long,
-    ): Response<ResponseTemplate<Unit>>
-}
-
-class CheerRepository {
-    val service = NetworkModule.getService(CheerService::class.java)
-
-    suspend fun cheer(
-        marketId: Long
-    ) = service.cheer(marketId)
-}
 
 @Composable
 fun LikePage(navController: NavController) {
