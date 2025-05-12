@@ -117,7 +117,7 @@ class MarketViewModel : ViewModel() {
         return "$province$provinceSuffix ${addr.region_2depth_name}"
     }
 
-    fun getMarketByPosition(position : LatLng) {
+    fun getMarketByPosition(position : LatLng, category: LargeCategory) {
         mapPageState = mapPageState.copy(
             isLoading = true
         )
@@ -127,7 +127,7 @@ class MarketViewModel : ViewModel() {
                 marketRepository.getMarketByAddress(
                     address = address,
                     lastMarketId = null,
-                    category = null,
+                    category = if(category == LargeCategory.All) null else category.backendLabel,
                     pageSize = null
                 )
             }
