@@ -67,7 +67,8 @@ fun MyApp(
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
-                    authViewModel = authViewModel
+                    authViewModel = authViewModel,
+                    marketViewModel = marketViewModel
                 )
             }
             composable(Page.CouponHam.name) { CouponPage(navController = navController) }

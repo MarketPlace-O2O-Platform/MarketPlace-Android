@@ -33,6 +33,11 @@ data class MapPageUiState(
     val errorMessage: String? = null
 )
 
+data class MyPageUiState(
+    val favorites : List<MarketRes> = emptyList(),
+    val isLoading: Boolean = false,
+)
+
 class MarketViewModel : ViewModel() {
     private val marketRepository = MarketRepository()
     private val favoriteRepository = FavoritesRepository()
@@ -40,6 +45,7 @@ class MarketViewModel : ViewModel() {
 
     var marketPageUiState by mutableStateOf(MarketPageUiState())
     var mapPageState by mutableStateOf(MapPageUiState())
+    var myPageUiState by mutableStateOf(MyPageUiState())
 
     fun getMarketData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
         viewModelScope.launch {
@@ -193,6 +199,22 @@ class MarketViewModel : ViewModel() {
             Log.e("FAVORITE", "favorite: $e")
         } finally {
             marketPageUiState = marketPageUiState.copy(isLoading = false)
+        }
+    }
+
+    fun getFavorites() {
+        myPageUiState = myPageUiState.copy(isLoading = true)
+        viewModelScope.launch {
+            val res = marketRepository.getFavoriteMarket(
+                lastMarketId = null,
+                pageSize = 100000
+            )
+            if (!res.isSuccessful) {
+                return@launch
+            }
+
+            val myFavorites = res.body()!!.response.marketResDtos
+            myPageUiState = myPageUiState.copy(isLoading = false, favorites = myFavorites)
         }
     }
 }

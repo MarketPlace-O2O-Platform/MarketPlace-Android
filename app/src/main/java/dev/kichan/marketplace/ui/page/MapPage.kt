@@ -17,6 +17,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.HorizontalDivider
@@ -180,7 +181,7 @@ fun MapPage(
                             .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Settings,
+                            imageVector = Icons.Default.LocationOn,
                             contentDescription = null,
                             tint = Color(0xff545454)
                         )

@@ -45,14 +45,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import dev.kichan.marketplace.model.service.MemberService
+import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
+import dev.kichan.marketplace.viewmodel.LoginUiState
+import dev.kichan.marketplace.viewmodel.MarketViewModel
 
 @Composable
 fun MyPage(
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    marketViewModel : MarketViewModel,
 ) {
-    val repo = MarketRepository()
-    var myCuration by remember { mutableStateOf<List<MarketRes>>(listOf()) }
+    val authState = authViewModel.loginState
+    val marketState = marketViewModel.myPageUiState
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     // 드롭다운 메뉴 열림 여부
@@ -73,23 +77,8 @@ fun MyPage(
         showMenu = false
     }
 
-
-    val onGetMyCulation = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = repo.getFavoriteMarket(
-                lastMarketId = null,
-                pageSize = 100000
-            )
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    myCuration = res.body()!!.response.marketResDtos
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(selectedCategory) {
-        onGetMyCulation()
+    LaunchedEffect(Unit) {
+        marketViewModel.getFavorites()
     }
 
     Scaffold(
@@ -123,7 +112,7 @@ fun MyPage(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "${202201469}님",
+                        text = "${(authState as LoginUiState.Success).member.studentId}님",
                         fontSize = 16.sp,
                         lineHeight = 22.4.sp,
                         fontWeight = FontWeight.Bold,
@@ -190,18 +179,25 @@ fun MyPage(
             Spacer(modifier = Modifier.height(20.dp))
 
             // MyPageCard를 세로로 나열하는 리스트
-            if (myCuration.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
+            ) {
+                if(marketState.isLoading) {
+                    items(10) {
+                        MarketListLoadingItem()
+                    }
                 }
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(0.dp) // 카드 사이 간격 제거
-                ) {
-                    items(items = myCuration) { market ->
+                else if (marketState.favorites.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("저장한 매장이 없습니다.", modifier = Modifier.padding(vertical = 16.dp))
+                        }
+                    }
+                } else {
+                    items(items = marketState.favorites) { market ->
                         MarketListItem(
                             title = market.name,
                             description = market.description,
@@ -216,10 +212,10 @@ fun MyPage(
         }
     }
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun MyPagePreview() {
-    MyPage(navController = rememberNavController(), authViewModel = AuthViewModel())
-}
+//
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun MyPagePreview() {
+//    MyPage(navController = rememberNavController(), authViewModel = AuthViewModel())
+//}
