@@ -75,7 +75,7 @@ fun LoginPage(
         }
         LoginUiState.Idle -> {}
         LoginUiState.Loading -> {}
-        LoginUiState.Success -> {
+        is LoginUiState.Success -> {
             navController.popBackStack()
             navController.navigate(Page.Main.name)
         }
