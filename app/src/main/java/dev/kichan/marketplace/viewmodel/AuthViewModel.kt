@@ -104,7 +104,7 @@ class AuthViewModel(private val application: Application = Application()) :Andro
             }
 
             if(!res.isSuccessful) {
-                throw Exception("FCM 토큰 저장 실패")
+//                throw Exception("FCM 토큰 저장 실패")
             }
         }
     }
