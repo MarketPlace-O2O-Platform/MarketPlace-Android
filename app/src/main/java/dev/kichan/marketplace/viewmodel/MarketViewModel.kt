@@ -43,7 +43,7 @@ class MarketViewModel : ViewModel() {
 
     fun getMarketData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
         viewModelScope.launch {
-            marketPageUiState = marketPageUiState.copy(isLoading = true)
+            marketPageUiState = marketPageUiState.copy(isLoading = true, marketData = if(isInit) emptyList() else marketPageUiState.marketData)
 
             try {
                 val res = withContext(Dispatchers.IO) {
