@@ -9,4 +9,5 @@ data class TempMarketRes(
     val thumbnail: String,
     val cheerCount: Int,
     val isCheer: Boolean,
+    val dueDate: Int,
 )

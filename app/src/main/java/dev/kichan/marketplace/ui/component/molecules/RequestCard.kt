@@ -48,6 +48,7 @@ fun RequestCard(
     thumbnail: String,
     isMyDone: Boolean,
     isRequestDone: Boolean,
+    duDate: Int,
     onCheer: () -> Unit,
 ) {
     Column(
@@ -93,8 +94,7 @@ fun RequestCard(
                             fontWeight = FontWeight.Medium
                         )
                     } else {
-                        val current = LocalDate.now()
-                        Text(text = "마감까지 None일 남음", fontSize = 12.sp, color = Color.Gray)
+                        Text(text = "마감까지 ${duDate}일 남음", fontSize = 12.sp, color = Color.Gray)
                     }
                 }
 
@@ -154,7 +154,8 @@ private fun RequestCardPrev() {
             likeCount = 100120,
             thumbnail = "https://fakeimg.pl/1200",
             isMyDone = false,
-            isRequestDone = false
+            isRequestDone = false,
+            duDate = 1
         ) {  }
     }
 }
