@@ -10,6 +10,8 @@ import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
 import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CouponService {
@@ -40,4 +42,9 @@ interface CouponService {
 
     @GET("/api/members/coupons")
     suspend fun getDownloadCouponList() : Response<ResponseTemplate<CouponPagination<IssuedCouponRes>>>
+
+    @POST("/api/members/coupons/{couponId}")
+    suspend fun downloadCoupon(
+        @Path("couponId") couponId: Long,
+    ) : Response<ResponseTemplate<Void>>
 }

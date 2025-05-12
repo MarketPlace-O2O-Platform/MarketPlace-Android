@@ -18,4 +18,6 @@ class CouponRepository {
     suspend fun getClosingCoupon(pageSize: Int) = service.getClosingCoupon(pageSize)
 
     suspend fun getDownloadCouponList() = service.getDownloadCouponList()
+
+    suspend fun downloadCoupon(id : Long) = service.downloadCoupon(id)
 }

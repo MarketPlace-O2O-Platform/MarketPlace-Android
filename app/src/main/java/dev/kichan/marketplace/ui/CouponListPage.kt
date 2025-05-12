@@ -38,17 +38,17 @@ fun CouponListPage(
         LazyColumn (
             modifier = Modifier.padding(it)
         ) {
-            if(state.isLoading) {
-                items(15) {
-                    MarketListLoadingItem()
-                }
-            }
             items(state.couponList) {
                 CouponListItem(
                     modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${it.marketId}") },
                     props = it,
                     onDownloadClick = {id -> couponViewModel.downloadCoupon(id)}
                 )
+            }
+            if(state.isLoading) {
+                items(15) {
+                    MarketListLoadingItem()
+                }
             }
         }
     }

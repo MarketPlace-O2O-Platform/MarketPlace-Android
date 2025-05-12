@@ -176,20 +176,21 @@ class CouponViewModel : ViewModel() {
     }
 
     fun downloadCoupon(id: Long) {
+        couponListPageState = couponListPageState.copy(isLoading = true)
         viewModelScope.launch {
-//            val res = withContext(Dispatchers.IO) {
-//                couponRepository.issuanceCouponkV(
-//                    couponId = id,
-//                    memberId = 1 //todo: 나중에 지우기
-//                )
-//            }
-//
-//            couponListPageState = couponListPageState.copy(
-//                couponList = couponListPageState.couponList.map {
-//                    if(id == it.id) it.copy(isMemberIssued = !it.isMemberIssued)
-//                    else it
-//                }
-//            )
+            val res = withContext(Dispatchers.IO) {
+                couponRepository.downloadCoupon(
+                    id = id
+                )
+            }
+
+            if(!res.isSuccessful)
+                return@launch
+
+            couponListPageState = couponListPageState.copy(
+                couponList = couponListPageState.couponList.map { if(it.id == id) it.copy(isMemberIssued = true) else it.copy() },
+                isLoading = false
+            )
         }
     }
 
