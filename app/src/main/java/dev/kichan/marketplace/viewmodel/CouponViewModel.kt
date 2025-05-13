@@ -191,6 +191,14 @@ class CouponViewModel : ViewModel() {
                 couponList = couponListPageState.couponList.map { if(it.id == id) it.copy(isMemberIssued = true) else it.copy() },
                 isLoading = false
             )
+            homeState = homeState.copy(
+                popularCoupons = homeState.popularCoupons.map {
+                    if (it.id == id) it.copy(isMemberIssued = true) else it
+                },
+                latestCoupons = homeState.latestCoupons.map {
+                    if (it.id == id) it.copy(isMemberIssued = true) else it
+                }
+            )
         }
     }
 
