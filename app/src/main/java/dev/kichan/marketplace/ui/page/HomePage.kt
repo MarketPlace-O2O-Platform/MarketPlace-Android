@@ -122,6 +122,8 @@ fun HomePage(
                                 subTitle = it.marketName,
                                 url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
+                                onDownloadClick = { couponViewModel.downloadCoupon(it.id) },
+                                isDownload = it.isMemberIssued,
                             )
                         },
                         isLoading =  state.isPopularLoading,
@@ -140,6 +142,8 @@ fun HomePage(
                                 title = it.name,
                                 url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
+                                onDownloadClick = { couponViewModel.downloadCoupon(it.id) },
+                                isDownload = it.isMemberIssued,
                             )
                         },
                         isLoading = state.isLatestLoading,

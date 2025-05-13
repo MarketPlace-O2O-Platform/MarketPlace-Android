@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.data.Event
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import kotlin.math.log
@@ -43,10 +46,8 @@ import kotlin.math.log
 @Composable
 fun EventBox(
     modifier: Modifier = Modifier,
-    event: Event
+    event: Event,
 ) {
-    var isBookMark by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier
     ) {
@@ -66,15 +67,15 @@ fun EventBox(
                 .background(Color(0x4D000000))
         )
 
-        Icon(
-            imageVector = if(!isBookMark) Carbon_bookmark else Bookmark,
-            contentDescription = "Bookmark",
-            tint = Color.White,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(8.dp)
-                .clickable { isBookMark = !isBookMark }
-        )
+        IconButton(
+            onClick = { event.onDownloadClick() },
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
+            Icon(
+                painter = painterResource(if(event.isDownload) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
+                contentDescription = null
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -102,11 +103,11 @@ fun EventBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
-    val event = Event(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png", marketId = 1)
+    val event = Event(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png", marketId = 1, onDownloadClick = {}, isDownload = false)
     EventBox(
         modifier = Modifier
             .fillMaxWidth(0.7f)
             .aspectRatio(1f / 1),
-        event = event
+        event = event,
     )
 }

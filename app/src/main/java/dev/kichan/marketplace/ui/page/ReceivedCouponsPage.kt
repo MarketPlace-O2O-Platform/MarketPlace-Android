@@ -28,8 +28,6 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 @Composable
 fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: CouponViewModel) {
     var selectedTab by remember { mutableStateOf(0) }
-    var isDialogShow by remember { mutableStateOf(false) }
-    var selectedCoupon by remember { mutableStateOf<CouponResponse?>(null) }
 
     val state = couponViewModel.downloadCouponPageState
 
@@ -40,7 +38,6 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(21.dp))
 
-        // ✅ 중앙 정렬된 타이틀
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,9 +89,9 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(vertical = 32.dp, horizontal = 20.dp)
         ) {
             items(items = state.couponList) { coupon ->
                 CouponItem(coupon)
