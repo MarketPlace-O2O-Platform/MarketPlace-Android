@@ -26,7 +26,8 @@ sealed class LoginUiState {
     data class Error(val message: String) : LoginUiState()
 }
 
-class AuthViewModel(private val application: Application = Application()) :AndroidViewModel(application) {
+class AuthViewModel(private val application: Application = Application()) :
+    AndroidViewModel(application) {
     private val authRepository = AuthRepositoryImpl(application.applicationContext)
 
     var loginState by mutableStateOf<LoginUiState>(LoginUiState.Idle)
@@ -38,7 +39,7 @@ class AuthViewModel(private val application: Application = Application()) :Andro
     private suspend fun getMemberData(): MemberLoginRes {
         val res = authRepository.getMemberData()
 
-        if(!res.isSuccessful) {
+        if (!res.isSuccessful) {
             val errorBody = res.errorBody()?.string()
             val message = JSONObject(errorBody ?: "{}").optString("message", "로그인 실패")
             throw Exception(message)
@@ -93,6 +94,7 @@ class AuthViewModel(private val application: Application = Application()) :Andro
         viewModelScope.launch {
             getAuthToken(application.applicationContext).collect { token ->
                 if (token.isNullOrBlank()) {
+                    loginState = LoginUiState.Error("")
                     return@collect
                 }
 
@@ -102,6 +104,7 @@ class AuthViewModel(private val application: Application = Application()) :Andro
                 val res = authRepository.getMemberData()
                 if (!res.isSuccessful) {
                     NetworkModule.updateToken(null)
+                    loginState = LoginUiState.Error("로그인 실패")
                     return@collect
                 }
                 val memberData = getMemberData()
@@ -116,7 +119,7 @@ class AuthViewModel(private val application: Application = Application()) :Andro
                 authRepository.saveFCMToken(token)
             }
 
-            if(!res.isSuccessful) {
+            if (!res.isSuccessful) {
 //                throw Exception("FCM 토큰 저장 실패")
             }
         }

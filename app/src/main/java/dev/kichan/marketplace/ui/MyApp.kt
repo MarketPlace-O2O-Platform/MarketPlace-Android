@@ -3,12 +3,6 @@ package dev.kichan.marketplace.ui
 import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -23,36 +17,16 @@ import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.ReceivedCouponsScreen
+import dev.kichan.marketplace.ui.page.SplashPage
 import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.viewmodel.MarketViewModel
-
-@Composable
-fun SplashPage(
-    authViewModel: AuthViewModel
-) {
-    Scaffold {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(painter = painterResource(R.drawable.logo), contentDescription = null)
-        }
-    }
-}
 
 @Composable
 fun MyApp(
@@ -74,7 +48,10 @@ fun MyApp(
         }
     ) {
         composable(Page.Splash.name) {
-            SplashPage(authViewModel = authViewModel)
+            SplashPage(
+                navController = navController,
+                authViewModel = authViewModel
+            )
         }
         navigation(route = Page.Main.name, startDestination = Page.Home.name) {
             composable(Page.Home.name) {

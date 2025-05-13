@@ -71,7 +71,9 @@ fun LoginPage(
 
     when (state) {
         is LoginUiState.Error -> {
-            Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+            if(state.message.length > 0) {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+            }
         }
         LoginUiState.Idle -> {}
         LoginUiState.Loading -> {}
