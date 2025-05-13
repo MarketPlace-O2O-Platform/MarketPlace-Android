@@ -41,7 +41,9 @@ interface CouponService {
     ): Response<ResponseTemplate<List<ClosingCouponRes>>>
 
     @GET("/api/members/coupons")
-    suspend fun getDownloadCouponList() : Response<ResponseTemplate<CouponPagination<IssuedCouponRes>>>
+    suspend fun getDownloadCouponList(
+        @Query("type") type : String? = null
+    ) : Response<ResponseTemplate<CouponPagination<IssuedCouponRes>>>
 
     @POST("/api/members/coupons/{couponId}")
     suspend fun downloadCoupon(

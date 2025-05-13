@@ -2,6 +2,7 @@ package dev.kichan.marketplace.model.repository
 
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.service.CouponService
+import retrofit2.http.Path
 
 class CouponRepository {
     private val service: CouponService = NetworkModule.getService(CouponService::class.java)
@@ -17,7 +18,9 @@ class CouponRepository {
 
     suspend fun getClosingCoupon(pageSize: Int) = service.getClosingCoupon(pageSize)
 
-    suspend fun getDownloadCouponList() = service.getDownloadCouponList()
+    suspend fun getDownloadCouponList(
+        @Path("type") type : String? = null
+    ) = service.getDownloadCouponList()
 
     suspend fun downloadCoupon(id : Long) = service.downloadCoupon(id)
 }

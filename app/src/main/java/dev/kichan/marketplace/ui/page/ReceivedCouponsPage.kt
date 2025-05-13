@@ -21,7 +21,6 @@ import androidx.navigation.NavHostController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.viewmodel.CouponViewModel
-import dev.kichan.marketplace.model.data.CouponResponse
 import dev.kichan.marketplace.ui.component.atoms.CouponItem
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
@@ -32,7 +31,9 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
     val state = couponViewModel.downloadCouponPageState
 
     LaunchedEffect(Unit) {
-        couponViewModel.getDownloadCouponList()
+        couponViewModel.getDownloadCouponList("ISSUED")
+        couponViewModel.getDownloadCouponList("EXPIRED")
+        couponViewModel.getDownloadCouponList("USED")
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -93,7 +94,7 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 32.dp, horizontal = 20.dp)
         ) {
-            items(items = state.couponList) { coupon ->
+            items(items = state.issuedCouponList) { coupon ->
                 CouponItem(coupon)
             }
         }

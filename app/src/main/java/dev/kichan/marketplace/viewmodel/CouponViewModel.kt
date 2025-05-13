@@ -32,7 +32,9 @@ data class CouponListPageState(
 )
 
 data class DownloadCouponPageState(
-    val couponList : List<IssuedCouponRes> = emptyList(),
+    val issuedCouponList : List<IssuedCouponRes> = emptyList(),
+    val expiredCouponList : List<IssuedCouponRes> = emptyList(),
+    val usedCouponList : List<IssuedCouponRes> = emptyList(),
     val isLoading : Boolean = false,
 )
 
@@ -202,13 +204,13 @@ class CouponViewModel : ViewModel() {
         }
     }
 
-    fun getDownloadCouponList() {
+    fun getDownloadCouponList(type: String) {
         couponListPageState = couponListPageState.copy(
             isLoading = true
         )
         viewModelScope.launch {
             val res = withContext(Dispatchers.IO) {
-                couponRepository.getDownloadCouponList()
+                couponRepository.getDownloadCouponList(type = type)
             }
 
             if(!res.isSuccessful) {
@@ -217,10 +219,27 @@ class CouponViewModel : ViewModel() {
 
             val body = res.body()!!
 
-            downloadCouponPageState = downloadCouponPageState.copy(
-                couponList = body.response.couponResDtos,
-                isLoading = false,
-            )
+            when(type) {
+                "ISSUED" -> {
+                    downloadCouponPageState = downloadCouponPageState.copy(
+                        issuedCouponList = body.response.couponResDtos,
+                        isLoading = false,
+                    )
+                }
+                "EXPIRED" -> {
+                    downloadCouponPageState = downloadCouponPageState.copy(
+                        expiredCouponList = body.response.couponResDtos,
+                        isLoading = false,
+                    )
+                }
+                "USED" -> {
+                    downloadCouponPageState = downloadCouponPageState.copy(
+                        usedCouponList = body.response.couponResDtos,
+                        isLoading = false,
+                    )
+                }
+            }
+
         }
     }
 }
