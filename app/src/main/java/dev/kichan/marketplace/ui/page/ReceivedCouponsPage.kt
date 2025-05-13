@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,9 +27,14 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: CouponViewModel) {
+    val state = couponViewModel.downloadCouponPageState
     var selectedTab by remember { mutableStateOf(0) }
 
-    val state = couponViewModel.downloadCouponPageState
+    val selectedTabCouponList = when(selectedTab) {
+        0 -> state.issuedCouponList
+        1 -> state.expiredCouponList
+        else -> state.usedCouponList
+    }
 
     LaunchedEffect(Unit) {
         couponViewModel.getDownloadCouponList("ISSUED")
@@ -70,7 +76,6 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
             )
         }
 
-        // 탭 레이아웃
         TabRow(
             modifier = Modifier.border(width = 1.dp, color = Color(0xFFE0E0E0)),
             selectedTabIndex = selectedTab,
@@ -94,7 +99,7 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 32.dp, horizontal = 20.dp)
         ) {
-            items(items = state.issuedCouponList) { coupon ->
+            items(items = selectedTabCouponList) { coupon ->
                 CouponItem(coupon)
             }
         }

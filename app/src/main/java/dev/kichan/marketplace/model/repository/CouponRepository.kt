@@ -20,7 +20,7 @@ class CouponRepository {
 
     suspend fun getDownloadCouponList(
         @Path("type") type : String? = null
-    ) = service.getDownloadCouponList()
+    ) = service.getDownloadCouponList(type = type)
 
     suspend fun downloadCoupon(id : Long) = service.downloadCoupon(id)
 }
