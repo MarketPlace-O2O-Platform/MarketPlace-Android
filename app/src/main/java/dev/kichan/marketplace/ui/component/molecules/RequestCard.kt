@@ -124,7 +124,15 @@ fun RequestCard(
 
             val buttonModifier = Modifier.fillMaxWidth()
 
-            if (isRequestDone) {
+            if(isMyDone) {
+                Button(
+                    text = "공감 완료",
+                    isDisable = true,
+                    modifier = buttonModifier
+                ) {
+                }
+            }
+            else if (isRequestDone) {
                 Button(
                     text = "제휴 컨텍중",
                     isDisable = true,
