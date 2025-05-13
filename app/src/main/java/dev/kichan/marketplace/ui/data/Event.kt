@@ -5,5 +5,7 @@ data class Event(
     val title: String,
     val subTitle : String,
     val url : String,
-    val marketId: Long
+    val marketId: Long,
+    val isDownload: Boolean,
+    val onDownloadClick: () -> Unit,
 )

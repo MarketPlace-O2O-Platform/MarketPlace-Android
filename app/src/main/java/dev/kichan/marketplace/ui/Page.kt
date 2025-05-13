@@ -7,6 +7,8 @@ enum class Page(
     LocalApiTestPage(pageName = "Test1"),
     GoogleMapTestPage(pageName = "Test2"),
 
+    Splash(pageName = "스플래시"),
+
     Home(pageName = "홈"),
     Like(pageName = "공감"),
     Map(pageName = "지도"),

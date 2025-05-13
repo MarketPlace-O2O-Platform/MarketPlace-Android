@@ -78,7 +78,7 @@ fun EventList(
                             }
                             .fillParentMaxSize(0.8f)
                             .aspectRatio(1f / 1),
-                        event = it
+                        event = it,
                     )
                 }
             }

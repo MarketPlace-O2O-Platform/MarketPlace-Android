@@ -6,6 +6,7 @@ import dev.kichan.marketplace.model.data.Member.SaveFCMTokenReq
 import dev.kichan.marketplace.model.data.ResponseTemplate
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
+import dev.kichan.marketplace.model.data.login.MemberLoginRes
 import dev.kichan.marketplace.model.removeAuthToken
 import dev.kichan.marketplace.model.service.MemberService
 import retrofit2.Response
@@ -23,7 +24,7 @@ class AuthRepositoryImpl(
         NetworkModule.updateToken(null)
     }
 
-    override suspend fun getMemberData(): Response<ResponseTemplate<LoginRes>>
+    override suspend fun getMemberData(): Response<ResponseTemplate<MemberLoginRes>>
         = service.getUserData()
 
     override suspend fun saveFCMToken(token: String): Response<ResponseTemplate<Unit>>

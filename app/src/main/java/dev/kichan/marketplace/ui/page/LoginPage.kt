@@ -52,6 +52,7 @@ fun LoginPage(
     val context = LocalContext.current
     val state = authViewModel.loginState
 
+    var isSaveToken by remember { mutableStateOf(false) }
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
@@ -66,16 +67,20 @@ fun LoginPage(
         authViewModel.login(
             id = id,
             password = password,
+            isSaveToken = isSaveToken
         )
     }
 
     when (state) {
         is LoginUiState.Error -> {
-            Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+            if (state.message.isNotEmpty()) {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+            }
         }
+
         LoginUiState.Idle -> {}
         LoginUiState.Loading -> {}
-        LoginUiState.Success -> {
+        is LoginUiState.Success -> {
             navController.popBackStack()
             navController.navigate(Page.Main.name)
         }
@@ -317,18 +322,11 @@ fun LoginPage(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = false, onCheckedChange = {})
-                    Text(text = "학번(ID) 저장", fontSize = 14.sp)
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = false, onCheckedChange = {})
-                    Text(text = "비밀번호 저장", fontSize = 14.sp)
-                }
+                Checkbox(checked = isSaveToken, onCheckedChange = { isSaveToken = it })
+                Text(text = "비밀번호 저장", fontSize = 14.sp)
             }
         }
     }

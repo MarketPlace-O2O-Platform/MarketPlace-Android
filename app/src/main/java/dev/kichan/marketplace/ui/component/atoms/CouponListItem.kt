@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -122,9 +124,11 @@ fun CouponListItem(
                     ) {
                         Icon(
                             imageVector =
-                            if (!isMemberIssued) Icons.Default.FavoriteBorder
-                            else Download,
+                            if (isMemberIssued) Icons.Default.Favorite
+                            else Icons.Outlined.FavoriteBorder,
                             contentDescription = null
+
+                            //todo : 아이콘
                         )
                     }
                 }

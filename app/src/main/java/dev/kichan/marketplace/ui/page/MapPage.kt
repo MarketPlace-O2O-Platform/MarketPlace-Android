@@ -17,6 +17,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.HorizontalDivider
@@ -24,8 +25,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -90,6 +94,7 @@ fun MapPage(
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
     }
+    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     val onMoveCurrentPosition = {
         fusedLocationClient.lastLocation
@@ -106,8 +111,8 @@ fun MapPage(
             }
     }
 
-    LaunchedEffect(Unit) {
-        marketViewModel.getMarketByPosition(initialPosition)
+    LaunchedEffect(Unit, selectedCategory) {
+        marketViewModel.getMarketByPosition(initialPosition, selectedCategory)
     }
 
     Scaffold(
@@ -163,8 +168,8 @@ fun MapPage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.TopCenter),
-                        selectedCategory = LargeCategory.All,
-                        onSelected = { }
+                        selectedCategory = selectedCategory,
+                        onSelected = { selectedCategory = it }
                     )
 
                     IconButton(
@@ -176,7 +181,7 @@ fun MapPage(
                             .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Settings,
+                            imageVector = Icons.Default.LocationOn,
                             contentDescription = null,
                             tint = Color(0xff545454)
                         )
@@ -188,7 +193,7 @@ fun MapPage(
                             .padding(52.dp),
                         onClick = {
                             val position = cameraPositionState.position.target
-                            marketViewModel.getMarketByPosition(position)
+                            marketViewModel.getMarketByPosition(position, selectedCategory)
                         },
                         icon = Icons.Default.Menu,
                         title = "현 지도에서 검색",
