@@ -32,8 +32,14 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
 
     val selectedTabCouponList = when(selectedTab) {
         0 -> state.issuedCouponList
-        1 -> state.expiredCouponList
-        else -> state.usedCouponList
+        1 -> state.usedCouponList
+        else -> state.expiredCouponList
+    }
+
+    val selectedTabType = when(selectedTab) {
+        0 -> "ISSUED"
+        1 -> "USED"
+        else -> "EXPIRED"
     }
 
     LaunchedEffect(Unit) {
@@ -100,7 +106,7 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
             contentPadding = PaddingValues(vertical = 32.dp, horizontal = 20.dp)
         ) {
             items(items = selectedTabCouponList) { coupon ->
-                CouponItem(coupon)
+                CouponItem(coupon, selectedTabType)
             }
         }
     }

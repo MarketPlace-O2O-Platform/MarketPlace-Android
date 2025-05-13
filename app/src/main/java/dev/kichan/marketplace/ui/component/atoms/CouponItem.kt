@@ -46,9 +46,11 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun CouponItem(
     coupon: IssuedCouponRes,
+    type: String,
     modifier: Modifier = Modifier
 ) {
     val darkGrey = Color(0xFF303030)
+    val lightGray = Color(0xFFBFBFBF)
     val dashColor = Color.LightGray
 
     Row(
@@ -57,7 +59,7 @@ fun CouponItem(
             .fillMaxWidth()
     ) {
         AsyncImage(
-            model = NetworkModule.getImageModel(LocalContext.current, faker.company().logo()),
+            model = NetworkModule.getImageModel(LocalContext.current, NetworkModule.getImage(coupon.thumbnail)),
             contentDescription = null,
             modifier = Modifier
                 .width(100.dp)
@@ -103,7 +105,7 @@ fun CouponItem(
             modifier = Modifier
                 .width(72.dp)
                 .fillMaxHeight()
-                .background(darkGrey)
+                .background(if(type == "ISSUED") darkGrey else lightGray)
         ) {
             Canvas(modifier = Modifier.matchParentSize()) {
                 val dash = 8.dp.toPx()
@@ -123,7 +125,7 @@ fun CouponItem(
                 drawCircle(Color.White, radius = r, center = Offset(0f, size.height))
             }
             Text(
-                text = "사용 가능",
+                text = if(type == "ISSUED") "사용 가능" else if(type == "USED") "사용 완료" else "기간 만료",
                 fontSize = 13.sp,
                 lineHeight = 30.sp,
                 fontFamily = PretendardFamily,
@@ -137,73 +139,3 @@ fun CouponItem(
         }
     }
 }
-
-//@Composable
-//fun CouponItem(coupon : IssuedCouponRes) {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(100.dp)
-//
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .matchParentSize(),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            AsyncImage(
-//                model = NetworkModule.getImageModel(LocalContext.current, faker.company().logo()),
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .width(100.dp)
-//                    .height(100.dp)
-//                    .clip(RoundedCornerShape(4.dp)),
-//                contentScale = ContentScale.Crop
-//            )
-//            Spacer(modifier = Modifier.width(12.dp))
-//            Column {
-//                Text(
-//                    text = "70%",
-//                    fontSize = 28.sp, // 글자 크기
-//                    lineHeight = 42.sp, // 줄 높이
-//                    fontFamily = PretendardFamily, // Pretendard 폰트 적용
-//                    fontWeight = FontWeight(600), // FontWeight 값 600을 SemiBold로 변경
-//                    color = Color(0xFF121212),
-//                )
-//                Text(
-//                    text = coupon.couponName,
-//                    fontSize = 15.sp,
-//                    lineHeight = 24.sp,
-//                    fontFamily = PretendardFamily,
-//                    fontWeight = FontWeight(600),
-//                    color = Color(0xFF121212),
-//                )
-//                Spacer(modifier = Modifier.height(8.dp))
-//                Text(
-//                    text = coupon.deadLine,
-//                    fontSize = 13.sp,
-//                    lineHeight = 22.sp,
-//                    fontFamily = PretendardFamily,
-//                    fontWeight = FontWeight(400),
-//                    color = Color(0xFF545454),
-//                )
-//            }
-//
-//            Spacer(modifier = Modifier.weight(1f))
-//
-//            // Right button or tag
-//            Text(
-//                text = "사용가능",
-//                fontSize = 13.sp,
-//                lineHeight = 30.sp,
-//                fontFamily = PretendardFamily,
-//                fontWeight = FontWeight(700),
-//                color = Color(0xFFFFFFFF),
-//                letterSpacing = 0.26.sp,
-//                modifier = Modifier
-//                    .align(Alignment.CenterVertically)
-//                    .padding(end = 20.dp)
-//            )
-//        }
-//    }
-//}
