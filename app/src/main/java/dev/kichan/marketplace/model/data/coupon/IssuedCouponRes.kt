@@ -3,10 +3,11 @@ package dev.kichan.marketplace.model.data.coupon
 import com.google.gson.annotations.SerializedName
 
 data class IssuedCouponRes(
+    @SerializedName("memberCouponId") val id: Long,
     val couponId: Long,
+    val thumbnail: String,
     val couponName: String,
-    @SerializedName("couponDescription") val description: String?,
+    val description: String?,
     val deadLine: String,
-    val isAvailable: Boolean,
-    val isMemberIssued: Boolean
+    @SerializedName("used") val isUsed: Boolean
 )

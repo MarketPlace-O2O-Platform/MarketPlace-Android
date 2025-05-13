@@ -156,12 +156,6 @@ fun MarketDetailPage(
                         val list = response.body()?.response?.couponResDtos ?: emptyList()
                         coupons.clear()
                         coupons.addAll(list)
-
-                        // ✅ 로그 출력
-                        println("✅ marketId=$id 쿠폰 ${list.size}개 불러옴")
-                        list.forEach {
-                            println("→ 쿠폰 이름: ${it.couponName}, 사용 가능: ${it.isAvailable}, 마감일: ${it.deadLine}")
-                        }
                     } else {
                         println("❌ 쿠폰 API 실패: ${response.errorBody()?.string()}")
                     }
@@ -182,14 +176,6 @@ fun MarketDetailPage(
     var isCouponDialogShow by remember { mutableStateOf(false) }
     var selectedCoupon by remember { mutableStateOf<IssuedCouponRes?>(null) }
     // 예시용 임시 쿠폰 데이터 (실제 데이터가 있다면 그 데이터를 사용)
-    val sampleCoupon = IssuedCouponRes(
-        couponId = 101,
-        couponName = "스트리트 치킨 30% 할인",
-        description = "매장에서 사용 가능",
-        deadLine = "2025-03-21T23:59:59.999",
-        isAvailable =true,
-        isMemberIssued = true
-    )
 
     Scaffold(
         topBar = {

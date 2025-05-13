@@ -90,8 +90,9 @@ fun PreviewDetailCoupon() {
         couponName = "스트리트 치킨 30% 할인",
         description = "매장에서 사용 가능",
         deadLine = "2025-03-21T23:59:59.999",
-        isAvailable =true,
-        isMemberIssued = true
+        thumbnail = "",
+        id = 1L,
+        isUsed = false
     )
     DetailCoupon(
         coupon = sampleCoupon,
