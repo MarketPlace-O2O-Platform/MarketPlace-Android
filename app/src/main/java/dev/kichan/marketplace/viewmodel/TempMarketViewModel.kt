@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.like.TempMarketRes
 import dev.kichan.marketplace.model.repository.CheerRepository
@@ -16,6 +17,7 @@ import kotlinx.coroutines.withContext
 data class LikePageUiState(
     val tempMarkets : List<TempMarketRes> = emptyList(),
     val cheerTempMarkets : List<TempMarketRes> = emptyList(),
+    val searchTempMarket: List<TempMarketRes> = emptyList(),
     val isLoading: Boolean = false
 )
 
@@ -55,6 +57,23 @@ class TempMarketViewModel : ViewModel() {
             likePageState = likePageState.copy(
                 tempMarkets = likePageState.tempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
                 cheerTempMarkets = likePageState.cheerTempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
+            )
+        }
+    }
+
+    fun searchTempMarket(key : String) {
+        likePageState = likePageState.copy(isLoading = true)
+
+        viewModelScope.launch {
+            val res = tempMarketRepo.getMarketSearch(key)
+            if(!res.isSuccessful) {
+                return@launch
+            }
+
+            val body = res.body()!!
+            likePageState = likePageState.copy(
+                searchTempMarket = body.response.marketResDtos,
+                isLoading = false
             )
         }
     }

@@ -64,6 +64,9 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
     LaunchedEffect(selectedCategory) {
         tempMarketViewModel.getTempMarket(selectedCategory);
     }
+    LaunchedEffect(searchKey) {
+        tempMarketViewModel.searchTempMarket(searchKey)
+    }
 
     Scaffold(
         bottomBar = {
@@ -173,8 +176,8 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
                     }
                 }
             } else {
-                item {
-                    Text("대충 검색")
+                items(tempMarketState.searchTempMarket) {
+                    Text(it.toString())
                 }
             }
         }
