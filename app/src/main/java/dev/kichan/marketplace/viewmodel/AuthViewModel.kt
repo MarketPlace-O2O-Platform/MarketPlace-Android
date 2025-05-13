@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import com.github.javafaker.Bool
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.login.LoginReq
 import dev.kichan.marketplace.model.data.login.LoginRes
@@ -51,6 +52,7 @@ class AuthViewModel(private val application: Application = Application()) :
     fun login(
         id: String,
         password: String,
+        isSaveToken: Boolean,
     ) {
         viewModelScope.launch {
             try {
@@ -65,7 +67,9 @@ class AuthViewModel(private val application: Application = Application()) :
 
                 val token = res.body()!!.response
                 NetworkModule.updateToken(token)
-                saveAuthToken(application.applicationContext, token)
+                if(isSaveToken){
+                    saveAuthToken(application.applicationContext, token)
+                }
 
                 val memberData = getMemberData()
                 loginState = LoginUiState.Success(memberData)
