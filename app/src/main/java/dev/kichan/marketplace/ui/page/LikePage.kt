@@ -84,20 +84,11 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
 
     val getTempMarket = {
         CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getTempMarkets(20,)
+            val res = repository.getTempMarkets(20, selectedCategory)
             withContext(Dispatchers.Main) {
                 if (res.isSuccessful) {
                     tempMarkets.value = res.body()!!.response.marketResDtos
                 }
-            }
-        }
-    }
-
-    val getTempMArketSearch = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getMarketSearch(searchKey)
-            withContext(Dispatchers.Main) {
-
             }
         }
     }
@@ -121,6 +112,9 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
     LaunchedEffect(Unit) {
         getTempMarket();
         getCheerTempMarket();
+    }
+    LaunchedEffect(selectedCategory) {
+        getTempMarket();
     }
 
     Scaffold(
