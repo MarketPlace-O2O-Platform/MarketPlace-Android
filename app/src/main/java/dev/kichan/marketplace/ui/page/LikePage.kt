@@ -97,8 +97,8 @@ class TempMarketViewModel : ViewModel() {
         val res = withContext(Dispatchers.IO) { cheerRepo.cheer(id) }
         if (res.isSuccessful) {
             likePageState = likePageState.copy(
-                tempMarkets = likePageState.tempMarkets.map { if(it.id == id) it.copy(isCheer = !it.isCheer) else it.copy() },
-                cheerTempMarkets = likePageState.cheerTempMarkets.map { if(it.id == id) it.copy(isCheer = !it.isCheer) else it.copy() },
+                tempMarkets = likePageState.tempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
+                cheerTempMarkets = likePageState.cheerTempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
             )
         }
     }
