@@ -14,13 +14,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,14 +35,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import dev.kichan.marketplace.model.repository.CheerRepository
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.like.TempMarketRes
-import dev.kichan.marketplace.model.repository.MarkerLikeRepository
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -52,58 +47,7 @@ import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-data class LikePageUiState(
-    val tempMarkets : List<TempMarketRes> = emptyList(),
-    val cheerTempMarkets : List<TempMarketRes> = emptyList(),
-    val isLoading: Boolean = false
-)
-
-class TempMarketViewModel : ViewModel() {
-    private val tempMarketRepo = MarkerLikeRepository()
-    private val cheerRepo = CheerRepository()
-
-    var likePageState by mutableStateOf(LikePageUiState())
-
-    fun getCheerTempMarket() = viewModelScope.launch {
-        likePageState = likePageState.copy(isLoading = true)
-        val res = withContext(Dispatchers.IO) { tempMarketRepo.getCheerMarket() }
-        if (res.isSuccessful) {
-            likePageState = likePageState.copy(
-                cheerTempMarkets = res.body()!!.response.marketResDtos,
-                isLoading = false
-            )
-        }
-    }
-
-    fun getTempMarket(selectedCategory : LargeCategory) = viewModelScope.launch {
-        likePageState = likePageState.copy(isLoading = true)
-        val res = withContext(Dispatchers.IO) {
-            tempMarketRepo.getTempMarkets(100, selectedCategory)
-        }
-        if (res.isSuccessful) {
-            likePageState = likePageState.copy(
-                tempMarkets = res.body()!!.response.marketResDtos
-            )
-        }
-    }
-
-    fun onCheer(id: Long) = viewModelScope.launch {
-        likePageState = likePageState.copy(isLoading = true)
-        val res = withContext(Dispatchers.IO) { cheerRepo.cheer(id) }
-        if (res.isSuccessful) {
-            likePageState = likePageState.copy(
-                tempMarkets = likePageState.tempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
-                cheerTempMarkets = likePageState.cheerTempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
-            )
-        }
-    }
-}
-
+import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 
 @Composable
 fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMarketViewModel: TempMarketViewModel) {
@@ -112,9 +56,6 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
 
     var searchKey by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
-
-//    val tempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
-//    val cheerTempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
 
     LaunchedEffect(Unit) {
         tempMarketViewModel.getTempMarket(selectedCategory);
