@@ -22,6 +22,7 @@ import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.ReceivedCouponsScreen
+import dev.kichan.marketplace.ui.page.TempMarketViewModel
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.viewmodel.MarketViewModel
@@ -31,7 +32,8 @@ fun MyApp(
     singlethone: SingleTonViewModel = SingleTonViewModel(),
     authViewModel: AuthViewModel = AuthViewModel(), //todo: 언젠가는 DI 적용
     couponViewModel: CouponViewModel = CouponViewModel(),
-    marketViewModel: MarketViewModel = MarketViewModel()
+    marketViewModel: MarketViewModel = MarketViewModel(),
+    tempMarketViewModel: TempMarketViewModel = TempMarketViewModel()
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -54,7 +56,8 @@ fun MyApp(
             composable(Page.Like.name) {
                 LikePage(
                     navController = navController,
-                    authViewModel = authViewModel
+                    authViewModel = authViewModel,
+                    tempMarketViewModel = tempMarketViewModel
                 )
             }
             composable(Page.Map.name) {

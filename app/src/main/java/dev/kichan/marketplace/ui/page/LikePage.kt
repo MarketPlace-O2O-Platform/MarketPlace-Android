@@ -33,11 +33,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.model.repository.CheerRepository
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
@@ -50,7 +50,6 @@ import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
 import kotlinx.coroutines.CoroutineScope
@@ -58,63 +57,71 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Composable
-fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
-    val repository = MarkerLikeRepository()
-    val cheerRepository = CheerRepository()
+data class LikePageUiState(
+    val tempMarkets : List<TempMarketRes> = emptyList(),
+    val cheerTempMarkets : List<TempMarketRes> = emptyList(),
+    val isLoading: Boolean = false
+)
 
+class TempMarketViewModel : ViewModel() {
+    private val tempMarketRepo = MarkerLikeRepository()
+    private val cheerRepo = CheerRepository()
+
+    var likePageState by mutableStateOf(LikePageUiState())
+
+    fun getCheerTempMarket() = viewModelScope.launch {
+        likePageState = likePageState.copy(isLoading = true)
+        val res = withContext(Dispatchers.IO) { tempMarketRepo.getCheerMarket() }
+        if (res.isSuccessful) {
+            likePageState = likePageState.copy(
+                cheerTempMarkets = res.body()!!.response.marketResDtos,
+                isLoading = false
+            )
+        }
+    }
+
+    fun getTempMarket(selectedCategory : LargeCategory) = viewModelScope.launch {
+        likePageState = likePageState.copy(isLoading = true)
+        val res = withContext(Dispatchers.IO) {
+            tempMarketRepo.getTempMarkets(100, selectedCategory)
+        }
+        if (res.isSuccessful) {
+            likePageState = likePageState.copy(
+                tempMarkets = res.body()!!.response.marketResDtos
+            )
+        }
+    }
+
+    fun onCheer(id: Long) = viewModelScope.launch {
+        likePageState = likePageState.copy(isLoading = true)
+        val res = withContext(Dispatchers.IO) { cheerRepo.cheer(id) }
+        if (res.isSuccessful) {
+            likePageState = likePageState.copy(
+                tempMarkets = likePageState.tempMarkets.map { if(it.id == id) it.copy(isCheer = !it.isCheer) else it.copy() },
+                cheerTempMarkets = likePageState.cheerTempMarkets.map { if(it.id == id) it.copy(isCheer = !it.isCheer) else it.copy() },
+            )
+        }
+    }
+}
+
+
+@Composable
+fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMarketViewModel: TempMarketViewModel) {
     val authState = authViewModel.loginState
+    val tempMarketState = tempMarketViewModel.likePageState
 
     var searchKey by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
-    val tempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
-    val cheerTempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
-
-    val getCheerTempMarket = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getCheerMarket()
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    cheerTempMarkets.value = res.body()!!.response.marketResDtos
-                }
-            }
-        }
-    }
-
-    val getTempMarket = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = repository.getTempMarkets(20, selectedCategory)
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    tempMarkets.value = res.body()!!.response.marketResDtos
-                }
-            }
-        }
-    }
-
-    val onCheer: (Long) -> Unit = { id ->
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = cheerRepository.cheer(id)
-
-            withContext(Dispatchers.Main) {
-                if(res.isSuccessful) {
-                    getTempMarket();
-                    getCheerTempMarket();
-                }
-                else {
-//                    throw Exception(res.errorBody().toString())
-                }
-            }
-        }
-    }
+//    val tempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
+//    val cheerTempMarkets = remember { mutableStateOf<List<TempMarketRes>>(listOf()) }
 
     LaunchedEffect(Unit) {
-        getTempMarket();
-        getCheerTempMarket();
+        tempMarketViewModel.getTempMarket(selectedCategory);
+        tempMarketViewModel.getCheerTempMarket();
     }
     LaunchedEffect(selectedCategory) {
-        getTempMarket();
+        tempMarketViewModel.getTempMarket(selectedCategory);
     }
 
     Scaffold(
@@ -148,14 +155,14 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
                     Spacer(modifier = Modifier.height(12.dp))
                 }
                 item {
-                    if (cheerTempMarkets.value.isEmpty()) {
+                    if (tempMarketState.cheerTempMarkets.isEmpty()) {
                         EmptyMessage()
                     } else {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            items(items = cheerTempMarkets.value) {
+                            items(items = tempMarketState.cheerTempMarkets) {
                                 RequestCard(
                                     modifier = Modifier.width(284.dp),
                                     marketName = it.name,
@@ -164,7 +171,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
                                     isMyDone = it.isCheer,
                                     isRequestDone = it.dueDate == 0,
                                     duDate = it.dueDate,
-                                    onCheer = { onCheer(it.id) }
+                                    onCheer = { tempMarketViewModel.onCheer(it.id) }
                                 )
                             }
                         }
@@ -182,7 +189,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
-                items(tempMarkets.value.size / 2) {
+                items(tempMarketState.tempMarkets.size / 2) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -193,7 +200,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
                             ),
                         horizontalArrangement = Arrangement.spacedBy(11.dp)
                     ) {
-                        val market1 = tempMarkets.value[it * 2]
+                        val market1 = tempMarketState.tempMarkets[it * 2]
                         RequestCard(
                             modifier = Modifier
                                 .weight(1f),
@@ -203,11 +210,11 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
                             isMyDone = market1.isCheer,
                             isRequestDone = market1.dueDate == 0,
                             duDate = market1.dueDate,
-                            onCheer = { onCheer(market1.id) }
+                            onCheer = { tempMarketViewModel.onCheer(market1.id) }
                         )
 
-                        if (it * 2 + 1 < tempMarkets.value.size) {
-                            val market2 = tempMarkets.value[it * 2 + 1]
+                        if (it * 2 + 1 < tempMarketState.tempMarkets.size) {
+                            val market2 = tempMarketState.tempMarkets[it * 2 + 1]
                             RequestCard(
                                 modifier = Modifier
                                     .weight(1f),
@@ -217,7 +224,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel) {
                                 isMyDone = market2.isCheer,
                                 isRequestDone = market2.dueDate == 0,
                                 duDate = market2.dueDate,
-                                onCheer = { onCheer(market2.id) }
+                                onCheer = { tempMarketViewModel.onCheer(market2.id) }
                             )
                         } else {
                             Box(Modifier.weight(1f))

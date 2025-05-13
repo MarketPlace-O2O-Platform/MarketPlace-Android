@@ -18,6 +18,7 @@ import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.SingleTonViewModel
+import dev.kichan.marketplace.ui.page.TempMarketViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
     private val couponViewModel : CouponViewModel by viewModels()
     private val marketViewModel : MarketViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
+    private val tempMarketViewModel: TempMarketViewModel by viewModels()
 
     private fun getFCMToken() {
         FirebaseMessaging.getInstance().token
@@ -82,7 +84,8 @@ class MainActivity : ComponentActivity() {
                     singleTon,
                     authViewModel = authViewModel,
                     couponViewModel = couponViewModel,
-                    marketViewModel = marketViewModel
+                    marketViewModel = marketViewModel,
+                    tempMarketViewModel = tempMarketViewModel
                 )
             }
         }
