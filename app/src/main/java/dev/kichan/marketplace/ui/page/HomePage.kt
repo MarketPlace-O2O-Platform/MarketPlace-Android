@@ -31,6 +31,7 @@ import dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.ui.data.CouponBoxProps
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.CouponViewModel
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -100,7 +101,7 @@ fun HomePage(
                 item {
                     CouponBoxList(
                         navController = navController,
-                        title = "Top 20 인기 페이지",
+                        title = "Top 20 인기 | 멤버십 혜택",
                         couponList = state.popularCoupons.map {
                             CouponBoxProps(
                                 id = it.id.toString(),
@@ -118,9 +119,11 @@ fun HomePage(
                 }
 //                // 최신 제휴 이벤트
                 item {
+                    val now = LocalDate.now()
+
                     CouponBoxList(
                         navController = navController,
-                        title = "이번달 신규 이벤트",
+                        title = "${now.monthValue}월 신규 | 멤버십 혜택",
                         couponList = state.latestCoupons.map {
                             CouponBoxProps(
                                 id = it.id.toString(),

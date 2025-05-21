@@ -16,6 +16,7 @@ import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.CouponViewModel
+import java.time.LocalDate
 
 @Composable
 fun CouponListPage(
@@ -23,8 +24,9 @@ fun CouponListPage(
     couponViewModel: CouponViewModel = CouponViewModel(),
     type: String,
 ) {
+    val now = LocalDate.now()
     val state = couponViewModel.couponListPageState
-    val title = if(type == "popular") "인기 쿠폰" else "x월 신규" //todo: 월 추가
+    val title = if(type == "popular") "인기 쿠폰" else "${now.monthValue}월 신규"
 
     LaunchedEffect(Unit) {
         couponViewModel.getCouponList(type)

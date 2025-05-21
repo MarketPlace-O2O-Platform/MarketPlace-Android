@@ -27,11 +27,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.faker
@@ -123,12 +125,9 @@ fun CouponListItem(
                         enabled = !isMemberIssued
                     ) {
                         Icon(
-                            imageVector =
-                            if (isMemberIssued) Icons.Default.Favorite
-                            else Icons.Outlined.FavoriteBorder,
+                            painter = painterResource(R.drawable.ic_download),
+                            tint = if(isMemberIssued) Color(0x814B4B4B) else Color(0xff4B4B4B),
                             contentDescription = null
-
-                            //todo : 아이콘
                         )
                     }
                 }
