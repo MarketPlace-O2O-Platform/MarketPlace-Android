@@ -23,6 +23,7 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.ui.component.atoms.CouponItem
+import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
@@ -105,8 +106,15 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 32.dp, horizontal = 20.dp)
         ) {
-            items(items = selectedTabCouponList) { coupon ->
-                CouponItem(coupon, selectedTabType)
+            if(selectedTabCouponList.isNotEmpty()) {
+                items(items = selectedTabCouponList) { coupon ->
+                    CouponItem(coupon, selectedTabType)
+                }
+            }
+            else {
+                item {
+                    EmptyMessage(message = "쿠폰이 없습니다.")
+                }
             }
         }
     }
