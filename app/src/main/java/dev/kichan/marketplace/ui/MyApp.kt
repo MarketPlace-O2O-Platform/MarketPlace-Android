@@ -91,7 +91,7 @@ fun MyApp(
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
                     Log.d("eventDetail", "id : $id")
-                    MarketDetailPage(navController, id.toLong())
+                    MarketDetailPage(navController, marketViewModel, id.toLong())
                 }
             }
         }

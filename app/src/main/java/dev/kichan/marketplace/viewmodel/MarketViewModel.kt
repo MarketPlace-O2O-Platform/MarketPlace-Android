@@ -17,8 +17,8 @@ import kotlinx.coroutines.withContext
 import com.google.android.gms.maps.model.LatLng
 import dev.kichan.marketplace.model.data.kakao.adress.Address
 import dev.kichan.marketplace.model.data.kakao.adress.LotNumberAddress
+import dev.kichan.marketplace.model.data.market.MarketDetailRes
 import kotlinx.coroutines.delay
-import kotlin.math.log
 
 data class MarketPageUiState(
     val marketData: List<MarketRes> = emptyList(),
@@ -38,6 +38,11 @@ data class MyPageUiState(
     val isLoading: Boolean = false,
 )
 
+data class MarketDetailPageUiState(
+    val marketData : MarketDetailRes? = null,
+    val isLoading: Boolean = false
+)
+
 class MarketViewModel : ViewModel() {
     private val marketRepository = MarketRepository()
     private val favoriteRepository = FavoritesRepository()
@@ -46,8 +51,9 @@ class MarketViewModel : ViewModel() {
     var marketPageUiState by mutableStateOf(MarketPageUiState())
     var mapPageState by mutableStateOf(MapPageUiState())
     var myPageUiState by mutableStateOf(MyPageUiState())
+    var marketDetailPageUiState by mutableStateOf(MarketDetailPageUiState())
 
-    fun getMarketData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
+    fun getMarketsData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
         viewModelScope.launch {
             marketPageUiState = marketPageUiState.copy(isLoading = true, marketData = if(isInit) emptyList() else marketPageUiState.marketData)
 
@@ -80,6 +86,23 @@ class MarketViewModel : ViewModel() {
                     errorMessage = e.message ?: "알 수 없는 오류"
                 )
             }
+        }
+    }
+
+    fun getMarket(id: Long) {
+        marketDetailPageUiState = marketDetailPageUiState.copy(isLoading = true)
+
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                marketRepository.getMarket(id)
+            }
+
+            if(!res.isSuccessful) {
+                throw Exception("오류")
+            }
+
+            val body = res.body()!!
+            marketDetailPageUiState = marketDetailPageUiState.copy(marketData = body.response, isLoading = false)
         }
     }
 

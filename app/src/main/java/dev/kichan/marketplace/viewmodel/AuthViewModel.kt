@@ -67,9 +67,7 @@ class AuthViewModel(private val application: Application = Application()) :
 
                 val token = res.body()!!.response
                 NetworkModule.updateToken(token)
-                if(isSaveToken){
-                    saveAuthToken(application.applicationContext, token)
-                }
+                saveAuthToken(application.applicationContext, token)
 
                 val memberData = getMemberData()
                 loginState = LoginUiState.Success(memberData)
