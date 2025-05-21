@@ -1,9 +1,12 @@
 package dev.kichan.marketplace.ui.page
 
 import Carbon_bookmark
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -332,6 +335,13 @@ fun BusinessInfoRow(label: String, value: String) {
 
 @Composable
 fun KakaoMapSearchBox(marketName: String) {
+    val context = LocalContext.current
+
+    val onClick = {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://search?q=${marketName}"))
+        context.startActivity(intent)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -339,7 +349,8 @@ fun KakaoMapSearchBox(marketName: String) {
             .height(48.dp)
             .clip(RoundedCornerShape(12.dp))
             .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
-            .background(Color.White),
+            .background(Color.White)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
