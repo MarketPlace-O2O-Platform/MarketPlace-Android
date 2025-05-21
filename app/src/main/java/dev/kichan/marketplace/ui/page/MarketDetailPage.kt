@@ -83,41 +83,6 @@ fun ImageSlider(imageList: List<String>) {
 }
 
 @Composable
-fun KakaoMapSearchBox() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .height(48.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
-            .background(Color.White),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.search),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(start = 12.dp)
-                .size(20.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = buildAnnotatedString {
-                append("카카오맵에서 ")
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("콜드케이스 트리플")
-                }
-                append(" 인하대점 검색")
-            },
-            fontSize = 14.sp,
-            color = Color(0xFF545454),
-            fontWeight = FontWeight.Normal
-        )
-    }
-}
-
-@Composable
 fun MarketDetailPage(
     navController: NavHostController,
     marketViewModel: MarketViewModel,
@@ -151,38 +116,39 @@ fun MarketDetailPage(
             item {
                 ImageSlider(state.marketData.imageResList.map { NetworkModule.getImage(it.name) })
             }
-//            item { MainInfo(data) }
-//            item {
-//                HorizontalDivider(
-//                    Modifier
-//                        .height(8.dp)
-//                        .background(Color(0xffeeeee))
-//                )
-//            }
-//            // 쿠폰 섹션: "이벤트 쿠폰" 타이틀과 함께 DetailCoupon 표시
-//            item {
-//                Column(
-//                    modifier = Modifier.padding(20.dp)
-//                ) {
-//                    Text(
-//                        "이벤트 쿠폰",
-//                        fontFamily = PretendardFamily,
-//                        fontWeight = FontWeight.SemiBold,
-//                        fontSize = 14.sp
-//                    )
-//                    Spacer(modifier = Modifier.height(20.dp))
-//
-//                    // ✅ coupons 리스트가 비어있지 않은 경우에만 LazyRow로 쿠폰들 보여주기
-//                    if (coupons.isNotEmpty()) {
-//                        LazyRow(
-//                            modifier = Modifier.fillMaxWidth(),
-//                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-//                            contentPadding = PaddingValues(horizontal = 8.dp)
-//                        ) {
-//                            items(coupons) { coupon ->
-//                                // 화면 너비만큼 쿠폰 하나가 차지하도록
-//                                val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-//
+            item { MainInfo(state.marketData) }
+            item {
+                HorizontalDivider(
+                    Modifier
+                        .height(8.dp)
+                        .background(Color(0xffeeeee))
+                )
+            }
+
+            item {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Text(
+                        "이벤트 쿠폰",
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    if (state.couponList.isNotEmpty()) {
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp)
+                        ) {
+                            items(state.couponList) { coupon ->
+                                // 화면 너비만큼 쿠폰 하나가 차지하도록
+                                val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+                                Text("대충 쿠폰", modifier = Modifier.width(screenWidth))
+
 //                                DetailCoupon(
 //                                    coupon = coupon,
 //                                    modifier = Modifier.width(screenWidth),
@@ -191,29 +157,27 @@ fun MarketDetailPage(
 //                                        isCouponDialogShow = true
 //                                    }
 //                                )
-//                            }
-//                        }
-//                    } else {
-//                        // ✅ 데이터가 없을 때는 "쿠폰이 없습니다" 메시지 (옵션)
-//                        Text(
-//                            "사용 가능한 쿠폰이 없습니다.",
-//                            fontFamily = PretendardFamily,
-//                            fontSize = 14.sp,
-//                            color = Color.Gray
-//                        )
-//                    }
-//                }
-//            }
-//
-//            item {
-//                HorizontalDivider(
-//                    Modifier
-//                        .height(8.dp)
-//                        .background(Color(0xffeeeee))
-//                )
-//            }
-//            item { BusinessInfo(data) }
-//            item { KakaoMapSearchBox() }
+                            }
+                        }
+                    } else {
+                        Text(
+                            "매장에 등록된 쿠폰이 없습니다.",
+                            fontFamily = PretendardFamily,
+                            fontSize = 14.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+            item {
+                HorizontalDivider(
+                    Modifier
+                        .height(8.dp)
+                        .background(Color(0xffeeeee))
+                )
+            }
+            item { BusinessInfo(state.marketData) }
+            item { KakaoMapSearchBox(state.marketData.name) }
 //        }
     }
 
@@ -284,79 +248,123 @@ fun MarketDetailPage(
     }
 }
 
-//@Composable
-//private fun BusinessInfo(data: MutableState<MarketDetailRes?>) {
-//    Column(
-//        modifier = Modifier.padding(20.dp)
-//    ) {
-//        Text(
-//            text = "영업정보",
-//            fontFamily = PretendardFamily,
-//            fontWeight = FontWeight.SemiBold,
-//            fontSize = 14.sp
-//        )
-//        Spacer(modifier = Modifier.height(12.dp))
-//        BusinessInfoRow("시간", data.value!!.operationHours)
-//        BusinessInfoRow("휴무일", data.value!!.closedDays)
-//        BusinessInfoRow("매장 전화번호", data.value!!.phoneNumber)
-//        BusinessInfoRow("주소", data.value!!.address)
-//    }
-//}
-//
-//@Composable
-//private fun MainInfo(data: MutableState<MarketDetailRes?>) {
-//    Row(
-//        modifier = Modifier.padding(20.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier.weight(1f)
-//        ) {
-//            Text(
-//                text = data.value!!.name,
-//                fontSize = 20.sp,
-//                fontWeight = FontWeight.SemiBold,
-//                fontFamily = PretendardFamily
-//            )
-//            Spacer(modifier = Modifier.height(8.dp))
-//            Text(
-//                text = data.value!!.description,
-//                fontSize = 15.sp,
-//                fontWeight = FontWeight.Medium,
-//                fontFamily = PretendardFamily,
-//                color = Color(0xff7D7D7D)
-//            )
-//        }
-//        Spacer(modifier = Modifier.width(12.dp))
-//        IconButton({ /* 즐겨찾기 처리 */ }) {
-//            Icon(imageVector = Carbon_bookmark, contentDescription = null)
-//        }
-//    }
-//}
-//
-//@Composable
-//fun BusinessInfoRow(label: String, value: String) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 4.dp),
-//        verticalAlignment = Alignment.Top
-//    ) {
-//        Text(
-//            text = label,
-//            color = Color(0xFF868686),
-//            fontSize = 14.sp,
-//            modifier = Modifier.width(100.dp)
-//        )
-//        Column {
-//            Text(
-//                text = value,
-//                color = Color(0xFF5E5E5E),
-//                fontSize = 14.sp
-//            )
-//        }
-//    }
-//}
-//
+
+@Composable
+private fun MainInfo(data: MarketDetailRes) {
+    Row(
+        modifier = Modifier.padding(20.dp)
+    ) {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = data.name,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = PretendardFamily
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = data.description,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = PretendardFamily,
+                color = Color(0xff7D7D7D)
+            )
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+
+        var isBook by remember { mutableStateOf(false) }
+
+        //todo: 즐겨찾기 처리
+        IconButton(
+            onClick = { isBook = !isBook }
+        ) {
+            Icon(
+                painter = painterResource(if(isBook) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@Composable
+private fun BusinessInfo(data: MarketDetailRes) {
+    Column(
+        modifier = Modifier.padding(20.dp)
+    ) {
+        Text(
+            text = "영업정보",
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        BusinessInfoRow("시간", data.operationHours)
+        BusinessInfoRow("휴무일", data.closedDays)
+        BusinessInfoRow("매장 전화번호", data.phoneNumber)
+        BusinessInfoRow("주소", data.address)
+    }
+}
+
+@Composable
+fun BusinessInfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = label,
+            color = Color(0xFF868686),
+            fontSize = 14.sp,
+            modifier = Modifier.width(100.dp)
+        )
+
+        Text(
+            text = value,
+            color = Color(0xFF5E5E5E),
+            fontSize = 14.sp
+        )
+    }
+}
+
+@Composable
+fun KakaoMapSearchBox(marketName: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .height(48.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
+            .background(Color.White),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.search),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(start = 12.dp)
+                .size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = buildAnnotatedString {
+                append("카카오맵에서 ")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(marketName)
+                }
+                append(" 검색")
+            },
+            fontSize = 14.sp,
+            color = Color(0xFF545454),
+            fontWeight = FontWeight.Normal
+        )
+    }
+}
+
 //@Preview(showBackground = true)
 //@Composable
 //fun DetailPagePreview() {
