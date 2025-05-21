@@ -45,7 +45,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import dev.kichan.marketplace.ui.component.atoms.DetailCoupon
-import dev.kichan.marketplace.model.data.CouponResponse
 import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
 
 
@@ -79,11 +78,6 @@ fun ImageSlider(imageList: List<String>) {
             )
         }
     }
-}
-
-@Composable
-fun DetailContent() {
-    // 기타 상세 내용
 }
 
 @Composable
