@@ -32,35 +32,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketDetailRes
-import dev.kichan.marketplace.model.service.MarketService
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import dev.kichan.marketplace.ui.component.atoms.DetailCoupon
-import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
-
-
 import androidx.compose.material3.*
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
-
-import androidx.compose.ui.text.style.TextAlign
-
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
-import dev.kichan.marketplace.model.service.CouponService
+import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.viewmodel.MarketViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -76,7 +74,7 @@ fun MarketDetailPage(
         marketViewModel.getMarketCoupon(id)
     }
 
-    if(state.marketData == null) return
+    if (state.marketData == null) return
 
     // 쿠폰 받기 다이얼로그 상태 변수
     Scaffold(
@@ -125,19 +123,20 @@ fun MarketDetailPage(
                             contentPadding = PaddingValues(horizontal = 8.dp)
                         ) {
                             items(state.couponList) { coupon ->
-                                // 화면 너비만큼 쿠폰 하나가 차지하도록
                                 val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-                                Text("대충 쿠폰", modifier = Modifier.width(screenWidth))
+                                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                val parsedDate =
+                                    LocalDate.parse(coupon.deadline.substring(0, 10), formatter)
+                                val expireDate =
+                                    parsedDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일까지"))
 
-//                                DetailCoupon(
-//                                    coupon = coupon,
-//                                    modifier = Modifier.width(screenWidth),
-//                                    onClick = {
-//                                        selectedCoupon = coupon
-//                                        isCouponDialogShow = true
-//                                    }
-//                                )
+                                TicketCoupon(
+                                    title = coupon.name,
+                                    expireDate = expireDate,
+                                    width = screenWidth - PAGE_HORIZONTAL_PADDING * 2,
+                                    onClick = {},
+                                )
                             }
                         }
                     } else {
@@ -160,7 +159,7 @@ fun MarketDetailPage(
             item { BusinessInfo(state.marketData) }
             item { KakaoMapSearchBox(state.marketData.name) }
 //        }
-    }
+        }
 
 //    // 쿠폰 받기 다이얼로그
 //    if (isCouponDialogShow && selectedCoupon != null) {
@@ -284,9 +283,110 @@ private fun MainInfo(data: MarketDetailRes) {
             onClick = { isBook = !isBook }
         ) {
             Icon(
-                painter = painterResource(if(isBook) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
+                painter = painterResource(if (isBook) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
                 contentDescription = null
             )
+        }
+    }
+}
+
+@Composable
+fun TicketCoupon(
+    title: String,
+    expireDate: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    width: Dp,
+    cutRadius: Dp = 10.dp,
+    lineFraction: Float = 0.75f,
+) {
+    val dark = Color(0xFF2B2B2B)
+    val white = Color.White
+    val downloadWidth = 90.dp
+
+    val ticketShape = remember(cutRadius, lineFraction) {
+        object : Shape {
+            override fun createOutline(
+                size: Size,
+                layoutDirection: LayoutDirection,
+                density: Density
+            ): Outline {
+                val r = with(density) { cutRadius.toPx() }
+                val downloadWidthPx = with(density) { downloadWidth.toPx() }
+                val x = size.width - downloadWidthPx
+
+                val p = Path().apply {
+                    addRect(Rect(0f, 0f, size.width, size.height))
+
+                    addOval(Rect(x - r, -r, x + r, r))
+                    addOval(Rect(x - r, size.height - r, x + r, size.height + r))
+
+                    fillType = PathFillType.EvenOdd
+                }
+                return Outline.Generic(p)
+            }
+        }
+    }
+
+    Row(
+        modifier
+            .width(width)
+            .height(88.dp)
+            .clip(ticketShape)
+            .background(dark)
+            .clickable { onClick() }
+
+            .drawBehind {
+                val dashW = 4.dp.toPx()
+                val dashGap = 6.dp.toPx()
+                val stroke = 2.dp.toPx()
+                val downloadWidthPx = downloadWidth.toPx()
+                val x = size.width - downloadWidthPx
+                drawLine(
+                    color = white,
+                    start = Offset(x, 0f + cutRadius.toPx()),
+                    end = Offset(x, size.height - cutRadius.toPx()),
+                    strokeWidth = stroke,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashW, dashGap))
+                )
+            }
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(3f)
+                .fillMaxHeight()
+                .padding(start = 20.dp, end = 12.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                color = white,
+                fontFamily = PretendardFamily,
+                maxLines = 1
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = expireDate,
+                style = MaterialTheme.typography.bodyMedium.copy(color = white)
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .width(downloadWidth)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_download),
+                contentDescription = "download",
+                modifier = Modifier.size(20.dp),
+                tint = white
+            )
+            Spacer(Modifier.height(8.dp))
+            Text("쿠폰받기", color = white)
         }
     }
 }
