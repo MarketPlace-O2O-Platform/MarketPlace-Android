@@ -126,8 +126,8 @@ fun MarketDetailPage(
 
     LaunchedEffect(Unit) {
         marketViewModel.getMarket(id)
+        marketViewModel.getMarketCoupon(id)
     }
-    Text(state.marketData.toString())
 //    val getCoupons = {
 //        CoroutineScope(Dispatchers.IO).launch {
 //            try {
@@ -153,12 +153,9 @@ fun MarketDetailPage(
 //        }
 //    }
 //
-//    LaunchedEffect(Unit) {
-//        getData()
-//        getCoupons()
-//    }
-//    if (data.value == null) return
-//
+    if(state.marketData == null) return
+
+    Text(state.couponList.toString())
 //    // 쿠폰 받기 다이얼로그 상태 변수
 //    var isCouponDialogShow by remember { mutableStateOf(false) }
 //    var selectedCoupon by remember { mutableStateOf<IssuedCouponRes?>(null) }

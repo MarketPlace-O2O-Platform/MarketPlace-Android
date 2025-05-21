@@ -15,9 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.google.android.gms.maps.model.LatLng
+import dev.kichan.marketplace.model.data.coupon.CouponRes
 import dev.kichan.marketplace.model.data.kakao.adress.Address
 import dev.kichan.marketplace.model.data.kakao.adress.LotNumberAddress
 import dev.kichan.marketplace.model.data.market.MarketDetailRes
+import dev.kichan.marketplace.model.repository.CouponOwnerRepository
 import kotlinx.coroutines.delay
 
 data class MarketPageUiState(
@@ -40,6 +42,7 @@ data class MyPageUiState(
 
 data class MarketDetailPageUiState(
     val marketData : MarketDetailRes? = null,
+    val couponList : List<CouponRes> = emptyList(),
     val isLoading: Boolean = false
 )
 
@@ -47,6 +50,7 @@ class MarketViewModel : ViewModel() {
     private val marketRepository = MarketRepository()
     private val favoriteRepository = FavoritesRepository()
     private val kakaoService = NetworkModule.getKakaoService()
+    private val couponOwnerRepository = CouponOwnerRepository()
 
     var marketPageUiState by mutableStateOf(MarketPageUiState())
     var mapPageState by mutableStateOf(MapPageUiState())
@@ -103,6 +107,25 @@ class MarketViewModel : ViewModel() {
 
             val body = res.body()!!
             marketDetailPageUiState = marketDetailPageUiState.copy(marketData = body.response, isLoading = false)
+        }
+    }
+
+    fun getMarketCoupon(id: Long) {
+        marketDetailPageUiState = marketDetailPageUiState.copy(isLoading = true)
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                couponOwnerRepository.getAllCouponByMarket(id.toInt(), 100)
+            }
+
+            if(!res.isSuccessful) {
+                throw Exception("쿠폰 조회 에러")
+            }
+
+            val body = res.body()!!
+            marketDetailPageUiState = marketDetailPageUiState.copy(
+                couponList = body.response.couponResDtos,
+                isLoading = false
+            )
         }
     }
 
