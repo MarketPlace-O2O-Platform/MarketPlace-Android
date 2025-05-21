@@ -107,7 +107,7 @@ fun HomeAppBar(
 }
 
 @Composable
-fun NavAppBar(title: String, onBack: () -> Unit) {
+fun NavAppBar(title: String, iconColor : Color = Color(0xff545454), onBack: () -> Unit) {
     Box(
         modifier = appBarModifier,
         contentAlignment = Alignment.Center
@@ -122,7 +122,7 @@ fun NavAppBar(title: String, onBack: () -> Unit) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = null,
-                tint = Color(0xff545454),
+                tint = iconColor,
             )
         }
         Text(text = title, style = titleStyle)
@@ -133,7 +133,7 @@ fun NavAppBar(title: String, onBack: () -> Unit) {
 @Composable
 fun NavAppBarPreview() {
     MarketPlaceTheme {
-        NavAppBar("제에에에목", {})
+        NavAppBar("제에에에목") {}
     }
 }
 

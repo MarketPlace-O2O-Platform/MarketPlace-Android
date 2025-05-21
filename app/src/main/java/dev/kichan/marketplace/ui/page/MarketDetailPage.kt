@@ -56,6 +56,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import dev.kichan.marketplace.model.service.CouponService
+import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.viewmodel.MarketViewModel
 
 
@@ -67,11 +68,11 @@ fun ImageSlider(imageList: List<String>) {
             .height(280.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(imageList) {
+        items(imageList) { url ->
             AsyncImage(
                 modifier = Modifier.size(280.dp),
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(it)
+                    .data(url)
                     .crossfade(true)
                     .build(),
                 contentDescription = "이미지",
@@ -128,71 +129,28 @@ fun MarketDetailPage(
         marketViewModel.getMarket(id)
         marketViewModel.getMarketCoupon(id)
     }
-//    val getCoupons = {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            try {
-//                val service = NetworkModule.getService(CouponService::class.java)
-//                val response = service.getCouponList(
-//                    marketId = id,
-//                    lastCouponId = null, // 첫 페이지
-//                    pageSize = 10
-//                )
-//
-//                withContext(Dispatchers.Main) {
-//                    if (response.isSuccessful) {
-//                        val list = response.body()?.response?.couponResDtos ?: emptyList()
-//                        coupons.clear()
-//                        coupons.addAll(list)
-//                    } else {
-//                        println("❌ 쿠폰 API 실패: ${response.errorBody()?.string()}")
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                println("🔥 예외 발생: ${e.localizedMessage}")
-//            }
-//        }
-//    }
-//
+
     if(state.marketData == null) return
 
-    Text(state.couponList.toString())
-//    // 쿠폰 받기 다이얼로그 상태 변수
-//    var isCouponDialogShow by remember { mutableStateOf(false) }
-//    var selectedCoupon by remember { mutableStateOf<IssuedCouponRes?>(null) }
-//    // 예시용 임시 쿠폰 데이터 (실제 데이터가 있다면 그 데이터를 사용)
-//
-//    Scaffold(
-//        topBar = {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(8.dp),
-//                contentAlignment = Alignment.CenterStart
-//            ) {
-//                IconButton(onClick = { /* 뒤로가기 처리 */ }) {
-//                    Icon(
-//                        modifier = Modifier.size(32.dp),
-//                        imageVector = androidx.compose.material.icons.Icons.Default.KeyboardArrowLeft,
-//                        contentDescription = null,
-//                        tint = Color.White,
-//                    )
-//                }
-//            }
-//        },
-//    ) {
-//        LazyColumn(
-//            modifier = Modifier.padding(
-//                PaddingValues(
-//                    top = 0.dp,
-//                    bottom = it.calculateBottomPadding(),
-//                    start = it.calculateStartPadding(LayoutDirection.Ltr),
-//                    end = it.calculateEndPadding(LayoutDirection.Rtl)
-//                )
-//            )
-//        ) {
-//            item {
-//                ImageSlider(data.value!!.imageResList.map { NetworkModule.getImage(it.name) })
-//            }
+    // 쿠폰 받기 다이얼로그 상태 변수
+    Scaffold(
+        topBar = {
+            NavAppBar("", Color.White) { navController.popBackStack() }
+        },
+    ) {
+        LazyColumn(
+            modifier = Modifier.padding(
+                PaddingValues(
+                    top = 0.dp,
+                    bottom = it.calculateBottomPadding(),
+                    start = it.calculateStartPadding(LayoutDirection.Ltr),
+                    end = it.calculateEndPadding(LayoutDirection.Rtl)
+                )
+            )
+        ) {
+            item {
+                ImageSlider(state.marketData.imageResList.map { NetworkModule.getImage(it.name) })
+            }
 //            item { MainInfo(data) }
 //            item {
 //                HorizontalDivider(
@@ -257,8 +215,8 @@ fun MarketDetailPage(
 //            item { BusinessInfo(data) }
 //            item { KakaoMapSearchBox() }
 //        }
-//    }
-//
+    }
+
 //    // 쿠폰 받기 다이얼로그
 //    if (isCouponDialogShow && selectedCoupon != null) {
 //        Dialog(onDismissRequest = { isCouponDialogShow = false }) {
@@ -323,7 +281,7 @@ fun MarketDetailPage(
 //                }
 //            }
 //        }
-//    }
+    }
 }
 
 //@Composable
