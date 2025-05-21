@@ -64,28 +64,6 @@ import dev.kichan.marketplace.viewmodel.MarketViewModel
 
 
 @Composable
-fun ImageSlider(imageList: List<String>) {
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(280.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(imageList) { url ->
-            AsyncImage(
-                modifier = Modifier.size(280.dp),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(url)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "이미지",
-                contentScale = ContentScale.Crop,
-            )
-        }
-    }
-}
-
-@Composable
 fun MarketDetailPage(
     navController: NavHostController,
     marketViewModel: MarketViewModel,
@@ -248,6 +226,28 @@ fun MarketDetailPage(
 //                }
 //            }
 //        }
+    }
+}
+
+@Composable
+fun ImageSlider(imageList: List<String>) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(280.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(imageList) { url ->
+            AsyncImage(
+                modifier = Modifier.size(280.dp),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(url)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "이미지",
+                contentScale = ContentScale.Crop,
+            )
+        }
     }
 }
 
