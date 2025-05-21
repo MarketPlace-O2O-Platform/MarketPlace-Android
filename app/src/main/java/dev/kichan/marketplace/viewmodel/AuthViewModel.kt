@@ -52,7 +52,6 @@ class AuthViewModel(private val application: Application = Application()) :
     fun login(
         id: String,
         password: String,
-        isSaveToken: Boolean,
     ) {
         viewModelScope.launch {
             try {
