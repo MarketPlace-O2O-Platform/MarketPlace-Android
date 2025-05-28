@@ -15,7 +15,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
-import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.AuthViewModel
@@ -27,7 +26,6 @@ import java.util.Locale
 val faker = Faker(Locale.KOREAN)
 
 class MainActivity : ComponentActivity() {
-    private val singleTon: SingleTonViewModel by viewModels()
     private val couponViewModel : CouponViewModel by viewModels()
     private val marketViewModel : MarketViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
@@ -79,7 +77,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MarketPlaceTheme {
                 MyApp(
-                    singleTon,
                     authViewModel = authViewModel,
                     couponViewModel = couponViewModel,
                     marketViewModel = marketViewModel,

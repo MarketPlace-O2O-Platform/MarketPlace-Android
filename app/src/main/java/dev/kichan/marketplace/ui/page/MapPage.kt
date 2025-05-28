@@ -50,7 +50,6 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketRes
@@ -72,7 +71,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapPage(
     navController: NavController,
-    singleTonViewModel: SingleTonViewModel = SingleTonViewModel(),
     marketViewModel: MarketViewModel = MarketViewModel()
 ) {
     val context = LocalContext.current

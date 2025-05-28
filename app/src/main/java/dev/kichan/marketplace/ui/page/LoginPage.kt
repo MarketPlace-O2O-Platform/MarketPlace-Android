@@ -29,28 +29,17 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.SingleTonViewModel
-import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.login.LoginReq
-import dev.kichan.marketplace.model.getAuthToken
-import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
-import dev.kichan.marketplace.model.saveAuthToken
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
     navController: NavHostController,
-    singleTon: SingleTonViewModel,
     authViewModel: AuthViewModel = AuthViewModel()
 ) {
     val context = LocalContext.current
@@ -329,7 +318,6 @@ fun LoginPagePreview() {
     MarketPlaceTheme {
         LoginPage(
             navController = rememberNavController(),
-            singleTon = SingleTonViewModel()
-        )// ViewModel 인스턴스를 직접 생성하는 것은 피하는 것이 좋습니다.
+        )
     }
 }
