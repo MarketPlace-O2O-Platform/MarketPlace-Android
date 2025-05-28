@@ -134,7 +134,7 @@ fun MarketDetailPage(
                                 TicketCoupon(
                                     title = coupon.name,
                                     expireDate = expireDate,
-                                    width = screenWidth - PAGE_HORIZONTAL_PADDING * 2,
+                                    width = screenWidth - PAGE_HORIZONTAL_PADDING * 2 - 40.dp,
                                     onClick = {},
                                 )
                             }
@@ -232,17 +232,15 @@ fun MarketDetailPage(
 fun ImageSlider(imageList: List<String>) {
     LazyRow(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(280.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(imageList) { url ->
             AsyncImage(
-                modifier = Modifier.size(280.dp),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(url)
-                    .crossfade(true)
-                    .build(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp),
+                model = NetworkModule.getImageModel(LocalContext.current, url),
                 contentDescription = "이미지",
                 contentScale = ContentScale.Crop,
             )
@@ -451,7 +449,8 @@ fun KakaoMapSearchBox(marketName: String) {
             .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
             .background(Color.White)
             .clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.search),

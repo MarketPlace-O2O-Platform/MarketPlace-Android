@@ -70,8 +70,6 @@ class MarketViewModel : ViewModel() {
                     )
                 }
 
-                delay(1500)
-
                 if (res.isSuccessful) {
                     val body = res.body()?.response?.marketResDtos ?: emptyList()
                     marketPageUiState = marketPageUiState.copy(
