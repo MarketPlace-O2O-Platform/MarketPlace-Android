@@ -15,8 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,34 +29,22 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.SingleTonViewModel
-import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.login.LoginReq
-import dev.kichan.marketplace.model.getAuthToken
-import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
-import dev.kichan.marketplace.model.saveAuthToken
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
     navController: NavHostController,
-    singleTon: SingleTonViewModel,
     authViewModel: AuthViewModel = AuthViewModel()
 ) {
     val context = LocalContext.current
     val state = authViewModel.loginState
 
-    var isSaveToken by remember { mutableStateOf(false) }
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
@@ -61,13 +53,12 @@ fun LoginPage(
 
     var expanded by remember { mutableStateOf(false) }
     var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
-    val schools = listOf("학교 A", "학교 B", "학교 C")
+    val schools = listOf("인천대학교")
 
     val onLogin: (String, String) -> Unit = { id, password ->
         authViewModel.login(
             id = id,
             password = password,
-            isSaveToken = isSaveToken
         )
     }
 
@@ -109,58 +100,58 @@ fun LoginPage(
             ) {
             Spacer(modifier = Modifier.height(100.dp))
 
-            Row(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = "App Logo",
                     modifier = Modifier
-                        .padding(0.dp)
                         .width(124.dp)
                         .height(40.dp)
                 )
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight(500)
+                            )
+                        ) {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("매번")
+                            }
+                            append(" 마라탕 한 그릇,")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(" 이천원 더")
+                            }
+                            append(" 내고 있어요.\n")
+                        }
+
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight(500)
+                            )
+                        ) {
+                            append("이제, 다니는")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight(600))) {
+                                append(" 대학")
+                            }
+                            append(" 제휴 멤버십으로\n")
+
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("쿠폰 꾸러미")
+                            }
+                            append(" 받아볼까요?")
+                        }
+                    },
+                    fontFamily = PretendardFamily,
+                )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "문구문구문구문구문구문구문구문구문구문구문구",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 22.4.sp,
-                        fontFamily = PretendardFamily,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF333333),
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(1.dp)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = "문구문구문구문구문구문구문구문구문구",
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        lineHeight = 19.2.sp,
-                        fontFamily = PretendardFamily,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF333333),
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(1.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(46.79.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
 
             // 학교 선택 드롭다운
@@ -317,17 +308,6 @@ fun LoginPage(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(checked = isSaveToken, onCheckedChange = { isSaveToken = it })
-                Text(text = "비밀번호 저장", fontSize = 14.sp)
-            }
         }
     }
 }
@@ -338,7 +318,6 @@ fun LoginPagePreview() {
     MarketPlaceTheme {
         LoginPage(
             navController = rememberNavController(),
-            singleTon = SingleTonViewModel()
-        )// ViewModel 인스턴스를 직접 생성하는 것은 피하는 것이 좋습니다.
+        )
     }
 }

@@ -1,7 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,11 +9,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,26 +20,18 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.toLocalDateTime
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
-import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
-import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.organisms.CategorySelector
-import dev.kichan.marketplace.model.repository.CouponRepository
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar
-import dev.kichan.marketplace.ui.component.molecules.EventList
+import dev.kichan.marketplace.ui.component.molecules.CouponBoxList
 import dev.kichan.marketplace.ui.component.organisms.BannerItem
 import dev.kichan.marketplace.ui.component.organisms.CouponBanner
-import dev.kichan.marketplace.ui.data.Event
+import dev.kichan.marketplace.ui.data.CouponBoxProps
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.CouponViewModel
-import dev.kichan.marketplace.viewmodel.HomeUiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -112,11 +99,11 @@ fun HomePage(
 
                 // Top 20 인기 페이지"
                 item {
-                    EventList(
+                    CouponBoxList(
                         navController = navController,
-                        title = "Top 20 인기 페이지",
+                        title = "Top 20 인기 | 멤버십 혜택",
                         couponList = state.popularCoupons.map {
-                            Event(
+                            CouponBoxProps(
                                 id = it.id.toString(),
                                 title = it.name,
                                 subTitle = it.marketName,
@@ -132,11 +119,13 @@ fun HomePage(
                 }
 //                // 최신 제휴 이벤트
                 item {
-                    EventList(
+                    val now = LocalDate.now()
+
+                    CouponBoxList(
                         navController = navController,
-                        title = "이번달 신규 이벤트",
+                        title = "${now.monthValue}월 신규 | 멤버십 혜택",
                         couponList = state.latestCoupons.map {
-                            Event(
+                            CouponBoxProps(
                                 id = it.id.toString(),
                                 subTitle = it.marketName,
                                 title = it.name,

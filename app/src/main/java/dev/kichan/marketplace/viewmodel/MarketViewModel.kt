@@ -15,10 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.google.android.gms.maps.model.LatLng
+import dev.kichan.marketplace.model.data.coupon.CouponRes
 import dev.kichan.marketplace.model.data.kakao.adress.Address
 import dev.kichan.marketplace.model.data.kakao.adress.LotNumberAddress
+import dev.kichan.marketplace.model.data.market.MarketDetailRes
+import dev.kichan.marketplace.model.repository.CouponOwnerRepository
 import kotlinx.coroutines.delay
-import kotlin.math.log
 
 data class MarketPageUiState(
     val marketData: List<MarketRes> = emptyList(),
@@ -38,16 +40,24 @@ data class MyPageUiState(
     val isLoading: Boolean = false,
 )
 
+data class MarketDetailPageUiState(
+    val marketData : MarketDetailRes? = null,
+    val couponList : List<CouponRes> = emptyList(),
+    val isLoading: Boolean = false
+)
+
 class MarketViewModel : ViewModel() {
     private val marketRepository = MarketRepository()
     private val favoriteRepository = FavoritesRepository()
     private val kakaoService = NetworkModule.getKakaoService()
+    private val couponOwnerRepository = CouponOwnerRepository()
 
     var marketPageUiState by mutableStateOf(MarketPageUiState())
     var mapPageState by mutableStateOf(MapPageUiState())
     var myPageUiState by mutableStateOf(MyPageUiState())
+    var marketDetailPageUiState by mutableStateOf(MarketDetailPageUiState())
 
-    fun getMarketData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
+    fun getMarketsData(category: LargeCategory, isInit: Boolean, lastMarketId: String?) {
         viewModelScope.launch {
             marketPageUiState = marketPageUiState.copy(isLoading = true, marketData = if(isInit) emptyList() else marketPageUiState.marketData)
 
@@ -59,8 +69,6 @@ class MarketViewModel : ViewModel() {
                         pageSize = 20
                     )
                 }
-
-                delay(1500)
 
                 if (res.isSuccessful) {
                     val body = res.body()?.response?.marketResDtos ?: emptyList()
@@ -80,6 +88,42 @@ class MarketViewModel : ViewModel() {
                     errorMessage = e.message ?: "알 수 없는 오류"
                 )
             }
+        }
+    }
+
+    fun getMarket(id: Long) {
+        marketDetailPageUiState = marketDetailPageUiState.copy(isLoading = true)
+
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                marketRepository.getMarket(id)
+            }
+
+            if(!res.isSuccessful) {
+                throw Exception("오류")
+            }
+
+            val body = res.body()!!
+            marketDetailPageUiState = marketDetailPageUiState.copy(marketData = body.response, isLoading = false)
+        }
+    }
+
+    fun getMarketCoupon(id: Long) {
+        marketDetailPageUiState = marketDetailPageUiState.copy(isLoading = true)
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.IO) {
+                couponOwnerRepository.getAllCouponByMarket(id.toInt(), 100)
+            }
+
+            if(!res.isSuccessful) {
+                throw Exception("쿠폰 조회 에러")
+            }
+
+            val body = res.body()!!
+            marketDetailPageUiState = marketDetailPageUiState.copy(
+                couponList = body.response.couponResDtos,
+                isLoading = false
+            )
         }
     }
 

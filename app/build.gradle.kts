@@ -17,12 +17,12 @@ secrets {
 
 android {
     namespace = "dev.kichan.marketplace"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.kichan.marketplace"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -82,6 +82,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
     implementation("com.google.firebase:firebase-messaging:24.1.0")
+    implementation("androidx.core:core-i18n:1.0.0-alpha01")
     val mapsComposeVersion = "4.4.1"
     implementation("com.google.maps.android:maps-compose:$mapsComposeVersion")
     // Google Maps Compose utility library
@@ -107,7 +108,6 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

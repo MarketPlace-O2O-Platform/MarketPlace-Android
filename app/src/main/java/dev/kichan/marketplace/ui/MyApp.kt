@@ -13,7 +13,6 @@ import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.LoginPage
-import dev.kichan.marketplace.SingleTonViewModel
 import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import androidx.compose.runtime.Composable
@@ -30,7 +29,6 @@ import dev.kichan.marketplace.viewmodel.MarketViewModel
 
 @Composable
 fun MyApp(
-    singlethone: SingleTonViewModel = SingleTonViewModel(),
     authViewModel: AuthViewModel = AuthViewModel(), //todo: 언젠가는 DI 적용
     couponViewModel: CouponViewModel = CouponViewModel(),
     marketViewModel: MarketViewModel = MarketViewModel(),
@@ -91,14 +89,13 @@ fun MyApp(
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
                     Log.d("eventDetail", "id : $id")
-                    MarketDetailPage(navController, id.toLong())
+                    MarketDetailPage(navController, marketViewModel, id.toLong())
                 }
             }
         }
         composable(route = Page.Login.name) {
             LoginPage(
                 navController = navController,
-                singleTon = singlethone,
                 authViewModel = authViewModel
             )
         }

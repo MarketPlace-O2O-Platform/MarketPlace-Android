@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class LikePageUiState(
-    val tempMarkets : List<TempMarketRes> = emptyList(),
-    val cheerTempMarkets : List<TempMarketRes> = emptyList(),
+    val tempMarkets: List<TempMarketRes> = emptyList(),
+    val cheerTempMarkets: List<TempMarketRes> = emptyList(),
     val searchTempMarket: List<TempMarketRes> = emptyList(),
     val isLoading: Boolean = false
 )
@@ -38,7 +38,7 @@ class TempMarketViewModel : ViewModel() {
         }
     }
 
-    fun getTempMarket(selectedCategory : LargeCategory) = viewModelScope.launch {
+    fun getTempMarket(selectedCategory: LargeCategory) = viewModelScope.launch {
         likePageState = likePageState.copy(isLoading = true)
         val res = withContext(Dispatchers.IO) {
             tempMarketRepo.getTempMarkets(100, selectedCategory)
@@ -50,23 +50,37 @@ class TempMarketViewModel : ViewModel() {
         }
     }
 
-    fun onCheer(id: Long) = viewModelScope.launch {
+    fun onCheer(id: Long, onSuccess: () -> Unit) = viewModelScope.launch {
         likePageState = likePageState.copy(isLoading = true)
         val res = withContext(Dispatchers.IO) { cheerRepo.cheer(id) }
-        if (res.isSuccessful) {
-            likePageState = likePageState.copy(
-                tempMarkets = likePageState.tempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
-                cheerTempMarkets = likePageState.cheerTempMarkets.map { if(it.id == id) it.copy(isCheer = true, cheerCount = it.cheerCount + 1) else it.copy() },
-            )
+        if (!res.isSuccessful) {
+            throw Exception("공감 실패")
         }
+
+        onSuccess()
+
+        likePageState = likePageState.copy(
+            tempMarkets = likePageState.tempMarkets.map {
+                if (it.id == id) it.copy(
+                    isCheer = true,
+                    cheerCount = it.cheerCount + 1
+                ) else it.copy()
+            },
+            cheerTempMarkets = likePageState.cheerTempMarkets.map {
+                if (it.id == id) it.copy(
+                    isCheer = true,
+                    cheerCount = it.cheerCount + 1
+                ) else it.copy()
+            },
+        )
     }
 
-    fun searchTempMarket(key : String) {
+    fun searchTempMarket(key: String) {
         likePageState = likePageState.copy(isLoading = true)
 
         viewModelScope.launch {
             val res = tempMarketRepo.getMarketSearch(key)
-            if(!res.isSuccessful) {
+            if (!res.isSuccessful) {
                 return@launch
             }
 

@@ -50,12 +50,20 @@ import dev.kichan.marketplace.viewmodel.LoginUiState
 import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 
 @Composable
-fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMarketViewModel: TempMarketViewModel) {
+fun LikePage(
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    tempMarketViewModel: TempMarketViewModel
+) {
     val authState = authViewModel.loginState
     val tempMarketState = tempMarketViewModel.likePageState
 
     var searchKey by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
+
+    val onDecrease = {
+        authViewModel.refershMemberData()
+    }
 
     LaunchedEffect(Unit) {
         tempMarketViewModel.getTempMarket(selectedCategory);
@@ -115,7 +123,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
                                     isMyDone = it.isCheer,
                                     isRequestDone = it.dueDate == 0,
                                     duDate = it.dueDate,
-                                    onCheer = { tempMarketViewModel.onCheer(it.id) }
+                                    onCheer = { tempMarketViewModel.onCheer(it.id, onDecrease) }
                                 )
                             }
                         }
@@ -133,46 +141,52 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
-                items(tempMarketState.tempMarkets.size / 2) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = PAGE_HORIZONTAL_PADDING,
-                                end = PAGE_HORIZONTAL_PADDING,
-                                bottom = 10.dp
-                            ),
-                        horizontalArrangement = Arrangement.spacedBy(11.dp)
-                    ) {
-                        val market1 = tempMarketState.tempMarkets[it * 2]
-                        RequestCard(
+                if (tempMarketState.tempMarkets.isNotEmpty()) {
+                    items(tempMarketState.tempMarkets.size / 2) {
+                        Row(
                             modifier = Modifier
-                                .weight(1f),
-                            marketName = market1.name,
-                            likeCount = market1.cheerCount,
-                            thumbnail = NetworkModule.getImage(market1.thumbnail, true),
-                            isMyDone = market1.isCheer,
-                            isRequestDone = market1.dueDate == 0,
-                            duDate = market1.dueDate,
-                            onCheer = { tempMarketViewModel.onCheer(market1.id) }
-                        )
-
-                        if (it * 2 + 1 < tempMarketState.tempMarkets.size) {
-                            val market2 = tempMarketState.tempMarkets[it * 2 + 1]
+                                .fillMaxWidth()
+                                .padding(
+                                    start = PAGE_HORIZONTAL_PADDING,
+                                    end = PAGE_HORIZONTAL_PADDING,
+                                    bottom = 10.dp
+                                ),
+                            horizontalArrangement = Arrangement.spacedBy(11.dp)
+                        ) {
+                            val market1 = tempMarketState.tempMarkets[it * 2]
                             RequestCard(
                                 modifier = Modifier
                                     .weight(1f),
-                                marketName = market2.name,
-                                likeCount = market2.cheerCount,
-                                thumbnail = NetworkModule.getImage(market2.thumbnail, true),
-                                isMyDone = market2.isCheer,
-                                isRequestDone = market2.dueDate == 0,
-                                duDate = market2.dueDate,
-                                onCheer = { tempMarketViewModel.onCheer(market2.id) }
+                                marketName = market1.name,
+                                likeCount = market1.cheerCount,
+                                thumbnail = NetworkModule.getImage(market1.thumbnail, true),
+                                isMyDone = market1.isCheer,
+                                isRequestDone = market1.dueDate == 0,
+                                duDate = market1.dueDate,
+                                onCheer = { tempMarketViewModel.onCheer(market1.id, onDecrease) }
                             )
-                        } else {
-                            Box(Modifier.weight(1f))
+
+                            if (it * 2 + 1 < tempMarketState.tempMarkets.size) {
+                                val market2 = tempMarketState.tempMarkets[it * 2 + 1]
+                                RequestCard(
+                                    modifier = Modifier
+                                        .weight(1f),
+                                    marketName = market2.name,
+                                    likeCount = market2.cheerCount,
+                                    thumbnail = NetworkModule.getImage(market2.thumbnail, true),
+                                    isMyDone = market2.isCheer,
+                                    isRequestDone = market2.dueDate == 0,
+                                    duDate = market2.dueDate,
+                                    onCheer = { tempMarketViewModel.onCheer(market2.id, onDecrease) }
+                                )
+                            } else {
+                                Box(Modifier.weight(1f))
+                            }
                         }
+                    }
+                } else {
+                    item {
+                        EmptyMessage(message = "등록된 매장이 없습니다.")
                     }
                 }
             } else {

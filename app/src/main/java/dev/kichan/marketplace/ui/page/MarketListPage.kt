@@ -15,13 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.market.MarketRes
-import dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
@@ -29,10 +26,6 @@ import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.MarketViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 data class Pagenation<T>(
     val lastId: T?,
@@ -50,7 +43,7 @@ fun MarketListPage(
     var category by remember { mutableStateOf(_category) }
 
     LaunchedEffect(category) {
-        marketViewModel.getMarketData(category, true, null)
+        marketViewModel.getMarketsData(category, true, null)
     }
 
     Scaffold(
