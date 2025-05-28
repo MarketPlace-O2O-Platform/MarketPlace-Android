@@ -125,4 +125,12 @@ class AuthViewModel(private val application: Application = Application()) :
             }
         }
     }
+
+    fun refershMemberData() {
+        viewModelScope.launch {
+            val res = getMemberData()
+
+            loginState = LoginUiState.Success(res)
+        }
+    }
 }

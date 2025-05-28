@@ -50,12 +50,20 @@ import dev.kichan.marketplace.viewmodel.LoginUiState
 import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 
 @Composable
-fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMarketViewModel: TempMarketViewModel) {
+fun LikePage(
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    tempMarketViewModel: TempMarketViewModel
+) {
     val authState = authViewModel.loginState
     val tempMarketState = tempMarketViewModel.likePageState
 
     var searchKey by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
+
+    val onDecrease = {
+        authViewModel.refershMemberData()
+    }
 
     LaunchedEffect(Unit) {
         tempMarketViewModel.getTempMarket(selectedCategory);
@@ -115,7 +123,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
                                     isMyDone = it.isCheer,
                                     isRequestDone = it.dueDate == 0,
                                     duDate = it.dueDate,
-                                    onCheer = { tempMarketViewModel.onCheer(it.id) }
+                                    onCheer = { tempMarketViewModel.onCheer(it.id, onDecrease) }
                                 )
                             }
                         }
@@ -133,7 +141,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
-                if(tempMarketState.tempMarkets.isNotEmpty()) {
+                if (tempMarketState.tempMarkets.isNotEmpty()) {
                     items(tempMarketState.tempMarkets.size / 2) {
                         Row(
                             modifier = Modifier
@@ -155,7 +163,7 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
                                 isMyDone = market1.isCheer,
                                 isRequestDone = market1.dueDate == 0,
                                 duDate = market1.dueDate,
-                                onCheer = { tempMarketViewModel.onCheer(market1.id) }
+                                onCheer = { tempMarketViewModel.onCheer(market1.id, onDecrease) }
                             )
 
                             if (it * 2 + 1 < tempMarketState.tempMarkets.size) {
@@ -169,15 +177,14 @@ fun LikePage(navController: NavController, authViewModel: AuthViewModel, tempMar
                                     isMyDone = market2.isCheer,
                                     isRequestDone = market2.dueDate == 0,
                                     duDate = market2.dueDate,
-                                    onCheer = { tempMarketViewModel.onCheer(market2.id) }
+                                    onCheer = { tempMarketViewModel.onCheer(market2.id, onDecrease) }
                                 )
                             } else {
                                 Box(Modifier.weight(1f))
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     item {
                         EmptyMessage(message = "등록된 매장이 없습니다.")
                     }

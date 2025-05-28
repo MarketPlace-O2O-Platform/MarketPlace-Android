@@ -143,7 +143,7 @@ class CouponViewModel : ViewModel() {
 
             try {
                 val newCoupon: List<CouponListItemProps> = if (type == "popular") {
-                    val res = couponRepository.getPopularCoupon(null, 20)
+                    val res = couponRepository.getPopularCoupon(null, 40)
                     if (!res.isSuccessful) {
                         throw Exception("실패!")
                     }

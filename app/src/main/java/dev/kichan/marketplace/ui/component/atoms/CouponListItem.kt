@@ -126,7 +126,7 @@ fun CouponListItem(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_download),
-                            tint = if(isMemberIssued) Color(0xBF6F6F6F) else Color(0xff4B4B4B),
+                            tint = if(isMemberIssued) Color(0xFFA5A5A5) else Color(0xFF4B4B4B),
                             contentDescription = null
                         )
                     }
