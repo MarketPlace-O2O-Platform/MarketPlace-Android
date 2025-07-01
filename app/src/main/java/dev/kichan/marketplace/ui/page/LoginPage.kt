@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,7 +33,6 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
     navController: NavHostController,
@@ -71,6 +69,8 @@ fun LoginPage(
             navController.navigate(Page.Main.name)
         }
     }
+
+    val isSubmitAble = inputId.isNotEmpty() && inputPassword.isNotEmpty() && selectedSchool.isNotEmpty();
 
     Scaffold {
         Column(
@@ -231,26 +231,14 @@ fun LoginPage(
                     .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(17.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .width(335.dp)
-                    .height(38.dp)
-                    .background(color = Color(0xFF303030), shape = RoundedCornerShape(size = 4.dp))
+            dev.kichan.marketplace.ui.component.atoms.Button(
+                text = "로그인",
+                modifier = Modifier.fillMaxWidth(),
+                isDisable = !isSubmitAble,
             ) {
-                Button(
-                    onClick = { onLogin(inputId, inputPassword) },
-                    modifier = Modifier.fillMaxSize(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "로그인",
-                        style = TextStyle(fontSize = 14.sp, color = Color.White)
-                    )
-                }
+                onLogin(inputId, inputPassword)
             }
         }
     }

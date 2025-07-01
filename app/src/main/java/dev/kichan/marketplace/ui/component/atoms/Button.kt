@@ -44,7 +44,7 @@ fun Button(
     border: BorderStroke? = null,
     isDisable: Boolean = false,
     icon: ImageVector? = null,
-    contentPadding: PaddingValues = PaddingValues(vertical = 10.dp, horizontal = 12.dp),
+    contentPadding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 12.dp),
     onClick: () -> Unit,
 ) {
     val bgc = animateColorAsState(
@@ -75,8 +75,8 @@ fun Button(
             style = TextStyle(
                 color = textColor,
                 fontFamily = PretendardFamily,
-                fontWeight = FontWeight(500),
-                fontSize = 12.sp,
+                fontWeight = FontWeight(700),
+                fontSize = 14.sp,
             )
         )
     }
