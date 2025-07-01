@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.kichan.marketplace.ui.component.atoms.Input
+import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.Gray_8
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily

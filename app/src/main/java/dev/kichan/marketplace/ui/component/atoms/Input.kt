@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -46,59 +45,65 @@ fun Input(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
     inputType: InputType = InputType.Text,
+    readOnly: Boolean = false,
 ) {
     val shape = RoundedCornerShape(2.dp)
     val contentColor = Gray_9
     val backgroundColor = Color(0xFFFFFFFF)
     val isContentShow = remember { mutableStateOf(false) }
 
-    BasicTextField(
-        value = value,
-        onValueChange = onChange,
-        modifier = modifier,
-        textStyle = textStyle.copy(color = contentColor),
-        singleLine = singleLine,
-        maxLines = maxLines,
-        minLines = minLines,
-    ) { innerTextField ->
-        Row(
-            modifier
-                .background(color = backgroundColor, shape = shape)
-                .border(1.dp, Gray_3, shape)
-                .padding(horizontal = 16.dp, vertical = 13.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.CenterStart,
+    Box(
+        modifier = modifier
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = onChange,
+            modifier = Modifier,
+            textStyle = textStyle.copy(color = contentColor),
+            singleLine = singleLine,
+            maxLines = maxLines,
+            minLines = minLines,
+            readOnly = readOnly,
+        ) { innerTextField ->
+            Row(
+                Modifier
+                    .background(color = backgroundColor, shape = shape)
+                    .border(1.dp, Gray_3, shape)
+                    .padding(horizontal = 16.dp, vertical = 13.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (value.isBlank() && placeholder != null) {
-                    Text(
-                        text = placeholder,
-                        style = textStyle.copy(
-                            color = Gray_6
+                Box(
+                    Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    if (value.isBlank() && placeholder != null) {
+                        Text(
+                            text = placeholder,
+                            style = textStyle.copy(
+                                color = Gray_6
+                            )
                         )
-                    )
-                }
+                    }
 
-                if (inputType == InputType.Text || isContentShow.value) {
-                    innerTextField()
-                } else {
-                    Text(text = "*".repeat(value.length), color = contentColor)
-                }
+                    if (inputType == InputType.Text || isContentShow.value) {
+                        innerTextField()
+                    } else {
+                        Text(text = "*".repeat(value.length), color = contentColor)
+                    }
 
-                if (inputType == InputType.Password) {
-                    Icon(
-                        painter = if (isContentShow.value) {
-                            painterResource(id = R.drawable.ic_visibility)
-                        } else {
-                            painterResource(id = R.drawable.ic_visibility_off)
-                        },
-                        contentDescription = "Toggle Password Visibility",
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .clickable { isContentShow.value = !isContentShow.value }
-                    )
+                    if (inputType == InputType.Password) {
+                        Icon(
+                            painter = if (isContentShow.value) {
+                                painterResource(id = R.drawable.ic_visibility)
+                            } else {
+                                painterResource(id = R.drawable.ic_visibility_off)
+                            },
+                            contentDescription = "Toggle Password Visibility",
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .clickable { isContentShow.value = !isContentShow.value }
+                        )
+                    }
                 }
             }
         }

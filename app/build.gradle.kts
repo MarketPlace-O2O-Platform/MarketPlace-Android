@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.gms.google-services")
+    id("io.github.irgaly.compose-vector") version "1.0.1"
 }
 
 secrets {
@@ -66,6 +67,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+composeVector {
+    packageName = "dev.kichan.marketplace.ui.icon"
+    inputDir = layout.projectDirectory.dir("images")
 }
 
 dependencies {
