@@ -3,7 +3,6 @@ package dev.kichan.marketplace.ui.page
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.ui.DropDownMenu
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -42,16 +42,13 @@ fun LoginPage(
 ) {
     val context = LocalContext.current
     val state = authViewModel.loginState
+    val scrollState = rememberScrollState()
 
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
-//    var message by remember { mutableStateOf() }
-//    var showError by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
 
-    var expanded by remember { mutableStateOf(false) }
-    var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
-    val schools = listOf("인천대학교")
+    var selectedSchool by remember { mutableStateOf("") }
+    val schools = listOf("인천대학교", "연세대학교", "인하대학교")
 
     val onLogin: (String, String) -> Unit = { id, password ->
         authViewModel.login(
@@ -159,42 +156,8 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }, // 드롭다운 상태 토글
-            ) {
-                // 드롭다운 트리거
-                Input(
-                    value = selectedSchool,
-                    onChange = {},
-                    readOnly = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
-                    textStyle = TextStyle( // 수정됨: 텍스트 스타일 정의
-                        fontSize = 13.sp,
-                        lineHeight = 20.8.sp,
-                        fontFamily = PretendardFamily,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF838A94)
-                    ),
-                )
-
-                // 드롭다운 메뉴
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    schools.forEach { school ->
-                        DropdownMenuItem(
-                            text = { Text(text = school) },
-                            onClick = {
-                                selectedSchool = school
-                                expanded = false // 선택 후 드롭다운 닫기
-                            },
-                        )
-                    }
-                }
+            DropDownMenu(selectedSchool, schools, placeholder = "학교를 선택해주세요") {
+                selectedSchool = it
             }
 
             Spacer(modifier = Modifier.height(12.dp))
