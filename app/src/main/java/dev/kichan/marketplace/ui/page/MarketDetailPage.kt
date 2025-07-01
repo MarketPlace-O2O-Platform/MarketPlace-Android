@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import Carbon_bookmark
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,8 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketDetailRes
@@ -54,6 +50,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
+import dev.kichan.marketplace.ui.CouponDownloadCheckDialog
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.viewmodel.MarketViewModel
@@ -68,6 +65,7 @@ fun MarketDetailPage(
     id: Long,
 ) {
     val state = marketViewModel.marketDetailPageUiState
+    var downLoadCouponId by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
         marketViewModel.getMarket(id)
@@ -82,6 +80,13 @@ fun MarketDetailPage(
             NavAppBar("", Color.White) { navController.popBackStack() }
         },
     ) {
+        if(downLoadCouponId != null) {
+            CouponDownloadCheckDialog(
+                onDismiss = { downLoadCouponId = null },
+                onAccept = {  }
+            )
+        }
+
         LazyColumn(
             modifier = Modifier.padding(
                 PaddingValues(
@@ -135,7 +140,7 @@ fun MarketDetailPage(
                                     title = coupon.name,
                                     expireDate = expireDate,
                                     width = screenWidth - PAGE_HORIZONTAL_PADDING * 2 - 40.dp,
-                                    onClick = {},
+                                    onClick = { downLoadCouponId = coupon.id },
                                 )
                             }
                         }
@@ -158,73 +163,7 @@ fun MarketDetailPage(
             }
             item { BusinessInfo(state.marketData) }
             item { KakaoMapSearchBox(state.marketData.name) }
-//        }
         }
-
-//    // 쿠폰 받기 다이얼로그
-//    if (isCouponDialogShow && selectedCoupon != null) {
-//        Dialog(onDismissRequest = { isCouponDialogShow = false }) {
-//            Column(
-//                modifier = Modifier
-//                    .width(320.dp)
-//                    .background(Color.White, shape = RoundedCornerShape(12.dp))
-//                    .padding(horizontal = 24.dp, vertical = 20.dp),
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Text(
-//                    text = "${selectedCoupon?.couponName} 쿠폰을 받으시겠습니까?",
-//                    fontSize = 20.sp,
-//                    lineHeight = 30.sp,
-//                    fontWeight = FontWeight(700),
-//                    textAlign = TextAlign.Center,
-//                    fontFamily = PretendardFamily
-//                )
-//                Spacer(modifier = Modifier.height(20.dp))
-//                Button(
-//                    onClick = {
-//                        // 실제 쿠폰 받기 API 호출 등 처리
-//                        isCouponDialogShow = false
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(48.dp),
-//                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-//                    shape = RoundedCornerShape(4.dp)
-//                ) {
-//                    Text(
-//                        text = "받기",
-//                        fontSize = 12.sp,
-//                        lineHeight = 16.8.sp,
-//                        color = Color.White,
-//                        fontWeight = FontWeight(500),
-//                        textAlign = TextAlign.Center,
-//                        fontFamily = PretendardFamily
-//                    )
-//                }
-//                Spacer(modifier = Modifier.height(12.dp))
-//                OutlinedButton(
-//                    onClick = { isCouponDialogShow = false },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(48.dp),
-//                    colors = ButtonDefaults.outlinedButtonColors(
-//                        containerColor = Color.White,
-//                        contentColor = Color.Black
-//                    ),
-//                    border = ButtonDefaults.outlinedButtonBorder,
-//                    shape = RoundedCornerShape(4.dp)
-//                ) {
-//                    Text(
-//                        text = "취소",
-//                        fontSize = 12.sp,
-//                        lineHeight = 16.8.sp,
-//                        textAlign = TextAlign.Center,
-//                        fontWeight = FontWeight(500),
-//                        fontFamily = PretendardFamily
-//                    )
-//                }
-//            }
-//        }
     }
 }
 
@@ -474,9 +413,3 @@ fun KakaoMapSearchBox(marketName: String) {
         )
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DetailPagePreview() {
-//    MarketDetailPage(rememberNavController(), 12121L)
-//}

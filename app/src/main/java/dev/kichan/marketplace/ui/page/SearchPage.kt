@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
-import dev.kichan.marketplace.ui.component.atoms.Button
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.javafaker.Faker
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.market.MarketRes
@@ -40,7 +39,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 @Composable
 fun SearchPage(modifier: Modifier = Modifier) {
@@ -348,7 +346,7 @@ fun SearchResultEmpty() {
         Spacer(modifier = Modifier.height(45.dp))
         Image(painter = painterResource(R.drawable.img_online_stats), null)
         Spacer(modifier = Modifier.height(31.dp))
-        Button("요청하기", modifier = Modifier.width(240.dp)) { }
+        CustomButton("요청하기", modifier = Modifier.width(240.dp)) { }
     }
 }
 

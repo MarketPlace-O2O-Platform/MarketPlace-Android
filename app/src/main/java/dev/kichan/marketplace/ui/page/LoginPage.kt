@@ -233,7 +233,7 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            dev.kichan.marketplace.ui.component.atoms.Button(
+            dev.kichan.marketplace.ui.component.atoms.CustomButton(
                 text = "로그인",
                 modifier = Modifier.fillMaxWidth(),
                 isDisable = !isSubmitAble,
