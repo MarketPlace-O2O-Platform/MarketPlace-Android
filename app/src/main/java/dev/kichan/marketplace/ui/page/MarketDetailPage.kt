@@ -52,7 +52,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import dev.kichan.marketplace.ui.CouponDownloadCheckDialog
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
+import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.viewmodel.MarketViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -62,6 +64,7 @@ import java.time.format.DateTimeFormatter
 fun MarketDetailPage(
     navController: NavHostController,
     marketViewModel: MarketViewModel,
+    couponViewModel: CouponViewModel,
     id: Long,
 ) {
     val state = marketViewModel.marketDetailPageUiState
@@ -80,10 +83,13 @@ fun MarketDetailPage(
             NavAppBar("", Color.White) { navController.popBackStack() }
         },
     ) {
-        if(downLoadCouponId != null) {
+        if (downLoadCouponId != null) {
             CouponDownloadCheckDialog(
                 onDismiss = { downLoadCouponId = null },
-                onAccept = {  }
+                onAccept = {
+                    couponViewModel.downloadCoupon(downLoadCouponId!!)
+                    navController.navigate(Page.My.name)
+                }
             )
         }
 
@@ -110,22 +116,25 @@ fun MarketDetailPage(
             }
 
             item {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Text(
-                        "이벤트 쿠폰",
-                        fontFamily = PretendardFamily,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp
-                    )
+                Column() {
+                    Surface(
+                        modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING)
+                    ) {
+                        Text(
+                            text = "이벤트 쿠폰",
+                            fontFamily = PretendardFamily,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp
+                        )
+                    }
                     Spacer(modifier = Modifier.height(20.dp))
 
                     if (state.couponList.isNotEmpty()) {
                         LazyRow(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp)
+                            contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
                         ) {
                             items(state.couponList) { coupon ->
                                 val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -139,7 +148,7 @@ fun MarketDetailPage(
                                 TicketCoupon(
                                     title = coupon.name,
                                     expireDate = expireDate,
-                                    width = screenWidth - PAGE_HORIZONTAL_PADDING * 2 - 40.dp,
+                                    width = screenWidth - PAGE_HORIZONTAL_PADDING * 2,
                                     onClick = { downLoadCouponId = coupon.id },
                                 )
                             }
