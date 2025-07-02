@@ -29,7 +29,7 @@ import dev.kichan.marketplace.model.data.market.MarketCreateReq
 import dev.kichan.marketplace.model.getAuthToken
 import dev.kichan.marketplace.model.repository.CouponOwnerRepository
 import dev.kichan.marketplace.model.repository.MarketOwnerRepository
-import dev.kichan.marketplace.ui.component.atoms.Button
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import kotlinx.coroutines.CoroutineScope
@@ -180,11 +180,11 @@ fun ApiTestPage() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button("매장 더미데이터 생성") { onDummyMarketData() }
+            CustomButton("매장 더미데이터 생성") { onDummyMarketData() }
 
-            Button("쿠폰 더미데이터 생성") { onDummyCoupon() }
+            CustomButton("쿠폰 더미데이터 생성") { onDummyCoupon() }
 
-            Button("쿠폰 보여주기") { ondummyCouponShow() }
+            CustomButton("쿠폰 보여주기") { ondummyCouponShow() }
 
             selectedImageUris.forEach { uri ->
                 Text(text = "선택된 이미지: $uri")

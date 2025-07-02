@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -26,7 +25,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.ui.component.atoms.Button
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 
 class RequestMapActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,7 +127,7 @@ fun GoogleMapView() {
     }
     Spacer(modifier = Modifier.height(85.dp))
 
-    Button(
+    CustomButton(
         text = "입점 요청하기",
         onClick = { println("매장 요청하기 버튼 클릭됨!") },
         modifier = Modifier

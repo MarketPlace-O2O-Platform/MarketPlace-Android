@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +34,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun Button(
+fun CustomButton(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = Color.White,
@@ -44,7 +43,7 @@ fun Button(
     border: BorderStroke? = null,
     isDisable: Boolean = false,
     icon: ImageVector? = null,
-    contentPadding: PaddingValues = PaddingValues(vertical = 10.dp, horizontal = 12.dp),
+    contentPadding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 12.dp),
     onClick: () -> Unit,
 ) {
     val bgc = animateColorAsState(
@@ -75,8 +74,8 @@ fun Button(
             style = TextStyle(
                 color = textColor,
                 fontFamily = PretendardFamily,
-                fontWeight = FontWeight(500),
-                fontSize = 12.sp,
+                fontWeight = FontWeight(700),
+                fontSize = 14.sp,
             )
         )
     }
@@ -86,7 +85,7 @@ fun Button(
 @Composable
 fun InuButtonPreview() {
     MarketPlaceTheme {
-        Button(
+        CustomButton(
             modifier = Modifier.fillMaxWidth(),
             text = "버튼",
             onClick = {},

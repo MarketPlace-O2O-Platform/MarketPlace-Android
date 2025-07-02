@@ -89,7 +89,7 @@ fun MyApp(
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
                     Log.d("eventDetail", "id : $id")
-                    MarketDetailPage(navController, marketViewModel, id.toLong())
+                    MarketDetailPage(navController, marketViewModel, couponViewModel, id.toLong())
                 }
             }
         }
@@ -122,21 +122,6 @@ fun MyApp(
                 )
             }
         }
-
-//        composable("${Page.CategoryEventList.name}/{category}") {
-//            it.arguments?.getString("category")?.let { category ->
-//                EventListPage(
-//                    navController = navController,
-//                    category = LargeCategory.valueOf(category)
-//                )
-//            }
-//        }
-
-//        composable("${Page.EventList.name}/{title}") {
-//            it.arguments?.getString("title")?.let { title ->
-//                EventListPage(navController = navController, title = title)
-//            }
-//        }
 
         composable(Page.LocalApiTestPage.name) {
             ApiTestPage()

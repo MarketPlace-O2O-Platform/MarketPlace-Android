@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,19 +28,6 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 @Composable
 fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: CouponViewModel) {
     val state = couponViewModel.downloadCouponPageState
-    var selectedTab by remember { mutableStateOf(0) }
-
-    val selectedTabCouponList = when(selectedTab) {
-        0 -> state.issuedCouponList
-        1 -> state.usedCouponList
-        else -> state.expiredCouponList
-    }
-
-    val selectedTabType = when(selectedTab) {
-        0 -> "ISSUED"
-        1 -> "USED"
-        else -> "EXPIRED"
-    }
 
     LaunchedEffect(Unit) {
         couponViewModel.getDownloadCouponList("ISSUED")
@@ -82,53 +68,5 @@ fun ReceivedCouponsScreen(navController: NavHostController, couponViewModel: Cou
                     .clickable { navController.navigate(Page.My.name) }
             )
         }
-
-        TabRow(
-            modifier = Modifier.border(width = 1.dp, color = Color(0xFFE0E0E0)),
-            selectedTabIndex = selectedTab,
-            containerColor = Color.White,
-            contentColor = Color.Black
-        ) {
-            listOf("사용 가능", "사용 완료", "기간 만료").forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTab == index,
-                    onClick = { selectedTab = index },
-                    text = { Text(text = title, fontSize = 14.sp) }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 32.dp, horizontal = 20.dp)
-        ) {
-            if(selectedTabCouponList.isNotEmpty()) {
-                items(items = selectedTabCouponList) { coupon ->
-                    CouponItem(coupon, selectedTabType)
-                }
-            }
-            else {
-                item {
-                    EmptyMessage(message = "쿠폰이 없습니다.")
-                }
-            }
-        }
     }
 }
-
-//@Composable
-//fun DebugCouponList(coupons: List<CouponResponse>) {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp)
-//    ) {
-//        coupons.forEach { coupon ->
-//            Text(text = "🛒 쿠폰 ID: ${coupon.memberCouponId}, 이름: ${coupon.couponName}, 사용 여부: ${coupon.used}")
-//        }
-//    }
-//}

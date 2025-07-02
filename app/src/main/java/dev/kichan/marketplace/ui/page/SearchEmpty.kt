@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.ui.component.atoms.Button
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 
 @Composable
 fun SearchEmptyUI() {
@@ -77,7 +77,7 @@ fun SearchEmptyUI() {
             )
         }
         Spacer(modifier = Modifier.height(31.dp))
-        Button(
+        CustomButton(
             text = "요청하기",
             onClick = { println("매장 요청하기 버튼 클릭됨!") },
             modifier = Modifier.fillMaxWidth()

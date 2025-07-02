@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.HorizontalDivider
@@ -29,6 +30,7 @@ import dev.kichan.marketplace.ui.component.molecules.CouponBoxList
 import dev.kichan.marketplace.ui.component.organisms.BannerItem
 import dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.ui.data.CouponBoxProps
+import dev.kichan.marketplace.ui.icon.IcCampaign
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import java.time.LocalDate
@@ -69,7 +71,7 @@ fun HomePage(
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
-                        isLoading = state.isClosingLoading,
+                        isLoading = state.isClosingLoading || state.closingCoupon.isEmpty(),
                         bannerList = state.closingCoupon.map {
                             val deadLine = it.deadline.toLocalDateTime()
                             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")

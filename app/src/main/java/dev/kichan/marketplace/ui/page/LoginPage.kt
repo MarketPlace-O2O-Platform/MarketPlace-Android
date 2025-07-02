@@ -1,12 +1,10 @@
 package dev.kichan.marketplace.ui.page
 
-import android.app.Application
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -29,14 +26,13 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.Input
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.InputType
+import dev.kichan.marketplace.ui.DropDownMenu
+import dev.kichan.marketplace.ui.component.atoms.Input
+import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
-import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
     navController: NavHostController,
@@ -44,16 +40,13 @@ fun LoginPage(
 ) {
     val context = LocalContext.current
     val state = authViewModel.loginState
+    val scrollState = rememberScrollState()
 
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.") }
-    var showError by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
 
-    var expanded by remember { mutableStateOf(false) }
-    var selectedSchool by remember { mutableStateOf("학교를 선택해주세요") }
-    val schools = listOf("인천대학교")
+    var selectedSchool by remember { mutableStateOf("") }
+    val schools = listOf("인천대학교", "연세대학교", "인하대학교")
 
     val onLogin: (String, String) -> Unit = { id, password ->
         authViewModel.login(
@@ -77,14 +70,7 @@ fun LoginPage(
         }
     }
 
-    if (showError) {
-        LaunchedEffect(Unit) {
-            message = "다시 입력해주세요."
-
-            showError = false
-            delay(5000)
-        }
-    }
+    val isSubmitAble = inputId.isNotEmpty() && inputPassword.isNotEmpty() && selectedSchool.isNotEmpty();
 
     Scaffold {
         Column(
@@ -154,7 +140,6 @@ fun LoginPage(
             Spacer(modifier = Modifier.height(20.dp))
 
 
-            // 학교 선택 드롭다운
             Text(
                 text = "학교",
                 style = TextStyle(
@@ -171,49 +156,8 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded } // 드롭다운 상태 토글
-            ) {
-                // 드롭다운 트리거
-                OutlinedTextField(
-                    value = selectedSchool,
-                    onValueChange = {},
-                    readOnly = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(), // 드롭다운 메뉴와 연결
-                    textStyle = TextStyle( // 수정됨: 텍스트 스타일 정의
-                        fontSize = 13.sp,
-                        lineHeight = 20.8.sp,
-                        fontFamily = PretendardFamily,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF838A94)
-                    ),
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF333333), // 수정됨: 포커스 시 테두리 색상 변경
-                        unfocusedBorderColor = Color(0xFFAAAAAA) // 수정됨: 비포커스 시 테두리 색상 변경
-                    )
-                )
-
-                // 드롭다운 메뉴
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    schools.forEach { school ->
-                        DropdownMenuItem(
-                            text = { Text(text = school) },
-                            onClick = {
-                                selectedSchool = school
-                                expanded = false // 선택 후 드롭다운 닫기
-                            }
-                        )
-                    }
-                }
+            DropDownMenu(selectedSchool, schools, placeholder = "학교를 선택해주세요") {
+                selectedSchool = it
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -275,7 +219,7 @@ fun LoginPage(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = message,
+                text = "학교 포털 아이디/비밀번호를 통해 접속하실 수 있습니다.",
                 style = TextStyle(
                     fontSize = 12.sp,
                     lineHeight = 19.2.sp,
@@ -287,26 +231,14 @@ fun LoginPage(
                     .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(17.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .width(335.dp)
-                    .height(38.dp)
-                    .background(color = Color(0xFF303030), shape = RoundedCornerShape(size = 4.dp))
+            dev.kichan.marketplace.ui.component.atoms.CustomButton(
+                text = "로그인",
+                modifier = Modifier.fillMaxWidth(),
+                isDisable = !isSubmitAble,
             ) {
-                Button(
-                    onClick = { onLogin(inputId, inputPassword) },
-                    modifier = Modifier.fillMaxSize(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "로그인",
-                        style = TextStyle(fontSize = 14.sp, color = Color.White)
-                    )
-                }
+                onLogin(inputId, inputPassword)
             }
         }
     }

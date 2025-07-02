@@ -1,15 +1,10 @@
 package dev.kichan.marketplace.ui.component.molecules
 
-import android.graphics.ColorSpace.Model
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,14 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.ui.component.atoms.Button
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate
 
@@ -105,7 +99,7 @@ fun RequestSmallCard(
             val buttonModifier = Modifier.fillMaxWidth()
 
             if (isRequestDone) {
-                Button(
+                CustomButton(
                     text = "제휴 컨텍중",
                     isDisable = true,
                     modifier = buttonModifier,
@@ -114,7 +108,7 @@ fun RequestSmallCard(
 
                 }
             } else {
-                Button(
+                CustomButton(
                     text = "공감 하기",
                     icon = Icons.Default.FavoriteBorder,
                     modifier = buttonModifier,

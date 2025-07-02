@@ -1,7 +1,5 @@
 package dev.kichan.marketplace.ui.component.molecules
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,20 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.MarketPageNationRes
-import dev.kichan.marketplace.ui.component.atoms.Button
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import java.time.LocalDate
 
 @Composable
 fun RequestCard(
@@ -125,7 +118,7 @@ fun RequestCard(
             val buttonModifier = Modifier.fillMaxWidth()
 
             if(isMyDone) {
-                Button(
+                CustomButton(
                     text = "공감 완료",
                     isDisable = true,
                     modifier = buttonModifier
@@ -133,14 +126,14 @@ fun RequestCard(
                 }
             }
             else if (isRequestDone) {
-                Button(
+                CustomButton(
                     text = "제휴 컨텍중",
                     isDisable = true,
                     modifier = buttonModifier
                 ) {
                 }
             } else {
-                Button(
+                CustomButton(
                     text = "공감 하기",
                     icon = Icons.Default.FavoriteBorder,
                     modifier = buttonModifier

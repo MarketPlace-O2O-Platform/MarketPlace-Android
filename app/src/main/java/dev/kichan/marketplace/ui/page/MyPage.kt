@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.page
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -134,12 +135,15 @@ fun MyPage(
             } else {
                 items(items = marketState.favorites) { market ->
                     MarketListItem(
+                        modifier = Modifier.clickable {
+                            navController.navigate("${Page.EventDetail.name}/${market.id}")
+                        },
                         title = market.name,
                         description = market.description,
                         location = market.address,
                         imageUrl = NetworkModule.getImage(market.thumbnail),
                         isFavorite = market.isFavorite,
-                        onLikeClick = {}
+                        onLikeClick = {  }
                     )
                 }
             }
