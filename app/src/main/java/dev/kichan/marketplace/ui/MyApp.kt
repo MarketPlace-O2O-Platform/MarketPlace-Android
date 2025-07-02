@@ -123,21 +123,6 @@ fun MyApp(
             }
         }
 
-//        composable("${Page.CategoryEventList.name}/{category}") {
-//            it.arguments?.getString("category")?.let { category ->
-//                EventListPage(
-//                    navController = navController,
-//                    category = LargeCategory.valueOf(category)
-//                )
-//            }
-//        }
-
-//        composable("${Page.EventList.name}/{title}") {
-//            it.arguments?.getString("title")?.let { title ->
-//                EventListPage(navController = navController, title = title)
-//            }
-//        }
-
         composable(Page.LocalApiTestPage.name) {
             ApiTestPage()
         }
