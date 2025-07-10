@@ -23,13 +23,13 @@ import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.ReceivedCouponsScreen
 import dev.kichan.marketplace.ui.page.SplashPage
 import dev.kichan.marketplace.viewmodel.TempMarketViewModel
-import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.viewmodel.MarketViewModel
 
 @Composable
 fun MyApp(
-    authViewModel: AuthViewModel = AuthViewModel(), //todo: 언젠가는 DI 적용
+    loginViewModel: LoginViewModel = LoginViewModel(), //todo: 언젠가는 DI 적용
     couponViewModel: CouponViewModel = CouponViewModel(),
     marketViewModel: MarketViewModel = MarketViewModel(),
     tempMarketViewModel: TempMarketViewModel = TempMarketViewModel()
@@ -48,7 +48,7 @@ fun MyApp(
         composable(Page.Splash.name) {
             SplashPage(
                 navController = navController,
-                authViewModel = authViewModel
+                loginViewModel = loginViewModel
             )
         }
         navigation(route = Page.Main.name, startDestination = Page.Home.name) {
@@ -61,7 +61,7 @@ fun MyApp(
             composable(Page.Like.name) {
                 LikePage(
                     navController = navController,
-                    authViewModel = authViewModel,
+                    loginViewModel = loginViewModel,
                     tempMarketViewModel = tempMarketViewModel
                 )
             }
@@ -74,7 +74,7 @@ fun MyApp(
             composable(Page.My.name) {
                 MyPage(
                     navController = navController,
-                    authViewModel = authViewModel,
+                    loginViewModel = loginViewModel,
                     marketViewModel = marketViewModel
                 )
             }
@@ -96,7 +96,7 @@ fun MyApp(
         composable(route = Page.Login.name) {
             LoginPage(
                 navController = navController,
-                authViewModel = authViewModel
+                loginViewModel = loginViewModel
             )
         }
         composable(route = "${Page.MarketListPage.name}/{category}") {

@@ -45,24 +45,24 @@ import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
-import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
 import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 
 @Composable
 fun LikePage(
     navController: NavController,
-    authViewModel: AuthViewModel,
+    loginViewModel: LoginViewModel,
     tempMarketViewModel: TempMarketViewModel
 ) {
-    val authState = authViewModel.loginState
+    val authState = loginViewModel.loginState
     val tempMarketState = tempMarketViewModel.likePageState
 
     var searchKey by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     val onDecrease = {
-        authViewModel.refershMemberData()
+        loginViewModel.refershMemberData()
     }
 
     LaunchedEffect(Unit) {

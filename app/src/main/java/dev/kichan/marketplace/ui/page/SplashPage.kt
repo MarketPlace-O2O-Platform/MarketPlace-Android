@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,16 +14,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
 
 @Composable
 fun SplashPage(
     navController: NavHostController,
-    authViewModel: AuthViewModel
+    loginViewModel: LoginViewModel
 ) {
     val context = LocalContext.current
-    val state = authViewModel.loginState
+    val state = loginViewModel.loginState
 
     when (state) {
         is LoginUiState.Error -> {

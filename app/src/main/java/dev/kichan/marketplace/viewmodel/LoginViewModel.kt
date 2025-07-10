@@ -8,10 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import com.github.javafaker.Bool
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.login.LoginReq
-import dev.kichan.marketplace.model.data.login.LoginRes
 import dev.kichan.marketplace.model.data.login.MemberLoginRes
 import dev.kichan.marketplace.model.getAuthToken
 import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
@@ -27,7 +25,7 @@ sealed class LoginUiState {
     data class Error(val message: String) : LoginUiState()
 }
 
-class AuthViewModel(private val application: Application = Application()) :
+class LoginViewModel(private val application: Application = Application()) :
     AndroidViewModel(application) {
     private val authRepository = AuthRepositoryImpl(application.applicationContext)
 

@@ -13,11 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,16 +27,16 @@ import dev.kichan.marketplace.ui.DropDownMenu
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
 
 @Composable
 fun LoginPage(
     navController: NavHostController,
-    authViewModel: AuthViewModel = AuthViewModel()
+    loginViewModel: LoginViewModel = LoginViewModel()
 ) {
     val context = LocalContext.current
-    val state = authViewModel.loginState
+    val state = loginViewModel.loginState
     val scrollState = rememberScrollState()
 
     var inputId by remember { mutableStateOf("") }
@@ -49,7 +46,7 @@ fun LoginPage(
     val schools = listOf("인천대학교", "연세대학교", "인하대학교")
 
     val onLogin: (String, String) -> Unit = { id, password ->
-        authViewModel.login(
+        loginViewModel.login(
             id = id,
             password = password,
         )
@@ -98,41 +95,7 @@ fun LoginPage(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight(500)
-                            )
-                        ) {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("매번")
-                            }
-                            append(" 마라탕 한 그릇,")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(" 이천원 더")
-                            }
-                            append(" 내고 있어요.\n")
-                        }
-
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight(500)
-                            )
-                        ) {
-                            append("이제, 다니는")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight(600))) {
-                                append(" 대학")
-                            }
-                            append(" 제휴 멤버십으로\n")
-
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("쿠폰 꾸러미")
-                            }
-                            append(" 받아볼까요?")
-                        }
-                    },
+                    text = "이제, 인천대 제휴 할인을 받으러 가볼까요?",
                     fontFamily = PretendardFamily,
                 )
             }

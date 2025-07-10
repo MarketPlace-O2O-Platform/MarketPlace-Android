@@ -36,7 +36,7 @@ import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.a
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.viewmodel.LoginUiState
 import dev.kichan.marketplace.viewmodel.MarketViewModel
@@ -44,15 +44,15 @@ import dev.kichan.marketplace.viewmodel.MarketViewModel
 @Composable
 fun MyPage(
     navController: NavController,
-    authViewModel: AuthViewModel,
+    loginViewModel: LoginViewModel,
     marketViewModel: MarketViewModel,
 ) {
-    val authState = authViewModel.loginState
+    val authState = loginViewModel.loginState
     val marketState = marketViewModel.myPageUiState
     var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     val onLogout = {
-        authViewModel.logout(
+        loginViewModel.logout(
             onSuccess = {
                 // 로그아웃 성공 시 로그인 화면으로 이동
                 navController.popBackStack()
