@@ -12,6 +12,11 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 
+data class SaveAccountReq(
+    val account: String,
+    val accountNumber: String
+)
+
 interface MemberService {
     @POST("api/members")
     suspend fun login(@Body body : LoginReq) : Response<ResponseTemplate<String>>
@@ -23,4 +28,12 @@ interface MemberService {
     suspend fun saveFcmToken(
         @Body body: SaveFCMTokenReq
     ): Response<ResponseTemplate<Unit>>
+
+    @PATCH("/api/members/account/permit")
+    suspend fun saveAccountPermit(
+        @Body body : SaveAccountReq
+    )
+
+    @PATCH("/api/members/account/deny")
+    suspend fun saveAccountDeny()
 }
