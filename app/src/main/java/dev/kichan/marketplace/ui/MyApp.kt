@@ -37,7 +37,7 @@ fun MyApp(
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "api-test",
+        startDestination = Page.Splash.name,
         enterTransition = {
             EnterTransition.None
         },

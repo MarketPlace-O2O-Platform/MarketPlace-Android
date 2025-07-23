@@ -8,4 +8,6 @@ class PayBackCouponMemberRepository {
 
     suspend fun getMemberPayBackCoupon(type: String) =
         service.getMemberPayBackCoupon(type)
+
+    suspend fun downloadCoupon(id: Long) = service.downLoadCoupon(id)
 }

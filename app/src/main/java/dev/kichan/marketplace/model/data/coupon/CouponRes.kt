@@ -12,4 +12,5 @@ data class CouponRes(
     val isAvailable: Boolean,
     val isMemberIssued: Boolean,
     val thumbnail: String,
+    val couponType : String,
 )
