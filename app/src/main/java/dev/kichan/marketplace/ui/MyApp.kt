@@ -37,7 +37,7 @@ fun MyApp(
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Page.Splash.name,
+        startDestination = "api-test",
         enterTransition = {
             EnterTransition.None
         },
@@ -45,6 +45,9 @@ fun MyApp(
             ExitTransition.None
         }
     ) {
+        composable("api-test") {
+            ApiTestPage()
+        }
         composable(Page.Splash.name) {
             SplashPage(
                 navController = navController,
