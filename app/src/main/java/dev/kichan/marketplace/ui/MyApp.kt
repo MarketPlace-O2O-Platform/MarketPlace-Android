@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui
 
+import MyPage2
 import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -26,13 +27,15 @@ import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.viewmodel.MarketViewModel
+import dev.kichan.marketplace.viewmodel.MyViewModel
 
 @Composable
 fun MyApp(
     loginViewModel: LoginViewModel = LoginViewModel(), //todo: 언젠가는 DI 적용
     couponViewModel: CouponViewModel = CouponViewModel(),
     marketViewModel: MarketViewModel = MarketViewModel(),
-    tempMarketViewModel: TempMarketViewModel = TempMarketViewModel()
+    tempMarketViewModel: TempMarketViewModel = TempMarketViewModel(),
+    myViewModel: MyViewModel = MyViewModel()
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -111,7 +114,6 @@ fun MyApp(
                 )
             }
         }
-
         composable(route = "${Page.CouponListPage.name}/{type}") {
             it.arguments?.getString("type")?.let { type ->
                 if (!listOf("popular", "latest").contains(type)) {
@@ -124,6 +126,11 @@ fun MyApp(
                     type = type
                 )
             }
+        }
+        composable(route=Page.My2.name) {
+            MyPage2(
+                myViewModel = myViewModel,
+            )
         }
 
         composable(Page.LocalApiTestPage.name) {

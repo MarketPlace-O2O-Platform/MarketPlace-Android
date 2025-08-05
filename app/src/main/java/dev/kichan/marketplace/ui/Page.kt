@@ -13,6 +13,7 @@ enum class Page(
     Like(pageName = "공감"),
     Map(pageName = "지도"),
     My(pageName = "마이페이지"),
+    My2(pageName = "마이2"),
 
     Search(pageName = "검색"),
     Coupon(pageName = "쿠폰"),

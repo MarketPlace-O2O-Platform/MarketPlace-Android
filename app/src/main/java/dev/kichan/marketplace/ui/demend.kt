@@ -13,5 +13,5 @@ val bottomNavItem = listOf(
     Page.Home to Icons.Filled.Home,
     Page.Map to Icons.Filled.Place,
     Page.Like to Icons.Filled.ShoppingCart,
-    Page.My to Icons.Filled.Person,
+    Page.My2 to Icons.Filled.Person,
 )

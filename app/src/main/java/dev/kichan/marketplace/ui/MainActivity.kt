@@ -20,6 +20,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import dev.kichan.marketplace.viewmodel.MarketViewModel
+import dev.kichan.marketplace.viewmodel.MyViewModel
 import java.util.Locale
 
 
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
     private val marketViewModel : MarketViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
     private val tempMarketViewModel: TempMarketViewModel by viewModels()
+    private val myViewModel: MyViewModel by viewModels()
 
     private fun getFCMToken() {
         FirebaseMessaging.getInstance().token
@@ -80,7 +82,8 @@ class MainActivity : ComponentActivity() {
                     loginViewModel = loginViewModel,
                     couponViewModel = couponViewModel,
                     marketViewModel = marketViewModel,
-                    tempMarketViewModel = tempMarketViewModel
+                    tempMarketViewModel = tempMarketViewModel,
+                    myViewModel = myViewModel
                 )
             }
         }
