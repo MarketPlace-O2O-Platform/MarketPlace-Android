@@ -16,7 +16,7 @@ interface CouponApiService {
         @Query("type") type: String = "ISSUED",
         @Query("size") size: Int = 10,
         @Header("Authorization") token: String
-    ): Response<ResponseTemplate<CouponListResponse>> // ✅ 변경됨!
+    ): Response<ResponseTemplate<CouponListResponse<CouponResponse>>> // ✅ 변경됨!
 
     // ✅ 2. 쿠폰 사용 처리 (PUT)
     @PUT("/api/members/coupons")

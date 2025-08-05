@@ -16,8 +16,8 @@ data class CouponResponse(
     @SerializedName("imageUrl") val imageUrl: String? = null
 )
 
-data class CouponListResponse(
-    @SerializedName("couponResDtos") val couponResDtos: List<CouponResponse> = emptyList(), // ✅ 기본값 추가!
+data class CouponListResponse<T>(
+    @SerializedName("couponResDtos") val couponResDtos: List<T> = emptyList(),
     @SerializedName("hasNext") val hasNext: Boolean
 )
 
