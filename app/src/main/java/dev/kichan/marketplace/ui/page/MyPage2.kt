@@ -13,7 +13,6 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,10 +25,11 @@ import androidx.navigation.NavController
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.ProfileHeader
-import dev.kichan.marketplace.ui.component.atoms.CouponItem
+import dev.kichan.marketplace.ui.component.RefundCouponCard
 import dev.kichan.marketplace.viewmodel.LoginUiState
 import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.MyViewModel
+
 
 @Composable
 fun MyPage2(
@@ -42,6 +42,10 @@ fun MyPage2(
 
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
     var selectedTabIndex by remember { mutableStateOf(0) }
+
+    val selectedCouponList = if (selectedTabIndex == 0) couponState.paybackCouponList
+    else if (selectedTabIndex == 1) couponState.giftCouponList
+    else listOf()
 
     val onLogout = {}
 
@@ -100,12 +104,12 @@ fun MyPage2(
                     }
                 }
             }
-            items(couponState.couponList) {
-                CouponItem(
-                    coupon = it,
-                    type = tabs[selectedTabIndex]
-                )
+            item {
+                RefundCouponCard()
             }
+//            items(selectedCouponList) {
+//                RefundCouponCard()
+//            }
         }
     }
 }

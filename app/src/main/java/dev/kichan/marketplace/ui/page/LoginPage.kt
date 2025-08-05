@@ -24,6 +24,7 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.DropDownMenu
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -196,7 +197,7 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            dev.kichan.marketplace.ui.component.atoms.CustomButton(
+            CustomButton(
                 text = "로그인",
                 modifier = Modifier.fillMaxWidth(),
                 isDisable = !isSubmitAble,
