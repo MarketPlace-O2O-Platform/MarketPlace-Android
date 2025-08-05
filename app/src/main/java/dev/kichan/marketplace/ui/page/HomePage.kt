@@ -22,7 +22,7 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.toLocalDateTime
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
+import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.HomeAppBar

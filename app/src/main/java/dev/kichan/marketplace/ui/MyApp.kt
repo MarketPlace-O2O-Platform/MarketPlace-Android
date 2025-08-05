@@ -129,6 +129,8 @@ fun MyApp(
         }
         composable(route=Page.My2.name) {
             MyPage2(
+                navController = navController,
+                authViewModel = loginViewModel,
                 myViewModel = myViewModel,
             )
         }
