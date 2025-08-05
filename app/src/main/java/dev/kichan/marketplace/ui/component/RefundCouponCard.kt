@@ -53,13 +53,14 @@ fun RefundCouponCard(
     storeName: String = "하노이키친 인천대점",
     discountTitle: String = "결제 금액 10% 환급",
     imageUrl: String = "https://placehold.co/600x600",
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
 //    val CouponShape = couponShape(density)
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         colors = CardDefaults.cardColors().copy(
             containerColor = Color.White,
@@ -83,12 +84,15 @@ fun RefundCouponCard(
                     Text(
                         storeName,
                         fontFamily = PretendardFamily,
-                        color = Color.Gray, style = MaterialTheme.typography.bodySmall
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xff727272),
                     )
                     Text(
                         discountTitle,
                         fontFamily = PretendardFamily,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight(500),
                     )
                 }
             }
@@ -98,7 +102,9 @@ fun RefundCouponCard(
             CustomButton(
                 text = "환급하러 가기",
                 modifier = Modifier.fillMaxWidth(),
-            ) {}
+            ) {
+                onClick()
+            }
 
             /* 절취선 ---------------------------------------------------------------- */
             Spacer(Modifier.height(21.dp))

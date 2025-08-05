@@ -104,12 +104,12 @@ fun MyPage2(
                     }
                 }
             }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
-                RefundCouponCard()
+                RefundCouponCard(
+                    modifier = Modifier.padding(horizontal = 18.dp)
+                )
             }
-//            items(selectedCouponList) {
-//                RefundCouponCard()
-//            }
         }
     }
 }
