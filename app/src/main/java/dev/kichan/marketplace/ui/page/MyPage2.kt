@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.ProfileHeader
@@ -106,7 +107,8 @@ fun MyPage2(
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
                 RefundCouponCard(
-                    modifier = Modifier.padding(horizontal = 18.dp)
+                    modifier = Modifier.padding(horizontal = 18.dp),
+                    onClick = { navController.navigate(Page.ReceptUploadPage.name) }
                 )
             }
         }

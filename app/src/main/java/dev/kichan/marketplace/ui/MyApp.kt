@@ -22,6 +22,7 @@ import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.ReceivedCouponsScreen
+import dev.kichan.marketplace.ui.page.ReceiptUploadPage
 import dev.kichan.marketplace.ui.page.SplashPage
 import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 import dev.kichan.marketplace.viewmodel.LoginViewModel
@@ -137,6 +138,10 @@ fun MyApp(
 
         composable(Page.LocalApiTestPage.name) {
             ApiTestPage()
+        }
+
+        composable(Page.ReceptUploadPage.name) {
+            ReceiptUploadPage()
         }
     }
 }
