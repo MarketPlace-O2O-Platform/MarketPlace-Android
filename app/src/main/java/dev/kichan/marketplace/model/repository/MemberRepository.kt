@@ -16,6 +16,6 @@ interface MemberRepository {
     ): Response<ResponseTemplate<Unit>>
 
 
-    suspend fun saveAccountPermit(body : SaveAccountReq)
-    suspend fun saveAccountDeny()
+    suspend fun saveAccountPermit(body : SaveAccountReq): Response<ResponseTemplate<Unit>>
+    suspend fun saveAccountDeny(): Response<ResponseTemplate<Unit>>
 }

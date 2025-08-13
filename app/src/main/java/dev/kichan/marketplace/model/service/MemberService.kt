@@ -12,10 +12,10 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 
 interface MemberService {
-    @POST("api/members")
+    @POST("/api/members")
     suspend fun login(@Body body : LoginReq) : Response<ResponseTemplate<String>>
 
-    @GET("api/members")
+    @GET("/api/members")
     suspend fun getUserData() : Response<ResponseTemplate<MemberLoginRes>>
 
     @PATCH("/api/members/notification/permit")
@@ -23,11 +23,14 @@ interface MemberService {
         @Body body: SaveFCMTokenReq
     ): Response<ResponseTemplate<Unit>>
 
+    @PATCH("/api/members/notification/deny")
+    suspend fun deleteFcmToken(): Response<ResponseTemplate<Unit>>
+
     @PATCH("/api/members/account/permit")
-    suspend fun saveAccountPermit(
+    suspend fun saveAccount(
         @Body body : SaveAccountReq
-    )
+    ) : Response<ResponseTemplate<Unit>>
 
     @PATCH("/api/members/account/deny")
-    suspend fun saveAccountDeny()
+    suspend fun deleteAccount(): Response<ResponseTemplate<Unit>>
 }
