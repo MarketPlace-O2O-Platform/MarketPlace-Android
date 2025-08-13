@@ -73,13 +73,6 @@ fun MyPage(
         ) {
             item { Spacer(modifier = Modifier.height(21.dp)) }
             item {
-                ProfileHeader(
-                    navController = navController,
-                    member = (authState as LoginUiState.Success).member,
-                    onLogout = onLogout
-                )
-            }
-            item {
                 Spacer(modifier = Modifier.height(2.dp))
                 Divider(
                     color = Color(0xFFF4F4F4),

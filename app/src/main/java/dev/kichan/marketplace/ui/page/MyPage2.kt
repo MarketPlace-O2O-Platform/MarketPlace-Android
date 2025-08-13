@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -29,7 +28,6 @@ import dev.kichan.marketplace.ui.component.RefundCouponCard
 import dev.kichan.marketplace.viewmodel.LoginUiState
 import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.MyViewModel
-
 
 @Composable
 fun MyPage2(
@@ -62,9 +60,10 @@ fun MyPage2(
             item { Spacer(modifier = Modifier.height(21.dp)) }
             item {
                 ProfileHeader(
-                    navController = navController,
                     member = (authState as LoginUiState.Success).member,
-                    onLogout = onLogout
+                    onLogout = onLogout,
+                    onCuration = {},
+                    onCallCenter = {}
                 )
             }
             item {

@@ -42,9 +42,10 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 @Composable
 fun ProfileHeader(
     modifier: Modifier = Modifier,
-    navController: NavController,
     member: MemberLoginRes,
     onLogout: () -> Unit = {},
+    onCuration: () -> Unit,
+    onCallCenter: () -> Unit,
 ) {
     var isShowLogoutMemu by remember { mutableStateOf(false) }
 
@@ -73,9 +74,6 @@ fun ProfileHeader(
                 fontFamily = PretendardFamily
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // 드롭다운 아이콘 (터치 가능하도록 IconButton 사용)
             IconButton(onClick = { isShowLogoutMemu = !isShowLogoutMemu }) {
                 Icon(
                     painter = painterResource(id = R.drawable.down),
@@ -97,21 +95,13 @@ fun ProfileHeader(
                 )
             }
         }
-        // 받은 쿠폰함 버튼
 
-        Button(
-            onClick = {
-                navController.navigate(Page.CouponHam.name)
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = Color.Black
+        TwoButtonGroup(
+            labels = listOf(
+                "큐레이션" to onCuration,
+                "고객센터" to onCallCenter,
             ),
-            contentPadding = PaddingValues(10.dp),
-            border = BorderStroke(1.dp, Color.Gray),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text(text = "받은 쿠폰함")
-        }
+            round = 16.dp
+        )
     }
 }
