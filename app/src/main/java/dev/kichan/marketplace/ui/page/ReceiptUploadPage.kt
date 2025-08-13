@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
@@ -48,6 +49,7 @@ import dev.kichan.marketplace.viewmodel.ReceiptUploadViewModel
 @Composable
 fun ReceiptUploadPage(
     modifier: Modifier = Modifier,
+    navController: NavController,
     viewModel: ReceiptUploadViewModel = viewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle(LocalLifecycleOwner.current)
@@ -63,7 +65,7 @@ fun ReceiptUploadPage(
 
     Scaffold(
         topBar = {
-            NavAppBar("환급하기") { }
+            NavAppBar("환급하기") { navController.popBackStack() }
         }
     ) {
         Column(

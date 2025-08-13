@@ -141,7 +141,7 @@ fun MyApp(
         }
 
         composable(Page.ReceptUploadPage.name) {
-            ReceiptUploadPage()
+            ReceiptUploadPage(navController = navController)
         }
     }
 }

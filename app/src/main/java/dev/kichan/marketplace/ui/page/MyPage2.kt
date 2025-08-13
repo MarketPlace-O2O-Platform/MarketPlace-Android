@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -105,11 +107,40 @@ fun MyPage2(
                 }
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
-            item {
-                RefundCouponCard(
-                    modifier = Modifier.padding(horizontal = 18.dp),
-                    onClick = { navController.navigate(Page.ReceptUploadPage.name) }
-                )
+            if(selectedTabIndex == 0) {
+                if(couponState.paybackCouponList.size == 0){
+                    item {
+                        RefundCouponCard(
+                            storeName = "인천대학교",
+                            discountTitle = "등록금 70%할인쿠폰",
+                            imageUrl = "https://postfiles.pstatic.net/MjAyMzA2MjdfMjgx/MDAxNjg3ODM1MzE3NjQ5.oBDtVqa7bFScuJ308FzHAdmRtABmaL1_SXK17n0-ndQg.KzZ6AcPYVQvHqB_vw4dZp8FG97HJp6bUS4QOU5RatRsg.JPEG.dream_we/IMG_7305.JPG?type=w966",
+                            onClick = { navController.navigate(Page.ReceptUploadPage) },
+                            modifier = Modifier.padding(horizontal = 18.dp),
+                        )
+                    }
+                }
+                else {
+                    items(couponState.paybackCouponList) {
+                        RefundCouponCard(
+                            storeName = "매충 매장 이름",
+                            discountTitle = it.couponName,
+                            imageUrl = NetworkModule.getImage(it.thumbnail),
+                            onClick = { navController.navigate(Page.ReceptUploadPage) },
+                            modifier = Modifier.padding(horizontal = 18.dp),
+                        )
+                    }
+                }
+            }
+            if(selectedTabIndex == 1) {
+                items(couponState.giftCouponList) {
+                    RefundCouponCard(
+                        storeName = "매충 매장 이름",
+                        discountTitle = it.couponName,
+                        imageUrl = NetworkModule.getImage(it.couponName),
+                        onClick = { navController.navigate(Page.ReceptUploadPage) },
+                        modifier = Modifier.padding(horizontal = 18.dp),
+                    )
+                }
             }
         }
     }
