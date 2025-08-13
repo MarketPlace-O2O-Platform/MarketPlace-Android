@@ -10,4 +10,8 @@ class PayBackCouponMemberRepository {
         service.getMemberPayBackCoupon(type)
 
     suspend fun downloadCoupon(id: Long) = service.downLoadCoupon(id)
+
+    suspend fun uploadRecept(
+        memberCouponId : Long
+    ) = service.uploadReceipt(memberCouponId)
 }
