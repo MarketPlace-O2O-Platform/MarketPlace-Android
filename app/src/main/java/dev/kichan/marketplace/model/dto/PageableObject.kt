@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class PageableObject(
     val sort: SortObject? = null,
     val offset: Long? = null,

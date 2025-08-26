@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class MarketReq(
     val marketName: String? = null,
     val description: String? = null,

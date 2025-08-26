@@ -1,9 +1,12 @@
+package dev.kichan.marketplace.model.services
+
 import retrofit2.Response
 import retrofit2.http.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import kotlinx.coroutines.Deferred
 import java.util.*
+import dev.kichan.marketplace.model.dto.*
 
 interface AdminService {
 
@@ -11,10 +14,10 @@ interface AdminService {
     suspend fun getAllTempMarket(@Query("page") page: Int? = null, @Query("size") size: Int? = null): Response<CommonResponsePageTempMarketDetailRes>
 
     @PUT("/api/admin/temp-markets")
-    suspend fun updateTempMarket(@Query("marketId") marketId: Long? = null, @Part file : MultipartBody.Part, @Part("jsonData")jsonData : RequestBody): Response<CommonResponseTempMarketDetailRes>
+    suspend fun updateTempMarket(@Query("marketId") marketId: Long? = null, @Part file : MultipartBody.Part, @Part("jsonData") jsonData : RequestBody): Response<CommonResponseTempMarketDetailRes>
 
     @POST("/api/admin/temp-markets")
-    suspend fun createTempMarket(@Part file : MultipartBody.Part, @Part("jsonData")jsonData : RequestBody): Response<CommonResponseTempMarketDetailRes>
+    suspend fun createTempMarket(@Part file : MultipartBody.Part, @Part("jsonData") jsonData : RequestBody): Response<CommonResponseTempMarketDetailRes>
 
     @PUT("/api/admin/temp-markets/hidden/{tempMarketId}")
     suspend fun toggleTempMarket(@Path("tempMarketId") tempMarketId: Long ): Response<CommonResponseTempMarketHiddenRes>

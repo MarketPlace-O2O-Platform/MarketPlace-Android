@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class MarketRes(
     val marketId: Long? = null,
     val marketName: String? = null,

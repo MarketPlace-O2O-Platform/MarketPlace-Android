@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class NotificationRes(
     val id: Long? = null,
     val title: String? = null,

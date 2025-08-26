@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class PageRequestMarketRes(
     val totalPages: Int? = null,
     val totalElements: Long? = null,

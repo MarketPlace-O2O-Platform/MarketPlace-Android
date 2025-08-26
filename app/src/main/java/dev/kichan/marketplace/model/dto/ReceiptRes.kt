@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class ReceiptRes(
     val memberCouponId: Long? = null,
     val receipt: String? = null,

@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class TempMarketReq(
     val category: String? = null,
     val marketName: String? = null,

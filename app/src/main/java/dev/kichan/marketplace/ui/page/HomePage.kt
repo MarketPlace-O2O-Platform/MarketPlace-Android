@@ -42,7 +42,7 @@ import dev.kichan.marketplace.viewmodel.HomeNavigationEvent
 fun HomePage(
     navController: NavController,
     couponViewModel: CouponViewModel = viewModel()
-) { {
+) {
     val state = couponViewModel.homeState
     LaunchedEffect(Unit) {
         if(state.popularCoupons.isEmpty()) {

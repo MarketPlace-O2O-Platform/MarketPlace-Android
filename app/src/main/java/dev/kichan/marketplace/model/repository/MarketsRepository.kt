@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.repository
+
 import retrofit2.Response
 import retrofit2.http.*
 import okhttp3.MultipartBody
@@ -6,7 +8,8 @@ import kotlinx.coroutines.Deferred
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import MarketsService
+import dev.kichan.marketplace.model.services.MarketsService
+import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class MarketsRepository @Inject constructor(

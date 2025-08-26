@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class BetaMarketRes(
     val betaMarketId: Long? = null,
     val marketName: String? = null,

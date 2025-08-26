@@ -1,3 +1,5 @@
+package dev.kichan.marketplace.model.dto
+
 data class IssuedCouponRes(
     val memberCouponId: Long? = null,
     val couponId: Long? = null,
