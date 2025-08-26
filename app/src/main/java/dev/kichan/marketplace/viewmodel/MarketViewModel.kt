@@ -16,11 +16,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.google.android.gms.maps.model.LatLng
 import dev.kichan.marketplace.model.data.coupon.CouponRes
-import dev.kichan.marketplace.model.data.kakao.adress.Address
+import dev.kichan.marketplace.model.dto.kakao.adress.Address
 import dev.kichan.marketplace.model.data.kakao.adress.LotNumberAddress
 import dev.kichan.marketplace.model.data.market.MarketDetailRes
 import dev.kichan.marketplace.model.repository.CouponOwnerRepository
-import kotlinx.coroutines.delay
 
 data class MarketPageUiState(
     val marketData: List<MarketRes> = emptyList(),
