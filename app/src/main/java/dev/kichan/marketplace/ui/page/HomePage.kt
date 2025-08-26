@@ -139,11 +139,10 @@ fun HomePage(
                             CouponBoxProps(
                                 id = it.couponId.toString(),
                                 subTitle = it.marketName,
-                                title = it.name,
+                                title = it.couponName,
                                 url = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
                                 marketId = it.marketId,
                                 onDownloadClick = { /* TODO */ },
-                                isDownload = it.isMemberIssued,
                             )
                         },
                         isLoading = uiState.isLatestLoading,
