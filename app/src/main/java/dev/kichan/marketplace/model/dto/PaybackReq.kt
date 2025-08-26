@@ -1,6 +1,6 @@
 package dev.kichan.marketplace.model.dto
 
 data class PaybackReq(
-    val couponName: String? = null,
-    val description: String? = null
+    val couponName: String,
+    val description: String
 )

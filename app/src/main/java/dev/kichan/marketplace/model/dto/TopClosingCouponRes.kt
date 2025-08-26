@@ -1,10 +1,10 @@
 package dev.kichan.marketplace.model.dto
 
 data class TopClosingCouponRes(
-    val couponId: Long? = null,
-    val couponName: String? = null,
-    val deadline: String? = null,
-    val marketId: Long? = null,
-    val marketName: String? = null,
-    val thumbnail: String? = null
+    val couponId: Long,
+    val couponName: String,
+    val deadline: String,
+    val marketId: Long,
+    val marketName: String,
+    val thumbnail: String
 )

@@ -1,10 +1,10 @@
 package dev.kichan.marketplace.model.dto
 
 data class PageableObject(
-    val sort: SortObject? = null,
-    val offset: Long? = null,
-    val paged: Boolean? = null,
-    val pageNumber: Int? = null,
-    val pageSize: Int? = null,
-    val unpaged: Boolean? = null
+    val sort: SortObject,
+    val offset: Long,
+    val paged: Boolean,
+    val pageNumber: Int,
+    val pageSize: Int,
+    val unpaged: Boolean
 )

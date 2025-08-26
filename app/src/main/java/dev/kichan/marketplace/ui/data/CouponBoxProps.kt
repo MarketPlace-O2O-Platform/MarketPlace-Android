@@ -6,6 +6,5 @@ data class CouponBoxProps(
     val subTitle : String,
     val url : String,
     val marketId: Long,
-    val isDownload: Boolean,
     val onDownloadClick: () -> Unit,
 )

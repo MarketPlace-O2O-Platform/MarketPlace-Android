@@ -1,10 +1,10 @@
 package dev.kichan.marketplace.model.dto
 
 data class PaybackRes(
-    val couponId: Long? = null,
-    val couponName: String? = null,
-    val couponDescription: String? = null,
-    val isHidden: Boolean? = null,
-    val isMemberIssued: Boolean? = null,
-    val couponType: String? = null
+    val couponId: Long,
+    val couponName: String,
+    val couponDescription: String,
+    val isHidden: Boolean,
+    val isMemberIssued: Boolean,
+    val couponType: String
 )

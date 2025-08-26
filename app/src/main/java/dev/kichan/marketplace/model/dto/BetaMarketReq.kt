@@ -1,9 +1,9 @@
 package dev.kichan.marketplace.model.dto
 
 data class BetaMarketReq(
-    val marketName: String? = null,
-    val couponName: String? = null,
-    val couponDetail: String? = null,
-    val major: String? = null,
-    val isPromise: Boolean? = null
+    val marketName: String,
+    val couponName: String,
+    val couponDetail: String,
+    val major: String,
+    val isPromise: Boolean
 )

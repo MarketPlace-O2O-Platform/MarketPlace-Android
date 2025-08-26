@@ -1,6 +1,6 @@
 package dev.kichan.marketplace.model.dto
 
 data class CommonResponseCouponHandleRes(
-    val message: String? = null,
-    val response: CouponHandleRes? = null
+    val message: String,
+    val response: CouponHandleRes
 )

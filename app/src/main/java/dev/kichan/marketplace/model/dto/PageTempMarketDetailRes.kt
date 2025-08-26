@@ -1,15 +1,15 @@
 package dev.kichan.marketplace.model.dto
 
 data class PageTempMarketDetailRes(
-    val totalPages: Int? = null,
-    val totalElements: Long? = null,
-    val first: Boolean? = null,
-    val last: Boolean? = null,
-    val sort: SortObject? = null,
-    val size: Int? = null,
-    val content: List<String>? = null,
-    val number: Int? = null,
-    val numberOfElements: Int? = null,
-    val pageable: PageableObject? = null,
-    val empty: Boolean? = null
+    val totalPages: Int,
+    val totalElements: Long,
+    val first: Boolean,
+    val last: Boolean,
+    val sort: SortObject,
+    val size: Int,
+    val content: List<String>,
+    val number: Int,
+    val numberOfElements: Int,
+    val pageable: PageableObject,
+    val empty: Boolean
 )

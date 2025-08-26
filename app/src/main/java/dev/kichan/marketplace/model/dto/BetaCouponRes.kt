@@ -1,11 +1,11 @@
 package dev.kichan.marketplace.model.dto
 
 data class BetaCouponRes(
-    val betaCouponId: Long? = null,
-    val marketName: String? = null,
-    val couponName: String? = null,
-    val couponDetail: String? = null,
-    val image: String? = null,
-    val isUsed: Boolean? = null,
-    val isPromise: Boolean? = null
+    val betaCouponId: Long,
+    val marketName: String,
+    val couponName: String,
+    val couponDetail: String,
+    val image: String,
+    val isUsed: Boolean,
+    val isPromise: Boolean
 )

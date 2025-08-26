@@ -1,11 +1,11 @@
 package dev.kichan.marketplace.model.dto
 
 data class NotificationRes(
-    val id: Long? = null,
-    val title: String? = null,
-    val body: String? = null,
-    val targetId: Long? = null,
-    val targetType: String? = null,
-    val isRead: Boolean? = null,
-    val createdAt: String? = null
+    val id: Long,
+    val title: String,
+    val body: String,
+    val targetId: Long,
+    val targetType: String,
+    val isRead: Boolean,
+    val createdAt: String
 )

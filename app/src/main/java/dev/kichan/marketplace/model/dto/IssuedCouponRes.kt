@@ -1,14 +1,14 @@
 package dev.kichan.marketplace.model.dto
 
 data class IssuedCouponRes(
-    val memberCouponId: Long? = null,
-    val couponId: Long? = null,
-    val marketName: String? = null,
-    val thumbnail: String? = null,
-    val couponName: String? = null,
-    val description: String? = null,
-    val used: Boolean? = null,
-    val couponType: String? = null,
-    val deadLine: String? = null,
-    val expired: Boolean? = null
+    val memberCouponId: Long,
+    val couponId: Long,
+    val marketName: String,
+    val thumbnail: String,
+    val couponName: String,
+    val description: String,
+    val used: Boolean,
+    val couponType: String,
+    val deadLine: String,
+    val expired: Boolean
 )

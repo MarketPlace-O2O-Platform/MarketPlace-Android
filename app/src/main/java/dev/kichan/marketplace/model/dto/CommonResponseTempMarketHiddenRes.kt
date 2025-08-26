@@ -1,6 +1,6 @@
 package dev.kichan.marketplace.model.dto
 
 data class CommonResponseTempMarketHiddenRes(
-    val message: String? = null,
-    val response: TempMarketHiddenRes? = null
+    val message: String,
+    val response: TempMarketHiddenRes
 )

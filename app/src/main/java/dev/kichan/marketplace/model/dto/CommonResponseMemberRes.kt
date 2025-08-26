@@ -1,6 +1,6 @@
 package dev.kichan.marketplace.model.dto
 
 data class CommonResponseMemberRes(
-    val message: String? = null,
-    val response: MemberRes? = null
+    val message: String,
+    val response: MemberRes
 )

@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.viewmodel
+package dev.kichan.marketplace.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

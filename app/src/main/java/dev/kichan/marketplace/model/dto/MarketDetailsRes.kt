@@ -1,12 +1,12 @@
 package dev.kichan.marketplace.model.dto
 
 data class MarketDetailsRes(
-    val marketId: Long? = null,
-    val name: String? = null,
-    val description: String? = null,
-    val operationHours: String? = null,
-    val closedDays: String? = null,
-    val phoneNumber: String? = null,
-    val address: String? = null,
-    val imageResList: List<String>? = null
+    val marketId: Long,
+    val name: String,
+    val description: String,
+    val operationHours: String,
+    val closedDays: String,
+    val phoneNumber: String,
+    val address: String,
+    val imageResList: List<String>
 )

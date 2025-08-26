@@ -54,16 +54,6 @@ fun CouponBox(
                 .background(Color(0x4D000000))
         )
 
-        IconButton(
-            onClick = { couponBoxProps.onDownloadClick() },
-            modifier = Modifier.align(Alignment.TopEnd)
-        ) {
-            Icon(
-                painter = painterResource(if(couponBoxProps.isDownload) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
-                contentDescription = null
-            )
-        }
-
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)

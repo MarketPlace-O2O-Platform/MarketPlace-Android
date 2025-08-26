@@ -1,7 +1,7 @@
 package dev.kichan.marketplace.model.dto
 
 data class ImageRes(
-    val imageId: Long? = null,
-    val sequence: Int? = null,
-    val name: String? = null
+    val imageId: Long,
+    val sequence: Int,
+    val name: String
 )

@@ -30,8 +30,8 @@ import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.ui.viewmodel.LoginEvent
-import dev.kichan.marketplace.ui.viewmodel.LoginViewModel
+import dev.kichan.marketplace.viewmodel.LoginEvent
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
 @Composable
