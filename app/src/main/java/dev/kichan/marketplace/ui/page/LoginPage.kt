@@ -18,20 +18,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.saveAuthToken
 import dev.kichan.marketplace.ui.DropDownMenu
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.InputType
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.viewmodel.LoginViewModel
-import dev.kichan.marketplace.viewmodel.LoginUiState
-import dev.kichan.marketplace.viewmodel.LoginNavigationEvent
-import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.kichan.marketplace.ui.viewmodel.LoginEvent
+import dev.kichan.marketplace.ui.viewmodel.LoginViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginPage(
@@ -39,8 +40,8 @@ fun LoginPage(
     loginViewModel: LoginViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val state = loginViewModel.loginState
     val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
 
     var inputId by remember { mutableStateOf("") }
     var inputPassword by remember { mutableStateOf("") }
@@ -49,37 +50,29 @@ fun LoginPage(
     val schools = listOf("인천대학교", "연세대학교", "인하대학교")
 
     val onLogin: (String, String) -> Unit = { id, password ->
-        loginViewModel.login(
-            id = id,
-            password = password,
-        )
+        loginViewModel.login(id, password)
     }
 
     LaunchedEffect(Unit) {
-        loginViewModel.navigationEvent.collect { event ->
+        loginViewModel.loginEvent.collect { event ->
             when (event) {
-                LoginNavigationEvent.PopBackStack -> navController.popBackStack()
-                LoginNavigationEvent.NavigateToMain -> navController.navigate(Page.Main.name)
-                else -> {}
+                is LoginEvent.Success -> {
+                    coroutineScope.launch {
+                        saveAuthToken(context, event.token)
+                        Toast.makeText(context, "로그인 성공", Toast.LENGTH_SHORT).show()
+                        navController.navigate(Page.Main.name) {
+                            popUpTo(Page.Login.name) { inclusive = true }
+                        }
+                    }
+                }
+                is LoginEvent.Error -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
-    when (state) {
-        is LoginUiState.Error -> {
-            if (state.message.isNotEmpty()) {
-                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        LoginUiState.Idle -> {}
-        LoginUiState.Loading -> {}
-        is LoginUiState.Success -> {
-            // Navigation is now handled by LaunchedEffect observing navigationEvent
-        }
-    }
-
-    val isSubmitAble = inputId.isNotEmpty() && inputPassword.isNotEmpty() && selectedSchool.isNotEmpty();
+    val isSubmitAble = inputId.isNotEmpty() && inputPassword.isNotEmpty() && selectedSchool.isNotEmpty()
 
     Scaffold {
         Column(
