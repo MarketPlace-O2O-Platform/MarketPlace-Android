@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -31,10 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.market.MarketDetailRes
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import androidx.compose.material3.*
 import androidx.compose.ui.draw.drawBehind
@@ -50,12 +50,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
+import dev.kichan.marketplace.model.data.remote.RetrofitClient
+import dev.kichan.marketplace.model.dto.MarketDetailsRes
 import dev.kichan.marketplace.ui.CouponDownloadCheckDialog
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
-import dev.kichan.marketplace.viewmodel.CouponViewModel
-import dev.kichan.marketplace.viewmodel.MarketViewModel
+import dev.kichan.marketplace.ui.viewmodel.MarketDetailNavigationEvent
+import dev.kichan.marketplace.ui.viewmodel.MarketDetailViewModel
+import dev.kichan.marketplace.ui.viewmodel.MarketDetailViewModelFactory
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -63,19 +66,28 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun MarketDetailPage(
     navController: NavHostController,
-    marketViewModel: MarketViewModel,
-    couponViewModel: CouponViewModel,
     id: Long,
+    marketDetailViewModel: MarketDetailViewModel = viewModel(
+        factory = MarketDetailViewModelFactory(
+            LocalContext.current.applicationContext as Application,
+            id
+        )
+    )
 ) {
-    val state = marketViewModel.marketDetailPageUiState
+    val uiState by marketDetailViewModel.uiState.collectAsState()
     var downLoadCouponId by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
-        marketViewModel.getMarket(id)
-        marketViewModel.getMarketCoupon(id)
+        marketDetailViewModel.navigationEvent.collect { event ->
+            when (event) {
+                is MarketDetailNavigationEvent.NavigateToMyPage -> {
+                    navController.navigate(Page.My.name)
+                }
+            }
+        }
     }
 
-    if (state.marketData == null) return
+    if (uiState.marketData == null) return
 
     // 쿠폰 받기 다이얼로그 상태 변수
     Scaffold(
@@ -87,8 +99,7 @@ fun MarketDetailPage(
             CouponDownloadCheckDialog(
                 onDismiss = { downLoadCouponId = null },
                 onAccept = {
-                    couponViewModel.downloadCoupon(downLoadCouponId!!)
-                    navController.navigate(Page.My.name)
+                    marketDetailViewModel.downloadCoupon(downLoadCouponId!!)
                 }
             )
         }
@@ -104,9 +115,15 @@ fun MarketDetailPage(
             )
         ) {
             item {
-                ImageSlider(state.marketData.imageResList.map { NetworkModule.getImage(it.name) })
+                ImageSlider(uiState.marketData!!.imageResList.map { img ->
+                    RetrofitClient.getClient().baseUrl().toString() + "images/" + img.imageId
+                })
             }
-            item { MainInfo(state.marketData) }
+            item {
+                MainInfo(
+                    uiState.marketData!!,
+                    onFavorite = { marketDetailViewModel.favorite(id) })
+            }
             item {
                 HorizontalDivider(
                     Modifier
@@ -129,27 +146,27 @@ fun MarketDetailPage(
                     }
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    if (state.couponList.isNotEmpty()) {
+                    if (uiState.couponList.isNotEmpty()) {
                         LazyRow(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
                         ) {
-                            items(state.couponList) { coupon ->
+                            items(uiState.couponList) { coupon ->
                                 val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
                                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                 val parsedDate =
-                                    LocalDate.parse(coupon.deadline.substring(0, 10), formatter)
+                                    LocalDate.parse(coupon.deadLine.substring(0, 10), formatter)
                                 val expireDate =
                                     parsedDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일까지"))
 
                                 TicketCoupon(
-                                    title = coupon.name,
+                                    title = coupon.couponName,
                                     expireDate = expireDate,
                                     width = screenWidth - PAGE_HORIZONTAL_PADDING * 2,
-                                    onClick = { downLoadCouponId = coupon.id },
+                                    onClick = { downLoadCouponId = coupon.couponId },
                                 )
                             }
                         }
@@ -170,8 +187,8 @@ fun MarketDetailPage(
                         .background(Color(0xffeeeee))
                 )
             }
-            item { BusinessInfo(state.marketData) }
-            item { KakaoMapSearchBox(state.marketData.name) }
+            item { BusinessInfo(uiState.marketData!!) }
+            item { KakaoMapSearchBox(uiState.marketData!!.name) }
         }
     }
 }
@@ -188,7 +205,7 @@ fun ImageSlider(imageList: List<String>) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(280.dp),
-                model = NetworkModule.getImageModel(LocalContext.current, url),
+                model = url,
                 contentDescription = "이미지",
                 contentScale = ContentScale.Crop,
             )
@@ -198,7 +215,7 @@ fun ImageSlider(imageList: List<String>) {
 
 
 @Composable
-private fun MainInfo(data: MarketDetailRes) {
+private fun MainInfo(data: MarketDetailsRes, onFavorite: () -> Unit) {
     Row(
         modifier = Modifier.padding(20.dp)
     ) {
@@ -222,14 +239,11 @@ private fun MainInfo(data: MarketDetailRes) {
         }
         Spacer(modifier = Modifier.width(12.dp))
 
-        var isBook by remember { mutableStateOf(false) }
-
-        //todo: 즐겨찾기 처리
         IconButton(
-            onClick = { isBook = !isBook }
+            onClick = { onFavorite() }
         ) {
             Icon(
-                painter = painterResource(if (isBook) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
+                painter = painterResource(if (false) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
                 contentDescription = null
             )
         }
@@ -338,7 +352,7 @@ fun TicketCoupon(
 }
 
 @Composable
-private fun BusinessInfo(data: MarketDetailRes) {
+private fun BusinessInfo(data: MarketDetailsRes) {
     Column(
         modifier = Modifier.padding(20.dp)
     ) {

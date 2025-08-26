@@ -8,5 +8,5 @@ data class MarketDetailsRes(
     val closedDays: String,
     val phoneNumber: String,
     val address: String,
-    val imageResList: List<String>
+    val imageResList: List<ImageRes>
 )
