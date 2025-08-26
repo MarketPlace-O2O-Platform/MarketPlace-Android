@@ -17,19 +17,16 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,10 +34,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastCbrt
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.github.javafaker.Bool
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -51,17 +47,18 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.remote.RetrofitClient
+import dev.kichan.marketplace.model.dto.MarketRes
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.ThreeStepBottomSheet
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
+import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import dev.kichan.marketplace.viewmodel.MarketViewModel
+import dev.kichan.marketplace.ui.viewmodel.MapViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,17 +67,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapPage(
     navController: NavController,
-    marketViewModel: MarketViewModel = MarketViewModel()
+    mapViewModel: MapViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val state = marketViewModel.mapPageState
-    val initialPosition = LatLng(
-        37.376651978907326,
-        126.63425891507083,
-    )
+    val uiState by mapViewModel.uiState.collectAsState()
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            initialPosition, 14f
+            LatLng(37.376651978907326, 126.63425891507083), 14f
         )
     }
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -91,7 +84,6 @@ fun MapPage(
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
     }
-    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
 
     val onMoveCurrentPosition = {
         fusedLocationClient.lastLocation
@@ -108,8 +100,8 @@ fun MapPage(
             }
     }
 
-    LaunchedEffect(Unit, selectedCategory) {
-        marketViewModel.getMarketByPosition(initialPosition, selectedCategory)
+    LaunchedEffect(Unit, uiState.selectedCategory) {
+        mapViewModel.getMarkets()
     }
 
     Scaffold(
@@ -130,13 +122,13 @@ fun MapPage(
                         .fillMaxWidth()
                         .height(screenHeight),
                     isExpended = sheetState.currentValue == 2,
-                    isLoading = state.isLoading,
-                    markets = state.marketData,
+                    isLoading = uiState.isLoading,
+                    markets = uiState.markets.map { it.market },
                     onCloseSheet = {
                         scope.launch { sheetState.animateTo(1) };
                     },
-                    onDetailClick = { navController.navigate("${Page.EventDetail}/$it") },
-                    onFavorite = { marketViewModel.favorite(it) }
+                    onDetailClick = { navController.navigate("${Page.EventDetail.name}/$it") },
+                    onFavorite = { mapViewModel.favorite(it) }
                 )
             },
             overlayContent = {},
@@ -149,14 +141,13 @@ fun MapPage(
                             zoomControlsEnabled = false,
                             myLocationButtonEnabled = false,
                             mapToolbarEnabled = true
-                            //todo: 참고 https://developers.google.com/maps/documentation/android-sdk/reference/com/google/android/libraries/maps/UiSettings?hl=ko
                         ),
                         onMapClick = {
                         }
                     ) {
-                        for (p in state.positionList) {
+                        for (p in uiState.markets) {
                             Marker(
-                                state = MarkerState(position = p)
+                                state = MarkerState(position = p.coords)
                             )
                         }
                     }
@@ -165,8 +156,8 @@ fun MapPage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.TopCenter),
-                        selectedCategory = selectedCategory,
-                        onSelected = { selectedCategory = it }
+                        selectedCategory = uiState.selectedCategory,
+                        onSelected = { mapViewModel.onCategoryChanged(it) }
                     )
 
                     IconButton(
@@ -189,8 +180,7 @@ fun MapPage(
                             .align(Alignment.TopCenter)
                             .padding(52.dp),
                         onClick = {
-                            val position = cameraPositionState.position.target
-                            marketViewModel.getMarketByPosition(position, selectedCategory)
+                            mapViewModel.getMarkets()
                         },
                         icon = Icons.Default.Menu,
                         title = "현 지도에서 검색",
@@ -252,14 +242,14 @@ fun SheetContent(
             items(markets) {
                 MarketListItem(
                     modifier = Modifier
-                        .clickable { onDetailClick(it.id) }
+                        .clickable { onDetailClick(it.marketId) }
                         .padding(12.dp),
-                    title = it.name,
-                    description = it.description,
+                    title = it.marketName,
+                    description = it.marketDescription,
                     location = it.address,
-                    imageUrl = NetworkModule.getImage(it.thumbnail),
+                    imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
                     isFavorite = it.isFavorite,
-                    onLikeClick = { onFavorite(it.id) }
+                    onLikeClick = { onFavorite(it.marketId) }
                 )
 
                 HorizontalDivider(
@@ -290,9 +280,9 @@ fun SheetContentPreview() {
             isExpended = true,
             isLoading = false,
             markets = listOf(),
-            onCloseSheet = {},
-            onDetailClick = {},
-            onFavorite = {}
+            onCloseSheet = { },
+            onDetailClick = { },
+            onFavorite = { }
         )
     }
 }
