@@ -149,13 +149,21 @@ fun formatDate(dateString: String): String {
 @Composable
 fun PreviewCouponCard() {
     Column {
-        val sampleCoupon = CouponResponse(
-            memberCouponId = 1,
-            couponId = 101,
+        val sampleCoupon = CouponRes(
+            couponId = 1,
             couponName = "커피 1+1 쿠폰",
-            description = "모든 매장에서 사용 가능",
+            couponDescription = "모든 매장에서 사용 가능",
             deadLine = "2025-03-30T23:59:59.999",
-            used = false
+            isHidden = false,
+            isAvailable = true,
+            isMemberIssued = false,
+            couponType = "GIFT",
+            marketId = 100L,
+            marketName = "카페",
+            address = "인천대학교",
+            thumbnail = faker.company().logo(),
+            couponCreatedAt = "2024-01-01T00:00:00.000",
+            issuedCount = 100L
         )
 
         CouponCard(coupon = sampleCoupon, onClick = {})

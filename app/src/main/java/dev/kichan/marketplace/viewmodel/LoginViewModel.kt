@@ -9,11 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.login.LoginReq
-import dev.kichan.marketplace.model.data.login.MemberLoginRes
-import dev.kichan.marketplace.model.getAuthToken
-import dev.kichan.marketplace.model.repository.AuthRepositoryImpl
-import dev.kichan.marketplace.model.saveAuthToken
+import dev.kichan.marketplace.model.data.LoginReq
+import dev.kichan.marketplace.model.data.MemberLoginRes
+import dev.kichan.marketplace.model.repository.MemberRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -25,22 +23,31 @@ sealed class LoginUiState {
     data class Error(val message: String) : LoginUiState()
 }
 
-class LoginViewModel(private val application: Application = Application()) :
-    AndroidViewModel(application) {
-    private val authRepository = AuthRepositoryImpl(application.applicationContext)
+sealed class LoginNavigationEvent {
+    object PopBackStack : LoginNavigationEvent()
+    object NavigateToMain : LoginNavigationEvent()
+}
+
+class LoginViewModel(
+    application: Application,
+    private val memberRepository: MemberRepository = MemberRepositoryImpl(NetworkModule.getService(MemberService::class.java))
+) : AndroidViewModel(application) {
 
     var loginState by mutableStateOf<LoginUiState>(LoginUiState.Idle)
 
+    private val _navigationEvent = MutableSharedFlow<LoginNavigationEvent>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
+
     init {
-        autoLogin()
+        // autoLogin() // Re-evaluate or remove auto-login logic
     }
 
     private suspend fun getMemberData(): MemberLoginRes {
-        val res = authRepository.getMemberData()
+        val res = memberRepository.getMember()
 
         if (!res.isSuccessful) {
             val errorBody = res.errorBody()?.string()
-            val message = JSONObject(errorBody ?: "{}").optString("message", "로그인 실패")
+            val message = JSONObject(errorBody ?: "{}").optString("message", "회원 정보 조회 실패")
             throw Exception(message)
         }
 
@@ -53,8 +60,8 @@ class LoginViewModel(private val application: Application = Application()) :
     ) {
         viewModelScope.launch {
             try {
-                val body = LoginReq(id, password)
-                val res = authRepository.login(body)
+                val body = MemberLoginReq(studentId = id, password = password)
+                val res = memberRepository.loginMember(body)
 
                 if (!res.isSuccessful) {
                     val errorBody = res.errorBody()?.string()
@@ -62,12 +69,14 @@ class LoginViewModel(private val application: Application = Application()) :
                     throw Exception(message)
                 }
 
-                val token = res.body()!!.response
+                val token = res.body()!!.response // Assuming response is the token string
                 NetworkModule.updateToken(token)
-                saveAuthToken(application.applicationContext, token)
+                // saveAuthToken(application.applicationContext, token) // Old token saving, re-evaluate
 
                 val memberData = getMemberData()
                 loginState = LoginUiState.Success(memberData)
+                _navigationEvent.emit(LoginNavigationEvent.PopBackStack)
+                _navigationEvent.emit(LoginNavigationEvent.NavigateToMain)
             } catch (e: Exception) {
                 Log.e("error", e.message.toString())
                 loginState = LoginUiState.Error(e.message.toString())
@@ -81,7 +90,7 @@ class LoginViewModel(private val application: Application = Application()) :
     ) {
         viewModelScope.launch {
             try {
-                authRepository.logout()
+                // memberRepository.logout() // No direct logout in new MemberRepository
                 onSuccess()
             } catch (e: Exception) {
                 onFail(e)
@@ -89,6 +98,8 @@ class LoginViewModel(private val application: Application = Application()) :
         }
     }
 
+    // Re-evaluate or remove auto-login logic
+    /*
     private fun autoLogin() {
         viewModelScope.launch {
             getAuthToken(application.applicationContext).collect { token ->
@@ -100,7 +111,7 @@ class LoginViewModel(private val application: Application = Application()) :
                 Log.d("token", token)
 
                 NetworkModule.updateToken(token)
-                val res = authRepository.getMemberData()
+                val res = memberRepository.getMember()
                 if (!res.isSuccessful) {
                     NetworkModule.updateToken(null)
                     loginState = LoginUiState.Error("로그인 실패")
@@ -111,23 +122,18 @@ class LoginViewModel(private val application: Application = Application()) :
             }
         }
     }
+    */
 
     fun saveFcmToken(token: String) {
         viewModelScope.launch {
-            val res = withContext(Dispatchers.IO) {
-                authRepository.saveFCMToken(token)
-            }
-
-            if (!res.isSuccessful) {
-//                throw Exception("FCM 토큰 저장 실패")
-            }
+            // val res = withContext(Dispatchers.IO) { memberRepository.permitFcmToken(MemberFcmReq(fcmToken = token)) }
+            // if (!res.isSuccessful) { /* throw Exception("FCM 토큰 저장 실패") */ }
         }
     }
 
     fun refershMemberData() {
         viewModelScope.launch {
             val res = getMemberData()
-
             loginState = LoginUiState.Success(res)
         }
     }

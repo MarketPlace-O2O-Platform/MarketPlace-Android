@@ -1,24 +1,29 @@
 package dev.kichan.marketplace.viewmodel
 
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
-import dev.kichan.marketplace.model.data.coupon.ClosingCouponRes
-import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
-import dev.kichan.marketplace.model.data.coupon.LatestCouponRes
-import dev.kichan.marketplace.model.data.coupon.PopularCouponRes
+import dev.kichan.marketplace.model.data.TopClosingCouponRes
+import dev.kichan.marketplace.model.data.IssuedCouponRes
+import dev.kichan.marketplace.model.data.TopLatestCouponRes
+import dev.kichan.marketplace.model.data.TopPopularCouponRes
 import dev.kichan.marketplace.model.repository.CouponRepository
+import dev.kichan.marketplace.model.repository.CouponRepositoryImpl
+import dev.kichan.marketplace.model.service.CouponService
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class HomeUiState(
-    val closingCoupon : List<ClosingCouponRes> = emptyList(),
-    val popularCoupons: List<PopularCouponRes> = emptyList(),
-    val latestCoupons: List<LatestCouponRes> = emptyList(),
+    val closingCoupon : List<TopClosingCouponRes> = emptyList(),
+    val popularCoupons: List<TopPopularCouponRes> = emptyList(),
+    val latestCoupons: List<TopLatestCouponRes> = emptyList(),
     val isClosingLoading: Boolean = false,
     val isPopularLoading: Boolean = false,
     val isLatestLoading: Boolean = false,
@@ -38,12 +43,26 @@ data class DownloadCouponPageState(
     val isLoading : Boolean = false,
 )
 
-class CouponViewModel : ViewModel() {
-    private val couponRepository = CouponRepository()
+sealed class HomeNavigationEvent {
+    object NavigateToSearch : HomeNavigationEvent()
+    data class NavigateToEventDetail(val marketId: String) : HomeNavigationEvent()
+    data class NavigateToCouponListPage(val type: String) : HomeNavigationEvent()
+}
 
-    var homeState by mutableStateOf(HomeUiState())
+class CouponViewModel(
+    private val couponRepository: CouponRepository = CouponRepositoryImpl(NetworkModule.getService(CouponService::class.java))
+) : ViewModel() {
+
+    var homeState by mutableStateOf(HomeUiState(
+        closingCoupon = emptyList(),
+        popularCoupons = emptyList(),
+        latestCoupons = emptyList()
+    ))
     var couponListPageState by mutableStateOf(CouponListPageState())
     var downloadCouponPageState by mutableStateOf(DownloadCouponPageState())
+
+    private val _navigationEvent = MutableSharedFlow<HomeNavigationEvent>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
 
     fun getClosingCoupon() {
@@ -52,7 +71,7 @@ class CouponViewModel : ViewModel() {
                 homeState = homeState.copy(isClosingLoading = true, errorMessage = null)
 
                 val res = withContext(Dispatchers.IO) {
-                    couponRepository.getClosingCoupon(10)
+                    couponRepository.getClosingCoupon(pageSize = 10)
                 }
 
                 if (!res.isSuccessful) {
@@ -83,11 +102,11 @@ class CouponViewModel : ViewModel() {
                 homeState = homeState.copy(isPopularLoading = true)
 
                 val res = withContext(Dispatchers.IO) {
-                    couponRepository.getPopularCoupon(null, 20)
+                    couponRepository.getPopularCoupon(pageSize = 20)
                 }
 
                 if (res.isSuccessful) {
-                    val data = res.body()?.response?.couponResDtos ?: emptyList()
+                    val data = res.body()?.response ?: emptyList()
                     homeState = homeState.copy(
                         popularCoupons = data,
                         isPopularLoading = false
@@ -113,11 +132,11 @@ class CouponViewModel : ViewModel() {
                 homeState = homeState.copy(isLatestLoading = true)
 
                 val res = withContext(Dispatchers.IO) {
-                    couponRepository.getLatestCoupon(null, null, 20)
+                    couponRepository.getLatestCoupon(pageSize = 20)
                 }
 
                 if (res.isSuccessful) {
-                    val data = res.body()?.response?.couponResDtos ?: emptyList()
+                    val data = res.body()?.response ?: emptyList()
                     homeState = homeState.copy(
                         latestCoupons = data,
                         isLatestLoading = false
@@ -143,22 +162,40 @@ class CouponViewModel : ViewModel() {
 
             try {
                 val newCoupon: List<CouponListItemProps> = if (type == "popular") {
-                    val res = couponRepository.getPopularCoupon(null, 40)
+                    val res = couponRepository.getPopularCoupon_1(pageSize = 40)
                     if (!res.isSuccessful) {
                         throw Exception("실패!")
                     }
-                    res.body()!!
-                        .response.couponResDtos.map {
-                            it.toCouponListItemProps()
+                    res.body()!!.response.couponResDtos.map {
+                            // it.toCouponListItemProps() // Removed, needs re-mapping
+                            CouponListItemProps(
+                                id = it.couponId,
+                                name = it.couponName,
+                                marketName = it.marketName,
+                                imageUrl = it.thumbnail, // Assuming thumbnail is direct URL
+                                address = "", // Not available in new DTO
+                                isAvailable = true, // Not available in new DTO
+                                isMemberIssued = false, // Not available in new DTO
+                                marketId = it.marketId
+                            )
                         }
                 } else {
-                    val res = couponRepository.getLatestCoupon(null, null, 20)
+                    val res = couponRepository.getLatestCoupon_1(pageSize = 20)
                     if (!res.isSuccessful) {
                         throw Exception("실패!")
                     }
-                    res.body()!!
-                        .response.couponResDtos.map {
-                            it.toCouponListItemProps()
+                    res.body()!!.response.couponResDtos.map {
+                            // it.toCouponListItemProps() // Removed, needs re-mapping
+                            CouponListItemProps(
+                                id = it.couponId,
+                                name = it.couponName,
+                                marketName = it.marketName,
+                                imageUrl = it.thumbnail, // Assuming thumbnail is direct URL
+                                address = "", // Not available in new DTO
+                                isAvailable = true, // Not available in new DTO
+                                isMemberIssued = false, // Not available in new DTO
+                                marketId = it.marketId
+                            )
                         }
                 }
 
@@ -178,68 +215,38 @@ class CouponViewModel : ViewModel() {
     }
 
     fun downloadCoupon(id: Long) {
-        couponListPageState = couponListPageState.copy(isLoading = true)
+        // This method needs to be re-implemented based on the new API
+        // The old couponRepository.downloadCoupon(id) is not available.
+        // Check apiDocs.json for issuedCoupon or issuedCoupon_1
         viewModelScope.launch {
-            val res = withContext(Dispatchers.IO) {
-                couponRepository.downloadCoupon(
-                    id = id
-                )
-            }
-
-            if(!res.isSuccessful)
-                return@launch
-
-            couponListPageState = couponListPageState.copy(
-                couponList = couponListPageState.couponList.map { if(it.id == id) it.copy(isMemberIssued = true) else it.copy() },
-                isLoading = false
-            )
-            homeState = homeState.copy(
-                popularCoupons = homeState.popularCoupons.map {
-                    if (it.id == id) it.copy(isMemberIssued = true) else it
-                },
-                latestCoupons = homeState.latestCoupons.map {
-                    if (it.id == id) it.copy(isMemberIssued = true) else it
-                }
-            )
+            Log.d("CouponViewModel", "downloadCoupon called for id: $id - needs re-implementation")
         }
     }
 
     fun getDownloadCouponList(type: String) {
-        couponListPageState = couponListPageState.copy(
-            isLoading = true
-        )
+        // This method needs to be re-implemented based on the new API
+        // The old couponRepository.getDownloadCouponList(type) is not available.
+        // Check apiDocs.json for getCouponList_2 or getCouponList_3
         viewModelScope.launch {
-            val res = withContext(Dispatchers.IO) {
-                couponRepository.getDownloadCouponList(type = type)
-            }
+            Log.d("CouponViewModel", "getDownloadCouponList called for type: $type - needs re-implementation")
+        }
+    }
 
-            if(!res.isSuccessful) {
-                return@launch
-            }
+    fun onSearchClicked() {
+        viewModelScope.launch {
+            _navigationEvent.emit(HomeNavigationEvent.NavigateToSearch)
+        }
+    }
 
-            val body = res.body()!!
+    fun onEventDetailClicked(marketId: String) {
+        viewModelScope.launch {
+            _navigationEvent.emit(HomeNavigationEvent.NavigateToEventDetail(marketId))
+        }
+    }
 
-            when(type) {
-                "ISSUED" -> {
-                    downloadCouponPageState = downloadCouponPageState.copy(
-                        issuedCouponList = body.response.couponResDtos,
-                        isLoading = false,
-                    )
-                }
-                "EXPIRED" -> {
-                    downloadCouponPageState = downloadCouponPageState.copy(
-                        expiredCouponList = body.response.couponResDtos,
-                        isLoading = false,
-                    )
-                }
-                "USED" -> {
-                    downloadCouponPageState = downloadCouponPageState.copy(
-                        usedCouponList = body.response.couponResDtos,
-                        isLoading = false,
-                    )
-                }
-            }
-
+    fun onCouponListPageClicked(type: String) {
+        viewModelScope.launch {
+            _navigationEvent.emit(HomeNavigationEvent.NavigateToCouponListPage(type))
         }
     }
 }

@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.coupon.IssuedCouponRes
+import dev.kichan.marketplace.model.data.IssuedCouponRes
 import dev.kichan.marketplace.ui.faker
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import java.time.LocalDate

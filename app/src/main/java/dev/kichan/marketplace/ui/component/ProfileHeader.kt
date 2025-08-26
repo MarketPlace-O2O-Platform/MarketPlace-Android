@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.login.MemberLoginRes
+import dev.kichan.marketplace.model.data.MemberLoginRes
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 

@@ -1,0 +1,3924 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MarketPlace API",
+    "description": "MarketPlace API 설명서",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://marketplace.inuappcenter.kr"
+    }
+  ],
+  "security": [
+    {
+      "Authorization": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "[관리자/사장님 환급 쿠폰]",
+      "description": "[관리자, 사장님] 환급 쿠폰 관리"
+    },
+    {
+      "name": "[쿠폰]",
+      "description": "[사장님,회원] 매장 별 쿠폰 조회"
+    },
+    {
+      "name": "[관리자 환급 쿠폰 관리]",
+      "description": "[관리자] 회원의 환급 쿠폰 관리"
+    },
+    {
+      "name": "[베타 버전 쿠폰]",
+      "description": "[베타] 쿠폰 관리"
+    },
+    {
+      "name": "[회원 환급 쿠폰(발급)]",
+      "description": "[회원] 회원의 환급 쿠폰의 발급 처리 및 리스트 조회"
+    },
+    {
+      "name": "[알림 기록]",
+      "description": "[회원] 알림 기록 생성 및 조회"
+    },
+    {
+      "name": "[사장님 쿠폰]",
+      "description": "[사장님] 사장님 발급 쿠폰 관리"
+    },
+    {
+      "name": "[회원 공감매장]",
+      "description": "[회원] 공감매장 조회"
+    },
+    {
+      "name": "[회원]",
+      "description": "[회원] 로그인 및 학번 조회"
+    },
+    {
+      "name": "[찜]",
+      "description": "[찜] 매장 찜하기"
+    },
+    {
+      "name": "[매장]",
+      "description": "[사장님,회원] 매장 조회"
+    },
+    {
+      "name": "[회원 증정 쿠폰(발급)]",
+      "description": "[회원] 회원의 쿠폰 발급 및 사용처리, 리스트 확인"
+    },
+    {
+      "name": "[베타 버전 매장]",
+      "description": "[베타] 매장 관리"
+    },
+    {
+      "name": "[공감]",
+      "description": "[공감] 임시 매장 공감하기"
+    },
+    {
+      "name": "[사장님 매장]",
+      "description": "[사장님] 사장님 매장 관리"
+    },
+    {
+      "name": "[알림TEST]",
+      "description": "[사장님,관리자] 알림 전송"
+    },
+    {
+      "name": "[관리자 공감매장]",
+      "description": "[관리자] 관리자 공감매장 관리"
+    },
+    {
+      "name": "[회원 환급 쿠폰]",
+      "description": "[회원] 매장별 환급 쿠폰 조회"
+    },
+    {
+      "name": "[요청 매장]",
+      "description": "[회원,관리자] 요청 매장 생성, 조회"
+    }
+  ],
+  "paths": {
+    "/api/owners/markets/{marketId}": {
+      "put": {
+        "tags": [
+          "[사장님 매장]"
+        ],
+        "summary": "사장님 매장 정보 수정",
+        "description": "사장님이 생성한 매장 정보를 수정합니다.",
+        "operationId": "updateMarket",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarketReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketDetailsRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "[사장님 매장]"
+        ],
+        "summary": "사장님 매장 삭제",
+        "description": "사장님이 생성한 매장을 삭제합니다. ",
+        "operationId": "deleteMarket",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owners/markets/images": {
+      "put": {
+        "tags": [
+          "[사장님 매장]"
+        ],
+        "summary": "사장님 매장 이미지 수정",
+        "description": "매장의 이미지를 추가,삭제 및 순서 변경을 합니다. <br>jsonData는 삭제할 이미지 id 리스트, 순서 변경할 Map<이미지id,순서order>, 추가할 이미지의 순서 리스트입니다. <br>images는 추가할 이미지 리스트입니다. 기존 이미지는 안주셔도 됩니다. <br>예시) 추가할 이미지의 순서 리스트가 [2,4] 이면, 이미지 파일은 2개여야하고, 첫번 째 사진은 순서 2가 부여됩니다. 두번 째 사진은 4가 부여됩니다.",
+        "operationId": "updateMarket_1",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "jsonData"
+                ],
+                "type": "object",
+                "properties": {
+                  "jsonData": {
+                    "$ref": "#/components/schemas/MarketImageUpdateReq"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketDetailsRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owners/coupons/{couponId}": {
+      "get": {
+        "tags": [
+          "[사장님 쿠폰]"
+        ],
+        "summary": "사장님 쿠폰 단일 조회",
+        "description": "사장님이 생성한 1개의 쿠폰을 조회합니다.",
+        "operationId": "getCoupon",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "[사장님 쿠폰]"
+        ],
+        "summary": "사장님 쿠폰 내용 수정",
+        "description": "사장님이 생성한 쿠폰의 내용을 수정합니다. <br> '숨김처리'를 제외한 내용을 수정할 수 있습니다. ",
+        "operationId": "updateCoupon",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "[사장님 쿠폰]"
+        ],
+        "summary": "사장님 쿠폰 삭제",
+        "description": "사장님은 쿠폰을 삭제할 수 있습니다. <br> 삭제는 소프트 딜리트로 구현됩니다.",
+        "operationId": "deleteCoupon",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owners/coupons/hidden/{couponId}": {
+      "put": {
+        "tags": [
+          "[사장님 쿠폰]"
+        ],
+        "summary": "숨김/공개 처리 기능",
+        "description": "사장님은 생성한 쿠폰을 숨김 / 공개 처리 할 수 있습니다.",
+        "operationId": "hiddenCoupon",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/payback-coupons": {
+      "get": {
+        "tags": [
+          "[회원 환급 쿠폰(발급)]"
+        ],
+        "summary": "회원의 쿠폰 리스트",
+        "description": "type은 'ISSUED(사용가능한)', 'ENDED(끝난)' 중에서 작성해주시면 됩니다. <br>쿠폰 리스트를 조회하면 기본적으로 조회되는 리스트는 ISSUED로 사용가능한 쿠폰 리스트입니다.<br> 무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 memberCouponId를 입력하여, 다음 페이지==다음 데이터를 받아올 수 있습니다.",
+        "operationId": "getCouponList_2",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "ISSUED",
+              "enum": [
+                "ISSUED",
+                "ENDED"
+              ]
+            }
+          },
+          {
+            "name": "memberCouponId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResIssuedCouponRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "[회원 환급 쿠폰(발급)]"
+        ],
+        "summary": "회원 쿠폰 영수증 제출",
+        "description": "회원은 발급받은 memberCouponId로 영수증을 제출합니다.",
+        "operationId": "updateCoupon_1",
+        "parameters": [
+          {
+            "name": "memberCouponId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "image"
+                ],
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponHandleRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/coupons": {
+      "get": {
+        "tags": [
+          "[회원 증정 쿠폰(발급)]"
+        ],
+        "summary": "회원의 쿠폰 리스트",
+        "description": "type은 'ISSUED(사용가능한)', 'ENDED(끝난)' 중에서 작성해주시면 됩니다. <br>쿠폰 리스트를 조회하면 기본적으로 조회되는 리스트는 ISSUED로 사용가능한 쿠폰 리스트입니다.<br> 무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 memberCouponId를 입력하여, 다음 페이지==다음 데이터를 받아올 수 있습니다.",
+        "operationId": "getCouponList_3",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "ISSUED",
+              "enum": [
+                "ISSUED",
+                "ENDED"
+              ]
+            }
+          },
+          {
+            "name": "memberCouponId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResIssuedCouponRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "[회원 증정 쿠폰(발급)]"
+        ],
+        "summary": "회원 쿠폰 사용처리",
+        "description": "회원은 발급받은 memberCouponId로 사용처리를 할 수 있습니다.",
+        "operationId": "updateCoupon_2",
+        "parameters": [
+          {
+            "name": "memberCouponId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponHandleRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/beta/markets/{betaMarketId}": {
+      "put": {
+        "tags": [
+          "[베타 버전 매장]"
+        ],
+        "summary": "베타 매장 정보 수정",
+        "description": "1개의 베타 버전 매장의 정보를 수정합니다. 수정 시 모든 유저에게 쿠폰을 재발송합니다. <br>이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.",
+        "operationId": "updateMarket_2",
+        "parameters": [
+          {
+            "name": "betaMarketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "image",
+                  "jsonData"
+                ],
+                "type": "object",
+                "properties": {
+                  "jsonData": {
+                    "$ref": "#/components/schemas/BetaMarketReq"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseBetaMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/beta/coupons/{betaCouponId}": {
+      "put": {
+        "tags": [
+          "[베타 버전 쿠폰]"
+        ],
+        "summary": "베타 쿠폰 사용처리",
+        "description": "회원의 발급 받은 베타 쿠폰을 사용처리 합니다.",
+        "operationId": "updateCoupon_3",
+        "parameters": [
+          {
+            "name": "betaCouponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/temp-markets": {
+      "get": {
+        "tags": [
+          "[관리자 공감매장]"
+        ],
+        "summary": "매장 정보 전체 조회",
+        "description": "매장 전체를 조회합니다. <br>pageNum의 기본값은 1입니다. (1페이지) <br>size의 기본값은 10입니다. 한페이지당 나타나는 데이터의 갯수입니다.",
+        "operationId": "getAllTempMarket",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponsePageTempMarketDetailRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "[관리자 공감매장]"
+        ],
+        "summary": "매장 정보 수정",
+        "description": "매장에 대한 기본 정보를 수정합니다. <br>기본적인 정보 수정이 가능하고, 이미지는 1개 (썸네일용)이므로 해당 API를 통해 수정이 가능합니다.",
+        "operationId": "updateTempMarket",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "jsonData"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "jsonData": {
+                    "$ref": "#/components/schemas/TempMarketReq"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseTempMarketDetailRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "[관리자 공감매장]"
+        ],
+        "summary": "임시 매장 생성",
+        "description": "공감 탭에 생성할 매장을 생성합니다.",
+        "operationId": "createTempMarket",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file",
+                  "jsonData"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "jsonData": {
+                    "$ref": "#/components/schemas/TempMarketReq"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseTempMarketDetailRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/temp-markets/hidden/{tempMarketId}": {
+      "put": {
+        "tags": [
+          "[관리자 공감매장]"
+        ],
+        "summary": "매장 공개(숨김) 처리",
+        "description": "매장을 공개(숨김)처리가 가능합니다.",
+        "operationId": "toggleTempMarket",
+        "parameters": [
+          {
+            "name": "tempMarketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseTempMarketHiddenRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/payback-coupons/{couponId}": {
+      "put": {
+        "tags": [
+          "[관리자/사장님 환급 쿠폰]"
+        ],
+        "summary": "쿠폰 내용 수정",
+        "description": "관리자(혹은 사장님)이 생성한 쿠폰의 내용을 수정합니다. <br> '숨김처리'를 제외한 쿠폰 제목/내용을 수정할 수 있습니다. ",
+        "operationId": "updateCoupon_4",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaybackReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponsePaybackRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "[관리자/사장님 환급 쿠폰]"
+        ],
+        "summary": "관리자(혹은 사장님) 쿠폰 삭제",
+        "description": "관리자(혹은 사장님)은 쿠폰을 삭제할 수 있습니다. <br> 삭제는 소프트 딜리트로 구현됩니다.",
+        "operationId": "deleteCoupon_1",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/payback-coupons/hidden/{couponId}": {
+      "put": {
+        "tags": [
+          "[관리자/사장님 환급 쿠폰]"
+        ],
+        "summary": "숨김/공개 처리 기능",
+        "description": "생성한 쿠폰을 숨김 / 공개 처리 할 수 있습니다.",
+        "operationId": "hiddenCoupon_1",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/payback-coupons/complete/{couponId}": {
+      "put": {
+        "tags": [
+          "[관리자 환급 쿠폰 관리]"
+        ],
+        "summary": "환급 쿠폰 사용 처리",
+        "description": "관리자는 영수증을 토대로, 환급을 진행한 후 사용처리를 완료합니다.",
+        "operationId": "manageCoupon",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponHandleRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/request-markets": {
+      "get": {
+        "tags": [
+          "[요청 매장]"
+        ],
+        "summary": "요청 매장 조회",
+        "description": "요청 매장을 반환합니다. <br>page의 기본값은 1입니다. <br>size의 기본값은 10입니다.",
+        "operationId": "createRequestMarket_1",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponsePageRequestMarketRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "[요청 매장]"
+        ],
+        "summary": "요청 매장 생성",
+        "description": "1개의 요청 매장을 생성합니다.",
+        "operationId": "createRequestMarket",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestMarketCreateReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseRequestMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owners/markets": {
+      "post": {
+        "tags": [
+          "[사장님 매장]"
+        ],
+        "summary": "사장님 매장 생성",
+        "description": "사장님이 1개의 매장을 생성합니다. <br>이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.",
+        "operationId": "createMarket",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "images",
+                  "jsonData"
+                ],
+                "type": "object",
+                "properties": {
+                  "jsonData": {
+                    "$ref": "#/components/schemas/MarketReq"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketDetailsRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owners/coupons": {
+      "get": {
+        "tags": [
+          "[사장님 쿠폰]"
+        ],
+        "summary": "사장님 매장별 전체 쿠폰 조회",
+        "description": "사장님의 특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.",
+        "operationId": "getCouponList_1",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "couponId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResCouponRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "[사장님 쿠폰]"
+        ],
+        "summary": "사장님 쿠폰 생성",
+        "description": "사장님이 1개의 쿠폰을 생성합니다.",
+        "operationId": "createCoupon",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "tags": [
+          "[알림 기록]"
+        ],
+        "summary": "알림 기록 리스트 조회",
+        "description": "알림 기록 리스트를 조회합니다. <br>type은 'MARKET(쿠폰발급)', 'COUPON(쿠폰만료 - 예정), 'NOTICE(공지- 예정)' 중에서 작성해주시면 됩니다. <br>type이 없을 시, 전체 알림 조회입니다.",
+        "operationId": "getNotificationList",
+        "parameters": [
+          {
+            "name": "notificationId",
+            "in": "query",
+            "description": "직전 페이지의 마지막 id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseNotificationPageResNotificationRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "[알림 기록]"
+        ],
+        "summary": "알림 기록 생성",
+        "description": "알림 기록을 생성합니다.",
+        "operationId": "createNotification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseNotificationRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "[알림 기록]"
+        ],
+        "summary": "알림 기록 읽음 처리",
+        "description": "알림 기록을 읽음 처리합니다.",
+        "operationId": "setNotificationRead",
+        "parameters": [
+          {
+            "name": "notificationId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/test": {
+      "post": {
+        "tags": [
+          "[알림TEST]"
+        ],
+        "summary": "[TEST] 개인 알림 전송",
+        "description": "개인 회원에게 알림 메시지 전송",
+        "operationId": "sendFcmMessage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FcmRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members": {
+      "get": {
+        "tags": [
+          "[회원]"
+        ],
+        "summary": "학생 조회",
+        "description": "마이페이지에 로그인한 회원의 정보를 조회하기 위해 사용됩니다.",
+        "operationId": "getMember",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMemberRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "[회원]"
+        ],
+        "summary": "학생 로그인",
+        "description": "포털 시스템 정보 (학번, 비밀번호)로 로그인합니다.",
+        "operationId": "loginMember",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberLoginReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/payback-coupons/{couponId}": {
+      "post": {
+        "tags": [
+          "[회원 환급 쿠폰(발급)]"
+        ],
+        "summary": "회원 환급 쿠폰 발급",
+        "description": "회원은 해당 couponId로 유효한 쿠폰을 발급받을 수 있습니다. <br> '유효한 쿠폰'은 공개처리가 된 쿠폰 및 만료되지 않은 쿠폰을 뜻합니다.",
+        "operationId": "issuedCoupon",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/coupons/{couponId}": {
+      "post": {
+        "tags": [
+          "[회원 증정 쿠폰(발급)]"
+        ],
+        "summary": "회원 증정 쿠폰 발급",
+        "description": "회원은 해당 couponId로 유효한 쿠폰을 발급받을 수 있습니다. <br> '유효한 쿠폰'은 공개처리가 된 쿠폰 및 만료되지 않은 쿠폰을 뜻합니다.",
+        "operationId": "issuedCoupon_1",
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/favorites": {
+      "post": {
+        "tags": [
+          "[찜]"
+        ],
+        "summary": "매장 찜하기",
+        "description": "매장 찜이 없으면 생성합니다. 있으면 삭제합니다.<br>소프트 딜리트를 적용합니다.",
+        "operationId": "createCoupon_1",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cheer": {
+      "post": {
+        "tags": [
+          "[공감]"
+        ],
+        "summary": "공감탭 매장 공감하기",
+        "description": "임시 매장을 공감합니다. <br>공감권은 매일 1개씩 충전됩니다. 따라서, 1개의 매장을 공감하게 되면, 더이상 공감할 수 없습니다.( 에러 처리 (409) : 공감권이 소진되었습니다)",
+        "operationId": "createCheer",
+        "parameters": [
+          {
+            "name": "tempMarketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/beta/markets": {
+      "post": {
+        "tags": [
+          "[베타 버전 매장]"
+        ],
+        "summary": "베타 매장 생성",
+        "description": "1개의 베타 버전 매장을 생성합니다. 생성 시 모든 유저에게 쿠폰을 제공합니다. <br>이미지를 가져오려면 /image/{image.name}을 fetch하면 됩니다.",
+        "operationId": "createMarket_1",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "image",
+                  "jsonData"
+                ],
+                "type": "object",
+                "properties": {
+                  "jsonData": {
+                    "$ref": "#/components/schemas/BetaMarketReq"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseBetaMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/payback-coupons": {
+      "get": {
+        "tags": [
+          "[관리자/사장님 환급 쿠폰]"
+        ],
+        "summary": "매장별 전체 생성된 환급 쿠폰 조회",
+        "description": "특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.",
+        "operationId": "getCouponList_6",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "couponId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResPaybackRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "[관리자/사장님 환급 쿠폰]"
+        ],
+        "summary": "환급형 쿠폰 생성",
+        "description": "관리자(혹은 사장님)이 1개의 환급형 쿠폰을 생성합니다. ",
+        "operationId": "createCoupon_2",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaybackReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponsePaybackRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/all": {
+      "patch": {
+        "tags": [
+          "[알림 기록]"
+        ],
+        "summary": "알림 기록 전체 읽음 처리",
+        "description": "알림 기록을 전체 읽음 처리합니다.",
+        "operationId": "setAllNotificationRead",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/notification/permit": {
+      "patch": {
+        "tags": [
+          "[회원]"
+        ],
+        "summary": "FCM 토큰 저장 API",
+        "description": "FCM 토큰을 저장합니다.",
+        "operationId": "permitFcmToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberFcmReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/notification/deny": {
+      "patch": {
+        "tags": [
+          "[회원]"
+        ],
+        "summary": "FCM 토큰 삭제 API",
+        "description": "FCM 토큰을 삭제합니다.",
+        "operationId": "denyFcmToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/admin": {
+      "patch": {
+        "tags": [
+          "[회원]"
+        ],
+        "summary": "관리자 권한 승급",
+        "description": "해당 회원을 관리자로 임명합니다.",
+        "operationId": "upgradePermission",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/account/permit": {
+      "patch": {
+        "tags": [
+          "[회원]"
+        ],
+        "summary": "주거래은행, 계좌번호 저장 API",
+        "description": "환급 쿠폰을 사용하기 위한 정보를 저장합니다.",
+        "operationId": "permitAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberAccountReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/account/deny": {
+      "patch": {
+        "tags": [
+          "[회원]"
+        ],
+        "summary": "주거래은행, 계좌번호 삭제 API",
+        "description": "환급 쿠폰을 사용하기 위한 정보를 삭제합니다.",
+        "operationId": "denyAccount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tempMarkets": {
+      "get": {
+        "tags": [
+          "[회원 공감매장]"
+        ],
+        "summary": "매장 기본 조회 (전체/카테고리별 조회)",
+        "description": "기본 실행은 매장 전체 조회힙니다. <br>'category'를 입력하면 카테고리별 조회가 가능합니다. <br>'lastPageIndex를 입력하면 페이징 처리를 통해 무한 스크롤 방식의 매장 조회가 가능힙니다. <br>'count'는 기본 10개씩 입니다. API를 조회할 시 불러와지는 매장의 갯수입니다.",
+        "operationId": "getTempMarket",
+        "parameters": [
+          {
+            "name": "lastPageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseTempMarketPageResTempMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tempMarkets/search": {
+      "get": {
+        "tags": [
+          "[회원 공감매장]"
+        ],
+        "summary": "검색 매장 조회",
+        "description": "처음 요청 시, lastPageIndex는 필요하지 않습니다. <br>최신순으로 보여줍니다.",
+        "operationId": "searchMarket",
+        "parameters": [
+          {
+            "name": "lastPageIndex",
+            "in": "query",
+            "description": "페이지의 마지막 marketId",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseTempMarketPageResTempMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tempMarkets/cheer": {
+      "get": {
+        "tags": [
+          "[회원 공감매장]"
+        ],
+        "summary": "달성 임박 매장 조회",
+        "description": "달성이 임박한 매장을 공감순으로 조회합니다. <br>20개가 각 매장의 목표 공감수 입니다. 이중 14개(70%) 이상이 될 경우에만 조회가 가능합니다. 또한, 공감수(cheerCount)가 20개 이상이면, '매장 컨텍 중'으로 보여주시면 됩니다. <br>'lastPageIndex', 'lastCheerCount'를 입력하면 페이징 처리를 통해 무한 스크롤 방식의 매장 조회가 가능합니다. <br>'count'는 기본 10개씩입니다. API를 조회할 시 불러와지는 매장의 갯수입니다.",
+        "operationId": "getTempMarketPage",
+        "parameters": [
+          {
+            "name": "lastPageIndex",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lastCheerCount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseTempMarketPageResTempMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payback-coupons": {
+      "get": {
+        "tags": [
+          "[회원 환급 쿠폰]"
+        ],
+        "summary": "매장별 전체 생성된 환급 쿠폰 조회",
+        "description": "특정 매장(MarketId)의 전체 쿠폰 리스트를 조회합니다.",
+        "operationId": "getCouponList",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "couponId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResPaybackRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/members/payback-coupons/receipt/{memberCouponId}": {
+      "get": {
+        "tags": [
+          "[회원 환급 쿠폰(발급)]"
+        ],
+        "summary": "회원 쿠폰 영수증 조회",
+        "description": "회원은 제출한 영수증을 조회할 수 있습니다. \n이미지를 조회할 땐, \"/image/receipt/\" prefix를 꼭 붙여야 합니다. ",
+        "operationId": "getReceipt",
+        "parameters": [
+          {
+            "name": "memberCouponId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseReceiptRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/markets": {
+      "get": {
+        "tags": [
+          "[매장]"
+        ],
+        "summary": "전체/카테고리 매장 조회",
+        "description": "처음 요청 시, pageSize만 필요합니다. 기본값은 10입니다. <br>카테고리 별 매장을 조회하시려면 category도 필요합니다. <br>최신순으로 보여줍니다.",
+        "operationId": "getMarket",
+        "parameters": [
+          {
+            "name": "lastPageIndex",
+            "in": "query",
+            "description": "페이지의 마지막 marketId",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketPageResMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/markets/{marketId}": {
+      "get": {
+        "tags": [
+          "[매장]"
+        ],
+        "summary": "매장 상세 조회",
+        "description": "상세 매장 정보 및 이미지 리스트를 조회합니다.",
+        "operationId": "getMarket_1",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketDetailsRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/markets/search": {
+      "get": {
+        "tags": [
+          "[매장]"
+        ],
+        "summary": "검색 매장 조회",
+        "description": "처음 요청 시, lastPageIndex는 필요하지 않습니다. <br>최신순으로 보여줍니다.",
+        "operationId": "searchMarket_1",
+        "parameters": [
+          {
+            "name": "lastPageIndex",
+            "in": "query",
+            "description": "페이지의 마지막 marketId",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketPageResMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/markets/my-favorite": {
+      "get": {
+        "tags": [
+          "[매장]"
+        ],
+        "summary": "자신이 찜한 매장 조회",
+        "description": "자신이 찜한 매장 정보 리스트를 반환합니다. <br>처음 요청 시엔 pageSize만 필요합니다.기본값은 10입니다. <br>JWT 구현 전 까지는 memberId를 추가해야합니다. <br>최신 찜 순으로 보여줍니다.",
+        "operationId": "getMemberFavoriteMarketList",
+        "parameters": [
+          {
+            "name": "lastModifiedAt",
+            "in": "query",
+            "description": "페이지의 마지막 favoriteModifiedAt (e.g. 2024-11-25 11:19:26.378948 )",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketPageResMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/markets/map": {
+      "get": {
+        "tags": [
+          "[매장]"
+        ],
+        "summary": "주소 별 매장 조회",
+        "description": "처음 요청 시, pageSize만 필요합니다. 기본값은 10입니다. <br>카테고리 별 매장을 조회하시려면 category도 필요합니다. <br>최신순으로 보여줍니다.",
+        "operationId": "getMarket_2",
+        "parameters": [
+          {
+            "name": "lastPageIndex",
+            "in": "query",
+            "description": "페이지의 마지막 marketId",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseMarketPageResMarketRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coupons": {
+      "get": {
+        "tags": [
+          "[쿠폰]"
+        ],
+        "summary": "유효 쿠폰 조회 리스트",
+        "description": "사장님이 공개처리 & 만료되지 않은 쿠폰 리스트가 조회됩니다. <br>매장 상세 정보에서 조회가 이루어집니다. <br> couponId는 다음 페이징 처리를 위해 사용되는 파라미터 입니다.",
+        "operationId": "getCouponList_4",
+        "parameters": [
+          {
+            "name": "marketId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "couponId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coupons/top/popular": {
+      "get": {
+        "tags": [
+          "[쿠폰]"
+        ],
+        "summary": "인기 쿠폰 TOP 조회",
+        "description": "메인 페이지에 들어갈 인기 쿠폰 TOP을 조회합니다. ",
+        "operationId": "getPopularCoupon",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseListTopPopularCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coupons/top/latest": {
+      "get": {
+        "tags": [
+          "[쿠폰]"
+        ],
+        "summary": "최신 등록 쿠폰 TOP 조회",
+        "description": "메인 페이지에 들어갈 최신 등록 쿠폰 TOP을 조회합니다. ",
+        "operationId": "getLatestCoupon",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseListTopLatestCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coupons/top/closing": {
+      "get": {
+        "tags": [
+          "[쿠폰]"
+        ],
+        "summary": "마감 임박 쿠폰 TOP 조회",
+        "description": "메인 페이지에 들어갈 마감 임박이 다가온 쿠폰 TOP을 조회합니다. <br>만약 쿠폰의 마감일자가 같을 시, 최신 등록 매장 순으로 보여지게 됩니다.",
+        "operationId": "getClosingCoupon",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseListTopClosingCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coupons/popular": {
+      "get": {
+        "tags": [
+          "[쿠폰]"
+        ],
+        "summary": "인기 쿠폰 더보기 조회",
+        "description": "인기 쿠폰을 등록순으로 정렬 <br>처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>",
+        "operationId": "getPopularCoupon_1",
+        "parameters": [
+          {
+            "name": "lastIssuedCount",
+            "in": "query",
+            "description": "페이지의 마지막 issuedCount",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lastCouponId",
+            "in": "query",
+            "description": "각 페이지의 마지막 couponId (e.g. 5)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coupons/latest": {
+      "get": {
+        "tags": [
+          "[쿠폰]"
+        ],
+        "summary": "최신 등록 쿠폰 더보기 조회",
+        "description": "최신 쿠폰을 등록순으로 정렬 <br>처음 요청 시, pageSize만 보내면 됩니다. (기본값은 10입니다) <br>",
+        "operationId": "getLatestCoupon_1",
+        "parameters": [
+          {
+            "name": "lastCreatedAt",
+            "in": "query",
+            "description": "각 페이지의 마지막 createdAt (e.g. 2024-11-20T00:59:33.469  OR  2024-11-20T00:59:33.469664 )",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "lastCouponId",
+            "in": "query",
+            "description": "각 페이지의 마지막 couponId (e.g. 5)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseCouponPageResCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/beta/coupons": {
+      "get": {
+        "tags": [
+          "[베타 버전 쿠폰]"
+        ],
+        "summary": "전체/카테고리 쿠폰 조회 리스트",
+        "description": "매장들의 모든 쿠폰을 조회합니다. <br> 무한 스크롤 방식으로 hasNext가 true 면 마지막 데이터의 betaCouponId를 입력하여, 다음 데이터를 받아올 수 있습니다. <br> 카테고리 별 매장을 조회하시려면 category도 필요합니다.",
+        "operationId": "getCouponList_5",
+        "parameters": [
+          {
+            "name": "betaCouponId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseBetaCouponPageResBetaCouponRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/temp-markets/{tempMarketId}": {
+      "get": {
+        "tags": [
+          "[관리자 공감매장]"
+        ],
+        "summary": "매장 정보 상세 조회",
+        "description": "매장 정보를 상세 조회합니다.",
+        "operationId": "getTempMarket_1",
+        "parameters": [
+          {
+            "name": "tempMarketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseTempMarketDetailRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "[관리자 공감매장]"
+        ],
+        "summary": "매장 삭제",
+        "description": "매장을 삭제합니다.",
+        "operationId": "deleteMarket_1",
+        "parameters": [
+          {
+            "name": "tempMarketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponseObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MarketReq": {
+        "required": [
+          "address",
+          "description",
+          "major",
+          "marketName"
+        ],
+        "type": "object",
+        "properties": {
+          "marketName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "operationHours": {
+            "type": "string"
+          },
+          "closedDays": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "major": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonResponseMarketDetailsRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/MarketDetailsRes"
+          }
+        }
+      },
+      "ImageRes": {
+        "type": "object",
+        "properties": {
+          "imageId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sequence": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "MarketDetailsRes": {
+        "type": "object",
+        "properties": {
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "operationHours": {
+            "type": "string"
+          },
+          "closedDays": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "imageResList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageRes"
+            }
+          }
+        }
+      },
+      "MarketImageUpdateReq": {
+        "type": "object",
+        "properties": {
+          "deletedImageIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "changedSequences": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "addedImageSequences": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "CouponReq": {
+        "required": [
+          "couponName",
+          "deadLine",
+          "description",
+          "stock"
+        ],
+        "type": "object",
+        "properties": {
+          "couponName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "deadLine": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "stock": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CommonResponseCouponRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/CouponRes"
+          }
+        }
+      },
+      "CouponRes": {
+        "type": "object",
+        "properties": {
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "couponDescription": {
+            "type": "string"
+          },
+          "deadLine": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "stock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isHidden": {
+            "type": "boolean"
+          },
+          "isAvailable": {
+            "type": "boolean"
+          },
+          "isMemberIssued": {
+            "type": "boolean"
+          },
+          "couponType": {
+            "type": "string",
+            "enum": [
+              "PAYBACK",
+              "GIFT"
+            ]
+          },
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "couponCreatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "issuedCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CommonResponseObject": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "type": "object"
+          }
+        }
+      },
+      "CommonResponseCouponHandleRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/CouponHandleRes"
+          }
+        }
+      },
+      "CouponHandleRes": {
+        "type": "object",
+        "properties": {
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isUsed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BetaMarketReq": {
+        "required": [
+          "couponDetail",
+          "couponName",
+          "major",
+          "marketName"
+        ],
+        "type": "object",
+        "properties": {
+          "marketName": {
+            "type": "string"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "couponDetail": {
+            "type": "string"
+          },
+          "major": {
+            "type": "string"
+          },
+          "isPromise": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BetaMarketRes": {
+        "type": "object",
+        "properties": {
+          "betaMarketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "couponDetail": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "isPromise": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseBetaMarketRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/BetaMarketRes"
+          }
+        }
+      },
+      "TempMarketReq": {
+        "required": [
+          "category",
+          "marketName"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonResponseTempMarketDetailRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/TempMarketDetailRes"
+          }
+        }
+      },
+      "TempMarketDetailRes": {
+        "type": "object",
+        "properties": {
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "cheerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isHidden": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseTempMarketHiddenRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/TempMarketHiddenRes"
+          }
+        }
+      },
+      "TempMarketHiddenRes": {
+        "type": "object",
+        "properties": {
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isHidden": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PaybackReq": {
+        "required": [
+          "couponName",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "couponName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonResponsePaybackRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PaybackRes"
+          }
+        }
+      },
+      "PaybackRes": {
+        "type": "object",
+        "properties": {
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "couponDescription": {
+            "type": "string"
+          },
+          "isHidden": {
+            "type": "boolean"
+          },
+          "isMemberIssued": {
+            "type": "boolean"
+          },
+          "couponType": {
+            "type": "string",
+            "enum": [
+              "PAYBACK",
+              "GIFT"
+            ]
+          }
+        }
+      },
+      "RequestMarketCreateReq": {
+        "required": [
+          "address",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonResponseRequestMarketRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/RequestMarketRes"
+          }
+        }
+      },
+      "RequestMarketRes": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "NotificationReq": {
+        "required": [
+          "body",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "MARKET",
+              "COUPON"
+            ]
+          }
+        }
+      },
+      "CommonResponseNotificationRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/NotificationRes"
+          }
+        }
+      },
+      "NotificationRes": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "MARKET",
+              "COUPON"
+            ]
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FcmRequest": {
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "MemberLoginReq": {
+        "required": [
+          "password",
+          "studentId"
+        ],
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonResponseString": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "type": "string"
+          }
+        }
+      },
+      "MemberFcmReq": {
+        "type": "object",
+        "properties": {
+          "fcmToken": {
+            "type": "string"
+          }
+        }
+      },
+      "MemberAccountReq": {
+        "required": [
+          "account",
+          "accountNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonResponseTempMarketPageResTempMarketRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/TempMarketPageResTempMarketRes"
+          }
+        }
+      },
+      "TempMarketPageResTempMarketRes": {
+        "type": "object",
+        "properties": {
+          "marketResDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TempMarketRes"
+            }
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TempMarketRes": {
+        "type": "object",
+        "properties": {
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "marketDescription": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "cheerCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isCheer": {
+            "type": "boolean"
+          },
+          "dueDate": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CommonResponsePageRequestMarketRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PageRequestMarketRes"
+          }
+        }
+      },
+      "PageRequestMarketRes": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestMarketRes"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseCouponPageResPaybackRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/CouponPageResPaybackRes"
+          }
+        }
+      },
+      "CouponPageResPaybackRes": {
+        "type": "object",
+        "properties": {
+          "couponResDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaybackRes"
+            }
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseCouponPageResCouponRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/CouponPageResCouponRes"
+          }
+        }
+      },
+      "CouponPageResCouponRes": {
+        "type": "object",
+        "properties": {
+          "couponResDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CouponRes"
+            }
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseNotificationPageResNotificationRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/NotificationPageResNotificationRes"
+          }
+        }
+      },
+      "NotificationPageResNotificationRes": {
+        "type": "object",
+        "properties": {
+          "notificationResList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationRes"
+            }
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseMemberRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/MemberRes"
+          }
+        }
+      },
+      "MemberRes": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cheerTicket": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "account": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "CommonResponseCouponPageResIssuedCouponRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/CouponPageResIssuedCouponRes"
+          }
+        }
+      },
+      "CouponPageResIssuedCouponRes": {
+        "type": "object",
+        "properties": {
+          "couponResDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssuedCouponRes"
+            }
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IssuedCouponRes": {
+        "type": "object",
+        "properties": {
+          "memberCouponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "used": {
+            "type": "boolean"
+          },
+          "couponType": {
+            "type": "string",
+            "enum": [
+              "PAYBACK",
+              "GIFT"
+            ]
+          },
+          "deadLine": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expired": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseReceiptRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ReceiptRes"
+          }
+        }
+      },
+      "ReceiptRes": {
+        "type": "object",
+        "properties": {
+          "memberCouponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "receipt": {
+            "type": "string"
+          },
+          "account": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "isUsed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseMarketPageResMarketRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/MarketPageResMarketRes"
+          }
+        }
+      },
+      "MarketPageResMarketRes": {
+        "type": "object",
+        "properties": {
+          "marketResDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarketRes"
+            }
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MarketRes": {
+        "type": "object",
+        "properties": {
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "marketDescription": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "isFavorite": {
+            "type": "boolean"
+          },
+          "isNewCoupon": {
+            "type": "boolean"
+          },
+          "favoriteModifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CommonResponseListTopPopularCouponRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopPopularCouponRes"
+            }
+          }
+        }
+      },
+      "TopPopularCouponRes": {
+        "type": "object",
+        "properties": {
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "issuedCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CommonResponseListTopLatestCouponRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopLatestCouponRes"
+            }
+          }
+        }
+      },
+      "TopLatestCouponRes": {
+        "type": "object",
+        "properties": {
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "couponCreatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CommonResponseListTopClosingCouponRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopClosingCouponRes"
+            }
+          }
+        }
+      },
+      "TopClosingCouponRes": {
+        "type": "object",
+        "properties": {
+          "couponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "marketId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          }
+        }
+      },
+      "BetaCouponPageResBetaCouponRes": {
+        "type": "object",
+        "properties": {
+          "betaCouponResDtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BetaCouponRes"
+            }
+          },
+          "hasNext": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BetaCouponRes": {
+        "type": "object",
+        "properties": {
+          "betaCouponId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marketName": {
+            "type": "string"
+          },
+          "couponName": {
+            "type": "string"
+          },
+          "couponDetail": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "isPromise": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CommonResponseBetaCouponPageResBetaCouponRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/BetaCouponPageResBetaCouponRes"
+          }
+        }
+      },
+      "CommonResponsePageTempMarketDetailRes": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/PageTempMarketDetailRes"
+          }
+        }
+      },
+      "PageTempMarketDetailRes": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TempMarketDetailRes"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

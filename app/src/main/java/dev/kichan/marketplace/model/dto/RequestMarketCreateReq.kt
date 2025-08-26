@@ -1,0 +1,4 @@
+data class RequestMarketCreateReq(
+    val name: String? = null,
+    val address: String? = null
+)

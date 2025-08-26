@@ -30,11 +30,13 @@ import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
+import dev.kichan.marketplace.viewmodel.LoginNavigationEvent
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun LoginPage(
     navController: NavHostController,
-    loginViewModel: LoginViewModel = LoginViewModel()
+    loginViewModel: LoginViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val state = loginViewModel.loginState
@@ -53,6 +55,16 @@ fun LoginPage(
         )
     }
 
+    LaunchedEffect(Unit) {
+        loginViewModel.navigationEvent.collect { event ->
+            when (event) {
+                LoginNavigationEvent.PopBackStack -> navController.popBackStack()
+                LoginNavigationEvent.NavigateToMain -> navController.navigate(Page.Main.name)
+                else -> {}
+            }
+        }
+    }
+
     when (state) {
         is LoginUiState.Error -> {
             if (state.message.isNotEmpty()) {
@@ -63,8 +75,7 @@ fun LoginPage(
         LoginUiState.Idle -> {}
         LoginUiState.Loading -> {}
         is LoginUiState.Success -> {
-            navController.popBackStack()
-            navController.navigate(Page.Main.name)
+            // Navigation is now handled by LaunchedEffect observing navigationEvent
         }
     }
 

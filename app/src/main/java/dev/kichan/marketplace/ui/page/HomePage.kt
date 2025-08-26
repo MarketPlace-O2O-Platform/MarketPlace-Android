@@ -35,12 +35,14 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.kichan.marketplace.viewmodel.HomeNavigationEvent
 
 @Composable
 fun HomePage(
     navController: NavController,
-    couponViewModel: CouponViewModel = CouponViewModel()
-) {
+    couponViewModel: CouponViewModel = viewModel()
+) { {
     val state = couponViewModel.homeState
     LaunchedEffect(Unit) {
         if(state.popularCoupons.isEmpty()) {
@@ -48,13 +50,20 @@ fun HomePage(
             couponViewModel.getLatestCoupon()
             couponViewModel.getPopularCoupon()
         }
+        couponViewModel.navigationEvent.collect { event ->
+            when (event) {
+                HomeNavigationEvent.NavigateToSearch -> navController.navigate(Page.Search.name)
+                is HomeNavigationEvent.NavigateToEventDetail -> navController.navigate("${Page.EventDetail.name}/${event.marketId}")
+                is HomeNavigationEvent.NavigateToCouponListPage -> navController.navigate("${Page.CouponListPage.name}/${event.type}")
+            }
+        }
     }
 
     Scaffold(
         topBar = {
             HomeAppBar(
                 logo = R.drawable.logo,
-                onSearch = { navController.navigate(Page.Search.name) },
+                onSearch = { couponViewModel.onSearchClicked() },
                 Icons.Outlined.Notifications to {}
             )
         },
@@ -81,7 +90,7 @@ fun HomePage(
                                 subTitle = it.marketName,
                                 description = "~ " + formatter.format(deadLine),
                                 imageUrl = NetworkModule.getImage(it.thumbnail),
-                                onClick = { navController.navigate("${Page.EventDetail.name}/${it.marketId}") }
+                                onClick = { couponViewModel.onEventDetailClicked(it.marketId) }
                             )
                         }
                     )
@@ -116,7 +125,7 @@ fun HomePage(
                             )
                         },
                         isLoading =  state.isPopularLoading,
-                        onMoreClick = { navController.navigate("${Page.CouponListPage.name}/popular") },
+                        onMoreClick = { couponViewModel.onCouponListPageClicked("popular") },
                     )
                 }
 //                // 최신 제휴 이벤트
@@ -138,7 +147,7 @@ fun HomePage(
                             )
                         },
                         isLoading = state.isLatestLoading,
-                        onMoreClick = { navController.navigate("${Page.CouponListPage.name}/latest") },
+                        onMoreClick = { couponViewModel.onCouponListPageClicked("latest") },
                     )
                 }
 

@@ -13,12 +13,12 @@ import kotlinx.coroutines.launch
 
 data class MyViewModelState(
     val paybackCouponList: List<IssuedCouponRes> = listOf(),
-    val giftCouponList: List<MemberCoupon> = listOf()
+    val giftCouponList: List<IssuedCouponRes> = listOf()
 )
 
 class MyViewModel: ViewModel() {
-    val paybackCouponRepo = PayBackCouponMemberRepository()
-    val couponRepo = CouponMemberRepositoryImpl()
+    private val memberPaybackCouponIssueRepository: MemberPaybackCouponIssueRepository = MemberPaybackCouponIssueRepositoryImpl(NetworkModule.getService(MemberPaybackCouponIssueService::class.java))
+    private val memberGiftCouponIssueRepository: MemberGiftCouponIssueRepository = MemberGiftCouponIssueRepositoryImpl(NetworkModule.getService(MemberGiftCouponIssueService::class.java))
 
     var state by mutableStateOf(MyViewModelState())
 
@@ -29,21 +29,21 @@ class MyViewModel: ViewModel() {
 
     fun getGiftCoupon() {
         viewModelScope.launch {
-            val res = couponRepo.getValidMemberCoupons(1)
+            val res = memberGiftCouponIssueRepository.getCouponList_3(type = "ISSUED")
 
             if(!res.isSuccessful) {
                 //todo: 예외처리
                 return@launch
             }
 
-            val resList = res.body()!!.response
+            val resList = res.body()!!.response.couponResDtos
             state = state.copy(giftCouponList = resList)
         }
     }
 
     fun getPaybackCoupon() {
         viewModelScope.launch {
-            val res = paybackCouponRepo.getMemberPayBackCoupon(type = "ISSUED")
+            val res = memberPaybackCouponIssueRepository.getCouponList_2(type = "ISSUED")
 
             if(!res.isSuccessful) {
                 //todo: 예외처리
