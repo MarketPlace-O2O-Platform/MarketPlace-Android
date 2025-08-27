@@ -13,10 +13,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,66 +26,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.market.MarketRes
-import dev.kichan.marketplace.model.repository.MarketRepository
 import dev.kichan.marketplace.ui.component.atoms.SearchResultItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import dev.kichan.marketplace.viewmodel.SearchViewModel
 
 @Composable
-fun SearchPage(modifier: Modifier = Modifier) {
-    val marketRepository = MarketRepository()
-    var key by remember { mutableStateOf<String>("") }
-    var recentKeywords by remember {
-        mutableStateOf(
-            listOf(
-                "신복관",
-                "송쭈집",
-                "우정소갈비",
-                "디저트39",
-                "헬스장",
-                "필라테스"
-            )
-        )
-    }
-    var isFirst by remember { mutableStateOf(true) }
-    var result by remember {
-        mutableStateOf<List<MarketRes>>(listOf())
+fun SearchPage(modifier: Modifier = Modifier, viewModel: SearchViewModel = viewModel()) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getRecentKeywords()
     }
 
-    val onSearch: (String) -> Unit = {
-        CoroutineScope(Dispatchers.IO).launch {
-            val res = marketRepository.searchMarket(it, null, 20)
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful) {
-                    val _result = res.body()?.response?.marketResDtos ?: listOf()
-                    result = _result
-
-                    if (_result.isNotEmpty()) {
-                        isFirst = false
-                    }
-                }
-            }
-        }
-    }
-
-    Scaffold {
+        Scaffold {
         Column(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
         ) {
-            SearchBar(key, {
-                key = it
+            SearchBar(uiState.key, {
+                viewModel.setKey(it)
 
                 if (it.length >= 2) {
-                    onSearch(it)
+                    viewModel.search()
                 }
             })
 
@@ -99,18 +65,18 @@ fun SearchPage(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (result.isNotEmpty()) {
+            if (uiState.result.isNotEmpty()) {
                 LazyColumn {
-                    items(items = result) {
+                    items(items = uiState.result) {
                         SearchResultItem(
-                            title = it.name,
-                            description = it.description,
-                            imageUrl = NetworkModule.getImage(id = it.thumbnail)
+                            title = it.marketName,
+                            description = it.marketDescription,
+                            imageUrl = NetworkModule.getImage(it.thumbnail)
                         )
                     }
                 }
-            } else if (key.isBlank() || isFirst) {
-                RecentKeyword(recentKeywords)
+            } else if (uiState.key.isBlank() || uiState.isFirst) {
+                RecentKeyword(uiState.recentKeywords)
                 PopularBenefitsList()
             } else {
                 SearchResultEmpty()
@@ -353,7 +319,5 @@ fun SearchResultEmpty() {
 @Preview(showBackground = true)
 @Composable
 private fun SearchPagePrev() {
-    MarketPlaceTheme {
-        SearchPage()
-    }
+    SearchPage()
 }

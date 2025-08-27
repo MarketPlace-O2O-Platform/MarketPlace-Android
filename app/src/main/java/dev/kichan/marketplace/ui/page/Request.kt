@@ -22,17 +22,6 @@ import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
-
-class RequestActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RequestScreen()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestScreen() {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -101,12 +90,9 @@ fun RequestScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .background(Color.White, shape = RoundedCornerShape(2.dp)),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF5F5F5),
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    .background(
+                        Color.White, shape = RoundedCornerShape(2.dp)
+                    )
             )
         }
     }

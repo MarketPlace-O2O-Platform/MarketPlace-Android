@@ -27,16 +27,6 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 
-class RequestMapActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RequestMapScreen()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestMapScreen() {
     Column(modifier = Modifier.fillMaxSize()) {

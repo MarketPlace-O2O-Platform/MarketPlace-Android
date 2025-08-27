@@ -1,17 +1,12 @@
 package dev.kichan.marketplace.model
 
-import coil3.network.NetworkHeaders
-import coil3.network.httpHeaders
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import dev.kichan.marketplace.BuildConfig
-import dev.kichan.marketplace.model.service.CouponApiService
-import dev.kichan.marketplace.model.service.KakaoLocalService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
-import org.junit.runner.manipulation.Ordering.Context
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -72,15 +67,6 @@ object NetworkModule {
 
     fun <T> getService(service: Class<T>): T {
         return retrofit.create(service)
-    }
-
-    // ✅ 4. CouponApiService 추가 (기존 getService 활용)
-    fun getCouponService(): CouponApiService {
-        return retrofit.create(CouponApiService::class.java)
-    }
-
-    fun getKakaoService(): KakaoLocalService {
-        return kakaoRetrofit.create(KakaoLocalService::class.java)
     }
 
     fun getImage(id: String, isTempMarket : Boolean = false): String =

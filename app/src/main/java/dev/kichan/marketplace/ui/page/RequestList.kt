@@ -24,18 +24,6 @@ import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
-
-
-class RequestListActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RequestListScreen()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestListScreen() {
     Column(modifier = Modifier.fillMaxSize()) {
