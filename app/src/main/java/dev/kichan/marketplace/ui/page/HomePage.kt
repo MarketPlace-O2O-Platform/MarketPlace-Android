@@ -37,6 +37,7 @@ import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.viewmodel.HomeNavigationEvent
 import dev.kichan.marketplace.ui.viewmodel.HomeViewModel
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -83,7 +84,8 @@ fun HomePage(
                     CouponBanner(
                         isLoading = uiState.isClosingLoading || uiState.closingCoupons.isEmpty(),
                         bannerList = uiState.closingCoupons.map {
-                            val deadLine = it.deadline.toLocalDateTime()
+                            val formatter____ = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+                            val deadLine = LocalDateTime.parse(it.deadline, formatter____)
                             val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
                             BannerItem(

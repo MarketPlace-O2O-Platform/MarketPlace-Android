@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MemberLoginReq
+import dev.kichan.marketplace.model.saveAuthToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
