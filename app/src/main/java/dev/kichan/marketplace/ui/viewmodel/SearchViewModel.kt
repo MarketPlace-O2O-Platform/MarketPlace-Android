@@ -47,7 +47,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                 val response = marketsRepository.searchMarket_1(name = query)
                 if (response.isSuccessful) {
                     _uiState.value = _uiState.value.copy(
-                        searchResults = response.body()?.response?.content ?: emptyList(),
+                        searchResults = response.body()?.response?.marketResDtos ?: emptyList(),
                         isFirstSearch = false
                     )
                 }

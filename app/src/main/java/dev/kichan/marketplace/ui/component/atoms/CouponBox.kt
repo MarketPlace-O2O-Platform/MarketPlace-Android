@@ -80,7 +80,7 @@ fun CouponBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
-    val couponBoxProps = CouponBoxProps(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png", marketId = 1, onDownloadClick = {}, isDownload = false)
+    val couponBoxProps = CouponBoxProps(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png", marketId = 1, onDownloadClick = {})
     CouponBox(
         modifier = Modifier
             .fillMaxWidth(0.7f)

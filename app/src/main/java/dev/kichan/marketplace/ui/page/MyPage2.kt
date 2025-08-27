@@ -27,7 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
@@ -35,12 +37,11 @@ import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.ProfileHeader
 import dev.kichan.marketplace.ui.component.RefundCouponCard
 import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun MyPage2(
     navController: NavController,
-    myPage2ViewModel: MyPage2ViewModel = viewModel(LocalContext.current.applicationContext as Application),
+    myPage2ViewModel: MyPage2ViewModel = viewModel(),
 ) {
     val uiState by myPage2ViewModel.uiState.collectAsState()
 
@@ -118,22 +119,14 @@ fun MyPage2(
             item { Spacer(modifier = Modifier.height(24.dp)) }
             if(selectedTabIndex == 0) {
                 if(uiState.paybackCouponList.isEmpty()){
-                    item {
-                        RefundCouponCard(
-                            storeName = "인천대학교",
-                            discountTitle = "등록금 70%할인쿠폰",
-                            imageUrl = "https://postfiles.pstatic.net/MjAyMzA2MjdfMjgx/MDAxNjg3ODM1MzE3NjQ5.oBDtVqa7bFScuJ308FzHAdmRtABmaL1_SXK17n0-ndQg.KzZ6AcPYVQvHqB_vw4dZp8FG97HJp6bUS4QOU5RatRsg.JPEG.dream_we/IMG_7305.JPG?type=w966",
-                            onClick = { navController.navigate(Page.ReceptUploadPage.name) },
-                            modifier = Modifier.padding(horizontal = 18.dp),
-                        )
-                    }
+
                 }
                 else {
                     items(uiState.paybackCouponList) {
                         RefundCouponCard(
                             storeName = "매충 매장 이름",
                             discountTitle = it.couponName,
-                            imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                            imageUrl = "https://postfiles.pstatic.net/MjAyMzA2MjdfMjgx/MDAxNjg3ODM1MzE3NjQ5.oBDtVqa7bFScuJ308FzHAdmRtABmaL1_SXK17n0-ndQg.KzZ6AcPYVQvHqB_vw4dZp8FG97HJp6bUS4QOU5RatRsg.JPEG.dream_we/IMG_7305.JPG?type=w966",
                             onClick = { navController.navigate(Page.ReceptUploadPage.name) },
                             modifier = Modifier.padding(horizontal = 18.dp),
                         )
@@ -145,7 +138,7 @@ fun MyPage2(
                     RefundCouponCard(
                         storeName = "매충 매장 이름",
                         discountTitle = it.couponName,
-                        imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                        imageUrl = "https://postfiles.pstatic.net/MjAyMzA2MjdfMjgx/MDAxNjg3ODM1MzE3NjQ5.oBDtVqa7bFScuJ308FzHAdmRtABmaL1_SXK17n0-ndQg.KzZ6AcPYVQvHqB_vw4dZp8FG97HJp6bUS4QOU5RatRsg.JPEG.dream_we/IMG_7305.JPG?type=w966",
                         onClick = { navController.navigate(Page.ReceptUploadPage.name) },
                         modifier = Modifier.padding(horizontal = 18.dp),
                     )

@@ -17,7 +17,7 @@ class MembersRepository @Inject constructor(
         @Query("type") type: String? = null,
         @Query("memberCouponId") memberCouponId: Long? = null,
         @Query("size") size: Int? = null
-    ): Response<CommonResponsePaybackRes> {
+    ): Response<CommonResponseCouponPageResPaybackRes> {
         return service.getPaybackCoupon(type, memberCouponId, size)
     }
 

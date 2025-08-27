@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.IssuedCouponRes
@@ -18,7 +19,7 @@ data class MyPage2UiState(
     val isLoading: Boolean = false,
 )
 
-class MyPage2ViewModel(application: Application) : AndroidViewModel(application) {
+class MyPage2ViewModel() : ViewModel() {
     private val membersRepository = RepositoryProvider.provideMembersRepository()
     private val paybackCouponsRepository = RepositoryProvider.providePaybackCouponsRepository()
 

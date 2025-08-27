@@ -12,7 +12,7 @@ interface MembersService {
         @Query("type") type: String? = null,
         @Query("memberCouponId") memberCouponId: Long? = null,
         @Query("size") size: Int? = null
-    ): Response<CommonResponsePaybackRes>
+    ): Response<CommonResponseCouponPageResPaybackRes>
 
     @PUT("/api/members/payback-coupons")
     suspend fun uploadReceipt(

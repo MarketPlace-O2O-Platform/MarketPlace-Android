@@ -48,7 +48,7 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val response = tempmarketsRepository.getTempMarket(category = _uiState.value.selectedCategory.name)
                 if (response.isSuccessful) {
-                    _uiState.value = _uiState.value.copy(tempMarkets = response.body()?.response?.content ?: emptyList())
+                    _uiState.value = _uiState.value.copy(tempMarkets = response.body()?.response?.marketResDtos ?: emptyList())
                 }
             } catch (e: Exception) {
                 // Handle error
@@ -64,7 +64,7 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val response = tempmarketsRepository.getTempMarketPage()
                 if (response.isSuccessful) {
-                    _uiState.value = _uiState.value.copy(cheerTempMarkets = response.body()?.response?.content ?: emptyList())
+                    _uiState.value = _uiState.value.copy(cheerTempMarkets = response.body()?.response?.marketResDtos ?: emptyList())
                 }
             } catch (e: Exception) {
                 // Handle error
@@ -80,7 +80,7 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val response = tempmarketsRepository.searchMarket(name = searchKey)
                 if (response.isSuccessful) {
-                    _uiState.value = _uiState.value.copy(searchTempMarket = response.body()?.response?.content ?: emptyList())
+                    _uiState.value = _uiState.value.copy(searchTempMarket = response.body()?.response?.marketResDtos ?: emptyList())
                 }
             } catch (e: Exception) {
                 // Handle error

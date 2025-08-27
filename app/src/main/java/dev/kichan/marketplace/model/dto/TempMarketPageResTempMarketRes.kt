@@ -1,6 +1,6 @@
 package dev.kichan.marketplace.model.dto
 
 data class TempMarketPageResTempMarketRes(
-    val marketResDtos: List<String>,
+    val marketResDtos: List<TempMarketRes>,
     val hasNext: Boolean
 )

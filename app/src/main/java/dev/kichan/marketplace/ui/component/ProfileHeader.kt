@@ -35,14 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.model.data.MemberLoginRes
+import dev.kichan.marketplace.model.dto.MemberRes
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun ProfileHeader(
     modifier: Modifier = Modifier,
-    member: MemberLoginRes,
+    member: MemberRes,
     onLogout: () -> Unit = {},
     onCuration: () -> Unit,
     onCallCenter: () -> Unit,
