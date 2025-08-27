@@ -7,6 +7,7 @@ import dev.kichan.marketplace.model.repository.FavoritesRepository
 import dev.kichan.marketplace.model.repository.KakaoRepository
 import dev.kichan.marketplace.model.repository.MembersRepository
 import dev.kichan.marketplace.model.repository.MarketsRepository
+import dev.kichan.marketplace.model.repository.PaybackCouponsRepository
 import dev.kichan.marketplace.model.repository.TempmarketsRepository
 import dev.kichan.marketplace.model.services.CheerService
 import dev.kichan.marketplace.model.services.CouponsService
@@ -14,6 +15,7 @@ import dev.kichan.marketplace.model.services.FavoritesService
 import dev.kichan.marketplace.model.services.KakaoLocalService
 import dev.kichan.marketplace.model.services.MembersService
 import dev.kichan.marketplace.model.services.MarketsService
+import dev.kichan.marketplace.model.services.PaybackCouponsService
 import dev.kichan.marketplace.model.services.TempmarketsService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -43,6 +45,7 @@ object RepositoryProvider {
     private val marketsService = retrofit.create(MarketsService::class.java)
     private val favoritesService = retrofit.create(FavoritesService::class.java)
     private val kakaoLocalService = kakaoRetrofit.create(KakaoLocalService::class.java)
+    private val paybackCouponsService = retrofit.create(PaybackCouponsService::class.java)
 
     fun provideMembersRepository(): MembersRepository {
         return MembersRepository(membersService)
@@ -70,5 +73,9 @@ object RepositoryProvider {
 
     fun provideKakaoRepository(): KakaoRepository {
         return KakaoRepository(kakaoLocalService)
+    }
+
+    fun providePaybackCouponsRepository(): PaybackCouponsRepository {
+        return PaybackCouponsRepository(paybackCouponsService)
     }
 }

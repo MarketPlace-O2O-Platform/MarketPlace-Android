@@ -1,3 +1,6 @@
+package dev.kichan.marketplace.ui.page
+
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,42 +16,46 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.ProfileHeader
 import dev.kichan.marketplace.ui.component.RefundCouponCard
-import dev.kichan.marketplace.viewmodel.LoginUiState
-import dev.kichan.marketplace.viewmodel.LoginViewModel
-import dev.kichan.marketplace.viewmodel.MyViewModel
+import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun MyPage2(
     navController: NavController,
-    authViewModel: LoginViewModel = LoginViewModel(),
-    myViewModel: MyViewModel = MyViewModel(),
+    myPage2ViewModel: MyPage2ViewModel = viewModel(LocalContext.current.applicationContext as Application),
 ) {
-    val authState = authViewModel.loginState
-    val couponState = myViewModel.state
+    val uiState by myPage2ViewModel.uiState.collectAsState()
 
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
     var selectedTabIndex by remember { mutableStateOf(0) }
 
-    val selectedCouponList = if (selectedTabIndex == 0) couponState.paybackCouponList
-    else if (selectedTabIndex == 1) couponState.giftCouponList
+    val selectedCouponList = if (selectedTabIndex == 0) uiState.paybackCouponList
+    else if (selectedTabIndex == 1) uiState.giftCouponList
     else listOf()
 
-    val onLogout = {}
+    LaunchedEffect(Unit) {
+        myPage2ViewModel.getMemberInfo()
+        myPage2ViewModel.getPaybackCoupons()
+        myPage2ViewModel.getGiftCoupons()
+    }
 
     Scaffold(
         bottomBar = {
@@ -62,12 +69,14 @@ fun MyPage2(
         ) {
             item { Spacer(modifier = Modifier.height(21.dp)) }
             item {
-                ProfileHeader(
-                    member = (authState as LoginUiState.Success).member,
-                    onLogout = onLogout,
-                    onCuration = {},
-                    onCallCenter = {}
-                )
+                uiState.member?.let { member ->
+                    ProfileHeader(
+                        member = member,
+                        onLogout = { /* TODO: Handle logout */ },
+                        onCuration = {},
+                        onCallCenter = {}
+                    )
+                }
             }
             item {
                 Divider(
@@ -108,36 +117,36 @@ fun MyPage2(
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             if(selectedTabIndex == 0) {
-                if(couponState.paybackCouponList.size == 0){
+                if(uiState.paybackCouponList.isEmpty()){
                     item {
                         RefundCouponCard(
                             storeName = "인천대학교",
                             discountTitle = "등록금 70%할인쿠폰",
                             imageUrl = "https://postfiles.pstatic.net/MjAyMzA2MjdfMjgx/MDAxNjg3ODM1MzE3NjQ5.oBDtVqa7bFScuJ308FzHAdmRtABmaL1_SXK17n0-ndQg.KzZ6AcPYVQvHqB_vw4dZp8FG97HJp6bUS4QOU5RatRsg.JPEG.dream_we/IMG_7305.JPG?type=w966",
-                            onClick = { navController.navigate(Page.ReceptUploadPage) },
+                            onClick = { navController.navigate(Page.ReceptUploadPage.name) },
                             modifier = Modifier.padding(horizontal = 18.dp),
                         )
                     }
                 }
                 else {
-                    items(couponState.paybackCouponList) {
+                    items(uiState.paybackCouponList) {
                         RefundCouponCard(
                             storeName = "매충 매장 이름",
                             discountTitle = it.couponName,
-                            imageUrl = NetworkModule.getImage(it.thumbnail),
-                            onClick = { navController.navigate(Page.ReceptUploadPage) },
+                            imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                            onClick = { navController.navigate(Page.ReceptUploadPage.name) },
                             modifier = Modifier.padding(horizontal = 18.dp),
                         )
                     }
                 }
             }
             if(selectedTabIndex == 1) {
-                items(couponState.giftCouponList) {
+                items(uiState.giftCouponList) {
                     RefundCouponCard(
                         storeName = "매충 매장 이름",
                         discountTitle = it.couponName,
-                        imageUrl = NetworkModule.getImage(it.couponName),
-                        onClick = { navController.navigate(Page.ReceptUploadPage) },
+                        imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                        onClick = { navController.navigate(Page.ReceptUploadPage.name) },
                         modifier = Modifier.padding(horizontal = 18.dp),
                     )
                 }
@@ -145,11 +154,3 @@ fun MyPage2(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun MyPage2Preview() {
-//    MarketPlaceTheme() {
-//        MyPage2()
-//    }
-//}
