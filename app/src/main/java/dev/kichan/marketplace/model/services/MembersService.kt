@@ -15,7 +15,7 @@ interface MembersService {
     ): Response<CommonResponsePaybackRes>
 
     @PUT("/api/members/payback-coupons")
-    suspend fun updatePaybackCoupon(
+    suspend fun uploadReceipt(
         @Query("memberCouponId") memberCouponId: Long? = null,
         @Part image: MultipartBody.Part
     ): Response<CommonResponseCouponHandleRes>

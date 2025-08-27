@@ -17,15 +17,15 @@ class MembersRepository @Inject constructor(
         @Query("type") type: String? = null,
         @Query("memberCouponId") memberCouponId: Long? = null,
         @Query("size") size: Int? = null
-    ): Response<CommonResponseCouponPageResPaybackRes> {
+    ): Response<CommonResponsePaybackRes> {
         return service.getPaybackCoupon(type, memberCouponId, size)
     }
 
-    suspend fun updateCoupon_1(
+    suspend fun uploadReceipt(
         @Query("memberCouponId") memberCouponId: Long? = null,
         @Part image: MultipartBody.Part
     ): Response<CommonResponseCouponHandleRes> {
-        return service.updatePaybackCoupon(memberCouponId, image)
+        return service.uploadReceipt(memberCouponId, image)
     }
 
     suspend fun getCoupons(

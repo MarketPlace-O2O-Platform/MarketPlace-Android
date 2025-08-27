@@ -15,9 +15,7 @@ import dev.kichan.marketplace.model.dto.*
 class PaybackCouponsRepository @Inject constructor(
     private val service: PaybackCouponsService
 ) {
-
     suspend fun getCouponList(@Query("marketId") marketId: Long? = null, @Query("couponId") couponId: Long? = null, @Query("size") size: Int? = null): Response<CommonResponseCouponPageResPaybackRes> {
         return service.getCouponList(marketId, couponId, size)
     }
-
 }
