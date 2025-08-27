@@ -15,21 +15,15 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
-import dev.kichan.marketplace.viewmodel.TempMarketViewModel
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import dev.kichan.marketplace.viewmodel.AuthViewModel
-import dev.kichan.marketplace.viewmodel.CouponViewModel
-import dev.kichan.marketplace.viewmodel.MarketViewModel
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import java.util.Locale
 
 
 val faker = Faker(Locale.KOREAN)
 
 class MainActivity : ComponentActivity() {
-    private val couponViewModel : CouponViewModel by viewModels()
-    private val marketViewModel : MarketViewModel by viewModels()
-    private val authViewModel: AuthViewModel by viewModels()
-    private val tempMarketViewModel: TempMarketViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
 
     private fun getFCMToken() {
         FirebaseMessaging.getInstance().token
@@ -40,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val token = task.result
-                authViewModel.saveFcmToken(token)
+//                loginViewModel.saveFcmToken(token)
                 Log.d("FCM", "FCM token: $token")
             }
     }
@@ -76,12 +70,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketPlaceTheme {
-                MyApp(
-                    authViewModel = authViewModel,
-                    couponViewModel = couponViewModel,
-                    marketViewModel = marketViewModel,
-                    tempMarketViewModel = tempMarketViewModel
-                )
+                MyApp()
             }
         }
     }

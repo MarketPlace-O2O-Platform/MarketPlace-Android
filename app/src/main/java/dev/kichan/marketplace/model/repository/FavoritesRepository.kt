@@ -1,12 +1,23 @@
 package dev.kichan.marketplace.model.repository
 
-import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.service.FavoritesService
+import retrofit2.Response
+import retrofit2.http.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import kotlinx.coroutines.Deferred
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
+import dev.kichan.marketplace.model.services.FavoritesService
+import dev.kichan.marketplace.model.dto.*
 
-class FavoritesRepository {
-    private val service = NetworkModule.getService(FavoritesService::class.java)
+@Singleton
+class FavoritesRepository @Inject constructor(
+    private val service: FavoritesService
+) {
 
-    suspend fun favorites(
-        marketId: Long,
-    ) = service.favorites(marketId)
+    suspend fun createCoupon_1(@Query("marketId") marketId: Long? = null): Response<CommonResponseObject> {
+        return service.createCoupon_1(marketId)
+    }
+
 }

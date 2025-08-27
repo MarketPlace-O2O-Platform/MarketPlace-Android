@@ -1,4 +1,4 @@
-package dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms
+package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth

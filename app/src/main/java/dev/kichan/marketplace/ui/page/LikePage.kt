@@ -23,10 +23,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,64 +33,59 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
+import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
-import dev.kichan.marketplace.viewmodel.AuthViewModel
-import dev.kichan.marketplace.viewmodel.LoginUiState
-import dev.kichan.marketplace.viewmodel.TempMarketViewModel
+import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
 
 @Composable
 fun LikePage(
     navController: NavController,
-    authViewModel: AuthViewModel,
-    tempMarketViewModel: TempMarketViewModel
+    likeViewModel: LikeViewModel = viewModel()
 ) {
-    val authState = authViewModel.loginState
-    val tempMarketState = tempMarketViewModel.likePageState
-
-    var searchKey by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf(LargeCategory.All) }
-
-    val onDecrease = {
-        authViewModel.refershMemberData()
-    }
+    val uiState by likeViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        tempMarketViewModel.getTempMarket(selectedCategory);
-        tempMarketViewModel.getCheerTempMarket();
+        likeViewModel.getMemberInfo()
+        likeViewModel.getCheerTempMarkets()
+        likeViewModel.getTempMarkets()
     }
-    LaunchedEffect(selectedCategory) {
-        tempMarketViewModel.getTempMarket(selectedCategory);
+
+    LaunchedEffect(uiState.selectedCategory) {
+        likeViewModel.getTempMarkets()
     }
-    LaunchedEffect(searchKey) {
-        tempMarketViewModel.searchTempMarket(searchKey)
+
+    LaunchedEffect(uiState.searchKey) {
+        if (uiState.searchKey.isNotEmpty()) {
+            likeViewModel.searchTempMarket(uiState.searchKey)
+        }
     }
 
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
-    ) {
+    ) {paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(paddingValues)
         ) {
             item {
                 LikeMarketSearchBar(
                     modifier = Modifier.fillMaxWidth(),
-                    key = searchKey
-                ) { searchKey = it }
+                    key = uiState.searchKey
+                ) { likeViewModel.onSearchKeyChanged(it) }
             }
-            if (searchKey.isEmpty()) {
+            if (uiState.searchKey.isEmpty()) {
                 item {
-                    MyHeartCount((authState as LoginUiState.Success).member.cheerTicket)
+                    MyHeartCount(uiState.cheerTicket)
                 }
                 item {
                     Spacer(
@@ -103,27 +96,27 @@ fun LikePage(
                     )
                 }
                 item {
-                    SpaceTitle(title = "달성 임박", badgeTitle = "HOT \uD83D\uDD25")
+                    SpaceTitle(title = "달성 임박", badgeTitle = "HOT 🔥")
                     Spacer(modifier = Modifier.height(12.dp))
                 }
                 item {
-                    if (tempMarketState.cheerTempMarkets.isEmpty()) {
+                    if (uiState.cheerTempMarkets.isEmpty()) {
                         EmptyMessage()
                     } else {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            items(items = tempMarketState.cheerTempMarkets) {
+                            items(items = uiState.cheerTempMarkets) { tempMarket ->
                                 RequestCard(
                                     modifier = Modifier.width(284.dp),
-                                    marketName = it.name,
-                                    likeCount = it.cheerCount,
-                                    thumbnail = NetworkModule.getImage(it.thumbnail, true),
-                                    isMyDone = it.isCheer,
-                                    isRequestDone = it.dueDate == 0,
-                                    duDate = it.dueDate,
-                                    onCheer = { tempMarketViewModel.onCheer(it.id, onDecrease) }
+                                    marketName = tempMarket.marketName,
+                                    likeCount = tempMarket.cheerCount,
+                                    thumbnail = RetrofitClient.getClient().baseUrl().toString() + "images/" + tempMarket.thumbnail,
+                                    isMyDone = tempMarket.isCheer,
+                                    isRequestDone = tempMarket.dueDate == 0,
+                                    duDate = tempMarket.dueDate,
+                                    onCheer = { likeViewModel.cheer(tempMarket.marketId) }
                                 )
                             }
                         }
@@ -136,13 +129,13 @@ fun LikePage(
                     SpaceTitle(title = "지금 공감하면 할인권을 드려요", badgeTitle = "EVENT")
                     Spacer(modifier = Modifier.height(20.dp))
                     CategorySelector(
-                        selectedCategory = selectedCategory,
-                        onChange = { selectedCategory = it }
+                        selectedCategory = uiState.selectedCategory,
+                        onChange = { likeViewModel.onCategoryChanged(it) }
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
-                if (tempMarketState.tempMarkets.isNotEmpty()) {
-                    items(tempMarketState.tempMarkets.size / 2) {
+                if (uiState.tempMarkets.isNotEmpty()) {
+                    items(uiState.tempMarkets.size / 2) { index ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -153,31 +146,31 @@ fun LikePage(
                                 ),
                             horizontalArrangement = Arrangement.spacedBy(11.dp)
                         ) {
-                            val market1 = tempMarketState.tempMarkets[it * 2]
+                            val market1 = uiState.tempMarkets[index * 2]
                             RequestCard(
                                 modifier = Modifier
                                     .weight(1f),
-                                marketName = market1.name,
+                                marketName = market1.marketName,
                                 likeCount = market1.cheerCount,
-                                thumbnail = NetworkModule.getImage(market1.thumbnail, true),
+                                thumbnail = RetrofitClient.getClient().baseUrl().toString() + "images/" + market1.thumbnail,
                                 isMyDone = market1.isCheer,
                                 isRequestDone = market1.dueDate == 0,
                                 duDate = market1.dueDate,
-                                onCheer = { tempMarketViewModel.onCheer(market1.id, onDecrease) }
+                                onCheer = { likeViewModel.cheer(market1.marketId) }
                             )
 
-                            if (it * 2 + 1 < tempMarketState.tempMarkets.size) {
-                                val market2 = tempMarketState.tempMarkets[it * 2 + 1]
+                            if (index * 2 + 1 < uiState.tempMarkets.size) {
+                                val market2 = uiState.tempMarkets[index * 2 + 1]
                                 RequestCard(
                                     modifier = Modifier
                                         .weight(1f),
-                                    marketName = market2.name,
+                                    marketName = market2.marketName,
                                     likeCount = market2.cheerCount,
-                                    thumbnail = NetworkModule.getImage(market2.thumbnail, true),
+                                    thumbnail = RetrofitClient.getClient().baseUrl().toString() + "images/" + market2.thumbnail,
                                     isMyDone = market2.isCheer,
                                     isRequestDone = market2.dueDate == 0,
                                     duDate = market2.dueDate,
-                                    onCheer = { tempMarketViewModel.onCheer(market2.id, onDecrease) }
+                                    onCheer = { likeViewModel.cheer(market2.marketId) }
                                 )
                             } else {
                                 Box(Modifier.weight(1f))
@@ -190,8 +183,8 @@ fun LikePage(
                     }
                 }
             } else {
-                items(tempMarketState.searchTempMarket) {
-                    Text(it.toString())
+                items(uiState.searchTempMarket) { tempMarket ->
+                    Text(tempMarket.toString())
                 }
             }
         }
@@ -277,11 +270,3 @@ private fun MyHeartCount(tiekctCount: Int) {
         )
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun LikePagePreview() {
-//    MarketPlaceTheme {
-//        LikePage(rememberNavController())
-//    }
-//}

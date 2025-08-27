@@ -54,16 +54,6 @@ fun CouponBox(
                 .background(Color(0x4D000000))
         )
 
-        IconButton(
-            onClick = { couponBoxProps.onDownloadClick() },
-            modifier = Modifier.align(Alignment.TopEnd)
-        ) {
-            Icon(
-                painter = painterResource(if(couponBoxProps.isDownload) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
-                contentDescription = null
-            )
-        }
-
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -90,7 +80,7 @@ fun CouponBox(
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventBox() {
-    val couponBoxProps = CouponBoxProps(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png", marketId = 1, onDownloadClick = {}, isDownload = false)
+    val couponBoxProps = CouponBoxProps(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png", marketId = 1, onDownloadClick = {})
     CouponBox(
         modifier = Modifier
             .fillMaxWidth(0.7f)

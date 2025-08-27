@@ -11,29 +11,24 @@ import dev.kichan.marketplace.ui.page.MarketDetailPage
 import dev.kichan.marketplace.ui.page.HomePage
 import dev.kichan.marketplace.ui.page.LikePage
 import dev.kichan.marketplace.ui.page.MapPage
-import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.ui.page.ApiTestPage
 import dev.kichan.marketplace.ui.page.MarketListPage
-import dev.kichan.marketplace.ui.page.ReceivedCouponsScreen
+import dev.kichan.marketplace.ui.page.ReceiptUploadPage
 import dev.kichan.marketplace.ui.page.SplashPage
-import dev.kichan.marketplace.viewmodel.TempMarketViewModel
-import dev.kichan.marketplace.viewmodel.AuthViewModel
+import dev.kichan.marketplace.viewmodel.LoginViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
-import dev.kichan.marketplace.viewmodel.MarketViewModel
+import dev.kichan.marketplace.viewmodel.SearchViewModel
+import dev.kichan.marketplace.viewmodel.ReceiptUploadViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.kichan.marketplace.ui.page.MyPage2
 
 @Composable
-fun MyApp(
-    authViewModel: AuthViewModel = AuthViewModel(), //todo: 언젠가는 DI 적용
-    couponViewModel: CouponViewModel = CouponViewModel(),
-    marketViewModel: MarketViewModel = MarketViewModel(),
-    tempMarketViewModel: TempMarketViewModel = TempMarketViewModel()
-) {
+fun MyApp() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -48,40 +43,27 @@ fun MyApp(
         composable(Page.Splash.name) {
             SplashPage(
                 navController = navController,
-                authViewModel = authViewModel
             )
         }
         navigation(route = Page.Main.name, startDestination = Page.Home.name) {
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
-                    couponViewModel = couponViewModel
                 )
             }
             composable(Page.Like.name) {
                 LikePage(
                     navController = navController,
-                    authViewModel = authViewModel,
-                    tempMarketViewModel = tempMarketViewModel
                 )
             }
             composable(Page.Map.name) {
                 MapPage(
                     navController = navController,
-                    marketViewModel = marketViewModel
                 )
             }
             composable(Page.My.name) {
-                MyPage(
+                MyPage2(
                     navController = navController,
-                    authViewModel = authViewModel,
-                    marketViewModel = marketViewModel
-                )
-            }
-            composable(Page.CouponHam.name) {
-                ReceivedCouponsScreen(
-                    navController = navController,
-                    couponViewModel = couponViewModel
                 )
             }
             composable(Page.Search.name) { SearchPage() }
@@ -89,26 +71,23 @@ fun MyApp(
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->
                     Log.d("eventDetail", "id : $id")
-                    MarketDetailPage(navController, marketViewModel, couponViewModel, id.toLong())
+                    MarketDetailPage(navController, id.toLong())
                 }
             }
         }
         composable(route = Page.Login.name) {
             LoginPage(
                 navController = navController,
-                authViewModel = authViewModel
             )
         }
         composable(route = "${Page.MarketListPage.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
                 MarketListPage(
                     nacController = navController,
-                    marketViewModel = marketViewModel,
-                    _category = LargeCategory.valueOf(category)
+                    category = LargeCategory.valueOf(category)
                 )
             }
         }
-
         composable(route = "${Page.CouponListPage.name}/{type}") {
             it.arguments?.getString("type")?.let { type ->
                 if (!listOf("popular", "latest").contains(type)) {
@@ -117,14 +96,18 @@ fun MyApp(
 
                 CouponListPage(
                     navController = navController,
-                    couponViewModel = couponViewModel,
                     type = type
                 )
             }
         }
+        composable(route = Page.My2.name) {
+            MyPage2(
+                navController = navController,
+            )
+        }
 
-        composable(Page.LocalApiTestPage.name) {
-            ApiTestPage()
+        composable(Page.ReceptUploadPage.name) {
+            ReceiptUploadPage(navController = navController)
         }
     }
 }

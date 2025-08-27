@@ -6,71 +6,74 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.DropDownMenu
+import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.InputType
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
+import dev.kichan.marketplace.viewmodel.LoginViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginPage(
     navController: NavHostController,
-    authViewModel: AuthViewModel = AuthViewModel()
+    loginViewModel: LoginViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val state = authViewModel.loginState
+    val state by loginViewModel.loginState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
 
-    var inputId by remember { mutableStateOf("") }
-    var inputPassword by remember { mutableStateOf("") }
+    val loginInputState by loginViewModel.loginInputState.collectAsStateWithLifecycle()
 
-    var selectedSchool by remember { mutableStateOf("") }
-    val schools = listOf("인천대학교", "연세대학교", "인하대학교")
-
-    val onLogin: (String, String) -> Unit = { id, password ->
-        authViewModel.login(
-            id = id,
-            password = password,
-        )
+    val onLogin: () -> Unit = {
+        loginViewModel.login()
     }
 
-    when (state) {
-        is LoginUiState.Error -> {
-            if (state.message.isNotEmpty()) {
-                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(state) {
+        when (state) {
+            is LoginUiState.Error -> {
+                Toast.makeText(context, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
-        }
 
-        LoginUiState.Idle -> {}
-        LoginUiState.Loading -> {}
-        is LoginUiState.Success -> {
-            navController.popBackStack()
-            navController.navigate(Page.Main.name)
+            LoginUiState.Authenticated -> {
+                coroutineScope.launch {
+                    Toast.makeText(context, "로그인 성공", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Page.Main.name) {
+                        popUpTo(Page.Login.name) { inclusive = true }
+                    }
+                }
+            }
+
+            else -> {}
         }
     }
 
-    val isSubmitAble = inputId.isNotEmpty() && inputPassword.isNotEmpty() && selectedSchool.isNotEmpty();
+    
 
     Scaffold {
         Column(
@@ -98,41 +101,7 @@ fun LoginPage(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight(500)
-                            )
-                        ) {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("매번")
-                            }
-                            append(" 마라탕 한 그릇,")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(" 이천원 더")
-                            }
-                            append(" 내고 있어요.\n")
-                        }
-
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight(500)
-                            )
-                        ) {
-                            append("이제, 다니는")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight(600))) {
-                                append(" 대학")
-                            }
-                            append(" 제휴 멤버십으로\n")
-
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("쿠폰 꾸러미")
-                            }
-                            append(" 받아볼까요?")
-                        }
-                    },
+                    text = "이제, 인천대 제휴 할인을 받으러 가볼까요?",
                     fontFamily = PretendardFamily,
                 )
             }
@@ -156,8 +125,8 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            DropDownMenu(selectedSchool, schools, placeholder = "학교를 선택해주세요") {
-                selectedSchool = it
+            DropDownMenu(loginInputState.selectedSchool, listOf("인천대학교"), placeholder = "학교를 선택해주세요") {
+                loginViewModel.setSelectedSchool(it)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -180,10 +149,10 @@ fun LoginPage(
 
             // ID Input
             Input(
-                value = inputId,
+                value = loginInputState.studentId,
                 onChange = {
                     if (it.all { char -> char.isDigit() }) {
-                        inputId = it
+                        loginViewModel.setStudentId(it)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -209,8 +178,8 @@ fun LoginPage(
 
             // Pw Input
             Input(
-                value = inputPassword,
-                onChange = { inputPassword = it },
+                value = loginInputState.password,
+                onChange = { loginViewModel.setPassword(it) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "비밀번호를 입력해주세요",
                 inputType = InputType.Password
@@ -233,12 +202,12 @@ fun LoginPage(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            dev.kichan.marketplace.ui.component.atoms.CustomButton(
+            CustomButton(
                 text = "로그인",
                 modifier = Modifier.fillMaxWidth(),
-                isDisable = !isSubmitAble,
+                isDisable = !(loginInputState.studentId.isNotEmpty() && loginInputState.password.isNotEmpty() && loginInputState.selectedSchool.isNotEmpty()),
             ) {
-                onLogin(inputId, inputPassword)
+                onLogin()
             }
         }
     }

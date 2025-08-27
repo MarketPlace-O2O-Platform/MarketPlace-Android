@@ -24,18 +24,6 @@ import androidx.compose.ui.unit.sp
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
-
-
-class RequestListActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RequestListScreen()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestListScreen() {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -99,16 +87,16 @@ fun RequestListScreen() {
                     )
                 },
                 modifier = Modifier
-                    .border(width = 1.dp, color = Color(0xFF303030), shape = RoundedCornerShape(size = 2.dp))
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFF303030),
+                        shape = RoundedCornerShape(size = 2.dp)
+                    )
                     .width(335.dp)
                     .height(50.dp)
-                    .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 2.dp)),
-
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFFFFFFF),
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                    .background(
+                        color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 2.dp)
+                    )
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -150,7 +138,11 @@ fun RequestList() {
                 )
             }
             Spacer(modifier = Modifier.height(25.dp))
-            Divider(color = Color(0xFFEEEEEE), thickness = 1.1.dp, modifier = Modifier.fillMaxWidth())
+            Divider(
+                color = Color(0xFFEEEEEE),
+                thickness = 1.1.dp,
+                modifier = Modifier.fillMaxWidth()
+            )
 
         }
     }
