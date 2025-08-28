@@ -20,11 +20,7 @@ import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.ReceiptUploadPage
 import dev.kichan.marketplace.ui.page.SplashPage
-import dev.kichan.marketplace.viewmodel.LoginViewModel
-import dev.kichan.marketplace.viewmodel.CouponViewModel
-import dev.kichan.marketplace.viewmodel.SearchViewModel
-import dev.kichan.marketplace.viewmodel.ReceiptUploadViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.kichan.marketplace.ui.page.CouponListPage
 import dev.kichan.marketplace.ui.page.MyPage2
 
 @Composable

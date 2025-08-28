@@ -2,10 +2,6 @@ package dev.kichan.marketplace.model.repository
 
 import retrofit2.Response
 import retrofit2.http.*
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import kotlinx.coroutines.Deferred
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import dev.kichan.marketplace.model.services.CouponsService
@@ -32,12 +28,12 @@ class CouponsRepository @Inject constructor(
         return service.getClosingCoupon(pageSize)
     }
 
-    suspend fun getPopularCoupon_1(@Query("lastIssuedCount") lastIssuedCount: Long? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes> {
-        return service.getPopularCoupon_1(lastIssuedCount, lastCouponId, pageSize)
+    suspend fun getPopularCouponAll(@Query("lastIssuedCount") lastIssuedCount: Long? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes> {
+        return service.getPopularCouponAll(lastIssuedCount, lastCouponId, pageSize)
     }
 
-    suspend fun getLatestCoupon_1(@Query("lastCreatedAt") lastCreatedAt: String? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes> {
-        return service.getLatestCoupon_1(lastCreatedAt, lastCouponId, pageSize)
+    suspend fun getLatestCouponAll(@Query("lastCreatedAt") lastCreatedAt: String? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes> {
+        return service.getLatestCouponAll(lastCreatedAt, lastCouponId, pageSize)
     }
 
 }
