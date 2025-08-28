@@ -48,7 +48,8 @@ data class CouponListItemProps(
     val imageUrl: String,
     val address: String,
     val isAvailable: Boolean,
-    val isMemberIssued: Boolean
+    val isMemberIssued: Boolean,
+    val couponType : String,
 )
 
 @Composable
@@ -149,7 +150,8 @@ fun CouponListItemWithDownloadPreview() {
                 isAvailable = false,
                 marketId = 1L,
                 id = 1L,
-                isMemberIssued = false
+                isMemberIssued = false,
+                couponType = "PAYBACK"
             ),
             onDownloadClick = {}
         )

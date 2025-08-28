@@ -22,6 +22,7 @@ data class CouponListUiState(
 
 class CouponViewModel() : ViewModel() {
     private val couponsRepository: CouponsRepository = RepositoryProvider.provideCouponsRepository();
+    private val mamberRepository = RepositoryProvider   .provideMembersRepository();
     private val _couponListUiState = MutableStateFlow(CouponListUiState())
     val couponListUiState = _couponListUiState.asStateFlow()
 
@@ -64,6 +65,7 @@ class CouponViewModel() : ViewModel() {
                             isMemberIssued = it.isMemberIssued,
                             address = it.address,
                             isAvailable = it.isAvailable,
+                            couponType = it.couponType
                         )
                     }
                     _couponListUiState.update { currentState ->
@@ -84,8 +86,23 @@ class CouponViewModel() : ViewModel() {
     }
 
     fun downloadCoupon(id: Long) {
-        viewModelScope.launch {
+        val coupon = _couponListUiState.value.couponList.find { it.id == id }
+        if(coupon == null)
+            return
 
+        viewModelScope.launch {
+            if(coupon.couponType == "PAYBACKA") {
+                mamberRepository.downloadPaybackCoupon(id)
+            }
+            else {
+                mamberRepository.downloadCoupon(id)
+            }
+
+            _couponListUiState.update { it.copy(
+                couponList = it.couponList.map { coupon ->
+                    if(coupon.id == id) coupon.copy(isMemberIssued = true) else coupon
+                }
+            ) }
         }
     }
 }

@@ -35,5 +35,4 @@ class CouponsRepository @Inject constructor(
     suspend fun getLatestCouponAll(@Query("lastCreatedAt") lastCreatedAt: String? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes> {
         return service.getLatestCouponAll(lastCreatedAt, lastCouponId, pageSize)
     }
-
 }

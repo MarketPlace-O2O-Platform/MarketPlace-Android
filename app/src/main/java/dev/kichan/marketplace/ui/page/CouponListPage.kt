@@ -68,10 +68,10 @@ fun CouponListPage(
             modifier = Modifier.padding(it),
             state = listState
         ) {
-            items(uiState.couponList) {
+            items(uiState.couponList) { coupon ->
                 CouponListItem(
-                    modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${it.marketId}") },
-                    props = it,
+                    modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${coupon.marketId}") },
+                    props = coupon,
                     onDownloadClick = {id -> couponViewModel.downloadCoupon(id)}
                 )
             }

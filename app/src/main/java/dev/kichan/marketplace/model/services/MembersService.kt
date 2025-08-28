@@ -37,10 +37,10 @@ interface MembersService {
     suspend fun loginMember(@Body body: MemberLoginReq): Response<CommonResponseString>
 
     @POST("/api/members/payback-coupons/{couponId}")
-    suspend fun issuedCoupon(@Path("couponId") couponId: Long): Response<CommonResponseObject>
+    suspend fun downloadPaybackCoupon(@Path("couponId") couponId: Long): Response<CommonResponseObject>
 
     @POST("/api/members/coupons/{couponId}")
-    suspend fun issuedCoupon_1(@Path("couponId") couponId: Long): Response<CommonResponseObject>
+    suspend fun downloadCoupon(@Path("couponId") couponId: Long): Response<Void>
 
     @PATCH("/api/members/notification/permit")
     suspend fun permitFcmToken(@Body body: MemberFcmReq): Response<CommonResponseObject>

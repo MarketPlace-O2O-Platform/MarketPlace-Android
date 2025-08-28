@@ -75,7 +75,7 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
     fun downloadCoupon(couponId: Long) {
         viewModelScope.launch {
             try {
-                val response = membersRepository.issuedCoupon(couponId)
+                val response = membersRepository.downloadPaybackCoupon(couponId)
                 if (response.isSuccessful) {
                     _navigationEvent.emit(MarketDetailNavigationEvent.NavigateToMyPage)
                 }
