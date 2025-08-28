@@ -47,6 +47,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.model.dto.MarketRes
 import dev.kichan.marketplace.ui.Page
@@ -101,7 +102,8 @@ fun MapPage(
     }
 
     LaunchedEffect(Unit, uiState.selectedCategory) {
-        mapViewModel.getMarkets()
+        val position = cameraPositionState.position.target
+        mapViewModel.getMarkets(position)
     }
 
     Scaffold(
@@ -180,7 +182,8 @@ fun MapPage(
                             .align(Alignment.TopCenter)
                             .padding(52.dp),
                         onClick = {
-                            mapViewModel.getMarkets()
+                            val position = cameraPositionState.position.target
+                            mapViewModel.getMarkets(position)
                         },
                         icon = Icons.Default.Menu,
                         title = "현 지도에서 검색",
@@ -247,7 +250,7 @@ fun SheetContent(
                     title = it.marketName,
                     description = it.marketDescription,
                     location = it.address,
-                    imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                    imageUrl = NetworkModule.getImage(it.thumbnail),
                     isFavorite = it.isFavorite,
                     onLikeClick = { onFavorite(it.marketId) }
                 )

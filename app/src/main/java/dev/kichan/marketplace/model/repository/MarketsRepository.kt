@@ -2,10 +2,6 @@ package dev.kichan.marketplace.model.repository
 
 import retrofit2.Response
 import retrofit2.http.*
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import kotlinx.coroutines.Deferred
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import dev.kichan.marketplace.model.services.MarketsService
@@ -32,8 +28,7 @@ class MarketsRepository @Inject constructor(
         return service.getMemberFavoriteMarketList(lastModifiedAt, pageSize)
     }
 
-    suspend fun getMarket_2(@Query("lastPageIndex") lastPageIndex: Long? = null, @Query("category") category: String? = null, @Query("pageSize") pageSize: Int? = null, @Query("address") address: String? = null): Response<CommonResponseMarketPageResMarketRes> {
-        return service.getMarket_2(lastPageIndex, category, pageSize, address)
+    suspend fun getMarketsByMap(@Query("lastPageIndex") lastPageIndex: Long? = null, @Query("category") category: String? = null, @Query("pageSize") pageSize: Int? = null, @Query("address") address: String? = null): Response<CommonResponseMarketPageResMarketRes> {
+        return service.getMarketsByMap(lastPageIndex, category, pageSize, address)
     }
-
 }

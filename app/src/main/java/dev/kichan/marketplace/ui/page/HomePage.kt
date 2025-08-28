@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.toLocalDateTime
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
@@ -92,7 +93,7 @@ fun HomePage(
                                 title = it.couponName,
                                 subTitle = it.marketName,
                                 description = "~ " + formatter.format(deadLine),
-                                imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                                imageUrl = NetworkModule.getImage(it.thumbnail),
                                 onClick = { homeViewModel.onEventDetailClicked(it.marketId) }
                             )
                         }
@@ -121,12 +122,12 @@ fun HomePage(
                                 id = it.couponId.toString(),
                                 title = it.couponName,
                                 subTitle = it.marketName,
-                                url = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                                url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
                                 onDownloadClick = { /* TODO */ },
                             )
                         },
-                        isLoading =  uiState.isPopularLoading,
+                        isLoading = uiState.isPopularLoading,
                         onMoreClick = { homeViewModel.onCouponListPageClicked("popular") },
                     )
                 }
@@ -142,7 +143,7 @@ fun HomePage(
                                 id = it.couponId.toString(),
                                 subTitle = it.marketName,
                                 title = it.couponName,
-                                url = RetrofitClient.getClient().baseUrl().toString() + "images/" + it.thumbnail,
+                                url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
                                 onDownloadClick = { /* TODO */ },
                             )

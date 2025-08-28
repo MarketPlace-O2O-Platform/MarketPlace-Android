@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.model.dto.MarketDetailsRes
 import dev.kichan.marketplace.ui.CouponDownloadCheckDialog
@@ -116,7 +117,7 @@ fun MarketDetailPage(
         ) {
             item {
                 ImageSlider(uiState.marketData!!.imageResList.map { img ->
-                    RetrofitClient.getClient().baseUrl().toString() + "images/" + img.imageId
+                    NetworkModule.getImage(img.name)
                 })
             }
             item {
