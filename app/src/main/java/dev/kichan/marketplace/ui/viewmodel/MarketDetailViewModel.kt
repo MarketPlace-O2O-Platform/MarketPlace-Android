@@ -88,7 +88,7 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.createCoupon_1(marketId)
+                favoritesRepository.favorite(marketId)
                 // Refresh the market details to get the updated favorite status
                 getMarketDetails()
             } catch (e: Exception) {

@@ -159,7 +159,10 @@ fun MapPage(
                             .fillMaxWidth()
                             .align(Alignment.TopCenter),
                         selectedCategory = uiState.selectedCategory,
-                        onSelected = { mapViewModel.onCategoryChanged(it) }
+                        onSelected = {
+                            val position = cameraPositionState.position.target
+                            mapViewModel.onCategoryChanged(it, position)
+                        }
                     )
 
                     IconButton(

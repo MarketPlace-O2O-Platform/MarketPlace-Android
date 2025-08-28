@@ -63,7 +63,7 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.createCoupon_1(marketId)
+                favoritesRepository.favorite(marketId)
                 // Refresh the list after favoriting
                 getMarkets(true)
             } catch (e: Exception) {

@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
@@ -61,7 +62,6 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     return@launch
                 }
                 val marketPage = response.body()?.response?.marketResDtos ?: emptyList()
-
                 val marketsWithCoords = marketPage.map { market ->
                     async {
                         val addressResponse = kakaoRepository.getAddress(market.address)
@@ -120,16 +120,24 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.createCoupon_1(marketId)
-//                getMarkets()
+                favoritesRepository.favorite(marketId)
+                _uiState.value = _uiState.value.copy(
+                    //todo: 시발 이게 뭔 코드야
+                    markets = _uiState.value.markets.map {
+                        if(it.market.marketId == marketId)
+                            it.copy(market = it.market.copy(isFavorite = !it.market.isFavorite))
+                        else
+                            it
+                    }
+                )
             } catch (e: Exception) {
                 // Handle error
             }
         }
     }
 
-    fun onCategoryChanged(category: LargeCategory) {
+    fun onCategoryChanged(category: LargeCategory, position: LatLng) {
         _uiState.value = _uiState.value.copy(selectedCategory = category)
-//        getMarkets()
+        getMarkets(position)
     }
 }
