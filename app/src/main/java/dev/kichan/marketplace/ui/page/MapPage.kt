@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -115,7 +118,11 @@ fun MapPage(
         },
     ) {
         ThreeStepBottomSheet(
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(
+                start = it.calculateStartPadding(LayoutDirection.Ltr),
+                end = it.calculateEndPadding(LayoutDirection.Rtl),
+                top = it.calculateTopPadding(),
+            ),
             sheetHeightDp = sheetHeights,
             swipeState = sheetState,
             sheetContent = {
@@ -268,7 +275,7 @@ fun SheetContent(
         IconChip(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 60.dp),
+                .padding(bottom = 120.dp),
             onClick = { onCloseSheet() },
             icon = Icons.Default.LocationOn,
             title = "지도 닫기",
