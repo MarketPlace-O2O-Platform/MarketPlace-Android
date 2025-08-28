@@ -39,7 +39,7 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
                 val lastPageIndex = if (isNewCategory) null else _uiState.value.lastPageIndex
                 val response = marketsRepository.getMarket(
                     lastPageIndex = lastPageIndex,
-                    category = _uiState.value.selectedCategory.name
+                    category = _uiState.value.selectedCategory.backendLabel
                 )
                 if (response.isSuccessful) {
                     val marketPage = response.body()?.response
@@ -47,8 +47,8 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
                         val currentMarkets = if (isNewCategory) emptyList() else _uiState.value.markets
                         _uiState.value = _uiState.value.copy(
                             markets = currentMarkets + marketPage.marketResDtos,
-                            hasNext = !marketPage.hasNext,
-                            lastPageIndex = marketPage.marketResDtos.last().marketId
+                            hasNext = marketPage.hasNext,
+                            lastPageIndex = marketPage.marketResDtos.lastOrNull()?.marketId
                         )
                     }
                 }
@@ -73,7 +73,13 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
     }
 
     fun onCategoryChanged(category: LargeCategory) {
-        _uiState.value = _uiState.value.copy(selectedCategory = category)
+        _uiState.value = MarketListUiState(
+            selectedCategory = category,
+            markets = emptyList(),
+            isLoading = false,
+            lastPageIndex = null,
+            hasNext = true
+        )
         getMarkets(true)
     }
 }

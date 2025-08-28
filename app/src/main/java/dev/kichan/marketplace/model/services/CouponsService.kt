@@ -26,6 +26,9 @@ interface CouponsService {
     ): Response<CommonResponseCouponPageResCouponRes>
 
     @GET("/api/coupons/latest")
-    suspend fun getLatestCouponAll(@Query("lastCreatedAt") lastCreatedAt: String? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes>
-
+    suspend fun getLatestCouponAll(
+        @Query("lastCreatedAt") lastCreatedAt: String? = null,
+        @Query("lastCouponId") lastCouponId: Long? = null,
+        @Query("pageSize") pageSize: Int? = null
+    ): Response<CommonResponseCouponPageResCouponRes>
 }

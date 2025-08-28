@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
@@ -51,7 +52,7 @@ fun MarketListPage(
 
     LaunchedEffect(isScrolledToEnd) {
         if (isScrolledToEnd) {
-            marketListViewModel.getMarkets()
+            marketListViewModel.getMarkets(false)
         }
     }
 
@@ -76,7 +77,7 @@ fun MarketListPage(
                         title = market.marketName,
                         description = market.marketDescription,
                         location = market.address,
-                        imageUrl = RetrofitClient.getClient().baseUrl().toString() + "images/" + market.thumbnail,
+                        imageUrl = NetworkModule.getImage(market.thumbnail),
                         isFavorite = market.isFavorite,
                         onLikeClick = { marketListViewModel.favorite(market.marketId) }
                     )
