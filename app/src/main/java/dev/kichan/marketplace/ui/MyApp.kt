@@ -21,6 +21,7 @@ import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.ReceiptUploadPage
 import dev.kichan.marketplace.ui.page.SplashPage
 import dev.kichan.marketplace.ui.page.CouponListPage
+import dev.kichan.marketplace.ui.page.CurationPage
 import dev.kichan.marketplace.ui.page.MyPage2
 
 @Composable
@@ -104,6 +105,9 @@ fun MyApp() {
 
         composable(Page.ReceptUploadPage.name) {
             ReceiptUploadPage(navController = navController)
+        }
+        composable(Page.CurationPage.name) {
+            CurationPage(nacController = navController)
         }
     }
 }

@@ -23,5 +23,6 @@ enum class Page(
 
     MarketListPage(pageName = "매장 목록"),
     CouponListPage(pageName = "쿠폰 목록"),
-    ReceptUploadPage(pageName = "영수증 등록")
+    ReceptUploadPage(pageName = "영수증 등록"),
+    CurationPage(pageName = "찜한 매장")
 }

@@ -41,7 +41,7 @@ object NetworkModule {
         TokenStore.token = token
     }
 
-    private fun getClient(type : String = "default") : OkHttpClient {
+    fun getClient(type : String = "default") : OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(type))
             .addNetworkInterceptor(interceptor)

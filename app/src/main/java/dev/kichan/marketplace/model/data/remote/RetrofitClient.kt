@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.model.data.remote
 
 import dev.kichan.marketplace.BuildConfig
+import dev.kichan.marketplace.model.NetworkModule
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,12 +12,7 @@ object RetrofitClient {
 
     fun getClient(): Retrofit {
         if (retrofit == null) {
-            val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
-            val client = OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build()
+            val client = NetworkModule.getClient()
 
             retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.API_BASE_URL)

@@ -79,12 +79,15 @@ fun MyPage2(
             item { Spacer(modifier = Modifier.height(21.dp)) }
             item {
                 if (uiState.member == null) {
-                    TopBarUI()
+                    TopBarUI(
+                        고객센터_가기 = {},
+                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) }
+                    )
                 } else {
                     TopBar(
                         member = uiState.member!!,
                         고객센터_가기 = {},
-                        큐레이션_가기 = {}
+                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) }
                     )
                 }
             }
@@ -274,7 +277,10 @@ fun TopBar(
 }
 
 @Composable
-fun TopBarUI() {
+fun TopBarUI(
+    큐레이션_가기: () -> Unit,
+    고객센터_가기: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -321,7 +327,8 @@ fun TopBarUI() {
                 Text(
                     text = "큐레이션",
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    modifier = Modifier.clickable { 큐레이션_가기() }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Divider(
@@ -334,7 +341,8 @@ fun TopBarUI() {
                 Text(
                     text = "고객센터",
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    modifier = Modifier.clickable { 고객센터_가기() }
                 )
             }
         }

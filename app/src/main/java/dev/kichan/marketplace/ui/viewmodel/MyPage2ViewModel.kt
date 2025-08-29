@@ -34,9 +34,9 @@ class MyPage2ViewModel() : ViewModel() {
 
     init {
         getMemberInfo()
-//        getPaybackCoupons()
-//        getGiftCoupons()
-//        getEndedCoupons()
+        getPaybackCoupons()
+        getGiftCoupons()
+        getEndedCoupons()
     }
 
     fun getMemberInfo() {
@@ -59,7 +59,7 @@ class MyPage2ViewModel() : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val response = membersRepository.getPaybackCoupon(type = "payback")
+                val response = membersRepository.getPaybackCoupon(type = "ISSUED")
                 if (response.isSuccessful) {
                     _uiState.value = _uiState.value.copy(paybackCouponList = response.body()?.response?.couponResDtos ?: emptyList())
                 }
@@ -75,7 +75,7 @@ class MyPage2ViewModel() : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val response = membersRepository.getCoupons(type = "gift")
+                val response = membersRepository.getCoupons(type = "ISSUED")
                 if (response.isSuccessful) {
                     _uiState.value = _uiState.value.copy(giftCouponList = response.body()?.response?.couponResDtos ?: emptyList())
                 }
