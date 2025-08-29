@@ -34,9 +34,9 @@ class MyPage2ViewModel() : ViewModel() {
 
     init {
         getMemberInfo()
-        getPaybackCoupons()
-        getGiftCoupons()
-        getEndedCoupons()
+//        getPaybackCoupons()
+//        getGiftCoupons()
+//        getEndedCoupons()
     }
 
     fun getMemberInfo() {

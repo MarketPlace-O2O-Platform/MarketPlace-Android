@@ -4,6 +4,7 @@ import androidx.annotation.Px
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -202,5 +203,70 @@ fun CouponDivider() {
 private fun RefunCouponCardPreview() {
     MarketPlaceTheme {
         RefundCouponCard()
+    }
+}
+
+@Composable
+fun RefundCouponCardSkeleton(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors().copy(containerColor = Color.White),
+        shape = RoundedCornerShape(4.dp),
+        border = BorderStroke(1.dp, Color(0xFFE0E0E0))
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            // 헤더
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(Color(0xFFE0E0E0))
+                )
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .width(120.dp)
+                            .height(14.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(Color(0xFFE0E0E0))
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .width(180.dp)
+                            .height(20.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(Color(0xFFE0E0E0))
+                    )
+                }
+            }
+
+            // 버튼
+            Spacer(Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Color(0xFFE0E0E0))
+            )
+
+            // 절취선 위치
+            Spacer(Modifier.height(21.dp))
+            Divider(color = Color(0xFFE0E0E0), thickness = 1.dp)
+            Spacer(Modifier.height(9.dp))
+
+            // 하단 메모
+            Box(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(14.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(Color(0xFFE0E0E0))
+            )
+            Spacer(Modifier.height(8.dp))
+        }
     }
 }
