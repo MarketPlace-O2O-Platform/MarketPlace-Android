@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.NetworkModule
@@ -55,6 +56,7 @@ class CouponViewModel() : ViewModel() {
             if (res.isSuccessful) {
                 val response = res.body()?.response
                 response?.let {
+                    Log.d("test", it.toString())
                     val newCoupons = it.couponResDtos.map {
                         CouponListItemProps(
                             id = it.couponId,
@@ -65,7 +67,7 @@ class CouponViewModel() : ViewModel() {
                             isMemberIssued = it.isMemberIssued,
                             address = it.address,
                             isAvailable = it.isAvailable,
-                            couponType = it.couponType
+                            couponType = "PAYBACK"//,it.couponType
                         )
                     }
                     _couponListUiState.update { currentState ->

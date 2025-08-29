@@ -54,7 +54,8 @@ fun RefundCouponCard(
     discountTitle: String = "결제 금액 10% 환급",
     imageUrl: String = "https://placehold.co/600x600",
     onClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isUsable: Boolean = true
 ) {
     val density = LocalDensity.current
 //    val CouponShape = couponShape(density)
@@ -100,11 +101,11 @@ fun RefundCouponCard(
             /* 버튼 ----------------------------------------------------------------- */
             Spacer(Modifier.height(16.dp))
             CustomButton(
-                text = "환급하러 가기",
+                text = if (isUsable) "환급하러 가기" else "사용 불가",
                 modifier = Modifier.fillMaxWidth(),
-            ) {
-                onClick()
-            }
+                isDisable = !isUsable,
+                onClick = onClick
+            )
 
             /* 절취선 ---------------------------------------------------------------- */
             Spacer(Modifier.height(21.dp))

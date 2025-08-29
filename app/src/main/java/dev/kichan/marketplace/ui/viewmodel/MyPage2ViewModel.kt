@@ -12,10 +12,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+sealed class EndedCoupon {
+    data class EndedPayback(val coupon: IssuedCouponRes) : EndedCoupon()
+    data class EndedGift(val coupon: IssuedCouponRes) : EndedCoupon()
+}
+
 data class MyPage2UiState(
     val member: MemberRes? = null,
-    val paybackCouponList: List<PaybackRes> = emptyList(),
+    val paybackCouponList: List<IssuedCouponRes> = emptyList(),
     val giftCouponList: List<IssuedCouponRes> = emptyList(),
+    val endedCouponList: List<EndedCoupon> = emptyList(),
     val isLoading: Boolean = false,
 )
 
@@ -30,6 +36,7 @@ class MyPage2ViewModel() : ViewModel() {
         getMemberInfo()
         getPaybackCoupons()
         getGiftCoupons()
+        getEndedCoupons()
     }
 
     fun getMemberInfo() {
@@ -72,6 +79,36 @@ class MyPage2ViewModel() : ViewModel() {
                 if (response.isSuccessful) {
                     _uiState.value = _uiState.value.copy(giftCouponList = response.body()?.response?.couponResDtos ?: emptyList())
                 }
+            } catch (e: Exception) {
+                // Handle error
+            } finally {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
+        }
+    }
+
+    fun getEndedCoupons() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            try {
+                val endedPaybackResponse = membersRepository.getPaybackCoupon(type = "ENDED")
+                val endedGiftResponse = membersRepository.getCoupons(type = "ENDED")
+
+                val endedCoupons = mutableListOf<EndedCoupon>()
+
+                if (endedPaybackResponse.isSuccessful) {
+                    endedPaybackResponse.body()?.response?.couponResDtos?.forEach {
+                        endedCoupons.add(EndedCoupon.EndedPayback(it))
+                    }
+                }
+
+                if (endedGiftResponse.isSuccessful) {
+                    endedGiftResponse.body()?.response?.couponResDtos?.forEach {
+                        endedCoupons.add(EndedCoupon.EndedGift(it))
+                    }
+                }
+                _uiState.value = _uiState.value.copy(endedCouponList = endedCoupons)
+
             } catch (e: Exception) {
                 // Handle error
             } finally {

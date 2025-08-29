@@ -36,6 +36,7 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.ProfileHeader
 import dev.kichan.marketplace.ui.component.RefundCouponCard
+import dev.kichan.marketplace.ui.viewmodel.EndedCoupon
 import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
 
 @Composable
@@ -48,14 +49,11 @@ fun MyPage2(
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
     var selectedTabIndex by remember { mutableStateOf(0) }
 
-    val selectedCouponList = if (selectedTabIndex == 0) uiState.paybackCouponList
-    else if (selectedTabIndex == 1) uiState.giftCouponList
-    else listOf()
-
     LaunchedEffect(Unit) {
         myPage2ViewModel.getMemberInfo()
         myPage2ViewModel.getPaybackCoupons()
         myPage2ViewModel.getGiftCoupons()
+        myPage2ViewModel.getEndedCoupons()
     }
 
     Scaffold(
@@ -124,11 +122,12 @@ fun MyPage2(
                 else {
                     items(uiState.paybackCouponList) {
                         RefundCouponCard(
-                            storeName = "매충 매장 이름",
+                            storeName = it.marketName,
                             discountTitle = it.couponName,
-                            imageUrl = "https://postfiles.pstatic.net/MjAyMzA2MjdfMjgx/MDAxNjg3ODM1MzE3NjQ5.oBDtVqa7bFScuJ308FzHAdmRtABmaL1_SXK17n0-ndQg.KzZ6AcPYVQvHqB_vw4dZp8FG97HJp6bUS4QOU5RatRsg.JPEG.dream_we/IMG_7305.JPG?type=w966",
+                            imageUrl = NetworkModule.getImage(it.thumbnail),
                             onClick = { navController.navigate(Page.ReceptUploadPage.name) },
                             modifier = Modifier.padding(horizontal = 18.dp),
+                            isUsable = true
                         )
                     }
                 }
@@ -136,12 +135,39 @@ fun MyPage2(
             if(selectedTabIndex == 1) {
                 items(uiState.giftCouponList) {
                     RefundCouponCard(
-                        storeName = "매충 매장 이름",
+                        storeName = it.marketName,
                         discountTitle = it.couponName,
-                        imageUrl = "https://postfiles.pstatic.net/MjAyMzA2MjdfMjgx/MDAxNjg3ODM1MzE3NjQ5.oBDtVqa7bFScuJ308FzHAdmRtABmaL1_SXK17n0-ndQg.KzZ6AcPYVQvHqB_vw4dZp8FG97HJp6bUS4QOU5RatRsg.JPEG.dream_we/IMG_7305.JPG?type=w966",
+                        imageUrl = it.thumbnail,
                         onClick = { navController.navigate(Page.ReceptUploadPage.name) },
                         modifier = Modifier.padding(horizontal = 18.dp),
+                        isUsable = true
                     )
+                }
+            }
+            if(selectedTabIndex == 2) {
+                items(uiState.endedCouponList) { endedCoupon ->
+                    when (endedCoupon) {
+                        is EndedCoupon.EndedPayback -> {
+                            RefundCouponCard(
+                                storeName = "매충 매장 이름", // PaybackRes doesn't have store name
+                                discountTitle = endedCoupon.coupon.couponName,
+                                imageUrl = NetworkModule.getImage(endedCoupon.coupon.thumbnail),
+                                onClick = { },
+                                modifier = Modifier.padding(horizontal = 18.dp),
+                                isUsable = false
+                            )
+                        }
+                        is EndedCoupon.EndedGift -> {
+                            RefundCouponCard(
+                                storeName = endedCoupon.coupon.marketName,
+                                discountTitle = endedCoupon.coupon.couponName,
+                                imageUrl = NetworkModule.getImage(endedCoupon.coupon.thumbnail),
+                                onClick = { },
+                                modifier = Modifier.padding(horizontal = 18.dp),
+                                isUsable = false
+                            )
+                        }
+                    }
                 }
             }
         }

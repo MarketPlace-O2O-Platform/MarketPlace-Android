@@ -14,10 +14,10 @@ class MembersRepository @Inject constructor(
 ) {
 
     suspend fun getPaybackCoupon(
-        @Query("type") type: String? = null,
+        @Query("type") type: String? = null, //ISSUED : 사용가능, ENDED : 끝난
         @Query("memberCouponId") memberCouponId: Long? = null,
         @Query("size") size: Int? = null
-    ): Response<CommonResponseCouponPageResPaybackRes> {
+    ): Response<CommonResponseCouponPageResIssuedCouponRes> {
         return service.getPaybackCoupon(type, memberCouponId, size)
     }
 
@@ -29,7 +29,7 @@ class MembersRepository @Inject constructor(
     }
 
     suspend fun getCoupons(
-        @Query("type") type: String? = null,
+        @Query("type") type: String? = null, //ISSUED : 사용가능, ENDED : 끝난
         @Query("memberCouponId") memberCouponId: Long? = null,
         @Query("size") size: Int? = null
     ): Response<CommonResponseCouponPageResIssuedCouponRes> {
