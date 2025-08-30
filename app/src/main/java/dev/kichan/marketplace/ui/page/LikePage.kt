@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
@@ -112,7 +113,7 @@ fun LikePage(
                                     modifier = Modifier.width(284.dp),
                                     marketName = tempMarket.marketName,
                                     likeCount = tempMarket.cheerCount,
-                                    thumbnail = RetrofitClient.getClient().baseUrl().toString() + "images/" + tempMarket.thumbnail,
+                                    thumbnail = NetworkModule.getImage(tempMarket.thumbnail),
                                     isMyDone = tempMarket.isCheer,
                                     isRequestDone = tempMarket.dueDate == 0,
                                     duDate = tempMarket.dueDate,
@@ -152,7 +153,7 @@ fun LikePage(
                                     .weight(1f),
                                 marketName = market1.marketName,
                                 likeCount = market1.cheerCount,
-                                thumbnail = RetrofitClient.getClient().baseUrl().toString() + "images/" + market1.thumbnail,
+                                thumbnail = NetworkModule.getImage(market1.thumbnail),
                                 isMyDone = market1.isCheer,
                                 isRequestDone = market1.dueDate == 0,
                                 duDate = market1.dueDate,
@@ -166,7 +167,7 @@ fun LikePage(
                                         .weight(1f),
                                     marketName = market2.marketName,
                                     likeCount = market2.cheerCount,
-                                    thumbnail = RetrofitClient.getClient().baseUrl().toString() + "images/" + market2.thumbnail,
+                                    thumbnail = NetworkModule.getImage(market2.thumbnail),
                                     isMyDone = market2.isCheer,
                                     isRequestDone = market2.dueDate == 0,
                                     duDate = market2.dueDate,

@@ -5,9 +5,12 @@ import retrofit2.http.*
 import dev.kichan.marketplace.model.dto.*
 
 interface CouponsService {
-
     @GET("/api/coupons")
-    suspend fun getCouponList_4(@Query("marketId") marketId: Long? = null, @Query("couponId") couponId: Long? = null, @Query("size") size: Int? = null): Response<CommonResponseCouponPageResCouponRes>
+    suspend fun getCouponList_4(
+        @Query("marketId") marketId: Long? = null,
+        @Query("couponId") couponId: Long? = null,
+        @Query("size") size: Int? = null
+    ): Response<CommonResponseCouponPageResCouponRes>
 
     @GET("/api/coupons/top/popular")
     suspend fun getPopularCoupon(@Query("pageSize") pageSize: Int? = null): Response<CommonResponseListTopPopularCouponRes>
