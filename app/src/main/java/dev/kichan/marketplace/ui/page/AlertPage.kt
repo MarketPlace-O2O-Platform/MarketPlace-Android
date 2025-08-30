@@ -50,16 +50,6 @@ fun AlertPage(
             NavAppBar("알림") { navController.popBackStack() }
         }
     ) {
-        if (uiState.error != null) {
-            Box(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(uiState.error.toString())
-            }
-        }
         Column {
             NotificationFilterBar(
                 selectedFilter = when (uiState.filterType) {
@@ -80,20 +70,42 @@ fun AlertPage(
                 },
                 onMarkAllRead = { viewModel.allRead() }
             )
-            LazyColumn(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
-            ) {
-                items(uiState.notifications) {
-                    NotificationItem(
-                        notification = it,
-                    )
+            if (uiState.error != null) {
+                Box(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(uiState.error.toString())
                 }
+            }
+            else if(uiState.notifications.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("알림이 없습니다.")
+                }
+            }
+            else {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize(),
+                ) {
+                    items(uiState.notifications) {
+                        NotificationItem(
+                            notification = it,
+                        )
+                    }
 
-                if (uiState.isLoading) {
-                    items(10) {
-                        NotificationItemSkeleton()
+                    if (uiState.isLoading) {
+                        items(10) {
+                            NotificationItemSkeleton()
+                        }
                     }
                 }
             }
