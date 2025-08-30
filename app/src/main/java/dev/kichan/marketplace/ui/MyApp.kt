@@ -111,7 +111,7 @@ fun MyApp() {
             CurationPage(nacController = navController)
         }
         composable(Page.AlertPage.name) {
-            AlertPage()
+            AlertPage(navController)
         }
     }
 }
