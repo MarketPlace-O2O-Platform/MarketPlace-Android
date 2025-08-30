@@ -4,6 +4,8 @@ import dev.kichan.marketplace.model.dto.CommonResponseNotificationListRes
 import dev.kichan.marketplace.model.dto.CommonResponseNotificationPageResNotificationRes
 import dev.kichan.marketplace.model.services.NotificationService
 import retrofit2.Response
+import retrofit2.http.PATCH
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,7 +13,18 @@ import javax.inject.Singleton
 class NotificationRepository @Inject constructor(
     private val service: NotificationService
 ) {
-    suspend fun getNotificationList(): Response<CommonResponseNotificationPageResNotificationRes> {
-        return service.getNotificationList()
+    suspend fun getNotificationList(type: String?): Response<CommonResponseNotificationPageResNotificationRes> {
+        return service.getNotificationList(type)
+    }
+
+
+    suspend fun readNotification(
+        notificationId: Long
+    ) : Response<Void> {
+        return service.readNotification(notificationId);
+    }
+
+    suspend fun readNotificationALl() : Response<Void> {
+        return service.readNotificationALl()
     }
 }

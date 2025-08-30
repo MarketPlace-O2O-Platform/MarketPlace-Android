@@ -44,18 +44,41 @@ fun AlertPage(
     viewModel: AlertViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var selected by remember { mutableStateOf("전체") }
 
     Scaffold(
         topBar = {
             NavAppBar("알림") { navController.popBackStack() }
         }
     ) {
+        if (uiState.error != null) {
+            Box(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(uiState.error.toString())
+            }
+        }
         Column {
             NotificationFilterBar(
-                selectedFilter = selected,
-                onFilterSelected = { selected = it },
-                onMarkAllRead = { /*todo: 전체 읽음 처리 */ }
+                selectedFilter = when (uiState.filterType) {
+                    "MARKET" -> "쿠폰 발급"
+                    "COUPON" -> "쿠폰 만료"
+                    "NOTICE" -> "공지"
+                    else -> "전체"
+                },
+                onFilterSelected = {
+                    val apiType = when (it) {
+                        "전체" -> null
+                        "쿠폰 발급" -> "MARKET"
+                        "쿠폰 만료" -> "COUPON"
+                        "공지" -> "NOTICE"
+                        else -> null
+                    }
+                    viewModel.setFilterType(apiType)
+                },
+                onMarkAllRead = { viewModel.allRead() }
             )
             LazyColumn(
                 modifier = Modifier
@@ -97,7 +120,6 @@ fun NotificationFilterBar(
             modifier = Modifier.weight(1f, fill = false)
         ) {
             val filters = listOf("전체", "쿠폰 발급", "쿠폰 만료", "공지")
-
             items(filters.size) { index ->
                 val filter = filters[index]
                 val isSelected = selectedFilter == filter

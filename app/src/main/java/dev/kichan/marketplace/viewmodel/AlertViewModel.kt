@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 data class AlertUiState(
     val notifications: List<NotificationRes> = emptyList(),
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val filterType: String? = null
 )
 
 class AlertViewModel : ViewModel() {
@@ -26,11 +27,18 @@ class AlertViewModel : ViewModel() {
         loadNotifications()
     }
 
+    fun setFilterType(type: String?) {
+        _uiState.update { it.copy(filterType = type) }
+        loadNotifications()
+    }
+
     fun loadNotifications() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                val response = notificationRepository.getNotificationList()
+                val currentType = _uiState.value.filterType
+                val response = notificationRepository.getNotificationList(currentType)
+
                 if (response.isSuccessful && response.body() != null) {
                     _uiState.update {
                         it.copy(
@@ -42,9 +50,15 @@ class AlertViewModel : ViewModel() {
                     _uiState.update { it.copy(isLoading = false, error = "알림을 불러오는데 실패했습니다.") }
                 }
             } catch (e: Exception) {
-                Log.e("알림알림", e.toString())
+                Log.e("error", e.message.toString())
                 _uiState.update { it.copy(isLoading = false, error = "알림을 불러오는 중 오류가 발생했습니다.") }
             }
+        }
+    }
+
+    fun allRead() {
+        viewModelScope.launch {
+            notificationRepository.readNotificationALl()
         }
     }
 }
