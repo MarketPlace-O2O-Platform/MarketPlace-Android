@@ -14,6 +14,7 @@ interface MembersService {
         @Query("size") size: Int? = null
     ): Response<CommonResponseCouponPageResIssuedCouponRes>
 
+    @Multipart
     @PUT("/api/members/payback-coupons")
     suspend fun uploadReceipt(
         @Query("memberCouponId") memberCouponId: Long? = null,

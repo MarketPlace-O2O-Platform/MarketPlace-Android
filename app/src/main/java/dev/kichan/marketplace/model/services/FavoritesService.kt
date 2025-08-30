@@ -7,6 +7,9 @@ import dev.kichan.marketplace.model.dto.*
 interface FavoritesService {
 
     @POST("/api/favorites")
-    suspend fun facorite(@Query("marketId") marketId: Long? = null): Response<CommonResponseObject>
+    suspend fun favorite(@Query("marketId") marketId: Long? = null): Response<CommonResponseObject>
+
+    @DELETE("/api/favorites")
+    suspend fun unfavorite(@Query("marketId") marketId: Long? = null): Response<CommonResponseObject>
 
 }

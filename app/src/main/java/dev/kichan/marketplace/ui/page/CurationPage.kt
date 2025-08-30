@@ -65,7 +65,7 @@ fun CurationPage(
                         location = market.address,
                         imageUrl = NetworkModule.getImage(market.thumbnail),
                         isFavorite = market.isFavorite,
-                        onLikeClick = { curationPageViewModel.favorite(market.marketId) }
+                        onLikeClick = { curationPageViewModel.unfavorite(market.marketId) }
                     )
                 }
 

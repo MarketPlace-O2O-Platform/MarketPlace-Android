@@ -12,6 +12,10 @@ class FavoritesRepository @Inject constructor(
     private val service: FavoritesService
 ) {
     suspend fun favorite(@Query("marketId") marketId: Long? = null): Response<CommonResponseObject> {
-        return service.facorite(marketId)
+        return service.favorite(marketId)
+    }
+
+    suspend fun unfavorite(@Query("marketId") marketId: Long? = null): Response<CommonResponseObject> {
+        return service.unfavorite(marketId)
     }
 }

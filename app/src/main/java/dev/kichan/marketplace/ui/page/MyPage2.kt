@@ -1,6 +1,8 @@
 package dev.kichan.marketplace.ui.page
 
 import android.app.Application
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,7 +27,10 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,7 +54,6 @@ import dev.kichan.marketplace.model.dto.MemberRes
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
-import dev.kichan.marketplace.ui.component.ProfileHeader
 import dev.kichan.marketplace.ui.component.RefundCouponCard
 import dev.kichan.marketplace.ui.component.RefundCouponCardSkeleton
 import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
@@ -61,6 +65,7 @@ fun MyPage2(
     navController: NavController,
     myPage2ViewModel: MyPage2ViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
     val uiState by myPage2ViewModel.uiState.collectAsState()
 
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
@@ -80,14 +85,23 @@ fun MyPage2(
             item {
                 if (uiState.member == null) {
                     TopBarUI(
-                        고객센터_가기 = {},
+                        고객센터_가기 = {
+                            val url = "http://pf.kakao.com/_XkZnn"
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            context.startActivity(intent)
+                        },
                         큐레이션_가기 = { navController.navigate(Page.CurationPage.name) }
                     )
                 } else {
                     TopBar(
                         member = uiState.member!!,
-                        고객센터_가기 = {},
-                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) }
+                        고객센터_가기 = {
+                            val url = "http://pf.kakao.com/_XkZnn"
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            context.startActivity(intent)
+                        },
+                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) },
+                        로그아웃_하기 = {}
                     )
                 }
             }
@@ -207,7 +221,9 @@ fun TopBar(
     member: MemberRes,
     큐레이션_가기: () -> Unit,
     고객센터_가기: () -> Unit,
+    로그아웃_하기 : () -> Unit,
 ) {
+    var isShowLogoutMemu by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -231,10 +247,26 @@ fun TopBar(
                 fontSize = 14.sp,
                 color = Color.Black
             )
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Dropdown",
-                tint = Color.Gray
+            IconButton(
+                onClick = { isShowLogoutMemu = !isShowLogoutMemu }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "Dropdown",
+                    tint = Color.Gray
+                )
+            }
+        }
+
+        DropdownMenu(
+            expanded = isShowLogoutMemu,
+            onDismissRequest = { isShowLogoutMemu = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("로그아웃") },
+                onClick = {
+                    로그아웃_하기()
+                }
             )
         }
 

@@ -67,4 +67,15 @@ class CurationPageViewModel(application: Application) : AndroidViewModel(applica
             }
         }
     }
+
+    fun unfavorite(marketId: Long) {
+        viewModelScope.launch {
+            try {
+                favoritesRepository.unfavorite(marketId)
+                getFavoriteMarkets(true)
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
 }

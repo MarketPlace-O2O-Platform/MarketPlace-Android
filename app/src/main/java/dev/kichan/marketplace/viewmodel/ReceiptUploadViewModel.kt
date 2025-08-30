@@ -73,7 +73,7 @@ class ReceiptUploadViewModel : ViewModel() {
 
     fun upload(memberCouponId: Long, context: Context, onSuccess: () -> Unit) {
         viewModelScope.launch {
-            val body = uriToMultipartBody(context, _state.value.imageUri!!)!!
+            val body = uriToMultipartBody(context, _state.value.imageUri!!, "image")!!
             membersRepository.uploadReceipt(memberCouponId, body)
             withContext(Dispatchers.Main) {
                 onSuccess()
