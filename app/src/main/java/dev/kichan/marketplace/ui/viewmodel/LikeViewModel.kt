@@ -46,7 +46,7 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val response = tempmarketsRepository.getTempMarket(category = _uiState.value.selectedCategory.name)
+                val response = tempmarketsRepository.getTempMarket(category = _uiState.value.selectedCategory.backendLabel)
                 if (response.isSuccessful) {
                     _uiState.value = _uiState.value.copy(tempMarkets = response.body()?.response?.marketResDtos ?: emptyList())
                 }
