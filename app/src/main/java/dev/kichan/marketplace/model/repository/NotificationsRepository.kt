@@ -16,11 +16,15 @@ class NotificationsRepository @Inject constructor(
     private val service: NotificationsService
 ) {
 
-    suspend fun getNotificationList(@Query("notificationId") notificationId: Long? = null, @Query("type") type: String? = null, @Query("size") size: Int? = null): Response<CommonResponseNotificationPageResNotificationRes> {
+    suspend fun getNotificationList(
+        @Query("notificationId") notificationId: Long? = null,
+        @Query("type") type: String? = null,
+        @Query("size") size: Int? = null
+    ): Response<CommonResponseNotificationPageResNotificationRes> {
         return service.getNotificationList(notificationId, type, size)
     }
 
-    suspend fun createNotification(@Body body : NotificationReq): Response<CommonResponseNotificationRes> {
+    suspend fun createNotification(@Body body: NotificationReq): Response<CommonResponseNotificationRes> {
         return service.createNotification(body)
     }
 
@@ -28,7 +32,7 @@ class NotificationsRepository @Inject constructor(
         return service.setNotificationRead(notificationId)
     }
 
-    suspend fun sendFcmMessage(@Body body : FcmRequest): Response<CommonResponseObject> {
+    suspend fun sendFcmMessage(@Body body: FcmRequest): Response<CommonResponseObject> {
         return service.sendFcmMessage(body)
     }
 

@@ -67,7 +67,9 @@ fun HomePage(
             HomeAppBar(
                 logo = R.drawable.logo,
                 onSearch = { homeViewModel.onSearchClicked() },
-                Icons.Outlined.Notifications to {}
+                Icons.Outlined.Notifications to {
+                    navController.navigate(Page.AlertPage.name)
+                }
             )
         },
         bottomBar = {

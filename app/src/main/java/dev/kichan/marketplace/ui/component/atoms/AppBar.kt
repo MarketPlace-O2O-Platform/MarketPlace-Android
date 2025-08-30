@@ -94,7 +94,7 @@ fun HomeAppBar(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             for (icon in icons) {
-                IconButton(onClick = { icon.second }) {
+                IconButton(onClick = { icon.second() }) {
                     Icon(
                         imageVector = icon.first,
                         contentDescription = null,
