@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MemberLoginReq
-import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.model.TokenManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -50,15 +50,13 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun checkLoginStatus() {
         viewModelScope.launch {
             _loginState.value = LoginUiState.Loading
-            delay(2000) // Simulate network delay
-            _loginState.value = LoginUiState.Unauthenticated
-//            // In a real app, check for saved token here
-//            val tokenExists = NetworkModule.token != null // Replace with actual token check
-//            if (tokenExists) {
-//                _loginState.value = LoginUiState.Authenticated
-//            } else {
-//                _loginState.value = LoginUiState.Unauthenticated
-//            }
+            delay(1000) // Simulate network delay
+            val token = TokenManager.getToken()
+            if (token != null) {
+                _loginState.value = LoginUiState.Authenticated
+            } else {
+                _loginState.value = LoginUiState.Unauthenticated
+            }
         }
     }
 
@@ -75,7 +73,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 if (response.isSuccessful) {
                     val token = response.body()?.response
                     if (token != null) {
-                        NetworkModule.updateToken(token)
+                        TokenManager.saveToken(token)
                         _loginState.value = LoginUiState.Authenticated
                     } else {
                         _loginState.value = LoginUiState.Error("토큰이 없습니다.")

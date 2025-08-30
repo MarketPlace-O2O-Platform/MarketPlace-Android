@@ -11,19 +11,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object TokenStore {
-    var token: String? = null
-}
-
 class AuthInterceptor(val type : String = "default") : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val token = if(type == "default") "Bearer ${TokenStore.token}" else "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
+        val token = TokenManager.getToken()
 
-        val newRequest = originalRequest.newBuilder()
-            .addHeader("Authorization", token)
-            .build()
-        return chain.proceed(newRequest)
+        val authRequest = if (token != null) {
+            originalRequest.newBuilder()
+                .addHeader("Authorization", "Bearer $token")
+                .build()
+        } else {
+            originalRequest
+        }
+
+        return chain.proceed(authRequest)
     }
 }
 
@@ -37,9 +38,7 @@ object NetworkModule {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    fun updateToken(token: String?) {
-        TokenStore.token = token
-    }
+    
 
     fun getClient(type : String = "default") : OkHttpClient {
         return OkHttpClient.Builder()

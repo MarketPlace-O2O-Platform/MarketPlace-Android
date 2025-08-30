@@ -1,61 +1,47 @@
 package dev.kichan.marketplace.ui.page
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavHostController
-import dev.kichan.marketplace.R
-import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.viewmodel.LoginViewModel
-import dev.kichan.marketplace.viewmodel.LoginUiState
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.viewmodel.SplashUiState
+import dev.kichan.marketplace.viewmodel.SplashViewModel
 
 @Composable
 fun SplashPage(
-    navController: NavHostController,
-    loginViewModel: LoginViewModel = viewModel(),
+    navController: NavController,
+    viewModel: SplashViewModel = viewModel()
 ) {
-    val state by loginViewModel.loginState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        loginViewModel.checkLoginStatus()
-    }
-
-    LaunchedEffect(state) {
-        when (state) {
-            is LoginUiState.Error -> {
-                navController.popBackStack()
-                navController.navigate(Page.Login.name)
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is SplashUiState.Authenticated -> {
+                navController.navigate(Page.Home.name) {
+                    popUpTo(Page.Splash.name) { inclusive = true }
+                }
             }
-
-            LoginUiState.Authenticated -> {
-                navController.popBackStack()
-                navController.navigate(Page.Main.name)
+            is SplashUiState.Unauthenticated -> {
+                navController.navigate(Page.Login.name) {
+                    popUpTo(Page.Splash.name) { inclusive = true }
+                }
             }
-
-            LoginUiState.Unauthenticated -> {
-                navController.popBackStack()
-                navController.navigate(Page.Login.name)
-            }
-
             else -> {}
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Image(painter = painterResource(R.drawable.logo), contentDescription = null)
+        CircularProgressIndicator()
     }
 }
