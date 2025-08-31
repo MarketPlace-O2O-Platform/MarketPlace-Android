@@ -59,6 +59,7 @@ import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.dto.TempMarketRes
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategorySelector
@@ -233,7 +234,7 @@ fun LikePage(
                 }
             } else {
                 if (uiState.searchTempMarket.isEmpty()) {
-                    item { SearchEmptyContent() }
+                    item { SearchEmptyContent() { navController.navigate(Page.RequestPage.name) } }
                 } else {
                     items(uiState.searchTempMarket) { tempMarket ->
                         MarketCard(

@@ -25,5 +25,6 @@ enum class Page(
     CouponListPage(pageName = "쿠폰 목록"),
     ReceptUploadPage(pageName = "영수증 등록"),
     CurationPage(pageName = "찜한 매장"),
-    AlertPage(pageName = "알림")
+    AlertPage(pageName = "알림"),
+    RequestPage(pageName = "요청하기")
 }

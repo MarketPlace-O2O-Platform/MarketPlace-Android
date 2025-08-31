@@ -24,6 +24,7 @@ import dev.kichan.marketplace.ui.page.CouponListPage
 import dev.kichan.marketplace.ui.page.CurationPage
 import dev.kichan.marketplace.ui.page.AlertPage
 import dev.kichan.marketplace.ui.page.MyPage2
+import dev.kichan.marketplace.ui.page.RequestPage
 
 @Composable
 fun MyApp() {
@@ -112,6 +113,9 @@ fun MyApp() {
         }
         composable(Page.AlertPage.name) {
             AlertPage(navController)
+        }
+        composable(Page.RequestPage.name) {
+            RequestPage(navController)
         }
     }
 }
