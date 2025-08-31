@@ -49,6 +49,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,6 +68,7 @@ import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
 
@@ -116,7 +118,7 @@ fun LikePage(
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(paddingValues),
-            state = listState
+            state = listState,
         ) {
             item {
                 LikeMarketSearchBar(
@@ -389,7 +391,8 @@ fun SearchEmptyContent(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             "검색 결과가 없어요. 찾으시는 매장이 없으신가요?",
@@ -414,5 +417,13 @@ fun SearchEmptyContent(
         )
         Spacer(modifier = Modifier.height(20.dp))
         CustomButton("요청하기", Modifier.width(240.dp)) { onRequest() }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SearchEmptyContentPreview() {
+    MarketPlaceTheme {
+        SearchEmptyContent() {}
     }
 }
