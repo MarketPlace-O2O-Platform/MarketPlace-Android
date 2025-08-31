@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.dto.TempMarketRes
@@ -63,6 +66,7 @@ import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
 import dev.kichan.marketplace.ui.component.molecules.RequestCard
+import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
 
 @Composable
@@ -108,7 +112,7 @@ fun LikePage(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
-    ) {paddingValues ->
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(paddingValues),
             state = listState
@@ -148,7 +152,10 @@ fun LikePage(
                                     modifier = Modifier.width(284.dp),
                                     marketName = tempMarket.marketName,
                                     likeCount = tempMarket.cheerCount,
-                                    thumbnail = NetworkModule.getImage(tempMarket.thumbnail, isTempMarket = true),
+                                    thumbnail = NetworkModule.getImage(
+                                        tempMarket.thumbnail,
+                                        isTempMarket = true
+                                    ),
                                     isMyDone = tempMarket.isCheer,
                                     isRequestDone = tempMarket.dueDate == 0,
                                     duDate = tempMarket.dueDate,
@@ -188,7 +195,10 @@ fun LikePage(
                                     .weight(1f),
                                 marketName = market1.marketName,
                                 likeCount = market1.cheerCount,
-                                thumbnail = NetworkModule.getImage(market1.thumbnail, isTempMarket = true),
+                                thumbnail = NetworkModule.getImage(
+                                    market1.thumbnail,
+                                    isTempMarket = true
+                                ),
                                 isMyDone = market1.isCheer,
                                 isRequestDone = market1.dueDate == 0,
                                 duDate = market1.dueDate,
@@ -202,7 +212,10 @@ fun LikePage(
                                         .weight(1f),
                                     marketName = market2.marketName,
                                     likeCount = market2.cheerCount,
-                                    thumbnail = NetworkModule.getImage(market2.thumbnail, isTempMarket = true),
+                                    thumbnail = NetworkModule.getImage(
+                                        market2.thumbnail,
+                                        isTempMarket = true
+                                    ),
                                     isMyDone = market2.isCheer,
                                     isRequestDone = market2.dueDate == 0,
                                     duDate = market2.dueDate,
@@ -219,10 +232,14 @@ fun LikePage(
                     }
                 }
             } else {
-                items(uiState.searchTempMarket) { tempMarket ->
-                    MarketCard(
-                        tempMarket
-                    ) { likeViewModel.cheer(tempMarket.marketId) }
+                if (uiState.searchTempMarket.isEmpty()) {
+                    item { SearchEmptyContent() }
+                } else {
+                    items(uiState.searchTempMarket) { tempMarket ->
+                        MarketCard(
+                            tempMarket
+                        ) { likeViewModel.cheer(tempMarket.marketId) }
+                    }
                 }
             }
         }
@@ -321,7 +338,10 @@ fun MarketCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = NetworkModule.getImageModel(context, NetworkModule.getImage(market.thumbnail, isTempMarket = true)),
+            model = NetworkModule.getImageModel(
+                context,
+                NetworkModule.getImage(market.thumbnail, isTempMarket = true)
+            ),
             contentDescription = market.marketName,
             modifier = Modifier
                 .size(80.dp)
@@ -358,5 +378,40 @@ fun MarketCard(
                 onCheerClick(market.marketId)
             }
         }
+    }
+}
+
+@Composable
+fun SearchEmptyContent(
+    modifier: Modifier = Modifier,
+    onRequest: () -> Unit,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            "검색 결과가 없어요. 찾으시는 매장이 없으신가요?",
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight(500),
+            fontSize = 14.sp,
+            color = Color(0xff5E5E5E),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(vertical = 28.dp)
+        )
+        Spacer(modifier = Modifier.height(72.dp))
+        Text(
+            "매장 요청하기를 해보세요!",
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight(600),
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+        )
+        Image(
+            painter = painterResource(R.drawable.ic_undraw_online_stats_0g94_1),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        CustomButton("요청하기", Modifier.width(240.dp)) { onRequest() }
     }
 }
