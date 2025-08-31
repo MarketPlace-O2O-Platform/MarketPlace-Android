@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class RequestViewModel : ViewModel() {
     private val kakaoRepository: KakaoRepository = RepositoryProvider.provideKakaoRepository()
-    private val requestMarketsRepository: RequestMarketsRepository = RepositoryProvider.provideRequestMarketsRepository()
+    private val requestMarketsRepository: RequestMarketsRepository = RepositoryProvider.providerRequestMarketRepository()
 
     val searchQuery = mutableStateOf("")
     val searchResults = mutableStateOf<List<Place>>(emptyList())

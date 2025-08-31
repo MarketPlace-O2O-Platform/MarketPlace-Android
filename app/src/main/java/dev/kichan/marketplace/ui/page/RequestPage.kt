@@ -114,6 +114,7 @@ fun RequestPage(
                 item {
                     CustomButton("입점 요청하기", Modifier.fillMaxWidth()) {
                         viewModel.createRequestMarket()
+                        navController.popBackStack()
                     }
                 }
             } else {

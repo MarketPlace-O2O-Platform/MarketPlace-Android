@@ -9,6 +9,7 @@ import dev.kichan.marketplace.model.repository.MembersRepository
 import dev.kichan.marketplace.model.repository.MarketsRepository
 import dev.kichan.marketplace.model.repository.NotificationRepository
 import dev.kichan.marketplace.model.repository.PaybackCouponsRepository
+import dev.kichan.marketplace.model.repository.RequestMarketsRepository
 import dev.kichan.marketplace.model.repository.TempmarketsRepository
 import dev.kichan.marketplace.model.services.CheerService
 import dev.kichan.marketplace.model.services.CouponsService
@@ -18,6 +19,7 @@ import dev.kichan.marketplace.model.services.MembersService
 import dev.kichan.marketplace.model.services.MarketsService
 import dev.kichan.marketplace.model.services.NotificationService
 import dev.kichan.marketplace.model.services.PaybackCouponsService
+import dev.kichan.marketplace.model.services.RequestMarketsService
 import dev.kichan.marketplace.model.services.TempmarketsService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -49,6 +51,7 @@ object RepositoryProvider {
     private val kakaoLocalService = kakaoRetrofit.create(KakaoLocalService::class.java)
     private val paybackCouponsService = retrofit.create(PaybackCouponsService::class.java)
     private val notificationService = retrofit.create(NotificationService::class.java)
+    private val requestMarketsService = retrofit.create(RequestMarketsService::class.java)
 
     fun provideMembersRepository(): MembersRepository {
         return MembersRepository(membersService)
@@ -84,5 +87,9 @@ object RepositoryProvider {
 
     fun provideNotificationRepository(): NotificationRepository {
         return NotificationRepository(notificationService)
+    }
+
+    fun providerRequestMarketRepository() : RequestMarketsRepository {
+        return RequestMarketsRepository(requestMarketsService)
     }
 }
