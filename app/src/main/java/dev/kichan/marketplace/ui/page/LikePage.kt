@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -24,7 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +40,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -53,6 +55,7 @@ fun LikePage(
     likeViewModel: LikeViewModel = viewModel()
 ) {
     val uiState by likeViewModel.uiState.collectAsState()
+    val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
         likeViewModel.getMemberInfo()
@@ -70,13 +73,29 @@ fun LikePage(
         }
     }
 
+    val loadMore by remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val totalItems = layoutInfo.totalItemsCount
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            totalItems > 0 && lastVisibleItemIndex >= totalItems - 5
+        }
+    }
+
+    LaunchedEffect(loadMore) {
+        if (loadMore) {
+            likeViewModel.loadMoreTempMarkets()
+        }
+    }
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
     ) {paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
+            state = listState
         ) {
             item {
                 LikeMarketSearchBar(

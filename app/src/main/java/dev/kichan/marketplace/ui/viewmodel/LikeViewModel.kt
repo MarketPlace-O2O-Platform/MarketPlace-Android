@@ -18,6 +18,8 @@ data class LikeUiState(
     val isLoading: Boolean = false,
     val searchKey: String = "",
     val selectedCategory: LargeCategory = LargeCategory.All,
+    val page: Int = 0,
+    val hasNext: Boolean = true,
 )
 
 class LikeViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,11 +46,44 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getTempMarkets() {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, page = 0, hasNext = true)
+            try {
+                val response = tempmarketsRepository.getTempMarket(
+                    lastPageIndex = 0,
+                    category = _uiState.value.selectedCategory.backendLabel
+                )
+                if (response.isSuccessful) {
+                    _uiState.value = _uiState.value.copy(
+                        tempMarkets = response.body()?.response?.marketResDtos ?: emptyList(),
+                        hasNext = response.body()?.response?.hasNext ?: false
+                    )
+                }
+            } catch (e: Exception) {
+                // Handle error
+            } finally {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
+        }
+    }
+
+    fun loadMoreTempMarkets() {
+        if (_uiState.value.isLoading || !_uiState.value.hasNext) return
+
+        viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val response = tempmarketsRepository.getTempMarket(category = _uiState.value.selectedCategory.backendLabel)
+                val nextPage = _uiState.value.page + 1
+                val response = tempmarketsRepository.getTempMarket(
+                    lastPageIndex = nextPage.toLong(),
+                    category = _uiState.value.selectedCategory.backendLabel
+                )
                 if (response.isSuccessful) {
-                    _uiState.value = _uiState.value.copy(tempMarkets = response.body()?.response?.marketResDtos ?: emptyList())
+                    val newMarkets = response.body()?.response?.marketResDtos ?: emptyList()
+                    _uiState.value = _uiState.value.copy(
+                        tempMarkets = _uiState.value.tempMarkets + newMarkets,
+                        page = nextPage,
+                        hasNext = response.body()?.response?.hasNext ?: false
+                    )
                 }
             } catch (e: Exception) {
                 // Handle error
