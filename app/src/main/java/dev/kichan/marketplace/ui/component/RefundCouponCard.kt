@@ -19,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -61,67 +62,71 @@ fun RefundCouponCard(
     val density = LocalDensity.current
 //    val CouponShape = couponShape(density)
 
-    Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors().copy(
-            containerColor = Color.White,
-        ),
-        shape = RoundedCornerShape(4.dp),
-        border = BorderStroke(1.dp, Color(0xFFE0E0E0))
+    Surface(
+        modifier = Modifier.padding(bottom = 16.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            /* 헤더 ----------------------------------------------------------------- */
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AsyncImage(
-                    model = NetworkModule.getImageModel(LocalContext.current, imageUrl),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(4.dp)),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(Modifier.width(12.dp))
-                Column {
-                    Text(
-                        storeName,
-                        fontFamily = PretendardFamily,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xff727272),
+        Card(
+            modifier = modifier
+                .fillMaxWidth(),
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Color.White,
+            ),
+            shape = RoundedCornerShape(4.dp),
+            border = BorderStroke(1.dp, Color(0xFFE0E0E0))
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                /* 헤더 ----------------------------------------------------------------- */
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    AsyncImage(
+                        model = NetworkModule.getImageModel(LocalContext.current, imageUrl),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(4.dp)),
+                        contentScale = ContentScale.Crop
                     )
-                    Text(
-                        discountTitle,
-                        fontFamily = PretendardFamily,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight(500),
-                    )
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            storeName,
+                            fontFamily = PretendardFamily,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xff727272),
+                        )
+                        Text(
+                            discountTitle,
+                            fontFamily = PretendardFamily,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight(500),
+                        )
+                    }
                 }
+
+                /* 버튼 ----------------------------------------------------------------- */
+                Spacer(Modifier.height(16.dp))
+                CustomButton(
+                    text = if (isUsable) "환급하러 가기" else "사용 불가",
+                    modifier = Modifier.fillMaxWidth(),
+                    isDisable = !isUsable,
+                    onClick = onClick
+                )
+
+                /* 절취선 ---------------------------------------------------------------- */
+                Spacer(Modifier.height(21.dp))
+                CouponDivider()      // 아래에 정의
+                Spacer(Modifier.height(9.dp))
+
+                /* 하단 메모 ------------------------------------------------------------- */
+                Text(
+                    "주류 제외",
+                    color = Color.Gray,
+                    fontFamily = PretendardFamily,
+                    fontWeight = FontWeight(400),
+                    fontSize = 14.sp
+                )
+                Spacer(Modifier.height(8.dp))
             }
-
-            /* 버튼 ----------------------------------------------------------------- */
-            Spacer(Modifier.height(16.dp))
-            CustomButton(
-                text = if (isUsable) "환급하러 가기" else "사용 불가",
-                modifier = Modifier.fillMaxWidth(),
-                isDisable = !isUsable,
-                onClick = onClick
-            )
-
-            /* 절취선 ---------------------------------------------------------------- */
-            Spacer(Modifier.height(21.dp))
-            CouponDivider()      // 아래에 정의
-            Spacer(Modifier.height(9.dp))
-
-            /* 하단 메모 ------------------------------------------------------------- */
-            Text(
-                "주류 제외",
-                color = Color.Gray,
-                fontFamily = PretendardFamily,
-                fontWeight = FontWeight(400),
-                fontSize = 14.sp
-            )
-            Spacer(Modifier.height(8.dp))
         }
     }
 }

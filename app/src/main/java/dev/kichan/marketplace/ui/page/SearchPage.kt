@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,33 +29,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.component.atoms.SearchResultItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
-import dev.kichan.marketplace.viewmodel.SearchViewModel
+import dev.kichan.marketplace.ui.viewmodel.PopularCoupon
+import dev.kichan.marketplace.ui.viewmodel.SearchViewModel
 
 @Composable
 fun SearchPage(modifier: Modifier = Modifier, viewModel: SearchViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getRecentKeywords()
+        viewModel.getPopularCoupons()
     }
 
-        Scaffold {
+    Scaffold {
         Column(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
         ) {
-            SearchBar(uiState.key, {
-                viewModel.setKey(it)
-
-                if (it.length >= 2) {
-                    viewModel.search()
-                }
+            SearchBar(uiState.searchKey, {
+                viewModel.onSearchKeyChanged(it)
             })
 
             Spacer(
@@ -65,9 +64,9 @@ fun SearchPage(modifier: Modifier = Modifier, viewModel: SearchViewModel = viewM
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (uiState.result.isNotEmpty()) {
+            if (uiState.searchResults.isNotEmpty()) {
                 LazyColumn {
-                    items(items = uiState.result) {
+                    items(items = uiState.searchResults) {
                         SearchResultItem(
                             title = it.marketName,
                             description = it.marketDescription,
@@ -75,9 +74,14 @@ fun SearchPage(modifier: Modifier = Modifier, viewModel: SearchViewModel = viewM
                         )
                     }
                 }
-            } else if (uiState.key.isBlank() || uiState.isFirst) {
+            } else if (uiState.searchKey.isBlank() || uiState.isFirstSearch) {
                 RecentKeyword(uiState.recentKeywords)
-                PopularBenefitsList()
+                PopularBenefitsList(uiState.popularCoupons, onFavoriteClick = {
+                    if (it.isFavorite)
+                        viewModel.unfavorite(it.marketId)
+                    else
+                        viewModel.favorite(it.marketId)
+                })
             } else {
                 SearchResultEmpty()
             }
@@ -86,7 +90,10 @@ fun SearchPage(modifier: Modifier = Modifier, viewModel: SearchViewModel = viewM
 }
 
 @Composable
-private fun PopularBenefitsList() {
+private fun PopularBenefitsList(
+    coupons: List<PopularCoupon>,
+    onFavoriteClick: (PopularCoupon) -> Unit
+) {
     Text(
         text = "인기 혜택",
         fontSize = 15.sp,
@@ -100,8 +107,8 @@ private fun PopularBenefitsList() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(4) {
-            BenefitCard()
+        items(coupons) { coupon ->
+            BenefitCard(coupon, onFavoriteClick)
         }
     }
 }
@@ -228,52 +235,55 @@ fun Chip(text: String) {
 }
 
 @Composable
-fun BenefitCard() {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-
+fun BenefitCard(coupon: PopularCoupon, onFavoriteClick: (PopularCoupon) -> Unit) {
+    Column(
         modifier = Modifier
             .width(200.dp)
             .padding(start = 20.dp, end = 8.dp),
-        shape = RoundedCornerShape(4.dp)
     ) {
-        Column {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Image(
-                    painter = painterResource(id = R.drawable.brown),
+        Box(modifier = Modifier.fillMaxWidth()) {
+            AsyncImage(
+                model = NetworkModule.getImageModel(
+                    LocalContext.current,
+                    NetworkModule.getImage(coupon.thumbnail)
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(172.dp)
+                    .fillMaxWidth()
+            )
+            IconButton(
+                onClick = {
+                    onFavoriteClick(coupon)
+                },
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    painter = painterResource(id = if (coupon.isFavorite) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .height(172.dp)
-                        .fillMaxWidth()
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.bookmark2), // 스크랩 기능 아이콘
-                    contentDescription = "Bookmark",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .align(Alignment.TopEnd)
-                        .padding(10.dp)
+                    modifier = Modifier.size(20.dp),
+                    tint = Color(0xffffffff)
                 )
             }
-            Text(
-                text = "콜드케이스 인하대점",
-                fontSize = 10.sp,
-                lineHeight = 13.51.sp,
-                fontFamily = PretendardFamily,
-                fontWeight = FontWeight(600),
-                color = Color(0xFF000000),
-                modifier = Modifier.padding(top = 11.39.dp, bottom = 4.dp)
-            )
-            Text(
-                text = "방탈출카페 2인 이용권",
-                fontSize = 15.sp,
-                lineHeight = 19.66.sp,
-                fontFamily = PretendardFamily,
-                fontWeight = FontWeight(500),
-                color = Color(0xFF000000),
-            )
         }
+        Text(
+            text = coupon.marketName,
+            fontSize = 10.sp,
+            lineHeight = 13.51.sp,
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight(600),
+            color = Color(0xFF000000),
+            modifier = Modifier.padding(top = 11.39.dp, bottom = 4.dp)
+        )
+        Text(
+            text = coupon.couponName,
+            fontSize = 15.sp,
+            lineHeight = 19.66.sp,
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight(500),
+            color = Color(0xFF000000),
+        )
     }
 }
 
