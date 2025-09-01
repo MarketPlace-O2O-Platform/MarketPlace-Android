@@ -105,8 +105,13 @@ fun MyApp() {
             )
         }
 
-        composable(Page.ReceptUploadPage.name) {
-            ReceiptUploadPage(navController = navController)
+        composable(Page.ReceptUploadPage.name + "/{couponId}") {
+            it.arguments?.getString("couponId")?.let {
+                ReceiptUploadPage(
+                    navController = navController,
+                    couponId = it.toLong()
+                )
+            }
         }
         composable(Page.CurationPage.name) {
             CurationPage(nacController = navController)

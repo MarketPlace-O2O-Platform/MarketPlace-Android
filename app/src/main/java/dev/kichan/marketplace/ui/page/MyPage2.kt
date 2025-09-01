@@ -154,7 +154,7 @@ fun MyPage2(
                             storeName = it.marketName,
                             discountTitle = it.couponName,
                             imageUrl = NetworkModule.getImage(it.thumbnail),
-                            onClick = { navController.navigate(Page.ReceptUploadPage.name) },
+                            onClick = { navController.navigate(Page.ReceptUploadPage.name + "/${it.memberCouponId}") },
                             modifier = Modifier.padding(horizontal = 18.dp),
                             isUsable = true
                         )
@@ -172,7 +172,7 @@ fun MyPage2(
                             storeName = it.marketName,
                             discountTitle = it.couponName,
                             imageUrl = it.thumbnail,
-                            onClick = { navController.navigate(Page.ReceptUploadPage.name) },
+                            onClick = { navController.navigate(Page.ReceptUploadPage.name + "/${it.memberCouponId}") },
                             modifier = Modifier.padding(horizontal = 18.dp),
                             isUsable = true
                         )

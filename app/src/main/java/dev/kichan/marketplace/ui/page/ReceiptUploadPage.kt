@@ -43,6 +43,7 @@ fun ReceiptUploadPage(
     modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: ReceiptUploadViewModel = viewModel(),
+    couponId: Long,
 ) {
     val context = LocalContext.current
     val uiState by viewModel.state.collectAsStateWithLifecycle()
@@ -139,7 +140,7 @@ fun ReceiptUploadPage(
                 modifier = Modifier.fillMaxWidth(),
                 isDisable = uiState.imageUri == null
             ) {
-                viewModel.upload(1, context) {
+                viewModel.upload(couponId, context) {
                     navController.popBackStack()
                 }
             }
