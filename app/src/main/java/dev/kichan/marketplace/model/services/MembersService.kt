@@ -41,7 +41,7 @@ interface MembersService {
     suspend fun downloadPaybackCoupon(@Path("couponId") couponId: Long): Response<CommonResponseObject>
 
     @POST("/api/members/coupons/{couponId}")
-    suspend fun downloadCoupon(@Path("couponId") couponId: Long): Response<Void>
+    suspend fun downloadGiftCoupon(@Path("couponId") couponId: Long): Response<Void>
 
     @PATCH("/api/members/notification/permit")
     suspend fun permitFcmToken(@Body body: MemberFcmReq): Response<CommonResponseObject>

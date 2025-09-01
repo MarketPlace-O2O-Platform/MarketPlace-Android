@@ -51,7 +51,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.remote.RetrofitClient
+import dev.kichan.marketplace.model.dto.CouponRes
 import dev.kichan.marketplace.model.dto.MarketDetailsRes
 import dev.kichan.marketplace.ui.CouponDownloadCheckDialog
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
@@ -76,7 +76,7 @@ fun MarketDetailPage(
     )
 ) {
     val uiState by marketDetailViewModel.uiState.collectAsState()
-    var downLoadCouponId by remember { mutableStateOf<Long?>(null) }
+    var downLoadCoupon by remember { mutableStateOf<CouponRes?>(null) }
 
     LaunchedEffect(Unit) {
         marketDetailViewModel.navigationEvent.collect { event ->
@@ -96,11 +96,16 @@ fun MarketDetailPage(
             NavAppBar("", Color.White) { navController.popBackStack() }
         },
     ) {
-        if (downLoadCouponId != null) {
+        if (downLoadCoupon != null) {
             CouponDownloadCheckDialog(
-                onDismiss = { downLoadCouponId = null },
+                onDismiss = { downLoadCoupon = null },
                 onAccept = {
-                    marketDetailViewModel.downloadCoupon(downLoadCouponId!!)
+                    if(downLoadCoupon!!.couponType == "GIFT") {
+                        marketDetailViewModel.downloadGiftCoupon(downLoadCoupon!!.couponId)
+                    }
+                    else {
+                        marketDetailViewModel.downloadPaybackCoupon(downLoadCoupon!!.couponId)
+                    }
                 }
             )
         }
@@ -167,7 +172,7 @@ fun MarketDetailPage(
                                     title = coupon.couponName,
                                     expireDate = expireDate,
                                     width = screenWidth - PAGE_HORIZONTAL_PADDING * 2,
-                                    onClick = { downLoadCouponId = coupon.couponId },
+                                    onClick = { downLoadCoupon = coupon },
                                 )
                             }
                         }

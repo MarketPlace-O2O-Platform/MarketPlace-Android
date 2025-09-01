@@ -72,7 +72,20 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
         }
     }
 
-    fun downloadCoupon(couponId: Long) {
+    fun downloadGiftCoupon(couponId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = membersRepository.downloadGiftCoupon(couponId)
+                if (response.isSuccessful) {
+                    _navigationEvent.emit(MarketDetailNavigationEvent.NavigateToMyPage)
+                }
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+
+    fun downloadPaybackCoupon(couponId: Long) {
         viewModelScope.launch {
             try {
                 val response = membersRepository.downloadPaybackCoupon(couponId)

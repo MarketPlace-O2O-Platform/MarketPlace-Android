@@ -52,8 +52,8 @@ class MembersRepository @Inject constructor(
         return service.downloadPaybackCoupon(couponId)
     }
 
-    suspend fun downloadCoupon(@Path("couponId") couponId: Long): Response<Void> {
-        return service.downloadCoupon(couponId)
+    suspend fun downloadGiftCoupon(@Path("couponId") couponId: Long): Response<Void> {
+        return service.downloadGiftCoupon(couponId)
     }
 
     suspend fun permitFcmToken(@Body body: MemberFcmReq): Response<CommonResponseObject> {

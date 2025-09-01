@@ -97,7 +97,7 @@ class CouponViewModel() : ViewModel() {
                 mamberRepository.downloadPaybackCoupon(id)
             }
             else {
-                mamberRepository.downloadCoupon(id)
+                mamberRepository.downloadGiftCoupon(id)
             }
 
             _couponListUiState.update { it.copy(
