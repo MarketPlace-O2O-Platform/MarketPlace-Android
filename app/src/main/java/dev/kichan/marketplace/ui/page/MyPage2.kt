@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -37,7 +36,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,8 +52,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.model.dto.MemberRes
+import dev.kichan.marketplace.model.removeAuthToken
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
@@ -132,7 +130,8 @@ fun MyPage2(
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             context.startActivity(intent)
                         },
-                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) }
+                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) },
+                        로그아웃_하기 = {}
                     )
                 } else {
                     TopBar(
@@ -143,7 +142,12 @@ fun MyPage2(
                             context.startActivity(intent)
                         },
                         큐레이션_가기 = { navController.navigate(Page.CurationPage.name) },
-                        로그아웃_하기 = {}
+                        로그아웃_하기 = {
+                            myPage2ViewModel.logout(context) {
+                                navController.popBackStack()
+                                navController.navigate(Page.Login.name)
+                            }
+                        }
                     )
                 }
             }
@@ -354,6 +358,7 @@ fun TopBar(
 fun TopBarUI(
     큐레이션_가기: () -> Unit,
     고객센터_가기: () -> Unit,
+    로그아웃_하기: () -> Unit,
 ) {
     Row(
         modifier = Modifier

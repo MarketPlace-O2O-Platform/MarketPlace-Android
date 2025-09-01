@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -86,7 +87,7 @@ fun Input(
                         )
                     }
 
-                    if (inputType == InputType.Text || isContentShow.value) {
+                    if (inputType == InputType.Text || isContentShow.value || value.isEmpty()) {
                         innerTextField()
                     } else {
                         Text(text = "*".repeat(value.length), color = contentColor)
@@ -95,14 +96,16 @@ fun Input(
                     if (inputType == InputType.Password) {
                         Icon(
                             painter = if (isContentShow.value) {
-                                painterResource(id = R.drawable.ic_visibility)
+                                painterResource(id = R.drawable.ic_show)
                             } else {
-                                painterResource(id = R.drawable.ic_visibility_off)
+                                painterResource(id = R.drawable.ic_hide)
                             },
                             contentDescription = "Toggle Password Visibility",
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)
-                                .clickable { isContentShow.value = !isContentShow.value }
+                                .size(16.dp)
+                                .clickable { isContentShow.value = !isContentShow.value },
+
                         )
                     }
                 }

@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.viewmodel
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.IssuedCouponRes
 import dev.kichan.marketplace.model.dto.MemberRes
 import dev.kichan.marketplace.model.dto.PaybackRes
+import dev.kichan.marketplace.model.removeAuthToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -127,6 +129,13 @@ class MyPage2ViewModel() : ViewModel() {
             } finally {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
+        }
+    }
+
+    fun logout(context : Context, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            removeAuthToken(context)
+            onSuccess()
         }
     }
 }
