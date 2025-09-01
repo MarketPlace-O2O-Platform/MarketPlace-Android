@@ -65,7 +65,7 @@ fun MyApp() {
                     navController = navController,
                 )
             }
-            composable(Page.Search.name) { SearchPage() }
+            composable(Page.Search.name) { SearchPage(navController) }
 
             composable("${Page.EventDetail.name}/{id}") {
                 it.arguments?.getString("id")?.let { id ->

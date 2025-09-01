@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MarketRes
 import dev.kichan.marketplace.model.dto.TopPopularCouponRes
+import dev.kichan.marketplace.model.repository.RecentKeywordRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -22,14 +23,7 @@ data class PopularCoupon(
 
 data class SearchUiState(
     val searchKey: String = "",
-    val recentKeywords: List<String> = listOf(
-        "신복관",
-        "송쭈집",
-        "우정소갈비",
-        "디저트39",
-        "헬스장",
-        "필라테스"
-    ),
+    val recentKeywords: List<String> = emptyList(),
     val searchResults: List<MarketRes> = emptyList(),
     val popularCoupons: List<PopularCoupon> = emptyList(),
     val isLoading: Boolean = false,
@@ -41,9 +35,14 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val marketsRepository = RepositoryProvider.provideMarketsRepository()
     private val couponsRepository = RepositoryProvider.provideCouponsRepository()
     private val favoritesRepository = RepositoryProvider.provideFavoritesRepository()
+    private val recentKeywordRepository = RecentKeywordRepository(application)
 
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        getRecentKeywords()
+    }
 
     fun onSearchKeyChanged(key: String) {
         _uiState.value = _uiState.value.copy(searchKey = key)
@@ -52,6 +51,23 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         } else {
             _uiState.value = _uiState.value.copy(searchResults = emptyList(), isFirstSearch = true)
         }
+    }
+
+    fun search() {
+        val keyword = _uiState.value.searchKey
+        if (keyword.isNotBlank()) {
+            addRecentKeyword(keyword)
+            searchMarkets(keyword)
+        }
+    }
+
+    private fun getRecentKeywords() {
+        _uiState.value = _uiState.value.copy(recentKeywords = recentKeywordRepository.getRecentKeywords())
+    }
+
+    private fun addRecentKeyword(keyword: String) {
+        recentKeywordRepository.addRecentKeyword(keyword)
+        getRecentKeywords()
     }
 
     fun getPopularCoupons() {
