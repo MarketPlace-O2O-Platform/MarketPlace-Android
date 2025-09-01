@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -34,6 +35,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
+import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.ReceiptUploadViewModel
@@ -54,9 +56,16 @@ fun ReceiptUploadPage(
         viewModel.setImage(uri)
     }
 
-    Column(
-        modifier = modifier.padding(20.dp)
+    Scaffold(
+        topBar = {
+            NavAppBar("환급하기") { navController.popBackStack() }
+        }
     ) {
+        Column(
+            modifier = modifier
+                .padding(it)
+                .padding(20.dp)
+        ) {
             Text(
                 "환급 받을 영수증을\n" + "등록해주세요",
                 fontSize = 24.sp,
@@ -145,4 +154,5 @@ fun ReceiptUploadPage(
                 }
             }
         }
+    }
 }
