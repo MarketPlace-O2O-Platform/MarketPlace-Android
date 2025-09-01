@@ -3,11 +3,14 @@ package dev.kichan.marketplace.ui.page
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +34,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.model.NetworkModule
@@ -56,6 +61,7 @@ import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.RefundCouponCard
 import dev.kichan.marketplace.ui.component.RefundCouponCardSkeleton
+import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
 import dev.kichan.marketplace.ui.viewmodel.EndedCoupon
 import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
@@ -70,12 +76,48 @@ fun MyPage2(
 
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
     var selectedTabIndex by remember { mutableStateOf(0) }
+    var selectedCouponId by remember { mutableStateOf<Long?>(null) }
 
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         }
     ) {
+        if (selectedCouponId != null) {
+            Dialog({ selectedCouponId = null }) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp, vertical = 32.dp)
+                            .fillMaxWidth(),
+                    ) {
+                        Text(
+                            "쿠폰을 사용해볼까요?",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight(800)
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        CustomButton("Yes", modifier = Modifier.fillMaxWidth()) {
+                            myPage2ViewModel.useGiftCoupon(selectedCouponId!!)
+                            selectedCouponId = null
+                            Toast.makeText(context, "쿠폰 사용 완료", Toast.LENGTH_SHORT).show()
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        CustomButton(
+                            "No",
+                            modifier = Modifier.fillMaxWidth(),
+                            backgroundColor = Color(0xffffffff),
+                            border = BorderStroke(1.dp, Color(0xff303030)),
+                            textColor = Color(0xff000000),
+                        ) { selectedCouponId = null }
+                    }
+                }
+            }
+        }
+
         LazyColumn(
             modifier = Modifier
                 .padding(it)
@@ -172,7 +214,7 @@ fun MyPage2(
                             storeName = it.marketName,
                             discountTitle = it.couponName,
                             imageUrl = it.thumbnail,
-                            onClick = { navController.navigate(Page.ReceptUploadPage.name + "/${it.memberCouponId}") },
+                            onClick = { selectedCouponId = it.memberCouponId },
                             modifier = Modifier.padding(horizontal = 18.dp),
                             isUsable = true
                         )
@@ -221,7 +263,7 @@ fun TopBar(
     member: MemberRes,
     큐레이션_가기: () -> Unit,
     고객센터_가기: () -> Unit,
-    로그아웃_하기 : () -> Unit,
+    로그아웃_하기: () -> Unit,
 ) {
     var isShowLogoutMemu by remember { mutableStateOf(false) }
     Row(

@@ -27,7 +27,6 @@ data class MyPage2UiState(
 
 class MyPage2ViewModel() : ViewModel() {
     private val membersRepository = RepositoryProvider.provideMembersRepository()
-    private val paybackCouponsRepository = RepositoryProvider.providePaybackCouponsRepository()
 
     private val _uiState = MutableStateFlow(MyPage2UiState())
     val uiState = _uiState.asStateFlow()
@@ -109,6 +108,20 @@ class MyPage2ViewModel() : ViewModel() {
                 }
                 _uiState.value = _uiState.value.copy(endedCouponList = endedCoupons)
 
+            } catch (e: Exception) {
+                // Handle error
+            } finally {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
+        }
+    }
+
+    fun useGiftCoupon(memberCouponId: Long) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            try {
+                membersRepository.useCoupon(memberCouponId)
+                _uiState.value = _uiState.value.copy(giftCouponList = _uiState.value.giftCouponList.filter { it.memberCouponId != memberCouponId })
             } catch (e: Exception) {
                 // Handle error
             } finally {

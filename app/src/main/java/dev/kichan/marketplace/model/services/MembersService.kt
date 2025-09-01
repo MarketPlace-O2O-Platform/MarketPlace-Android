@@ -29,7 +29,7 @@ interface MembersService {
     ): Response<CommonResponseCouponPageResIssuedCouponRes>
 
     @PUT("/api/members/coupons")
-    suspend fun updateCoupons(@Query("memberCouponId") memberCouponId: Long? = null): Response<CommonResponseCouponHandleRes>
+    suspend fun useCoupon(@Query("memberCouponId") memberCouponId: Long? = null): Response<CommonResponseCouponHandleRes>
 
     @GET("/api/members")
     suspend fun getMember(): Response<CommonResponseMemberRes>

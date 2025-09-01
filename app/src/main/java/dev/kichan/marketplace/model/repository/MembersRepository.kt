@@ -36,8 +36,8 @@ class MembersRepository @Inject constructor(
         return service.getCoupons(type, memberCouponId, size)
     }
 
-    suspend fun updateCoupon_2(@Query("memberCouponId") memberCouponId: Long? = null): Response<CommonResponseCouponHandleRes> {
-        return service.updateCoupons(memberCouponId)
+    suspend fun useCoupon(@Query("memberCouponId") memberCouponId: Long? = null): Response<CommonResponseCouponHandleRes> {
+        return service.useCoupon(memberCouponId)
     }
 
     suspend fun getMember(): Response<CommonResponseMemberRes> {
