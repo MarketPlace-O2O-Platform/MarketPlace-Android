@@ -14,7 +14,7 @@ enum class LargeCategory(
         R.drawable.ic_category_all
     ),
     Food(
-        "음식",
+        "푸드",
         "FOOD",
         R.drawable.ic_category_food
     ),
@@ -29,22 +29,22 @@ enum class LargeCategory(
         R.drawable.ic_category_sports
     ),
     Beauty(
-        "미용",
+        "뷰티&헤어",
         "BEAUTY",
         R.drawable.ic_category_beauty
     ),
     Hospital(
-        "병원",
+        "메디컬",
         "HOSPITAL",
         R.drawable.ic_category_medical
     ),
     Education(
-        "교육",
+        "에듀",
         "EDUCATION",
         R.drawable.ic_category_education
     ),
     Rest(
-        "기타",
+        "더 다양한",
         "ETC",
         R.drawable.ic_category_etc
     );
