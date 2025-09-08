@@ -190,10 +190,19 @@ fun MyPage2(
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             if (selectedTabIndex == 0) {
-                if (uiState.paybackCouponList.isEmpty()) {
+                if (uiState.isLoading) {
                     items(20) {
                         RefundCouponCardSkeleton()
                         Spacer(modifier = Modifier.height(20.dp))
+                    }
+                } else if (uiState.paybackCouponList.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "사용 가능한 쿠폰이 없어요")
+                        }
                     }
                 } else {
                     items(uiState.paybackCouponList) {
@@ -210,10 +219,19 @@ fun MyPage2(
                 }
             }
             if (selectedTabIndex == 1) {
-                if (uiState.giftCouponList.isEmpty()) {
+                if (uiState.isLoading) {
                     items(20) {
                         RefundCouponCardSkeleton()
                         Spacer(modifier = Modifier.height(20.dp))
+                    }
+                } else if (uiState.giftCouponList.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "사용 가능한 쿠폰이 없어요")
+                        }
                     }
                 } else {
                     items(uiState.giftCouponList) {
@@ -230,10 +248,19 @@ fun MyPage2(
                 }
             }
             if (selectedTabIndex == 2) {
-                if (uiState.endedCouponList.isEmpty()) {
+                if (uiState.isLoading) {
                     items(20) {
                         RefundCouponCardSkeleton()
                         Spacer(modifier = Modifier.height(20.dp))
+                    }
+                } else if (uiState.endedCouponList.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "만료된 쿠폰이 없어요")
+                        }
                     }
                 } else {
                     items(uiState.endedCouponList) { endedCoupon ->
