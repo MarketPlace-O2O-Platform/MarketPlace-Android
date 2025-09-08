@@ -50,6 +50,8 @@ import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
+//https://chatgpt.com/c/68bd9b5a-da74-8322-8bd1-3c9afc14d6eb
+
 @Composable
 fun RefundCouponCard(
     storeName: String = "하노이키친 인천대점",
