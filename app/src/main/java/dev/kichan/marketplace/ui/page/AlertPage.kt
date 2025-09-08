@@ -40,6 +40,9 @@ import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.AlertViewModel
 
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+
 @Composable
 fun AlertPage(
     navController: NavController,
@@ -219,6 +222,21 @@ fun NotificationItemSkeleton(
     }
 }
 
+fun formatCreatedAt(createdAt: String): String {
+    val now = LocalDateTime.now()
+    val then = LocalDateTime.parse(createdAt.substring(0, 26))
+
+    val diff = ChronoUnit.SECONDS.between(then, now)
+
+    return when {
+        diff < 60 -> "방금 전"
+        diff < 3600 -> "${diff / 60}분 전"
+        diff < 86400 -> "${diff / 3600}시간 전"
+        diff < 2592000 -> "${diff / 86400}일 전"
+        else -> then.toLocalDate().toString()
+    }
+}
+
 @Composable
 fun NotificationItem(
     notification: NotificationRes,
@@ -242,7 +260,7 @@ fun NotificationItem(
                     shape = RoundedCornerShape(50)
                 )
                 .border(width = 1.dp, color = Color(0xffEEEEEE), shape = RoundedCornerShape(50))
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 8.dp, vertical = 6.dp)
         )
 
         Spacer(modifier = Modifier.height(6.dp))
@@ -269,7 +287,7 @@ fun NotificationItem(
 
         // 생성 시간
         Text(
-            text = notification.createdAt, // "1일 전" 같은 포맷으로 변환 필요
+            text = formatCreatedAt(notification.createdAt),
             fontFamily = PretendardFamily,
             fontWeight = FontWeight.W500,
             fontSize = 13.sp,
