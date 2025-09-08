@@ -216,7 +216,9 @@ private fun RefunCouponCardPreview() {
 @Composable
 fun RefundCouponCardSkeleton(modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
         colors = CardDefaults.cardColors().copy(containerColor = Color.White),
         shape = RoundedCornerShape(4.dp),
         border = BorderStroke(1.dp, Color(0xFFE0E0E0))

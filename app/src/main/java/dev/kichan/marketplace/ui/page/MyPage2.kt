@@ -193,6 +193,7 @@ fun MyPage2(
                 if (uiState.paybackCouponList.isEmpty()) {
                     items(20) {
                         RefundCouponCardSkeleton()
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
                 } else {
                     items(uiState.paybackCouponList) {
@@ -204,6 +205,7 @@ fun MyPage2(
                             modifier = Modifier.padding(horizontal = 18.dp),
                             isUsable = true
                         )
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
             }
@@ -211,6 +213,7 @@ fun MyPage2(
                 if (uiState.giftCouponList.isEmpty()) {
                     items(20) {
                         RefundCouponCardSkeleton()
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
                 } else {
                     items(uiState.giftCouponList) {
@@ -222,6 +225,7 @@ fun MyPage2(
                             modifier = Modifier.padding(horizontal = 18.dp),
                             isUsable = true
                         )
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
             }
@@ -229,6 +233,7 @@ fun MyPage2(
                 if (uiState.endedCouponList.isEmpty()) {
                     items(20) {
                         RefundCouponCardSkeleton()
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
                 } else {
                     items(uiState.endedCouponList) { endedCoupon ->
@@ -242,6 +247,7 @@ fun MyPage2(
                                     modifier = Modifier.padding(horizontal = 18.dp),
                                     isUsable = false
                                 )
+                                Spacer(modifier = Modifier.height(20.dp))
                             }
 
                             is EndedCoupon.EndedGift -> {
@@ -253,6 +259,7 @@ fun MyPage2(
                                     modifier = Modifier.padding(horizontal = 18.dp),
                                     isUsable = false
                                 )
+                                Spacer(modifier = Modifier.height(20.dp))
                             }
                         }
                     }
