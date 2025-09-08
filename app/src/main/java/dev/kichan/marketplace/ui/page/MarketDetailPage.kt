@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -49,6 +48,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.navigation.NavHostController
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.dto.CouponRes
@@ -57,13 +59,16 @@ import dev.kichan.marketplace.ui.CouponDownloadCheckDialog
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
+import dev.kichan.marketplace.ui.component.atoms.PagerIndicator
 import dev.kichan.marketplace.ui.viewmodel.MarketDetailNavigationEvent
 import dev.kichan.marketplace.ui.viewmodel.MarketDetailViewModel
 import dev.kichan.marketplace.ui.viewmodel.MarketDetailViewModelFactory
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MarketDetailPage(
     navController: NavHostController,
@@ -90,6 +95,11 @@ fun MarketDetailPage(
 
     if (uiState.marketData == null) return
 
+    val availableCouponList = uiState.couponList.filter {
+        val deadLine = LocalDateTime.parse(it.deadLine.substring(0, 19))
+        it.isAvailable && !it.isMemberIssued && !it.isHidden && deadLine.isAfter(LocalDateTime.now())
+    }
+
     // 쿠폰 받기 다이얼로그 상태 변수
     Scaffold(
         topBar = {
@@ -100,10 +110,9 @@ fun MarketDetailPage(
             CouponDownloadCheckDialog(
                 onDismiss = { downLoadCoupon = null },
                 onAccept = {
-                    if(downLoadCoupon!!.couponType == "GIFT") {
+                    if (downLoadCoupon!!.couponType == "GIFT") {
                         marketDetailViewModel.downloadGiftCoupon(downLoadCoupon!!.couponId)
-                    }
-                    else {
+                    } else {
                         marketDetailViewModel.downloadPaybackCoupon(downLoadCoupon!!.couponId)
                     }
                 }
@@ -131,14 +140,6 @@ fun MarketDetailPage(
                     onFavorite = { marketDetailViewModel.favorite(id) })
             }
             item {
-                HorizontalDivider(
-                    Modifier
-                        .height(8.dp)
-                        .background(Color(0xffeeeee))
-                )
-            }
-
-            item {
                 Column() {
                     Surface(
                         modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING)
@@ -152,46 +153,61 @@ fun MarketDetailPage(
                     }
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    if (uiState.couponList.isNotEmpty()) {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING)
+                    if (availableCouponList.isNotEmpty()) {
+                        val pagerState =
+                            rememberPagerState(pageCount = { availableCouponList.size })
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxWidth(),
+                            contentPadding = PaddingValues(horizontal = PAGE_HORIZONTAL_PADDING),
+                            pageSpacing = 8.dp
                         ) {
-                            items(uiState.couponList) { coupon ->
-                                val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+                            val coupon = availableCouponList[it]
+                            val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-                                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                val parsedDate =
-                                    LocalDate.parse(coupon.deadLine.substring(0, 10), formatter)
-                                val expireDate =
-                                    parsedDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일까지"))
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            val parsedDate =
+                                LocalDate.parse(coupon.deadLine.substring(0, 10), formatter)
+                            val expireDate =
+                                parsedDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일까지"))
 
-                                TicketCoupon(
-                                    title = coupon.couponName,
-                                    expireDate = expireDate,
-                                    width = screenWidth - PAGE_HORIZONTAL_PADDING * 2,
-                                    onClick = { downLoadCoupon = coupon },
-                                )
-                            }
+                            TicketCoupon(
+                                title = coupon.couponName,
+                                expireDate = expireDate,
+                                width = screenWidth - PAGE_HORIZONTAL_PADDING * 2,
+                                onClick = { downLoadCoupon = coupon },
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
+                        ) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            PagerIndicator(
+                                modifier = Modifier.fillMaxWidth(),
+                                pagerState = pagerState
+                            )
+                            Spacer(modifier = Modifier.height(15.dp))
+                            Text(
+                                text = availableCouponList[pagerState.targetPage].couponDescription,
+                                fontFamily = PretendardFamily,
+                                fontWeight = FontWeight.W400,
+                                fontSize = 13.sp,
+                                color = Color(0xff7D7D7D),
+                            )
                         }
                     } else {
-                        Text(
-                            "매장에 등록된 쿠폰이 없습니다.",
-                            fontFamily = PretendardFamily,
-                            fontSize = 14.sp,
-                            color = Color.Gray
-                        )
+                        Box(
+                            modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING),
+                        ) {
+                            Text(
+                                text = "매장에 등록된 쿠폰이 없습니다.",
+                                fontFamily = PretendardFamily,
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
-            }
-            item {
-                HorizontalDivider(
-                    Modifier
-                        .height(8.dp)
-                        .background(Color(0xffeeeee))
-                )
             }
             item { BusinessInfo(uiState.marketData!!) }
             item { KakaoMapSearchBox(uiState.marketData!!.name) }
