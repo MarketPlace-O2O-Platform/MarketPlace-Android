@@ -31,11 +31,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.model.dto.NotificationRes
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
+import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.AlertViewModel
 
 @Composable
@@ -52,22 +54,8 @@ fun AlertPage(
     ) {
         Column {
             NotificationFilterBar(
-                selectedFilter = when (uiState.filterType) {
-                    "MARKET" -> "쿠폰 발급"
-                    "COUPON" -> "쿠폰 만료"
-                    "NOTICE" -> "공지"
-                    else -> "전체"
-                },
-                onFilterSelected = {
-                    val apiType = when (it) {
-                        "전체" -> null
-                        "쿠폰 발급" -> "MARKET"
-                        "쿠폰 만료" -> "COUPON"
-                        "공지" -> "NOTICE"
-                        else -> null
-                    }
-                    viewModel.setFilterType(apiType)
-                },
+                selectedFilter = NotificationType.fromServerType(uiState.filterType),
+                onFilterSelected = { viewModel.setFilterType(it.serverType) },
                 onMarkAllRead = { viewModel.allRead() }
             )
             if (uiState.error != null) {
@@ -79,8 +67,7 @@ fun AlertPage(
                 ) {
                     Text(uiState.error.toString())
                 }
-            }
-            else if(uiState.notifications.isEmpty()) {
+            } else if (uiState.notifications.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .padding(it)
@@ -89,8 +76,7 @@ fun AlertPage(
                 ) {
                     Text("알림이 없습니다.")
                 }
-            }
-            else {
+            } else {
                 LazyColumn(
                     modifier = Modifier
                         .padding(it)
@@ -115,8 +101,8 @@ fun AlertPage(
 
 @Composable
 fun NotificationFilterBar(
-    selectedFilter: String,
-    onFilterSelected: (String) -> Unit,
+    selectedFilter: NotificationType,
+    onFilterSelected: (NotificationType) -> Unit,
     onMarkAllRead: () -> Unit
 ) {
     Row(
@@ -131,7 +117,7 @@ fun NotificationFilterBar(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f, fill = false)
         ) {
-            val filters = listOf("전체", "쿠폰 발급", "쿠폰 만료", "공지")
+            val filters = NotificationType.values()
             items(filters.size) { index ->
                 val filter = filters[index]
                 val isSelected = selectedFilter == filter
@@ -140,35 +126,47 @@ fun NotificationFilterBar(
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
                         .background(
-                            if (isSelected) Color.Black else Color.Transparent,
+                            if (isSelected) Color(0xff303030) else Color.Transparent,
                         )
                         .border(
                             width = 1.dp,
-                            color = if (isSelected) Color.Black else Color.Gray,
+                            color = if (isSelected) Color.Black else Color(0xffC6C6C6),
                             shape = RoundedCornerShape(50)
                         )
                         .clickable { onFilterSelected(filter) }
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = filter,
-                        color = if (isSelected) Color.White else Color.Black,
-                        style = MaterialTheme.typography.bodyMedium
+                        text = filter.displayName,
+                        color = if (isSelected) Color.White else Color(0xff5E5E5E),
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight.W400,
+                        fontSize = 12.sp,
                     )
                 }
             }
         }
 
         // 오른쪽 전체 읽음 버튼
-        Text(
-            text = "전체 읽음",
-            color = Color.Black,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .clickable { onMarkAllRead() }
-                .padding(start = 8.dp)
-        )
+        Row {
+            Spacer(
+                modifier = Modifier
+                    .width(1.dp)
+                    .height(16.dp)
+                    .background(
+                        color = Color(0xffE0E0E0)
+                    )
+            )
+            Text(
+                text = "전체 읽음",
+                color = Color.Black,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .clickable { onMarkAllRead() }
+                    .padding(start = 8.dp)
+            )
+        }
     }
 }
 
@@ -232,26 +230,28 @@ fun NotificationItem(
             .background(color = if (notification.isRead) Color(0xffFAFAFA) else Color.White)
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
-        // 상단 카테고리 (예: "쿠폰 발급")
         Text(
-            text = "쿠폰 발급",
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.Gray,
+            text = NotificationType.fromServerType(notification.targetType).displayName,
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight.W400,
+            fontSize = 10.sp,
+            color = Color(0xff5E5E5E),
             modifier = Modifier
                 .background(
-                    color = Color(0xFFF5F5F5),
+                    color = Color.White,
                     shape = RoundedCornerShape(50)
                 )
+                .border(width = 1.dp, color = Color(0xffEEEEEE), shape = RoundedCornerShape(50))
                 .padding(horizontal = 8.dp, vertical = 4.dp)
         )
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        // 타이틀
         Text(
             text = notification.title,
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-            color = Color.Black
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight.W600,
+            fontSize = 14.sp,
         )
 
         Spacer(modifier = Modifier.height(2.dp))
@@ -259,8 +259,10 @@ fun NotificationItem(
         // 내용
         Text(
             text = notification.body,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight.W500,
+            fontSize = 14.sp,
+            color = Color(0xff868686)
         )
 
         Spacer(modifier = Modifier.height(6.dp))
@@ -268,8 +270,10 @@ fun NotificationItem(
         // 생성 시간
         Text(
             text = notification.createdAt, // "1일 전" 같은 포맷으로 변환 필요
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray
+            fontFamily = PretendardFamily,
+            fontWeight = FontWeight.W500,
+            fontSize = 13.sp,
+            color = Color(0xff9b9b9b)
         )
     }
 }
