@@ -238,7 +238,7 @@ fun MyPage2(
                         RefundCouponCard(
                             storeName = it.marketName,
                             discountTitle = it.couponName,
-                            imageUrl = it.thumbnail,
+                            imageUrl = NetworkModule.getImage(it.thumbnail),
                             onClick = { selectedCouponId = it.memberCouponId },
                             modifier = Modifier.padding(horizontal = 18.dp),
                             isUsable = true
