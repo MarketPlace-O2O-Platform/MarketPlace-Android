@@ -58,6 +58,7 @@ import dev.kichan.marketplace.ui.ThreeStepBottomSheet
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
+import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
@@ -252,23 +253,32 @@ fun SheetContent(
                     MarketListLoadingItem()
                 }
             }
-            items(markets) {
-                MarketListItem(
-                    modifier = Modifier
-                        .clickable { onDetailClick(it.marketId) }
-                        .padding(12.dp),
-                    title = it.marketName,
-                    description = it.marketDescription,
-                    location = it.address,
-                    imageUrl = NetworkModule.getImage(it.thumbnail),
-                    isFavorite = it.isFavorite,
-                    onLikeClick = { onFavorite(it.marketId) }
-                )
+            if(markets.isNotEmpty()) {
+                items(markets) {
+                    val newAddress = it.address.split(" ")
+                        .take(2)
+                        .joinToString(" ")
 
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = Color(0xffEAEAEA)
-                )
+                    MarketListItem(
+                        modifier = Modifier
+                            .clickable { onDetailClick(it.marketId) }
+                            .padding(12.dp),
+                        title = it.marketName,
+                        description = it.marketDescription,
+                        location = newAddress,
+                        imageUrl = NetworkModule.getImage(it.thumbnail),
+                        isFavorite = it.isFavorite,
+                        onLikeClick = { onFavorite(it.marketId) }
+                    )
+
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Color(0xffEAEAEA)
+                    )
+                }
+            }
+            else {
+                item { EmptyMessage(message = "근처에 매장이 없습니다") }
             }
         }
 

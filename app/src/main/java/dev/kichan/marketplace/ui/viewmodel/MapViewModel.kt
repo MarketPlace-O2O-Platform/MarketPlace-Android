@@ -50,8 +50,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun getMarkets(position : LatLng) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val address = formatProvinceDistrict(getAddress(position).address)
             try {
+                val address = formatProvinceDistrict(getAddress(position).address)
                 val response = marketsRepository.getMarketsByMap(
                     lastPageIndex = null,
                     category = _uiState.value.selectedCategory.backendLabel,

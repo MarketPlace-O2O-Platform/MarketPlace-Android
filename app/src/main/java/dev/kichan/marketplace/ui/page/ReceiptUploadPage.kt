@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
@@ -92,21 +94,21 @@ fun ReceiptUploadPage(
                             .height(220.dp)
                     )
                 } else {
-                    Text(
-                        "24시간 내로 환급이 이루어지지 않을 시\n고객센터(쿠러미 카카오채널)로 문의주세요!",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight(400),
-                        fontFamily = PretendardFamily
-                    )
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        tint = Color(0xffE0E0E0),
-                        modifier = Modifier
-                            .padding(top = 20.dp, end = 20.dp)
-                            .size(80.dp)
-                            .align(Alignment.TopEnd)
-                    )
+                    Column {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_recepit_add),
+                            contentDescription = null,
+                            tint = Color(0xffE0E0E0),
+                            modifier = Modifier
+                                .size(64.dp)
+                        )
+                        Text(
+                            "24시간 내로 환급이 이루어지지 않을 시\n고객센터(쿠러미 카카오채널)로 문의주세요!",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(400),
+                            fontFamily = PretendardFamily
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(32.dp))

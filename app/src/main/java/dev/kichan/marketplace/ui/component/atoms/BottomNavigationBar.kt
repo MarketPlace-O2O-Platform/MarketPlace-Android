@@ -17,12 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.kichan.marketplace.ui.Page
 
 @Composable
-fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, ImageVector>>) {
+fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, Int>>) {
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
     val selectedContentColor = Color(0xff545454)
@@ -44,7 +45,7 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
             val icon = item.second
 
             BottomNavigationItem(
-                icon = { Icon(icon, contentDescription = page.name) },
+                icon = { Icon(painterResource(id = icon), contentDescription = page.name) },
                 label = { Text(page.pageName) },
                 selected = navController.currentDestination?.route == page.name,
                 onClick = {
