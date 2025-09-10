@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 sealed class LoginUiState {
     object Idle : LoginUiState()
     object Loading : LoginUiState()
-    object Authenticated : LoginUiState()
+    data class Authenticated(val token: String) : LoginUiState()
     object Unauthenticated : LoginUiState()
     data class Error(val message: String) : LoginUiState()
     data class LoginInputState(
@@ -53,7 +53,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             delay(1000) // Simulate network delay
             val token = TokenManager.getToken()
             if (token != null) {
-                _loginState.value = LoginUiState.Authenticated
+                _loginState.value = LoginUiState.Authenticated(
+                    token = token
+                )
             } else {
                 _loginState.value = LoginUiState.Unauthenticated
             }
@@ -74,7 +76,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     val token = response.body()?.response
                     if (token != null) {
                         TokenManager.saveToken(token)
-                        _loginState.value = LoginUiState.Authenticated
+                        _loginState.value = LoginUiState.Authenticated(token)
                     } else {
                         _loginState.value = LoginUiState.Error("토큰이 없습니다.")
                     }

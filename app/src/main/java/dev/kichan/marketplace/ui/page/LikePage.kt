@@ -71,19 +71,32 @@ import dev.kichan.marketplace.ui.component.molecules.RequestCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 
 @Composable
 fun LikePage(
     navController: NavController,
-    likeViewModel: LikeViewModel = viewModel()
+    likeViewModel: LikeViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val uiState by likeViewModel.uiState.collectAsState()
+    val authState by authViewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        likeViewModel.getMemberInfo()
-        likeViewModel.getCheerTempMarkets()
-        likeViewModel.getTempMarkets()
+        authViewModel.checkLoginStatus(navController.context)
+    }
+
+    LaunchedEffect(authState.isLoggedIn) {
+        if (authState.isLoggedIn) {
+            likeViewModel.getMemberInfo()
+            likeViewModel.getCheerTempMarkets()
+            likeViewModel.getTempMarkets()
+        } else {
+            navController.navigate(Page.Login.name) {
+                popUpTo(Page.Like.name) { inclusive = true }
+            }
+        }
     }
 
     LaunchedEffect(uiState.selectedCategory) {

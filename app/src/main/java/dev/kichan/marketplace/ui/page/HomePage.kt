@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.HorizontalDivider
@@ -37,6 +36,7 @@ import dev.kichan.marketplace.ui.data.CouponBoxProps
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.viewmodel.HomeNavigationEvent
 import dev.kichan.marketplace.ui.viewmodel.HomeViewModel
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -44,11 +44,14 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HomePage(
     navController: NavController,
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: HomeViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
+    val authState by authViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
+        authViewModel.checkLoginStatus(navController.context)
         homeViewModel.getClosingCoupons()
         homeViewModel.getLatestCoupons()
         homeViewModel.getPopularCoupons()
@@ -67,8 +70,17 @@ fun HomePage(
             HomeAppBar(
                 logo = R.drawable.logo,
                 onSearch = { homeViewModel.onSearchClicked() },
-                Icons.Outlined.Notifications to {
-                    navController.navigate(Page.AlertPage.name)
+                button = if (authState.isLoggedIn) {
+                    Icons.Outlined.Notifications to {
+                        navController.navigate(Page.AlertPage.name)
+                    }
+                } else {
+                    null
+                },
+                loginButton = if (!authState.isLoggedIn) {
+                    "로그인" to { navController.navigate(Page.Login.name) }
+                } else {
+                    null
                 }
             )
         },
@@ -126,7 +138,6 @@ fun HomePage(
                                 subTitle = it.marketName,
                                 url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
-                                onDownloadClick = { /* TODO */ },
                             )
                         },
                         isLoading = uiState.isPopularLoading,
@@ -147,7 +158,6 @@ fun HomePage(
                                 title = it.couponName,
                                 url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
-                                onDownloadClick = { /* TODO */ },
                             )
                         },
                         isLoading = uiState.isLatestLoading,

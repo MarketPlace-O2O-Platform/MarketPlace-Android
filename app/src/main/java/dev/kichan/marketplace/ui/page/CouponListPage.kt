@@ -11,9 +11,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,12 +26,14 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.component.atoms.CouponListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
+import dev.kichan.marketplace.ui.component.LoginDialog
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import java.time.LocalDate
 
@@ -36,10 +41,13 @@ import java.time.LocalDate
 fun CouponListPage(
     navController: NavHostController = rememberNavController(),
     couponViewModel: CouponViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel(),
     type: String,
 ) {
     val now = LocalDate.now()
     val uiState by couponViewModel.couponListUiState.collectAsStateWithLifecycle()
+    val authState by authViewModel.uiState.collectAsState()
+    var showLoginDialog by remember { mutableStateOf(false) }
     val title = if(type == "popular") "인기 쿠폰" else "${now.monthValue}월 신규"
     val listState = rememberLazyListState()
 
@@ -56,7 +64,14 @@ fun CouponListPage(
     }
 
     LaunchedEffect(Unit) {
+        authViewModel.checkLoginStatus(navController.context)
         couponViewModel.getCouponList(type)
+    }
+
+    if (showLoginDialog) {
+        LoginDialog(onDismiss = { showLoginDialog = false }) {
+            navController.navigate(Page.Login.name)
+        }
     }
 
     Scaffold(
@@ -72,7 +87,10 @@ fun CouponListPage(
                 CouponListItem(
                     modifier = Modifier.clickable { navController.navigate("${Page.EventDetail.name}/${coupon.marketId}") },
                     props = coupon,
-                    onDownloadClick = {id -> couponViewModel.downloadCoupon(id)}
+                    onDownloadClick = {id -> 
+                        if(authState.isLoggedIn) couponViewModel.downloadCoupon(id)
+                        else showLoginDialog = true
+                    }
                 )
             }
             if(uiState.isLoading) {

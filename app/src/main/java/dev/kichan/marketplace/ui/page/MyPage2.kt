@@ -36,6 +36,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,18 +64,38 @@ import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
 import dev.kichan.marketplace.ui.viewmodel.EndedCoupon
 import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 
 @Composable
 fun MyPage2(
     navController: NavController,
     myPage2ViewModel: MyPage2ViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val uiState by myPage2ViewModel.uiState.collectAsState()
+    val authState by authViewModel.uiState.collectAsState()
 
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
     var selectedTabIndex by remember { mutableStateOf(0) }
     var selectedCouponId by remember { mutableStateOf<Long?>(null) }
+
+    LaunchedEffect(Unit) {
+        authViewModel.checkLoginStatus(context)
+    }
+
+    LaunchedEffect(authState.isLoggedIn) {
+        if (authState.isLoggedIn) {
+            myPage2ViewModel.getMemberInfo()
+            myPage2ViewModel.getPaybackCoupons()
+            myPage2ViewModel.getGiftCoupons()
+            myPage2ViewModel.getEndedCoupons()
+        } else {
+            navController.navigate(Page.Login.name) {
+                popUpTo(Page.My2.name) { inclusive = true }
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -143,10 +164,7 @@ fun MyPage2(
                         },
                         큐레이션_가기 = { navController.navigate(Page.CurationPage.name) },
                         로그아웃_하기 = {
-                            myPage2ViewModel.logout(context) {
-                                navController.popBackStack()
-                                navController.navigate(Page.Login.name)
-                            }
+                            authViewModel.logout(context)
                         }
                     )
                 }

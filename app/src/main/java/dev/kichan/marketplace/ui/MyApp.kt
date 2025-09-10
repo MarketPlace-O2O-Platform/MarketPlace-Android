@@ -16,6 +16,7 @@ import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.ReceiptUploadPage
@@ -25,10 +26,13 @@ import dev.kichan.marketplace.ui.page.CurationPage
 import dev.kichan.marketplace.ui.page.AlertPage
 import dev.kichan.marketplace.ui.page.MyPage2
 import dev.kichan.marketplace.ui.page.RequestPage
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
+    val authViewModel: AuthViewModel = viewModel()
+
     NavHost(
         navController = navController,
         startDestination = Page.Splash.name,
@@ -48,11 +52,13 @@ fun MyApp() {
             composable(Page.Home.name) {
                 HomePage(
                     navController = navController,
+                    authViewModel = authViewModel
                 )
             }
             composable(Page.Like.name) {
                 LikePage(
                     navController = navController,
+                    authViewModel = authViewModel
                 )
             }
             composable(Page.Map.name) {
@@ -63,6 +69,7 @@ fun MyApp() {
             composable(Page.My.name) {
                 MyPage2(
                     navController = navController,
+                    authViewModel = authViewModel
                 )
             }
             composable(Page.Search.name) { SearchPage(navController) }
@@ -77,13 +84,15 @@ fun MyApp() {
         composable(route = Page.Login.name) {
             LoginPage(
                 navController = navController,
+                authViewModel = authViewModel
             )
         }
         composable(route = "${Page.MarketListPage.name}/{category}") {
             it.arguments?.getString("category")?.let { category ->
                 MarketListPage(
                     nacController = navController,
-                    category = LargeCategory.valueOf(category)
+                    category = LargeCategory.valueOf(category),
+                    authViewModel = authViewModel
                 )
             }
         }
@@ -95,13 +104,15 @@ fun MyApp() {
 
                 CouponListPage(
                     navController = navController,
-                    type = type
+                    type = type,
+                    authViewModel = authViewModel
                 )
             }
         }
         composable(route = Page.My2.name) {
             MyPage2(
                 navController = navController,
+                authViewModel = authViewModel
             )
         }
 

@@ -34,6 +34,7 @@ import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 import dev.kichan.marketplace.viewmodel.LoginUiState
 import dev.kichan.marketplace.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
@@ -41,7 +42,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginPage(
     navController: NavHostController,
-    loginViewModel: LoginViewModel = viewModel()
+    loginViewModel: LoginViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val state by loginViewModel.loginState.collectAsStateWithLifecycle()
@@ -60,8 +62,9 @@ fun LoginPage(
                 Toast.makeText(context, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
 
-            LoginUiState.Authenticated -> {
+            is LoginUiState.Authenticated -> {
                 coroutineScope.launch {
+                    authViewModel.login(context, (state as LoginUiState.Authenticated).token)
                     Toast.makeText(context, "로그인 성공", Toast.LENGTH_SHORT).show()
                     navController.navigate(Page.Main.name) {
                         popUpTo(Page.Login.name) { inclusive = true }

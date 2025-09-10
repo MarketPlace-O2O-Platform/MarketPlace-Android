@@ -75,7 +75,8 @@ fun LogoAppBar(@DrawableRes logo: Int, vararg icons: Pair<ImageVector, () -> Uni
 fun HomeAppBar(
     @DrawableRes logo: Int,
     onSearch: () -> Unit,
-    vararg icons: Pair<ImageVector, () -> Unit>
+    button: Pair<ImageVector, () -> Unit>? = null,
+    loginButton: Pair<String, () -> Unit>? = null
 ) {
     Row(
         modifier = appBarModifier,
@@ -93,10 +94,21 @@ fun HomeAppBar(
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            for (icon in icons) {
-                IconButton(onClick = { icon.second() }) {
+            if (loginButton != null) {
+                Text(
+                    text = loginButton.first,
+                    modifier = Modifier.clickable { loginButton.second() },
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = PretendardFamily,
+                        color = Gray_9
+                    )
+                )
+            } else if (button != null) {
+                IconButton(onClick = { button.second() }) {
                     Icon(
-                        imageVector = icon.first,
+                        imageVector = button.first,
                         contentDescription = null,
                         tint = Color(0xff121212)
                     )

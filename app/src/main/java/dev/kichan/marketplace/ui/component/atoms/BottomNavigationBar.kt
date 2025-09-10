@@ -9,28 +9,44 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.ui.Page
+import dev.kichan.marketplace.ui.component.LoginDialog
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 
 @Composable
-fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, Int>>) {
+fun BottomNavigationBar(
+    navController: NavController,
+    pageList: List<Pair<Page, Int>>,
+    authViewModel: AuthViewModel = viewModel()
+) {
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
+    val authState by authViewModel.uiState.collectAsState()
+    var showLoginDialog by remember { mutableStateOf(false) }
 
     val selectedContentColor = Color(0xff545454)
     val unselectedContentColor = Color(0xffC7C7C7)
 
     val bottomNavShape = RoundedCornerShape(0.dp)
     val itemModifier = Modifier.padding(vertical = 6.dp)
+
+    if (showLoginDialog) {
+        LoginDialog(onDismiss = { showLoginDialog = false }) {
+            navController.navigate(Page.Login.name)
+        }
+    }
 
     BottomNavigation(
         backgroundColor = Color.White,
@@ -43,14 +59,19 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
         pageList.mapIndexed { index, item ->
             val page = item.first
             val icon = item.second
+            val isProtected = listOf(Page.Like.name, Page.My2.name).contains(page.name)
 
             BottomNavigationItem(
                 icon = { Icon(painterResource(id = icon), contentDescription = page.name) },
                 label = { Text(page.pageName) },
                 selected = navController.currentDestination?.route == page.name,
                 onClick = {
-                    selectedIndex = index
-                    navController.navigate(page.name)
+                    if (isProtected && !authState.isLoggedIn) {
+                        showLoginDialog = true
+                    } else {
+                        selectedIndex = index
+                        navController.navigate(page.name)
+                    }
                 },
                 selectedContentColor = selectedContentColor,
                 unselectedContentColor = unselectedContentColor,

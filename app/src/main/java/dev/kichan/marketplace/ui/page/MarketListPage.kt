@@ -13,7 +13,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,14 +30,17 @@ import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
+import dev.kichan.marketplace.ui.component.LoginDialog
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.viewmodel.MarketListViewModel
 import dev.kichan.marketplace.ui.viewmodel.MarketListViewModelFactory
+import dev.kichan.marketplace.viewmodel.AuthViewModel
 
 @Composable
 fun MarketListPage(
     nacController: NavHostController = rememberNavController(),
-    category: LargeCategory
+    category: LargeCategory,
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val marketListViewModel: MarketListViewModel = viewModel(
@@ -43,6 +48,8 @@ fun MarketListPage(
     )
     val listState = rememberLazyListState()
     val uiState by marketListViewModel.uiState.collectAsState()
+    val authState by authViewModel.uiState.collectAsState()
+    var showLoginDialog by remember { mutableStateOf(false) }
 
     val isScrolledToEnd by remember {
         derivedStateOf {
@@ -53,6 +60,15 @@ fun MarketListPage(
     LaunchedEffect(isScrolledToEnd) {
         if (isScrolledToEnd) {
             marketListViewModel.getMarkets(false)
+        }
+    }
+    LaunchedEffect(Unit) {
+        authViewModel.checkLoginStatus(context)
+    }
+
+    if (showLoginDialog) {
+        LoginDialog(onDismiss = { showLoginDialog = false }) {
+            nacController.navigate(Page.Login.name)
         }
     }
 
@@ -78,8 +94,11 @@ fun MarketListPage(
                         description = market.marketDescription,
                         location = market.address,
                         imageUrl = NetworkModule.getImage(market.thumbnail),
-                        isFavorite = market.isFavorite,
-                        onLikeClick = { marketListViewModel.favorite(market.marketId) }
+                        isFavorite = if(authState.isLoggedIn) market.isFavorite else false,
+                        onLikeClick = { 
+                            if(authState.isLoggedIn) marketListViewModel.favorite(market.marketId) 
+                            else showLoginDialog = true
+                        }
                     )
                 }
 
