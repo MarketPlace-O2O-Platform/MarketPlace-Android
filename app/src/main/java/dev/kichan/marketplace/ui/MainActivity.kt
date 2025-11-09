@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        WindowCompat.setDecorFitsSystemWindows(window, false) // WindowInsets 활성화
 
         // Key Hash 가져오는 코드
         val keyHash = Utility.getKeyHash(this)
