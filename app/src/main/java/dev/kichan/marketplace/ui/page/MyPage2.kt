@@ -53,7 +53,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.dto.MemberRes
-import dev.kichan.marketplace.model.removeAuthToken
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
