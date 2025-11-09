@@ -1,20 +1,25 @@
 package dev.kichan.marketplace.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
-import dev.kichan.marketplace.model.dto.CouponRes
+import dev.kichan.marketplace.model.dto.DisplayCoupon
 import dev.kichan.marketplace.model.dto.MarketDetailsRes
+import dev.kichan.marketplace.model.dto.toDisplayCoupon
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class MarketDetailUiState(
     val marketData: MarketDetailsRes? = null,
-    val couponList: List<CouponRes> = emptyList(),
+    val couponList: List<DisplayCoupon> = emptyList(),
     val isLoading: Boolean = false,
 )
 
@@ -26,6 +31,7 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
 
     private val marketsRepository = RepositoryProvider.provideMarketsRepository()
     private val couponsRepository = RepositoryProvider.provideCouponsRepository()
+    private val paybackCouponsRepository = RepositoryProvider.providePaybackCouponsRepository()
     private val membersRepository = RepositoryProvider.provideMembersRepository()
     private val favoritesRepository = RepositoryProvider.provideFavoritesRepository()
 
@@ -58,16 +64,75 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
 
     private fun getMarketCoupons() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.update { it.copy(isLoading = true) }
             try {
-                val response = couponsRepository.getCouponList_4(marketId = marketId)
-                if (response.isSuccessful) {
-                    _uiState.value = _uiState.value.copy(couponList = response.body()?.response?.couponResDtos ?: emptyList())
+                // 병렬 API 호출
+                val giftCouponsDeferred = async {
+                    couponsRepository.getCouponList_4(marketId = marketId)
                 }
+                val paybackCouponsDeferred = async {
+                    paybackCouponsRepository.getCouponList(marketId = marketId, couponId = null, size = 100)
+                }
+
+                // 결과 대기
+                val giftResponse = giftCouponsDeferred.await()
+                val paybackResponse = paybackCouponsDeferred.await()
+
+                // 디버깅 로깅 (디버그 빌드에서만)
+                if (BuildConfig.DEBUG) {
+                    val giftCount = giftResponse.body()?.response?.couponResDtos?.size ?: 0
+                    val paybackCount = paybackResponse.body()?.response?.couponResDtos?.size ?: 0
+                    Log.d("MarketDetail", "쿠폰 로딩 완료 - 일반: ${giftCount}개, 환급: ${paybackCount}개")
+
+                    // 각 쿠폰 상태 로깅
+                    giftResponse.body()?.response?.couponResDtos?.forEach { coupon ->
+                        Log.d("MarketDetail", "일반 쿠폰 ${coupon.couponId}: hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}, available=${coupon.isAvailable}")
+                    }
+                    paybackResponse.body()?.response?.couponResDtos?.forEach { coupon ->
+                        Log.d("MarketDetail", "환급 쿠폰 ${coupon.couponId}: hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}")
+                    }
+                }
+
+                // DisplayCoupon으로 변환
+                val giftCoupons = if (giftResponse.isSuccessful) {
+                    giftResponse.body()?.response?.couponResDtos?.map {
+                        it.toDisplayCoupon()
+                    } ?: emptyList()
+                } else {
+                    emptyList()
+                }
+
+                val paybackCoupons = if (paybackResponse.isSuccessful) {
+                    val marketData = _uiState.value.marketData
+                    if (marketData != null) {
+                        paybackResponse.body()?.response?.couponResDtos?.map {
+                            it.toDisplayCoupon(marketData)
+                        } ?: emptyList()
+                    } else {
+                        emptyList()
+                    }
+                } else {
+                    emptyList()
+                }
+
+                // 병합: GIFT 먼저, PAYBACK 나중 (자동 순서 보장)
+                val allCoupons = giftCoupons + paybackCoupons
+
+                _uiState.update {
+                    it.copy(
+                        couponList = allCoupons,
+                        isLoading = false
+                    )
+                }
+
             } catch (e: Exception) {
-                // Handle error
-            } finally {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                Log.e("MarketDetail", "쿠폰 로딩 실패", e)
+                _uiState.update {
+                    it.copy(
+                        couponList = emptyList(),
+                        isLoading = false
+                    )
+                }
             }
         }
     }

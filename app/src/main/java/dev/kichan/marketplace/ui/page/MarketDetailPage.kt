@@ -3,6 +3,8 @@ package dev.kichan.marketplace.ui.page
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import dev.kichan.marketplace.BuildConfig
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.model.dto.DisplayCoupon
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import androidx.compose.material3.*
 import androidx.compose.ui.draw.drawBehind
@@ -81,7 +84,7 @@ fun MarketDetailPage(
     )
 ) {
     val uiState by marketDetailViewModel.uiState.collectAsState()
-    var downLoadCoupon by remember { mutableStateOf<CouponRes?>(null) }
+    var downLoadCoupon by remember { mutableStateOf<DisplayCoupon?>(null) }
 
     LaunchedEffect(Unit) {
         marketDetailViewModel.navigationEvent.collect { event ->
@@ -95,9 +98,50 @@ fun MarketDetailPage(
 
     if (uiState.marketData == null) return
 
-    val availableCouponList = uiState.couponList.filter {
-        val deadLine = LocalDateTime.parse(it.deadLine.substring(0, 19))
-        it.isAvailable && !it.isMemberIssued && !it.isHidden && deadLine.isAfter(LocalDateTime.now())
+    val availableCouponList = uiState.couponList.filter { coupon ->
+        // 디버깅 로깅 (디버그 빌드에서만)
+        if (BuildConfig.DEBUG) {
+            Log.d("MarketDetailPage", "쿠폰 필터링 체크 ${coupon.couponId}: type=${coupon.couponType}, hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}")
+        }
+
+        // 공통 조건: 숨김 아님, 이미 발급받지 않음
+        !coupon.isMemberIssued && !coupon.isHidden &&
+
+        // 타입별 조건
+        when (coupon.couponType) {
+            "GIFT" -> {
+                // 일반 쿠폰: 재고 있고, 마감일이 지나지 않음
+                coupon.isAvailable && coupon.deadLine?.let { deadline ->
+                    try {
+                        val deadLineDate = LocalDateTime.parse(deadline.substring(0, 19))
+                        deadLineDate.isAfter(LocalDateTime.now())
+                    } catch (e: Exception) {
+                        if (BuildConfig.DEBUG) {
+                            Log.e("MarketDetailPage", "날짜 파싱 실패: 쿠폰 ${coupon.couponId}", e)
+                        }
+                        false
+                    }
+                } ?: false
+            }
+            "PAYBACK" -> {
+                // 환급 쿠폰: 숨김이 아니고 발급받지 않았으면 표시
+                // (마감일 없음, 항상 사용 가능)
+                true
+            }
+            else -> {
+                if (BuildConfig.DEBUG) {
+                    Log.w("MarketDetailPage", "알 수 없는 쿠폰 타입: ${coupon.couponType}")
+                }
+                false
+            }
+        }
+    }.also { filteredList ->
+        // 필터링 결과 로깅 (디버그 빌드에서만)
+        if (BuildConfig.DEBUG) {
+            Log.d("MarketDetailPage", "쿠폰 필터링: ${uiState.couponList.size}개 → ${filteredList.size}개")
+            Log.d("MarketDetailPage", "  - GIFT: ${filteredList.count { it.couponType == "GIFT" }}개")
+            Log.d("MarketDetailPage", "  - PAYBACK: ${filteredList.count { it.couponType == "PAYBACK" }}개")
+        }
     }
 
     // 쿠폰 받기 다이얼로그 상태 변수
@@ -165,11 +209,15 @@ fun MarketDetailPage(
                             val coupon = availableCouponList[it]
                             val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            val parsedDate =
-                                LocalDate.parse(coupon.deadLine.substring(0, 10), formatter)
-                            val expireDate =
-                                parsedDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일까지"))
+                            val expireDate = if (coupon.couponType == "PAYBACK") {
+                                "환급 쿠폰"
+                            } else {
+                                coupon.deadLine?.let { deadline ->
+                                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                    val parsedDate = LocalDate.parse(deadline.substring(0, 10), formatter)
+                                    parsedDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일까지"))
+                                } ?: ""
+                            }
 
                             TicketCoupon(
                                 title = coupon.couponName,
