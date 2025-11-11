@@ -1,8 +1,12 @@
 package dev.kichan.marketplace.model.services
 
+import dev.kichan.marketplace.model.dto.CommonResponseCouponPageResCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseListTopClosingCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseListTopLatestCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseListTopPopularCouponRes
 import retrofit2.Response
-import retrofit2.http.*
-import dev.kichan.marketplace.model.dto.*
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface CouponsService {
     @GET("/api/coupons")

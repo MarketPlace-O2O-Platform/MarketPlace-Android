@@ -3,28 +3,28 @@ package dev.kichan.marketplace.ui
 import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.ui.page.MarketDetailPage
-import dev.kichan.marketplace.ui.page.HomePage
-import dev.kichan.marketplace.ui.page.LikePage
-import dev.kichan.marketplace.ui.page.MapPage
-import dev.kichan.marketplace.ui.page.LoginPage
-import dev.kichan.marketplace.ui.page.SearchPage
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import dev.kichan.marketplace.common.LargeCategory
-import dev.kichan.marketplace.ui.page.MarketListPage
-import dev.kichan.marketplace.ui.page.ReceiptUploadPage
-import dev.kichan.marketplace.ui.page.SplashPage
+import dev.kichan.marketplace.ui.page.AlertPage
 import dev.kichan.marketplace.ui.page.CouponListPage
 import dev.kichan.marketplace.ui.page.CurationPage
-import dev.kichan.marketplace.ui.page.AlertPage
+import dev.kichan.marketplace.ui.page.HomePage
+import dev.kichan.marketplace.ui.page.LikePage
+import dev.kichan.marketplace.ui.page.LoginPage
+import dev.kichan.marketplace.ui.page.MapPage
+import dev.kichan.marketplace.ui.page.MarketDetailPage
+import dev.kichan.marketplace.ui.page.MarketListPage
 import dev.kichan.marketplace.ui.page.MyPage2
+import dev.kichan.marketplace.ui.page.ReceiptUploadPage
 import dev.kichan.marketplace.ui.page.RequestPage
+import dev.kichan.marketplace.ui.page.SearchPage
+import dev.kichan.marketplace.ui.page.SplashPage
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 
 @Composable
 fun MyApp() {

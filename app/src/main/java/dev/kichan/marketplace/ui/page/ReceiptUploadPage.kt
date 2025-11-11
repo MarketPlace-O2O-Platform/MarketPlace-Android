@@ -21,8 +21,6 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,7 +39,6 @@ import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
-
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.viewmodel.ReceiptUploadViewModel
 

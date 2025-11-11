@@ -1,12 +1,10 @@
 package dev.kichan.marketplace.model.services
 
-import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.dto.kakao.KakaoLocal
 import dev.kichan.marketplace.model.dto.kakao.adress.Address
 import dev.kichan.marketplace.model.dto.kakao.local.Place
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface KakaoLocalService {

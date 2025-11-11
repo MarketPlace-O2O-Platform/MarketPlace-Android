@@ -22,7 +22,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem

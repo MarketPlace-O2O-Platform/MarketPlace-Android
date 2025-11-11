@@ -1,12 +1,23 @@
 package dev.kichan.marketplace.model.repository
 
-import retrofit2.Response
-import retrofit2.http.*
+import dev.kichan.marketplace.model.dto.CommonResponseCouponHandleRes
+import dev.kichan.marketplace.model.dto.CommonResponseCouponPageResIssuedCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseMemberRes
+import dev.kichan.marketplace.model.dto.CommonResponseObject
+import dev.kichan.marketplace.model.dto.CommonResponseReceiptRes
+import dev.kichan.marketplace.model.dto.CommonResponseString
+import dev.kichan.marketplace.model.dto.MemberAccountReq
+import dev.kichan.marketplace.model.dto.MemberFcmReq
+import dev.kichan.marketplace.model.dto.MemberLoginReq
+import dev.kichan.marketplace.model.services.MembersService
 import okhttp3.MultipartBody
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.kichan.marketplace.model.services.MembersService
-import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class MembersRepository @Inject constructor(

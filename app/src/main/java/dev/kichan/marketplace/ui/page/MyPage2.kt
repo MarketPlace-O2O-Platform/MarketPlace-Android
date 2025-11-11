@@ -23,21 +23,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,9 +56,9 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.dto.MemberRes
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
-import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.RefundCouponCard
 import dev.kichan.marketplace.ui.component.RefundCouponCardSkeleton
+import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
 import dev.kichan.marketplace.ui.viewmodel.EndedCoupon
@@ -72,7 +73,7 @@ fun MyPage2(
     val uiState by myPage2ViewModel.uiState.collectAsState()
 
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
     var selectedCouponId by remember { mutableStateOf<Long?>(null) }
 
     Scaffold(

@@ -1,11 +1,11 @@
 package dev.kichan.marketplace.model.repository
 
+import dev.kichan.marketplace.model.dto.CommonResponseObject
+import dev.kichan.marketplace.model.services.FavoritesService
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.kichan.marketplace.model.services.FavoritesService
-import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class FavoritesRepository @Inject constructor(

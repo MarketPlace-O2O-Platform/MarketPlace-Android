@@ -2,8 +2,8 @@ package dev.kichan.marketplace.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.repository.CouponsRepository

@@ -9,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.core.view.WindowCompat
 import com.github.javafaker.Faker
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility

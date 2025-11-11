@@ -1,15 +1,17 @@
 package dev.kichan.marketplace.model.repository
 
-import retrofit2.Response
-import retrofit2.http.*
+import dev.kichan.marketplace.model.dto.CommonResponseBetaCouponPageResBetaCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseBetaMarketRes
+import dev.kichan.marketplace.model.dto.CommonResponseObject
+import dev.kichan.marketplace.model.services.BetaService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import kotlinx.coroutines.Deferred
-import java.util.*
+import retrofit2.Response
+import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.kichan.marketplace.model.services.BetaService
-import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class BetaRepository @Inject constructor(

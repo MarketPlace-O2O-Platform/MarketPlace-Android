@@ -1,11 +1,8 @@
 package dev.kichan.marketplace.model.repository
 
-import dev.kichan.marketplace.model.dto.CommonResponseNotificationListRes
 import dev.kichan.marketplace.model.dto.CommonResponseNotificationPageResNotificationRes
 import dev.kichan.marketplace.model.services.NotificationService
 import retrofit2.Response
-import retrofit2.http.PATCH
-import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 

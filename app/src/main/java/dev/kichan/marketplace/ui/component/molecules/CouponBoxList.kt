@@ -13,13 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import dev.kichan.marketplace.ui.data.CouponBoxProps
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.CouponBox
+import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.MoreViewTitle
 import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
+import dev.kichan.marketplace.ui.data.CouponBoxProps
 
 @Composable
 fun CouponBoxList(

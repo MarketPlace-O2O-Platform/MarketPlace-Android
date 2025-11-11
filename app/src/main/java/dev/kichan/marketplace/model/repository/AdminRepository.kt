@@ -1,15 +1,23 @@
 package dev.kichan.marketplace.model.repository
 
-import retrofit2.Response
-import retrofit2.http.*
+import dev.kichan.marketplace.model.dto.CommonResponseCouponHandleRes
+import dev.kichan.marketplace.model.dto.CommonResponseCouponPageResPaybackRes
+import dev.kichan.marketplace.model.dto.CommonResponseObject
+import dev.kichan.marketplace.model.dto.CommonResponsePageTempMarketDetailRes
+import dev.kichan.marketplace.model.dto.CommonResponsePaybackRes
+import dev.kichan.marketplace.model.dto.CommonResponseTempMarketDetailRes
+import dev.kichan.marketplace.model.dto.CommonResponseTempMarketHiddenRes
+import dev.kichan.marketplace.model.dto.PaybackReq
+import dev.kichan.marketplace.model.services.AdminService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import kotlinx.coroutines.Deferred
-import java.util.*
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.kichan.marketplace.model.services.AdminService
-import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class AdminRepository @Inject constructor(

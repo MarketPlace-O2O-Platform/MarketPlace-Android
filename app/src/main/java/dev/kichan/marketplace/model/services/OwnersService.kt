@@ -1,12 +1,22 @@
 package dev.kichan.marketplace.model.services
 
-import retrofit2.Response
-import retrofit2.http.*
+import dev.kichan.marketplace.model.dto.CommonResponseCouponPageResCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseMarketDetailsRes
+import dev.kichan.marketplace.model.dto.CommonResponseObject
+import dev.kichan.marketplace.model.dto.CouponReq
+import dev.kichan.marketplace.model.dto.MarketReq
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import kotlinx.coroutines.Deferred
-import java.util.*
-import dev.kichan.marketplace.model.dto.*
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface OwnersService {
 

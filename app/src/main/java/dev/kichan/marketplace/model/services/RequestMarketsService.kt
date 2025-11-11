@@ -1,12 +1,13 @@
 package dev.kichan.marketplace.model.services
 
+import dev.kichan.marketplace.model.dto.CommonResponsePageRequestMarketRes
+import dev.kichan.marketplace.model.dto.CommonResponseRequestMarketRes
+import dev.kichan.marketplace.model.dto.RequestMarketCreateReq
 import retrofit2.Response
-import retrofit2.http.*
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import kotlinx.coroutines.Deferred
-import java.util.*
-import dev.kichan.marketplace.model.dto.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface RequestMarketsService {
 

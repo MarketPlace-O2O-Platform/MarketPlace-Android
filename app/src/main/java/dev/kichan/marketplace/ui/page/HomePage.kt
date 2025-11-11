@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.HorizontalDivider
@@ -24,9 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.R
-import dev.kichan.marketplace.common.toLocalDateTime
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.bottomNavItem
 import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar

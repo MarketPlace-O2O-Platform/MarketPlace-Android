@@ -1,7 +1,5 @@
 package dev.kichan.marketplace.ui.component.atoms
 
-import Bookmark
-import Carbon_bookmark
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

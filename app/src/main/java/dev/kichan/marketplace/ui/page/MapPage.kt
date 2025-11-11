@@ -49,9 +49,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
-import dev.kichan.marketplace.model.data.remote.RetrofitClient
 import dev.kichan.marketplace.model.dto.MarketRes
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.ThreeStepBottomSheet

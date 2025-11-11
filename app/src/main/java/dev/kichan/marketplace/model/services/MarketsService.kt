@@ -1,8 +1,11 @@
 package dev.kichan.marketplace.model.services
 
+import dev.kichan.marketplace.model.dto.CommonResponseMarketDetailsRes
+import dev.kichan.marketplace.model.dto.CommonResponseMarketPageResMarketRes
 import retrofit2.Response
-import retrofit2.http.*
-import dev.kichan.marketplace.model.dto.*
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MarketsService {
 

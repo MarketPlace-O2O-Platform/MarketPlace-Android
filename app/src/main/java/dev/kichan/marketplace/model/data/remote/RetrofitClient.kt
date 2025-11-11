@@ -2,8 +2,6 @@ package dev.kichan.marketplace.model.data.remote
 
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.NetworkModule
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

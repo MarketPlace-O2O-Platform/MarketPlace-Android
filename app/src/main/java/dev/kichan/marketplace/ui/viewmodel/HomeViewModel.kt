@@ -3,8 +3,8 @@ package dev.kichan.marketplace.ui.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.TopClosingCouponRes
 import dev.kichan.marketplace.model.dto.TopLatestCouponRes

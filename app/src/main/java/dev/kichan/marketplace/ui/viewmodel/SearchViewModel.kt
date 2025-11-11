@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MarketRes
-import dev.kichan.marketplace.model.dto.TopPopularCouponRes
 import dev.kichan.marketplace.model.repository.RecentKeywordRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,11 +1,13 @@
 package dev.kichan.marketplace.model.repository
 
+import dev.kichan.marketplace.model.dto.CommonResponseMarketDetailsRes
+import dev.kichan.marketplace.model.dto.CommonResponseMarketPageResMarketRes
+import dev.kichan.marketplace.model.services.MarketsService
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Path
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.kichan.marketplace.model.services.MarketsService
-import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class MarketsRepository @Inject constructor(

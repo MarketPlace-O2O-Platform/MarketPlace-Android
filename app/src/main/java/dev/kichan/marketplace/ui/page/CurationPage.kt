@@ -1,6 +1,5 @@
 package dev.kichan.marketplace.ui.page
 
-import android.app.Application
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

@@ -1,11 +1,14 @@
 package dev.kichan.marketplace.model.repository
 
+import dev.kichan.marketplace.model.dto.CommonResponseCouponPageResCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseListTopClosingCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseListTopLatestCouponRes
+import dev.kichan.marketplace.model.dto.CommonResponseListTopPopularCouponRes
+import dev.kichan.marketplace.model.services.CouponsService
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.kichan.marketplace.model.services.CouponsService
-import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class CouponsRepository @Inject constructor(

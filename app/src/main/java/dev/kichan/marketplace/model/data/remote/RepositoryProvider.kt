@@ -5,8 +5,8 @@ import dev.kichan.marketplace.model.repository.CheerRepository
 import dev.kichan.marketplace.model.repository.CouponsRepository
 import dev.kichan.marketplace.model.repository.FavoritesRepository
 import dev.kichan.marketplace.model.repository.KakaoRepository
-import dev.kichan.marketplace.model.repository.MembersRepository
 import dev.kichan.marketplace.model.repository.MarketsRepository
+import dev.kichan.marketplace.model.repository.MembersRepository
 import dev.kichan.marketplace.model.repository.NotificationRepository
 import dev.kichan.marketplace.model.repository.PaybackCouponsRepository
 import dev.kichan.marketplace.model.repository.RequestMarketsRepository
@@ -15,8 +15,8 @@ import dev.kichan.marketplace.model.services.CheerService
 import dev.kichan.marketplace.model.services.CouponsService
 import dev.kichan.marketplace.model.services.FavoritesService
 import dev.kichan.marketplace.model.services.KakaoLocalService
-import dev.kichan.marketplace.model.services.MembersService
 import dev.kichan.marketplace.model.services.MarketsService
+import dev.kichan.marketplace.model.services.MembersService
 import dev.kichan.marketplace.model.services.NotificationService
 import dev.kichan.marketplace.model.services.PaybackCouponsService
 import dev.kichan.marketplace.model.services.RequestMarketsService

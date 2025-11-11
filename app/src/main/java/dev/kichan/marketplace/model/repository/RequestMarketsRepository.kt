@@ -1,15 +1,14 @@
 package dev.kichan.marketplace.model.repository
 
+import dev.kichan.marketplace.model.dto.CommonResponsePageRequestMarketRes
+import dev.kichan.marketplace.model.dto.CommonResponseRequestMarketRes
+import dev.kichan.marketplace.model.dto.RequestMarketCreateReq
+import dev.kichan.marketplace.model.services.RequestMarketsService
 import retrofit2.Response
-import retrofit2.http.*
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import kotlinx.coroutines.Deferred
-import java.util.*
+import retrofit2.http.Body
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
-import dev.kichan.marketplace.model.services.RequestMarketsService
-import dev.kichan.marketplace.model.dto.*
 
 @Singleton
 class RequestMarketsRepository @Inject constructor(

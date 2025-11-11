@@ -3,9 +3,9 @@ package dev.kichan.marketplace.ui.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.kakao.adress.LotNumberAddress
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider

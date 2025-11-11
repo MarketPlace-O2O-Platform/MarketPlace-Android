@@ -18,17 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import dev.kichan.marketplace.ui.component.atoms.CouponListItem
-import dev.kichan.marketplace.ui.component.atoms.NavAppBar
-import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.kichan.marketplace.model.NetworkModule
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.ui.Page
-import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
+import dev.kichan.marketplace.ui.component.atoms.CouponListItem
+import dev.kichan.marketplace.ui.component.atoms.NavAppBar
+import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.viewmodel.CouponViewModel
 import java.time.LocalDate
 

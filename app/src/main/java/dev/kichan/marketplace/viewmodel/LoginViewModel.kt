@@ -3,14 +3,14 @@ package dev.kichan.marketplace.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.model.TokenManager
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MemberLoginReq
-import dev.kichan.marketplace.model.TokenManager
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 
 sealed class LoginUiState {
     object Idle : LoginUiState()
