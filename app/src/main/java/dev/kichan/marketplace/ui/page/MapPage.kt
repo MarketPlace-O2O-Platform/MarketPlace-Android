@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -88,6 +89,7 @@ fun MapPage(
         LocationServices.getFusedLocationProviderClient(context)
     }
 
+    @SuppressLint("MissingPermission")
     val onMoveCurrentPosition = {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { position ->
