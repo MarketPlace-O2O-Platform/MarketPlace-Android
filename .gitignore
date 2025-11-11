@@ -16,5 +16,6 @@ local.defaults.properties
 google-services.json
 GoogleService-Info.plist
 # AI 도구 컨텍스트 파일
-CLAUDE.md
 .claude/
+# Gradle daemon
+daemon/

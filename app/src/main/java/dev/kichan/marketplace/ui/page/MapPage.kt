@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -15,12 +17,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -67,13 +68,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun MapPage(
     navController: NavController,
     mapViewModel: MapViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current
     val uiState by mapViewModel.uiState.collectAsState()
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
@@ -82,7 +84,17 @@ fun MapPage(
     }
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val sheetHeights = listOf(100.dp, 220.dp, screenHeight - 50.dp)
-    val sheetState = rememberSwipeableState(initialValue = 1)
+
+    // 프로젝트 버전의 AnchoredDraggableState 생성자 사용
+    val sheetState = remember {
+        AnchoredDraggableState(
+            initialValue = 1,
+            positionalThreshold = { distance -> distance * 0.3f },
+            velocityThreshold = { with(density) { 125.dp.toPx() } },
+            snapAnimationSpec = androidx.compose.animation.core.tween(),
+            decayAnimationSpec = androidx.compose.animation.core.exponentialDecay()
+        )
+    }
 
     val scope = rememberCoroutineScope()
     val fusedLocationClient = remember {
@@ -135,7 +147,7 @@ fun MapPage(
                     isLoading = uiState.isLoading,
                     markets = uiState.markets.map { it.market },
                     onCloseSheet = {
-                        scope.launch { sheetState.animateTo(1) };
+                        scope.launch { sheetState.animateTo(1) }
                     },
                     onDetailClick = { navController.navigate("${Page.EventDetail.name}/$it") },
                     onFavorite = { mapViewModel.favorite(it) }
