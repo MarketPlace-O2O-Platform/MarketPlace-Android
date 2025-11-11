@@ -152,9 +152,13 @@ fun ReceiptUploadPage(
                 modifier = Modifier.fillMaxWidth(),
                 isDisable = uiState.imageUri == null
             ) {
-                viewModel.upload(couponId, context) {
-                    navController.popBackStack()
-                }
+                viewModel.upload(
+                    memberCouponId = couponId,
+                    context = context,
+                    onSuccess = {
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }
