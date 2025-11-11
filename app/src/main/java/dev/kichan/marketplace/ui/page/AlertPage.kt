@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.dto.NotificationRes
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -222,18 +224,29 @@ fun NotificationItemSkeleton(
     }
 }
 
-fun formatCreatedAt(createdAt: String): String {
-    val now = LocalDateTime.now()
-    val then = LocalDateTime.parse(createdAt.substring(0, 26))
+fun formatCreatedAt(createdAt: String?): String {
+    if (createdAt == null || createdAt.length < 26) {
+        return "알 수 없음"
+    }
 
-    val diff = ChronoUnit.SECONDS.between(then, now)
+    return try {
+        val now = LocalDateTime.now()
+        val then = LocalDateTime.parse(createdAt.substring(0, 26))
 
-    return when {
-        diff < 60 -> "방금 전"
-        diff < 3600 -> "${diff / 60}분 전"
-        diff < 86400 -> "${diff / 3600}시간 전"
-        diff < 2592000 -> "${diff / 86400}일 전"
-        else -> then.toLocalDate().toString()
+        val diff = ChronoUnit.SECONDS.between(then, now)
+
+        when {
+            diff < 60 -> "방금 전"
+            diff < 3600 -> "${diff / 60}분 전"
+            diff < 86400 -> "${diff / 3600}시간 전"
+            diff < 2592000 -> "${diff / 86400}일 전"
+            else -> then.toLocalDate().toString()
+        }
+    } catch (e: Exception) {
+        if (BuildConfig.DEBUG) {
+            Log.e("AlertPage", "createdAt 파싱 실패: $createdAt", e)
+        }
+        "알 수 없음"
     }
 }
 

@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.common.toLocalDateTime
 import dev.kichan.marketplace.model.NetworkModule
@@ -86,18 +88,25 @@ fun HomePage(
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
                         isLoading = uiState.isClosingLoading || uiState.closingCoupons.isEmpty(),
-                        bannerList = uiState.closingCoupons.map {
-                            val formatter____ = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-                            val deadLine = LocalDateTime.parse(it.deadline, formatter____)
-                            val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                        bannerList = uiState.closingCoupons.mapNotNull {
+                            try {
+                                val formatter____ = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+                                val deadLine = LocalDateTime.parse(it.deadline, formatter____)
+                                val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
-                            BannerItem(
-                                title = it.couponName,
-                                subTitle = it.marketName,
-                                description = "~ " + formatter.format(deadLine),
-                                imageUrl = NetworkModule.getImage(it.thumbnail),
-                                onClick = { homeViewModel.onEventDetailClicked(it.marketId) }
-                            )
+                                BannerItem(
+                                    title = it.couponName,
+                                    subTitle = it.marketName,
+                                    description = "~ " + formatter.format(deadLine),
+                                    imageUrl = NetworkModule.getImage(it.thumbnail),
+                                    onClick = { homeViewModel.onEventDetailClicked(it.marketId) }
+                                )
+                            } catch (e: Exception) {
+                                if (BuildConfig.DEBUG) {
+                                    Log.e("HomePage", "마감임박 쿠폰 날짜 파싱 실패: ${it.couponId}", e)
+                                }
+                                null
+                            }
                         }
                     )
                 }
