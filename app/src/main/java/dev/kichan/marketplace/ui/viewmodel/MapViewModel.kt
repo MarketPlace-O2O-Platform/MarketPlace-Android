@@ -3,6 +3,7 @@ package dev.kichan.marketplace.ui.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dev.kichan.marketplace.common.LargeCategory
@@ -83,7 +84,10 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 _uiState.value = _uiState.value.copy(markets = marketsWithCoords)
 
             } catch (e: Exception) {
-                // Handle error
+                if (BuildConfig.DEBUG) {
+                    Log.e("MapViewModel", "지도 매장 로드 실패: position=$position", e)
+                }
+                _uiState.value = _uiState.value.copy(markets = emptyList())
             } finally {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }

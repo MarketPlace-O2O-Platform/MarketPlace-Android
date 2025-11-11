@@ -4,7 +4,9 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import kotlinx.coroutines.Dispatchers
@@ -71,12 +73,36 @@ class ReceiptUploadViewModel : ViewModel() {
         _state.update { it.copy(isSaveAccount = isSave) }
     }
 
-    fun upload(memberCouponId: Long, context: Context, onSuccess: () -> Unit) {
+    fun upload(memberCouponId: Long, context: Context, onSuccess: () -> Unit, onError: ((String) -> Unit)? = null) {
         viewModelScope.launch {
-            val body = uriToMultipartBody(context, _state.value.imageUri!!, "image")!!
-            membersRepository.uploadReceipt(memberCouponId, body)
-            withContext(Dispatchers.Main) {
-                onSuccess()
+            try {
+                val imageUri = _state.value.imageUri
+                if (imageUri == null) {
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke("이미지를 선택해주세요")
+                    }
+                    return@launch
+                }
+
+                val body = uriToMultipartBody(context, imageUri, "image")
+                if (body == null) {
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke("이미지 처리 중 오류가 발생했습니다")
+                    }
+                    return@launch
+                }
+
+                membersRepository.uploadReceipt(memberCouponId, body)
+                withContext(Dispatchers.Main) {
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("ReceiptUploadViewModel", "영수증 업로드 실패: memberCouponId=$memberCouponId", e)
+                }
+                withContext(Dispatchers.Main) {
+                    onError?.invoke("업로드 중 오류가 발생했습니다")
+                }
             }
         }
     }

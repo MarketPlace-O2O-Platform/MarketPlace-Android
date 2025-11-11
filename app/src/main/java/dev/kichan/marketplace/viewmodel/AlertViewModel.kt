@@ -2,6 +2,7 @@ package dev.kichan.marketplace.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.NotificationRes
@@ -59,7 +60,13 @@ class AlertViewModel : ViewModel() {
 
     fun allRead() {
         viewModelScope.launch {
-            notificationRepository.readNotificationALl()
+            try {
+                notificationRepository.readNotificationALl()
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("AlertViewModel", "전체 알림 읽음 처리 실패", e)
+                }
+            }
         }
     }
 }

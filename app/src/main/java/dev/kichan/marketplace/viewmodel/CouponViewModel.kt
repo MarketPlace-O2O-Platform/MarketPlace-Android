@@ -2,6 +2,7 @@ package dev.kichan.marketplace.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
@@ -36,52 +37,59 @@ class CouponViewModel() : ViewModel() {
         if (!_couponListUiState.value.hasNext || _couponListUiState.value.isLoading) return
 
         viewModelScope.launch {
-            _couponListUiState.update { it.copy(isLoading = true) }
+            try {
+                _couponListUiState.update { it.copy(isLoading = true) }
 
-            val state = _couponListUiState.value
-            val res = when (type) {
-                "popular" -> couponsRepository.getPopularCouponAll(
-                    lastIssuedCount = state.lastIssuedCount,
-                    lastCouponId = state.lastCouponId,
-                    pageSize = 10
-                )
-                "latest" -> couponsRepository.getLatestCouponAll(
-                    lastCreatedAt = state.lastCreatedAt,
-                    lastCouponId = state.lastCouponId,
-                    pageSize = 10
-                )
-                else -> throw IllegalArgumentException("Invalid coupon type")
-            }
-
-            if (res.isSuccessful) {
-                val response = res.body()?.response
-                response?.let {
-                    Log.d("test", it.toString())
-                    val newCoupons = it.couponResDtos.map {
-                        CouponListItemProps(
-                            id = it.couponId,
-                            name = it.couponName,
-                            marketName = it.marketName,
-                            marketId = it.marketId,
-                            imageUrl = NetworkModule.getImage(it.thumbnail),
-                            isMemberIssued = it.isMemberIssued,
-                            address = it.address,
-                            isAvailable = it.isAvailable,
-                            couponType = "PAYBACK"//,it.couponType
-                        )
-                    }
-                    _couponListUiState.update { currentState ->
-                        currentState.copy(
-                            couponList = currentState.couponList + newCoupons,
-                            isLoading = false,
-                            hasNext = it.hasNext,
-                            lastIssuedCount = it.couponResDtos.lastOrNull()?.issuedCount,
-                            lastCreatedAt = it.couponResDtos.lastOrNull()?.couponCreatedAt,
-                            lastCouponId = it.couponResDtos.lastOrNull()?.couponId
-                        )
-                    }
+                val state = _couponListUiState.value
+                val res = when (type) {
+                    "popular" -> couponsRepository.getPopularCouponAll(
+                        lastIssuedCount = state.lastIssuedCount,
+                        lastCouponId = state.lastCouponId,
+                        pageSize = 10
+                    )
+                    "latest" -> couponsRepository.getLatestCouponAll(
+                        lastCreatedAt = state.lastCreatedAt,
+                        lastCouponId = state.lastCouponId,
+                        pageSize = 10
+                    )
+                    else -> throw IllegalArgumentException("Invalid coupon type")
                 }
-            } else {
+
+                if (res.isSuccessful) {
+                    val response = res.body()?.response
+                    response?.let {
+                        Log.d("test", it.toString())
+                        val newCoupons = it.couponResDtos.map {
+                            CouponListItemProps(
+                                id = it.couponId,
+                                name = it.couponName,
+                                marketName = it.marketName,
+                                marketId = it.marketId,
+                                imageUrl = NetworkModule.getImage(it.thumbnail),
+                                isMemberIssued = it.isMemberIssued,
+                                address = it.address,
+                                isAvailable = it.isAvailable,
+                                couponType = "PAYBACK"//,it.couponType
+                            )
+                        }
+                        _couponListUiState.update { currentState ->
+                            currentState.copy(
+                                couponList = currentState.couponList + newCoupons,
+                                isLoading = false,
+                                hasNext = it.hasNext,
+                                lastIssuedCount = it.couponResDtos.lastOrNull()?.issuedCount,
+                                lastCreatedAt = it.couponResDtos.lastOrNull()?.couponCreatedAt,
+                                lastCouponId = it.couponResDtos.lastOrNull()?.couponId
+                            )
+                        }
+                    }
+                } else {
+                    _couponListUiState.update { it.copy(isLoading = false) }
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("CouponViewModel", "쿠폰 목록 로드 실패: type=$type", e)
+                }
                 _couponListUiState.update { it.copy(isLoading = false) }
             }
         }
@@ -93,18 +101,24 @@ class CouponViewModel() : ViewModel() {
             return
 
         viewModelScope.launch {
-            if(coupon.couponType == "PAYBACKA") {
-                mamberRepository.downloadPaybackCoupon(id)
-            }
-            else {
-                mamberRepository.downloadGiftCoupon(id)
-            }
-
-            _couponListUiState.update { it.copy(
-                couponList = it.couponList.map { coupon ->
-                    if(coupon.id == id) coupon.copy(isMemberIssued = true) else coupon
+            try {
+                if(coupon.couponType == "PAYBACKA") {
+                    mamberRepository.downloadPaybackCoupon(id)
                 }
-            ) }
+                else {
+                    mamberRepository.downloadGiftCoupon(id)
+                }
+
+                _couponListUiState.update { it.copy(
+                    couponList = it.couponList.map { coupon ->
+                        if(coupon.id == id) coupon.copy(isMemberIssued = true) else coupon
+                    }
+                ) }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("CouponViewModel", "쿠폰 다운로드 실패: id=$id", e)
+                }
+            }
         }
     }
 }

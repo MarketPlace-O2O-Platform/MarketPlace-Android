@@ -1,6 +1,8 @@
 package dev.kichan.marketplace.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MarketRes
@@ -30,14 +32,21 @@ class SearchViewModel : ViewModel() {
 
     fun search() {
         viewModelScope.launch {
-            val response = marketsRepository.searchMarket_1(
-                lastPageIndex = null,
-                pageSize = null,
-                name = _uiState.value.key
-            )
-            if (response.isSuccessful) {
-                val result = response.body()?.response?.marketResDtos ?: emptyList()
-                _uiState.update { it.copy(result = result, isFirst = result.isEmpty()) }
+            try {
+                val response = marketsRepository.searchMarket_1(
+                    lastPageIndex = null,
+                    pageSize = null,
+                    name = _uiState.value.key
+                )
+                if (response.isSuccessful) {
+                    val result = response.body()?.response?.marketResDtos ?: emptyList()
+                    _uiState.update { it.copy(result = result, isFirst = result.isEmpty()) }
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("SearchViewModel", "매장 검색 실패: key=${_uiState.value.key}", e)
+                }
+                _uiState.update { it.copy(result = emptyList(), isFirst = true) }
             }
         }
     }

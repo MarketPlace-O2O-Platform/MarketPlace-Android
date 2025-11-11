@@ -1,7 +1,9 @@
 package dev.kichan.marketplace.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import dev.kichan.marketplace.BuildConfig
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.TopClosingCouponRes
@@ -88,19 +90,37 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onSearchClicked() {
         viewModelScope.launch {
-            _navigationEvent.emit(HomeNavigationEvent.NavigateToSearch)
+            try {
+                _navigationEvent.emit(HomeNavigationEvent.NavigateToSearch)
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("HomeViewModel", "검색 페이지 이동 실패", e)
+                }
+            }
         }
     }
 
     fun onEventDetailClicked(marketId: Long) {
         viewModelScope.launch {
-            _navigationEvent.emit(HomeNavigationEvent.NavigateToEventDetail(marketId))
+            try {
+                _navigationEvent.emit(HomeNavigationEvent.NavigateToEventDetail(marketId))
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("HomeViewModel", "매장 상세 페이지 이동 실패: marketId=$marketId", e)
+                }
+            }
         }
     }
 
     fun onCouponListPageClicked(type: String) {
         viewModelScope.launch {
-            _navigationEvent.emit(HomeNavigationEvent.NavigateToCouponListPage(type))
+            try {
+                _navigationEvent.emit(HomeNavigationEvent.NavigateToCouponListPage(type))
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("HomeViewModel", "쿠폰 리스트 페이지 이동 실패: type=$type", e)
+                }
+            }
         }
     }
 }
