@@ -85,28 +85,30 @@ fun HomePage(
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
                         isLoading = uiState.isClosingLoading || uiState.closingCoupons.isEmpty(),
-                        bannerList = uiState.closingCoupons
-                            .filter { it.deadline != null }
-                            .mapNotNull {
+                        bannerList = uiState.closingCoupons.mapNotNull { coupon ->
+                            val deadlineText = if (coupon.deadline != null) {
                                 try {
-                                    val formatterMore = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-                                    val deadLine = LocalDateTime.parse(it.deadline, formatterMore)
-                                    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-
-                                    BannerItem(
-                                        title = it.couponName,
-                                        subTitle = it.marketName,
-                                        description = "~ " + formatter.format(deadLine),
-                                        imageUrl = NetworkModule.getImage(it.thumbnail),
-                                        onClick = { homeViewModel.onEventDetailClicked(it.marketId) }
-                                    )
+                                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+                                    val deadLine = LocalDateTime.parse(coupon.deadline, formatter)
+                                    "~ " + DateTimeFormatter.ofPattern("yyyy.MM.dd").format(deadLine)
                                 } catch (e: Exception) {
                                     if (BuildConfig.DEBUG) {
-                                        Log.e("HomePage", "마감임박 쿠폰 날짜 형식 오류: ${it.couponId}", e)
+                                        Log.e("HomePage", "마감임박 쿠폰 날짜 형식 오류: ${coupon.couponId}", e)
                                     }
-                                    null
+                                    return@mapNotNull null
                                 }
+                            } else {
+                                "상시 발급 가능"
                             }
+
+                            BannerItem(
+                                title = coupon.couponName,
+                                subTitle = coupon.marketName,
+                                description = deadlineText,
+                                imageUrl = NetworkModule.getImage(coupon.thumbnail),
+                                onClick = { homeViewModel.onEventDetailClicked(coupon.marketId) }
+                            )
+                        }
                     )
                 }
 
