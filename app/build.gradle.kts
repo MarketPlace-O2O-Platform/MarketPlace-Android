@@ -1,7 +1,7 @@
 import java.util.Properties
 
-//val properties = Properties()
-//properties.load(project.rootProject.file("local.properties").inputStream())
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
 
 plugins {
     alias(libs.plugins.android.application)
@@ -14,6 +14,12 @@ plugins {
 secrets {
     propertiesFileName = "secrets.properties"
     defaultPropertiesFileName = "local.properties"
+
+    // BuildConfig에서 제외할 민감한 키들 (보안)
+    ignoreList.add("KEYSTORE_FILE")
+    ignoreList.add("KEYSTORE_PASSWORD")
+    ignoreList.add("KEY_ALIAS")
+    ignoreList.add("KEY_PASSWORD")
 }
 
 android {
@@ -31,12 +37,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "KAKAO_REST_API_KEY", properties["KAKAO_REST_API_KEY"].toString())
-        buildConfigField("String", "KAKAO_NATIVE_API_KEY", properties["KAKAO_NATIVE_API_KEY"].toString())
-        buildConfigField("String", "KAKAO_ADMIN_API_KEY", properties["KAKAO_ADMIN_API_KEY"].toString())
-        //buildConfigField("String", "API_BASE_URL", properties["API_BASE_URL"].toString())
-        buildConfigField("String", "API_BASE_URL", properties["API_BASE_URL"]?.toString() ?: "\"https://default-url.com\"")
-
+        // buildConfigField 제거: Secrets Gradle Plugin이 자동으로 처리
     }
 
     buildTypes {
