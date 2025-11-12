@@ -40,8 +40,18 @@ android {
         // buildConfigField 제거: Secrets Gradle Plugin이 자동으로 처리
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(properties["KEYSTORE_FILE"] as String)
+            storePassword = properties["KEYSTORE_PASSWORD"] as String
+            keyAlias = properties["KEY_ALIAS"] as String
+            keyPassword = properties["KEY_PASSWORD"] as String
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
