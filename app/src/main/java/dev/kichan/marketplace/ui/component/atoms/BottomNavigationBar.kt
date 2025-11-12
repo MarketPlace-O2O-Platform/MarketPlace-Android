@@ -54,7 +54,14 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
                 selected = navController.currentDestination?.route == page.name,
                 onClick = {
                     selectedIndex = index
-                    navController.navigate(page.name)
+                    navController.navigate(page.name) {
+                        // 하단바는 스택을 쌓지 않고 Home까지 비우기
+                        popUpTo(Page.Home.name) {
+                            saveState = true  // 각 탭의 상태 저장
+                        }
+                        launchSingleTop = true  // 같은 화면 중복 방지
+                        restoreState = true  // 탭 복귀 시 상태 복원
+                    }
                 },
                 selectedContentColor = selectedContentColor,
                 unselectedContentColor = unselectedContentColor,
