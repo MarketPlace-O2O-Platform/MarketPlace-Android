@@ -8,15 +8,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
@@ -37,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -51,6 +49,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.dto.MarketRes
 import dev.kichan.marketplace.ui.Page
@@ -121,9 +120,9 @@ fun MapPage(
         mapViewModel.getMarkets(position)
     }
 
-    // 시트 높이 정의 (3단계: 접음, 중간, 펼침)
+    // 시트 높이 정의 (2단계: 접음, 펼침)
     val contentHeight = screenHeight - bottomNavHeight
-    val sheetHeights = listOf(220.dp, 400.dp, contentHeight - 100.dp)
+    val sheetHeights = listOf(190.dp, contentHeight - 100.dp)
 
     Scaffold(
         bottomBar = {
@@ -166,25 +165,27 @@ fun MapPage(
                 }
             )
 
-            IconButton(
-                onClick = { onMoveCurrentPosition() },
+            Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(top = 52.dp, end = 12.dp)
+                    .padding(top = 62.dp, end = 20.dp)
+                    .size(36.dp)
                     .background(color = Color(0xffffffff), shape = CircleShape)
                     .border(width = 1.dp, color = Color(0xFFE1E1E1), shape = CircleShape)
+                    .clickable { onMoveCurrentPosition() },
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.LocationOn,
+                    painter = painterResource(id = R.drawable.mage_location),
                     contentDescription = null,
-                    tint = Color(0xff545454)
+                    tint = Color(0xff545454),
                 )
             }
 
             IconChip(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(52.dp),
+                    .padding(top = 62.dp),
                 onClick = {
                     val position = cameraPositionState.position.target
                     mapViewModel.getMarkets(position)
@@ -200,7 +201,7 @@ fun MapPage(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = sheetHeights[0] + 20.dp),
-                onClick = { currentSheetStage = 2 },
+                onClick = { currentSheetStage = 1 },
                 icon = Icons.Default.Menu,
                 title = "목록 보기",
                 contentColor = Color(0xff545454),
@@ -218,7 +219,7 @@ fun MapPage(
             ) { stage ->
                 SheetContent(
                     modifier = Modifier.fillMaxSize(),
-                    isExpended = stage == 2,
+                    isExpended = stage == 1,
                     isLoading = uiState.isLoading,
                     markets = uiState.markets.map { it.market },
                     onDetailClick = { navController.navigate("${Page.EventDetail.name}/$it") },
@@ -227,7 +228,7 @@ fun MapPage(
             }
 
             // "지도 보기" 버튼 - 펼친 상태일 때만 표시
-            if (currentSheetStage == 2) {
+            if (currentSheetStage == 1) {
                 IconChip(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
