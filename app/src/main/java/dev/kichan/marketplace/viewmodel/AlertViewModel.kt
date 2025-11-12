@@ -35,7 +35,7 @@ class AlertViewModel : ViewModel() {
 
     fun loadNotifications() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 val currentType = _uiState.value.filterType
                 val response = notificationRepository.getNotificationList(currentType)
@@ -44,7 +44,8 @@ class AlertViewModel : ViewModel() {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            notifications = response.body()!!.response.notificationResList
+                            notifications = response.body()!!.response.notificationResList,
+                            error = null
                         )
                     }
                 } else {
