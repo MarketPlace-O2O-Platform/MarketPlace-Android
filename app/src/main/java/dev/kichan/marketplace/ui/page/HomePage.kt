@@ -85,26 +85,28 @@ fun HomePage(
                     Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
                         isLoading = uiState.isClosingLoading || uiState.closingCoupons.isEmpty(),
-                        bannerList = uiState.closingCoupons.mapNotNull {
-                            try {
-                                val formatter____ = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-                                val deadLine = LocalDateTime.parse(it.deadline, formatter____)
-                                val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                        bannerList = uiState.closingCoupons
+                            .filter { it.deadline != null }
+                            .mapNotNull {
+                                try {
+                                    val formatterMore = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+                                    val deadLine = LocalDateTime.parse(it.deadline, formatterMore)
+                                    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
-                                BannerItem(
-                                    title = it.couponName,
-                                    subTitle = it.marketName,
-                                    description = "~ " + formatter.format(deadLine),
-                                    imageUrl = NetworkModule.getImage(it.thumbnail),
-                                    onClick = { homeViewModel.onEventDetailClicked(it.marketId) }
-                                )
-                            } catch (e: Exception) {
-                                if (BuildConfig.DEBUG) {
-                                    Log.e("HomePage", "마감임박 쿠폰 날짜 파싱 실패: ${it.couponId}", e)
+                                    BannerItem(
+                                        title = it.couponName,
+                                        subTitle = it.marketName,
+                                        description = "~ " + formatter.format(deadLine),
+                                        imageUrl = NetworkModule.getImage(it.thumbnail),
+                                        onClick = { homeViewModel.onEventDetailClicked(it.marketId) }
+                                    )
+                                } catch (e: Exception) {
+                                    if (BuildConfig.DEBUG) {
+                                        Log.e("HomePage", "마감임박 쿠폰 날짜 형식 오류: ${it.couponId}", e)
+                                    }
+                                    null
                                 }
-                                null
                             }
-                        }
                     )
                 }
 
