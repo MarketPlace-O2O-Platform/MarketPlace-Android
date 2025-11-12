@@ -1,8 +1,10 @@
 package dev.kichan.marketplace.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MarketRes
@@ -63,9 +65,24 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.favorite(marketId)
-                // Refresh the list after favoriting
-                getMarkets(true)
+                // 1. 현재 북마크 상태 확인 (UI 토글용)
+                val currentMarket = _uiState.value.markets.find { it.marketId == marketId }
+                val isFavorite = currentMarket?.isFavorite ?: false
+
+                // 2. 서버 토글 API 호출 (POST만 사용)
+                val response = favoritesRepository.favorite(marketId)
+
+                // 3. 성공 시에만 UI 토글
+                if (response.isSuccessful) {
+                    _uiState.value = _uiState.value.copy(
+                        markets = _uiState.value.markets.map {
+                            if (it.marketId == marketId)
+                                it.copy(isFavorite = !isFavorite)
+                            else
+                                it
+                        }
+                    )
+                }
             } catch (e: Exception) {
                 // Handle error
             }
@@ -81,5 +98,25 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
             hasNext = true
         )
         getMarkets(true)
+    }
+
+    fun refreshBookmarkStates() {
+        viewModelScope.launch {
+            try {
+                val response = marketsRepository.getMemberFavoriteMarketList()
+                if (response.isSuccessful) {
+                    val favoriteMarketIds = response.body()?.response?.marketResDtos?.map { it.marketId } ?: emptyList()
+                    _uiState.value = _uiState.value.copy(
+                        markets = _uiState.value.markets.map { market ->
+                            market.copy(isFavorite = favoriteMarketIds.contains(market.marketId))
+                        }
+                    )
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("MarketListViewModel", "북마크 상태 새로고침 실패", e)
+                }
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -52,6 +53,22 @@ fun MarketListPage(
     LaunchedEffect(isScrolledToEnd) {
         if (isScrolledToEnd) {
             marketListViewModel.getMarkets(false)
+        }
+    }
+
+
+    // 페이지가 화면에 나타날 때마다 북마크 상태 새로고침
+    DisposableEffect(nacController.currentBackStackEntry) {
+        val entry = nacController.currentBackStackEntry
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                marketListViewModel.refreshBookmarkStates()
+            }
+        }
+        entry?.lifecycle?.addObserver(observer)
+
+        onDispose {
+            entry?.lifecycle?.removeObserver(observer)
         }
     }
 

@@ -60,21 +60,46 @@ class CurationPageViewModel(application: Application) : AndroidViewModel(applica
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.favorite(marketId)
-                getFavoriteMarkets(true)
+                // 1. 즉시 UI에서 제거 (Optimistic Update)
+                val updatedMarkets = _uiState.value.markets.filter { it.marketId != marketId }
+                _uiState.value = _uiState.value.copy(markets = updatedMarkets)
+
+                // 2. 서버 토글 API 호출 (POST만 사용)
+                val response = favoritesRepository.favorite(marketId)
+
+                // 3. 실패 시 복구
+                if (!response.isSuccessful) {
+                    // 서버 실패 시 전체 새로고침
+                    getFavoriteMarkets(true)
+                }
             } catch (e: Exception) {
-                // Handle error
+                // 에러 발생 시 전체 새로고침
+                getFavoriteMarkets(true)
             }
         }
     }
 
     fun unfavorite(marketId: Long) {
+        // unfavorite는 favorite와 동일하게 동작 (서버가 토글 API)
+        favorite(marketId)
+    }
+
+    fun refreshFavorites() {
         viewModelScope.launch {
             try {
-                favoritesRepository.unfavorite(marketId)
-                getFavoriteMarkets(true)
+                val response = marketsRepository.getMemberFavoriteMarketList(lastModifiedAt = null)
+                if (response.isSuccessful) {
+                    val marketPage = response.body()?.response
+                    if (marketPage != null) {
+                        _uiState.value = _uiState.value.copy(
+                            markets = marketPage.marketResDtos,
+                            hasNext = marketPage.hasNext,
+                            lastModifiedAt = marketPage.marketResDtos.lastOrNull()?.favoriteModifiedAt
+                        )
+                    }
+                }
             } catch (e: Exception) {
-                // Handle error
+                // Handle error silently
             }
         }
     }

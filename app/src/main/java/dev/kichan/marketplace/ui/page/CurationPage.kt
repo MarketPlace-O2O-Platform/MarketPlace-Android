@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -42,6 +43,21 @@ fun CurationPage(
     LaunchedEffect(isScrolledToEnd) {
         if (isScrolledToEnd) {
             curationPageViewModel.getFavoriteMarkets(false)
+        }
+    }
+
+    // 페이지가 화면에 나타날 때마다 찜한 매장 목록 새로고침
+    DisposableEffect(nacController.currentBackStackEntry) {
+        val entry = nacController.currentBackStackEntry
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                curationPageViewModel.refreshFavorites()
+            }
+        }
+        entry?.lifecycle?.addObserver(observer)
+
+        onDispose {
+            entry?.lifecycle?.removeObserver(observer)
         }
     }
 

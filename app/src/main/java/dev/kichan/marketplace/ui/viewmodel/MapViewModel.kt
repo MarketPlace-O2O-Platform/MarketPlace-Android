@@ -124,18 +124,28 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.favorite(marketId)
-                _uiState.value = _uiState.value.copy(
-                    //todo: 시발 이게 뭔 코드야
-                    markets = _uiState.value.markets.map {
-                        if(it.market.marketId == marketId)
-                            it.copy(market = it.market.copy(isFavorite = !it.market.isFavorite))
-                        else
-                            it
-                    }
-                )
+                // 1. 현재 북마크 상태 확인 (UI 토글용)
+                val currentMarket = _uiState.value.markets.find { it.market.marketId == marketId }
+                val isFavorite = currentMarket?.market?.isFavorite ?: false
+
+                // 2. 서버 토글 API 호출 (POST만 사용)
+                val response = favoritesRepository.favorite(marketId)
+
+                // 3. 성공 시에만 UI 토글
+                if (response.isSuccessful) {
+                    _uiState.value = _uiState.value.copy(
+                        markets = _uiState.value.markets.map {
+                            if(it.market.marketId == marketId)
+                                it.copy(market = it.market.copy(isFavorite = !isFavorite))
+                            else
+                                it
+                        }
+                    )
+                }
             } catch (e: Exception) {
-                // Handle error
+                if (BuildConfig.DEBUG) {
+                    Log.e("MapViewModel", "북마크 토글 실패: marketId=$marketId", e)
+                }
             }
         }
     }

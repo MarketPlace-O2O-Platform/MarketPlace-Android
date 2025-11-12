@@ -2,9 +2,7 @@ package dev.kichan.marketplace.ui.page
 
 import android.app.Application
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -36,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -68,6 +67,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
@@ -90,7 +90,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MarketDetailPage(
     navController: NavHostController,
@@ -112,6 +111,21 @@ fun MarketDetailPage(
                     navController.navigate(Page.My.name)
                 }
             }
+        }
+    }
+
+    // 페이지가 화면에 나타날 때마다 북마크 상태 새로고침
+    DisposableEffect(navController.currentBackStackEntry) {
+        val entry = navController.currentBackStackEntry
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                marketDetailViewModel.checkFavoriteStatus()
+            }
+        }
+        entry?.lifecycle?.addObserver(observer)
+
+        onDispose {
+            entry?.lifecycle?.removeObserver(observer)
         }
     }
 
@@ -199,11 +213,12 @@ fun MarketDetailPage(
             }
             item {
                 MainInfo(
-                    uiState.marketData!!,
+                    data = uiState.marketData!!,
+                    isFavorite = uiState.isFavorite,
                     onFavorite = { marketDetailViewModel.favorite(id) })
             }
             item {
-                Column() {
+                Column{
                     Surface(
                         modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING)
                     ) {
@@ -304,7 +319,7 @@ fun ImageSlider(imageList: List<String>) {
 
 
 @Composable
-private fun MainInfo(data: MarketDetailsRes, onFavorite: () -> Unit) {
+private fun MainInfo(data: MarketDetailsRes, isFavorite: Boolean, onFavorite: () -> Unit) {
     Row(
         modifier = Modifier.padding(20.dp)
     ) {
@@ -332,7 +347,7 @@ private fun MainInfo(data: MarketDetailsRes, onFavorite: () -> Unit) {
             onClick = { onFavorite() }
         ) {
             Icon(
-                painter = painterResource(if (false) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
+                painter = painterResource(if (isFavorite) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
                 contentDescription = null
             )
         }
@@ -487,7 +502,7 @@ fun KakaoMapSearchBox(marketName: String) {
     val context = LocalContext.current
 
     val onClick = {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("kakaomap://search?q=${marketName}"))
+        val intent = Intent(Intent.ACTION_VIEW, "kakaomap://search?q=${marketName}".toUri())
         context.startActivity(intent)
     }
 

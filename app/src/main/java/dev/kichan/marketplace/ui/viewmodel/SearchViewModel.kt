@@ -101,11 +101,20 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.favorite(marketId)
-                val updatedCoupons = _uiState.value.popularCoupons.map {
-                    if (it.marketId == marketId) it.copy(isFavorite = true) else it
+                // 1. 현재 북마크 상태 확인 (UI 토글용)
+                val currentCoupon = _uiState.value.popularCoupons.find { it.marketId == marketId }
+                val isFavorite = currentCoupon?.isFavorite ?: false
+
+                // 2. 서버 토글 API 호출 (POST만 사용)
+                val response = favoritesRepository.favorite(marketId)
+
+                // 3. 성공 시에만 UI 토글
+                if (response.isSuccessful) {
+                    val updatedCoupons = _uiState.value.popularCoupons.map {
+                        if (it.marketId == marketId) it.copy(isFavorite = !isFavorite) else it
+                    }
+                    _uiState.value = _uiState.value.copy(popularCoupons = updatedCoupons)
                 }
-                _uiState.value = _uiState.value.copy(popularCoupons = updatedCoupons)
             } catch (e: Exception) {
                 // Handle error
             }
@@ -113,17 +122,8 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun unfavorite(marketId: Long) {
-        viewModelScope.launch {
-            try {
-                favoritesRepository.unfavorite(marketId)
-                val updatedCoupons = _uiState.value.popularCoupons.map {
-                    if (it.marketId == marketId) it.copy(isFavorite = false) else it
-                }
-                _uiState.value = _uiState.value.copy(popularCoupons = updatedCoupons)
-            } catch (e: Exception) {
-                // Handle error
-            }
-        }
+        // unfavorite는 favorite와 동일하게 동작 (서버가 토글 API)
+        favorite(marketId)
     }
 
     private fun searchMarkets(query: String) {

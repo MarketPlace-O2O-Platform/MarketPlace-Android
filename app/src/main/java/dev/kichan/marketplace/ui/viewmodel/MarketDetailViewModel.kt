@@ -21,6 +21,7 @@ data class MarketDetailUiState(
     val marketData: MarketDetailsRes? = null,
     val couponList: List<DisplayCoupon> = emptyList(),
     val isLoading: Boolean = false,
+    val isFavorite: Boolean = false,
 )
 
 sealed class MarketDetailNavigationEvent {
@@ -44,6 +45,23 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
     init {
         getMarketDetails()
         getMarketCoupons()
+        checkFavoriteStatus()
+    }
+
+    fun checkFavoriteStatus() {
+        viewModelScope.launch {
+            try {
+                val response = marketsRepository.getMemberFavoriteMarketList()
+                if (response.isSuccessful) {
+                    val favoriteMarkets = response.body()?.response?.marketResDtos?.map { it.marketId } ?: emptyList()
+                    _uiState.value = _uiState.value.copy(isFavorite = favoriteMarkets.contains(marketId))
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("MarketDetailViewModel", "즐겨찾기 상태 확인 실패", e)
+                }
+            }
+        }
     }
 
     private fun getMarketDetails() {
@@ -166,11 +184,20 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
-                favoritesRepository.favorite(marketId)
-                // Refresh the market details to get the updated favorite status
-                getMarketDetails()
+                // 1. 현재 북마크 상태 확인 (UI 토글용)
+                val isFavorite = _uiState.value.isFavorite
+
+                // 2. 서버 토글 API 호출 (POST만 사용)
+                val response = favoritesRepository.favorite(marketId)
+
+                // 3. 성공 시에만 UI 토글
+                if (response.isSuccessful) {
+                    _uiState.value = _uiState.value.copy(isFavorite = !isFavorite)
+                }
             } catch (e: Exception) {
-                // Handle error
+                if (BuildConfig.DEBUG) {
+                    Log.e("MarketDetailViewModel", "북마크 토글 실패: marketId=$marketId", e)
+                }
             }
         }
     }
