@@ -8,22 +8,19 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
 import com.github.javafaker.Faker
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMapSdk
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
-import dev.kichan.marketplace.viewmodel.LoginViewModel
 import java.util.Locale
 
 
 val faker = Faker(Locale.KOREAN)
 
 class MainActivity : ComponentActivity() {
-    private val loginViewModel: LoginViewModel by viewModels()
-
     private fun getFCMToken() {
         FirebaseMessaging.getInstance().token
             .addOnCompleteListener { task ->
@@ -33,7 +30,6 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val token = task.result
-//                loginViewModel.saveFcmToken(token)
                 Log.d("FCM", "FCM token: $token")
             }
     }
@@ -55,6 +51,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // 상태바 아이콘을 항상 검정색으로 고정
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = true  // 검정 아이콘 (라이트 모드)
+        }
 
         // Key Hash 가져오는 코드
         val keyHash = Utility.getKeyHash(this)
