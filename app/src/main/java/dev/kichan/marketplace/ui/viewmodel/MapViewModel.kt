@@ -26,6 +26,7 @@ data class MapUiState(
     val markets: List<MarketWithCoords> = emptyList(),
     val isLoading: Boolean = false,
     val selectedCategory: LargeCategory = LargeCategory.All,
+    val selectedMarketId: Long? = null,
 )
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
@@ -153,5 +154,13 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun onCategoryChanged(category: LargeCategory, position: LatLng) {
         _uiState.value = _uiState.value.copy(selectedCategory = category)
         getMarkets(position)
+    }
+
+    fun onMarkerClick(marketId: Long) {
+        _uiState.value = _uiState.value.copy(selectedMarketId = marketId)
+    }
+
+    fun clearSelection() {
+        _uiState.value = _uiState.value.copy(selectedMarketId = null)
     }
 }
