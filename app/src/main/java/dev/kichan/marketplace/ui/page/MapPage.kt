@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -32,7 +34,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -102,10 +103,11 @@ fun MapPage(
     // 앱 하단바 높이 (Material BottomNavigation 기본 높이 + 시스템 네비게이션 바)
     val bottomNavHeight = 56.dp + navigationBarsHeight
 
-    val scope = rememberCoroutineScope()
-
     // 현재 시트 단계 추적
     var currentSheetStage by remember { mutableIntStateOf(0) }
+
+    // LazyColumn 스크롤 상태 (Nested Scroll용)
+    val listState = rememberLazyListState()
 
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
@@ -266,8 +268,9 @@ fun MapPage(
                 currentStage = currentSheetStage,
                 onStageChange = { newStage ->
                     currentSheetStage = newStage
-                }
-            ) { stage ->
+                },
+                listState = listState
+            ) { _ ->
                 // 선택된 매장을 최상단으로 정렬
                 val displayedMarkets = remember(uiState.selectedMarketId, uiState.markets) {
                     if (uiState.selectedMarketId != null) {
@@ -281,7 +284,7 @@ fun MapPage(
 
                 SheetContent(
                     modifier = Modifier.fillMaxSize(),
-                    isExpended = stage == 1,
+                    state = listState,
                     isLoading = uiState.isLoading,
                     markets = displayedMarkets.map { it.market },
                     onDetailClick = { navController.navigate("${Page.EventDetail.name}/$it") },
@@ -310,15 +313,16 @@ fun MapPage(
 @Composable
 fun SheetContent(
     modifier: Modifier = Modifier,
+    state: LazyListState,
     onDetailClick: (id: Long) -> Unit,
-    isExpended: Boolean,
     isLoading: Boolean,
     markets: List<MarketRes>,
     onFavorite: (Long) -> Unit
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        userScrollEnabled = isExpended
+        state = state,
+        modifier = modifier.fillMaxWidth()
+        // userScrollEnabled 제거 - NestedScroll에서 제어
     ) {
         if (isLoading) {
             items(10) {
@@ -359,7 +363,7 @@ fun SheetContent(
 fun SheetContentPreview() {
     MarketPlaceTheme {
         SheetContent(
-            isExpended = true,
+            state = rememberLazyListState(),
             isLoading = false,
             markets = listOf(),
             onDetailClick = { },
