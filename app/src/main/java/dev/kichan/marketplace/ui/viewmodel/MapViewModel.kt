@@ -22,11 +22,19 @@ data class MarketWithCoords(
     val coords: LatLng
 )
 
+data class MarkerGroup(
+    val coords: LatLng,
+    val markets: List<MarketRes>,
+    val count: Int
+)
+
 data class MapUiState(
     val markets: List<MarketWithCoords> = emptyList(),
+    val markerGroups: List<MarkerGroup> = emptyList(),
     val isLoading: Boolean = false,
     val selectedCategory: LargeCategory = LargeCategory.All,
     val selectedMarketId: Long? = null,
+    val selectedGroupMarketIds: List<Long>? = null,
 )
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
@@ -119,7 +127,16 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }.awaitAll().filterNotNull()
 
-                _uiState.value = _uiState.value.copy(markets = marketsWithCoords)
+                Log.d("MapViewModel", "[API 응답] 카테고리=${_uiState.value.selectedCategory}, 총 매장 수=${marketsWithCoords.size}")
+                marketsWithCoords.forEach {
+                    Log.d("MapViewModel", "  - ${it.market.marketName} (ID=${it.market.marketId}, 좌표=${it.coords})")
+                }
+
+                val markerGroups = groupMarketsByLocation(marketsWithCoords)
+                _uiState.value = _uiState.value.copy(
+                    markets = marketsWithCoords,
+                    markerGroups = markerGroups
+                )
 
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
@@ -159,6 +176,31 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         return "$province$provinceSuffix ${addr.region_2depth_name}"
     }
 
+    private fun groupMarketsByLocation(markets: List<MarketWithCoords>): List<MarkerGroup> {
+        return markets.groupBy { market ->
+            // 소수점 2자리 기준 (약 1km 이내 그룹화)
+            val lat = String.format("%.2f", market.coords.latitude)
+            val lng = String.format("%.2f", market.coords.longitude)
+            "$lat,$lng"
+        }.map { (coordKey, marketsAtLocation) ->
+            Log.d("MapViewModel", "[그룹화] 좌표=$coordKey, 매장 수=${marketsAtLocation.size}")
+            marketsAtLocation.forEach {
+                Log.d("MapViewModel", "  - ${it.market.marketName} (ID=${it.market.marketId}, 좌표=${it.coords})")
+            }
+
+            // 일관된 정렬 기준 (marketId 오름차순)
+            val sortedMarkets = marketsAtLocation.sortedBy { it.market.marketId }
+            val selectedMarket = sortedMarkets.first()
+            Log.d("MapViewModel", "[대표 선택] ${selectedMarket.market.marketName} (ID=${selectedMarket.market.marketId})")
+
+            MarkerGroup(
+                coords = selectedMarket.coords,
+                markets = sortedMarkets.map { it.market },
+                count = sortedMarkets.size
+            )
+        }
+    }
+
     fun favorite(marketId: Long) {
         viewModelScope.launch {
             try {
@@ -189,7 +231,13 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onCategoryChanged(category: LargeCategory, position: LatLng) {
-        _uiState.value = _uiState.value.copy(selectedCategory = category)
+        Log.d("MapViewModel", "[카테고리 변경] ${_uiState.value.selectedCategory} → $category")
+        Log.d("MapViewModel", "[선택 초기화] 이전=${_uiState.value.selectedGroupMarketIds}")
+
+        _uiState.value = _uiState.value.copy(
+            selectedCategory = category,
+            selectedGroupMarketIds = null  // 카테고리 변경 시 선택 상태 초기화
+        )
         getMarkets(position)
     }
 
@@ -197,7 +245,21 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(selectedMarketId = marketId)
     }
 
+    fun onMarkerGroupClick(group: MarkerGroup) {
+        Log.d("MapViewModel", "[마커 클릭] 좌표=${group.coords}, 매장 수=${group.count}")
+        group.markets.forEach {
+            Log.d("MapViewModel", "  - ${it.marketName} (ID=${it.marketId})")
+        }
+
+        _uiState.value = _uiState.value.copy(
+            selectedGroupMarketIds = group.markets.map { it.marketId }
+        )
+    }
+
     fun clearSelection() {
-        _uiState.value = _uiState.value.copy(selectedMarketId = null)
+        _uiState.value = _uiState.value.copy(
+            selectedMarketId = null,
+            selectedGroupMarketIds = null
+        )
     }
 }

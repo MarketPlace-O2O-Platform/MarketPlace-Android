@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.page
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -161,15 +163,29 @@ fun MapPage(
                 ),
                 onMapClick = { mapViewModel.clearSelection() }
             ) {
-                for (p in uiState.markets) {
-                    val isSelected = p.market.marketId == uiState.selectedMarketId
+                for (group in uiState.markerGroups) {
+                    key(group.markets.first().marketId) {
+                        val isSelected = uiState.selectedGroupMarketIds?.any { id ->
+                            group.markets.any { it.marketId == id }
+                        } ?: false
 
-                    MarkerComposable(
-                        keys = arrayOf(isSelected, p.market.marketName),
-                        state = rememberMarkerState(position = p.coords),
+                        Log.d("MapPage", "[마커 렌더링] ${group.markets.first().marketName}, " +
+                            "선택=$isSelected, 좌표=${group.coords}, count=${group.count}, " +
+                            "key=${group.markets.first().marketId}")
+
+                        MarkerComposable(
+                        keys = arrayOf(
+                            uiState.selectedCategory,
+                            group.markets.first().marketId,  // 대표 매장 ID
+                            group.coords.latitude,
+                            group.coords.longitude,
+                            group.count,
+                            isSelected
+                        ),
+                        state = rememberMarkerState(position = group.coords),
                         anchor = Offset(0.5f, 0.5f),
                         onClick = {
-                            mapViewModel.onMarkerClick(p.market.marketId)
+                            mapViewModel.onMarkerGroupClick(group)
                             true
                         }
                     ) {
@@ -177,22 +193,26 @@ fun MapPage(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.wrapContentSize()
                         ) {
-                            // 마커 아이콘 (위)
+                            // 마커 아이콘
                             Icon(
                                 painter = painterResource(
                                     if (isSelected) R.drawable.map_marker
                                     else R.drawable.map_coupon
                                 ),
-                                contentDescription = p.market.marketName,
-                                tint = Color.Unspecified,  // drawable의 원래 색상 사용
+                                contentDescription = null,
+                                tint = Color.Unspecified,
                                 modifier = Modifier.size(if (isSelected) 48.dp else 14.dp)
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
 
-                            // 매장 이름 (아래)
+                            // 매장 이름 (항상 표시)
                             Text(
-                                text = p.market.marketName,
+                                text = if (group.count > 1) {
+                                    "${group.markets.first().marketName} 외 ${group.count - 1}곳"
+                                } else {
+                                    group.markets.first().marketName
+                                },
                                 style = TextStyle(
                                     fontSize = 11.sp,
                                     lineHeight = 14.sp,
@@ -203,6 +223,7 @@ fun MapPage(
                                 modifier = Modifier.widthIn(max = 100.dp)
                             )
                         }
+                    }
                     }
                 }
             }
@@ -271,11 +292,12 @@ fun MapPage(
                 },
                 listState = listState
             ) { _ ->
-                // 선택된 매장을 최상단으로 정렬
-                val displayedMarkets = remember(uiState.selectedMarketId, uiState.markets) {
-                    if (uiState.selectedMarketId != null) {
-                        uiState.markets.sortedByDescending {
-                            it.market.marketId == uiState.selectedMarketId
+                // 그룹 선택 시 해당 매장들만 필터링
+                val displayedMarkets = remember(uiState.selectedGroupMarketIds, uiState.markets) {
+                    val selectedIds = uiState.selectedGroupMarketIds
+                    if (selectedIds != null) {
+                        uiState.markets.filter { market ->
+                            market.market.marketId in selectedIds
                         }
                     } else {
                         uiState.markets
