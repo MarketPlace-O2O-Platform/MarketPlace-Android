@@ -66,17 +66,54 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 val marketPage = response.body()?.response?.marketResDtos ?: emptyList()
                 val marketsWithCoords = marketPage.map { market ->
                     async {
-                        val addressResponse = kakaoRepository.getAddress(market.address)
-                        if (addressResponse.isSuccessful) {
-                            val document = addressResponse.body()?.documents?.firstOrNull()
-                            if (document != null) {
-                                val lat = document.y.toDouble()
-                                val lng = document.x.toDouble()
-                                MarketWithCoords(market, LatLng(lat, lng))
+                        try {
+                            // 1차: 키워드 검색 시도 (매장명만 사용)
+                            val keywordQuery = market.marketName
+                            Log.d("MapViewModel", "[키워드 검색 시도] query: $keywordQuery")
+
+                            val keywordResponse = kakaoRepository.searchByKeyword(
+                                query = keywordQuery,
+                                x = position.longitude.toString(),
+                                y = position.latitude.toString(),
+                                radius = 20000  // 반경 20km
+                            )
+
+                            if (keywordResponse.isSuccessful) {
+                                val documents = keywordResponse.body()?.documents
+                                Log.d("MapViewModel", "[키워드 검색 결과] ${market.marketName}: ${documents?.size ?: 0}개")
+
+                                val keywordDocument = documents?.firstOrNull()
+                                if (keywordDocument != null) {
+                                    val lat = keywordDocument.y.toDouble()
+                                    val lng = keywordDocument.x.toDouble()
+                                    Log.d("MapViewModel", "[키워드 성공] ${market.marketName}: ($lat, $lng)")
+                                    return@async MarketWithCoords(market, LatLng(lat, lng))
+                                } else {
+                                    Log.d("MapViewModel", "[키워드 실패] ${market.marketName}: 결과 없음 → 폴백")
+                                }
                             } else {
-                                null
+                                Log.e("MapViewModel", "[키워드 API 실패] ${market.marketName}: ${keywordResponse.code()}")
                             }
-                        } else {
+
+                            // 2차: 키워드 검색 실패 → 주소 검색으로 폴백
+                            Log.d("MapViewModel", "[주소 검색 시도] ${market.marketName}: ${market.address}")
+                            val addressResponse = kakaoRepository.getAddress(market.address)
+                            if (addressResponse.isSuccessful) {
+                                val addressDocument = addressResponse.body()?.documents?.firstOrNull()
+                                if (addressDocument != null) {
+                                    val lat = addressDocument.y.toDouble()
+                                    val lng = addressDocument.x.toDouble()
+                                    Log.d("MapViewModel", "[주소 성공] ${market.marketName}: ($lat, $lng)")
+                                    return@async MarketWithCoords(market, LatLng(lat, lng))
+                                }
+                            }
+
+                            // 3차: 둘 다 실패 → null 반환
+                            Log.e("MapViewModel", "[전체 실패] ${market.marketName}: 좌표 없음")
+                            null
+
+                        } catch (e: Exception) {
+                            Log.e("MapViewModel", "[Exception] ${market.marketName}: ${e.message}", e)
                             null
                         }
                     }
