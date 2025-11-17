@@ -10,7 +10,7 @@ enum class Page(
     Splash(pageName = "스플래시"),
 
     Home(pageName = "홈"),
-    Like(pageName = "요청"),
+    Like(pageName = "공감"),
     Map(pageName = "지도"),
     My(pageName = "마이페이지"),
     My2(pageName = "마이"),
