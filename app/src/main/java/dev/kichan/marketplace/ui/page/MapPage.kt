@@ -2,10 +2,12 @@ package dev.kichan.marketplace.ui.page
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -28,12 +30,11 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.key
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,13 +42,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -207,7 +211,7 @@ fun MapPage(
                             Spacer(modifier = Modifier.height(4.dp))
 
                             // 매장 이름 (항상 표시)
-                            Text(
+                            OutlinedText(
                                 text = if (group.count > 1) {
                                     "${group.markets.first().marketName} 외 ${group.count - 1}곳"
                                 } else {
@@ -220,7 +224,9 @@ fun MapPage(
                                     color = Color(0xFF121212),
                                     textAlign = TextAlign.Center
                                 ),
-                                modifier = Modifier.widthIn(max = 100.dp)
+                                outlineColor = Color.White,
+                                outlineWidth = 6f,
+                                modifier = Modifier.widthIn(max = 150.dp)
                             )
                         }
                     }
@@ -331,6 +337,79 @@ fun MapPage(
     }
 }
 
+
+@Composable
+fun OutlinedText(
+    text: String,
+    modifier: Modifier = Modifier,
+    style: TextStyle = TextStyle.Default,
+    outlineColor: Color = Color.White,
+    outlineWidth: Float = 4f
+) {
+    BoxWithConstraints(modifier = modifier) {
+        val textMeasurer = rememberTextMeasurer()
+        val density = LocalDensity.current
+
+        val measuredText = remember(text, style, constraints) {
+            textMeasurer.measure(
+                text = AnnotatedString(text),
+                style = style,
+                constraints = constraints
+            )
+        }
+
+        val textSizePx = with(density) { (style.fontSize).toPx() }
+
+        Canvas(
+            modifier = Modifier.size(
+                width = with(density) { measuredText.size.width.toDp() },
+                height = with(density) { measuredText.size.height.toDp() }
+            )
+        ) {
+            drawContext.canvas.nativeCanvas.apply {
+                val paint = android.graphics.Paint().apply {
+                    isAntiAlias = true
+                    textSize = textSizePx
+                    textAlign = android.graphics.Paint.Align.CENTER
+                    isFakeBoldText = true  // 텍스트를 더 진하게
+                }
+
+                // 여러 줄 처리
+                val lines = text.split("\n")
+                val lineHeight = paint.descent() - paint.ascent()
+                val totalHeight = lineHeight * lines.size
+                var yOffset = -paint.ascent()
+
+                lines.forEach { line ->
+                    // Stroke (테두리)
+                    paint.style = android.graphics.Paint.Style.STROKE
+                    paint.strokeWidth = outlineWidth
+                    paint.color = android.graphics.Color.WHITE
+
+                    drawText(
+                        line,
+                        measuredText.size.width / 2f,
+                        yOffset,
+                        paint
+                    )
+
+                    // Fill (내부)
+                    paint.style = android.graphics.Paint.Style.FILL
+                    paint.color = android.graphics.Color.BLACK
+
+                    drawText(
+                        line,
+                        measuredText.size.width / 2f,
+                        yOffset,
+                        paint
+                    )
+
+                    yOffset += lineHeight
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun SheetContent(
