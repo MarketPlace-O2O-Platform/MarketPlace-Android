@@ -268,7 +268,8 @@ fun MapPage(
                     .padding(top = 62.dp),
                 onClick = {
                     val position = cameraPositionState.position.target
-                    mapViewModel.getMarkets(position)
+                    val bounds = cameraPositionState.projection?.visibleRegion?.latLngBounds
+                    mapViewModel.getMarkets(position, bounds)
                 },
                 icon = Icons.Default.Menu,
                 title = "현 지도에서 검색",
@@ -298,15 +299,28 @@ fun MapPage(
                 },
                 listState = listState
             ) { _ ->
-                // 그룹 선택 시 해당 매장들만 필터링
-                val displayedMarkets = remember(uiState.selectedGroupMarketIds, uiState.markets) {
+                // 그룹 선택 시 해당 매장들만 필터링 + 화면 범위 필터링
+                val displayedMarkets = remember(
+                    uiState.selectedGroupMarketIds,
+                    uiState.markets,
+                    uiState.visibleBounds
+                ) {
+                    // 1. 그룹 선택 필터링
                     val selectedIds = uiState.selectedGroupMarketIds
-                    if (selectedIds != null) {
-                        uiState.markets.filter { market ->
-                            market.market.marketId in selectedIds
-                        }
+                    val groupFiltered = if (selectedIds != null) {
+                        uiState.markets.filter { it.market.marketId in selectedIds }
                     } else {
                         uiState.markets
+                    }
+
+                    // 2. 화면 범위 필터링 (저장된 bounds 사용)
+                    val bounds = uiState.visibleBounds
+                    if (bounds != null) {
+                        groupFiltered.filter { market ->
+                            bounds.contains(market.coords)
+                        }
+                    } else {
+                        groupFiltered
                     }
                 }
 

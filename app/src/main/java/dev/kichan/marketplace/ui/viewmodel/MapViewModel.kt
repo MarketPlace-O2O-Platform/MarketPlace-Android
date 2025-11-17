@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.kakao.adress.LotNumberAddress
@@ -35,6 +36,7 @@ data class MapUiState(
     val selectedCategory: LargeCategory = LargeCategory.All,
     val selectedMarketId: Long? = null,
     val selectedGroupMarketIds: List<Long>? = null,
+    val visibleBounds: LatLngBounds? = null
 )
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
@@ -45,33 +47,72 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState = _uiState.asStateFlow()
 
-    private suspend fun getAddress(position: LatLng) : Address {
+    private suspend fun getAddress(position: LatLng) : Address? {
         val res = kakaoRepository.coord2Address(
             x = position.longitude.toString(),
             y = position.latitude.toString()
         )
 
         if(!res.isSuccessful)
-            throw Exception("주소 가져오는 문제")
+            return null
 
-        return res.body()!!.documents[0]
+        val documents = res.body()?.documents
+        if (documents.isNullOrEmpty())
+            return null
+
+        return documents[0]
     }
 
-    fun getMarkets(position : LatLng) {
+    fun getMarkets(position : LatLng, bounds: LatLngBounds? = null) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val address = formatProvinceDistrict(getAddress(position).address)
-                val response = marketsRepository.getMarketsByMap(
-                    lastPageIndex = null,
-                    category = _uiState.value.selectedCategory.backendLabel,
-                    pageSize = 999,
-                    address = address
-                )
-                if (!response.isSuccessful) {
+                // 1. 여러 지점에서 주소 수집 (중앙점 + 북동쪽)
+                val addresses = mutableSetOf<String>()
+
+                // 중앙점 시도
+                getAddress(position)?.let { addr ->
+                    val formattedAddress = formatProvinceDistrict(addr.address)
+                    addresses.add(formattedAddress)
+                    Log.d("MapViewModel", "[중앙점 주소] $formattedAddress")
+                }
+
+                // 북동쪽 시도 (바텀시트에 가려지지 않는 화면 최상단)
+                bounds?.northeast?.let { northeast ->
+                    getAddress(northeast)?.let { addr ->
+                        val formattedAddress = formatProvinceDistrict(addr.address)
+                        addresses.add(formattedAddress)
+                        Log.d("MapViewModel", "[북동쪽 주소] $formattedAddress")
+                    }
+                }
+
+                // 주소를 하나도 못 가져온 경우 (모두 바다 등)
+                if (addresses.isEmpty()) {
+                    Log.e("MapViewModel", "[주소 없음] 중앙점과 북동쪽 모두 주소 변환 실패")
+                    _uiState.value = _uiState.value.copy(markets = emptyList(), markerGroups = emptyList())
                     return@launch
                 }
-                val marketPage = response.body()?.response?.marketResDtos ?: emptyList()
+
+                // 2. 각 주소별로 API 호출 후 병합
+                val allMarkets = addresses.map { address ->
+                    async {
+                        val response = marketsRepository.getMarketsByMap(
+                            lastPageIndex = null,
+                            category = _uiState.value.selectedCategory.backendLabel,
+                            pageSize = 999,
+                            address = address
+                        )
+                        if (response.isSuccessful) {
+                            response.body()?.response?.marketResDtos ?: emptyList()
+                        } else {
+                            emptyList()
+                        }
+                    }
+                }.awaitAll().flatten().distinctBy { it.marketId }
+
+                Log.d("MapViewModel", "[병합 결과] 총 ${allMarkets.size}개 매장 (중복 제거 후)")
+
+                val marketPage = allMarkets
                 val marketsWithCoords = marketPage.map { market ->
                     async {
                         try {
@@ -135,7 +176,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 val markerGroups = groupMarketsByLocation(marketsWithCoords)
                 _uiState.value = _uiState.value.copy(
                     markets = marketsWithCoords,
-                    markerGroups = markerGroups
+                    markerGroups = markerGroups,
+                    visibleBounds = bounds
                 )
 
             } catch (e: Exception) {
