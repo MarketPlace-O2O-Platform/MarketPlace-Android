@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.common.LargeCategory
@@ -48,18 +49,32 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, page = 0, hasNext = true)
             try {
+                val category = _uiState.value.selectedCategory.backendLabel
+                Log.d("TempMarkets", "API 호출 시작 - category: $category")
+
                 val response = tempmarketsRepository.getTempMarket(
-                    lastPageIndex = 0,
-                    category = _uiState.value.selectedCategory.backendLabel
+                    lastPageIndex = null,
+                    category = category,
+                    count = 10
                 )
+
+                Log.d("TempMarkets", "응답 코드: ${response.code()}, isSuccessful: ${response.isSuccessful}")
+                Log.d("TempMarkets", "응답 body: ${response.body()}")
+
                 if (response.isSuccessful) {
+                    val markets = response.body()?.response?.marketResDtos ?: emptyList()
+                    Log.d("TempMarkets", "받은 매장 수: ${markets.size}")
+
                     _uiState.value = _uiState.value.copy(
-                        tempMarkets = response.body()?.response?.marketResDtos ?: emptyList(),
+                        tempMarkets = markets,
                         hasNext = response.body()?.response?.hasNext ?: false
                     )
+                } else {
+                    Log.e("TempMarkets", "API 실패 - 코드: ${response.code()}, 메시지: ${response.message()}")
+                    Log.e("TempMarkets", "에러 body: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                // Handle error
+                Log.e("TempMarkets", "API 호출 중 예외 발생", e)
             } finally {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
@@ -72,16 +87,17 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
-                val nextPage = _uiState.value.page + 1
+                val lastMarketId = _uiState.value.tempMarkets.lastOrNull()?.marketId
                 val response = tempmarketsRepository.getTempMarket(
-                    lastPageIndex = nextPage.toLong(),
-                    category = _uiState.value.selectedCategory.backendLabel
+                    lastPageIndex = lastMarketId?.toLong(),
+                    category = _uiState.value.selectedCategory.backendLabel,
+                    count = 10
                 )
                 if (response.isSuccessful) {
                     val newMarkets = response.body()?.response?.marketResDtos ?: emptyList()
                     _uiState.value = _uiState.value.copy(
                         tempMarkets = _uiState.value.tempMarkets + newMarkets,
-                        page = nextPage,
+                        page = _uiState.value.page + 1,
                         hasNext = response.body()?.response?.hasNext ?: false
                     )
                 }
