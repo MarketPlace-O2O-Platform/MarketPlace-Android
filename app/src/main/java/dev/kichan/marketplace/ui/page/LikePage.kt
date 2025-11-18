@@ -376,12 +376,24 @@ fun MarketCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            CustomButton(
-                text = "공감 하기",
-                icon = Icons.Default.FavoriteBorder,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                onCheerClick(market.marketId)
+            when {
+                market.isCheer -> {
+                    CustomButton(
+                        text = "공감 완료",
+                        isDisable = true,
+                        modifier = Modifier.fillMaxWidth()
+                    ) { }
+                }
+                else -> {
+                    CustomButton(
+                        text = "공감하기",
+                        icon = painterResource(R.drawable.empty_heart),
+                        backgroundColor = Color(0xFF4A4A4A),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        onCheerClick(market.marketId)
+                    }
+                }
             }
         }
     }

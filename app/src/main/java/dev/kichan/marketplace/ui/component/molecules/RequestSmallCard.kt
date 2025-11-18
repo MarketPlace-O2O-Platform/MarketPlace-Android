@@ -109,7 +109,7 @@ fun RequestSmallCard(
                 }
             } else {
                 CustomButton(
-                    text = "공감 하기",
+                    text = "공감하기",
                     icon = Icons.Default.FavoriteBorder,
                     modifier = buttonModifier,
 //                    contentPadding = PaddingValues(vertical = 8.dp)
