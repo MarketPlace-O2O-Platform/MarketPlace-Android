@@ -18,6 +18,7 @@ data class CouponListUiState(
     val isLoading: Boolean = false,
     val hasNext: Boolean = true,
     val lastIssuedCount: Long? = null,
+    val lastOrderNo: Long? = null,
     val lastCreatedAt: String? = null,
     val lastCouponId: Long? = null,
 )
@@ -42,11 +43,21 @@ class CouponViewModel() : ViewModel() {
 
                 val state = _couponListUiState.value
                 val res = when (type) {
-                    "popular" -> couponsRepository.getPopularCouponAll(
-                        lastIssuedCount = state.lastIssuedCount,
-                        lastCouponId = state.lastCouponId,
-                        pageSize = 10
-                    )
+                    "popular" -> {
+                        // 마지막 쿠폰의 couponType에 따라 다른 값 전달
+                        val lastCoupon = state.couponList.lastOrNull()
+                        val (lastIssuedCountValue, couponTypeValue) = when (lastCoupon?.couponType) {
+                            "GIFT" -> Pair(state.lastIssuedCount, "GIFT")
+                            "PAYBACK" -> Pair(state.lastOrderNo, "PAYBACK")
+                            else -> Pair(null, null)  // 첫 페이지
+                        }
+                        couponsRepository.getPopularCouponAll(
+                            lastIssuedCount = lastIssuedCountValue,
+                            lastCouponId = state.lastCouponId,
+                            pageSize = 10,
+                            couponType = couponTypeValue
+                        )
+                    }
                     "latest" -> couponsRepository.getLatestCouponAll(
                         lastCreatedAt = state.lastCreatedAt,
                         lastCouponId = state.lastCouponId,
@@ -69,7 +80,7 @@ class CouponViewModel() : ViewModel() {
                                 isMemberIssued = it.isMemberIssued,
                                 address = it.address,
                                 isAvailable = it.isAvailable,
-                                couponType = "PAYBACK"//,it.couponType
+                                couponType = it.couponType
                             )
                         }
                         _couponListUiState.update { currentState ->
@@ -78,6 +89,7 @@ class CouponViewModel() : ViewModel() {
                                 isLoading = false,
                                 hasNext = it.hasNext,
                                 lastIssuedCount = it.couponResDtos.lastOrNull()?.issuedCount,
+                                lastOrderNo = it.couponResDtos.lastOrNull()?.orderNo,
                                 lastCreatedAt = it.couponResDtos.lastOrNull()?.couponCreatedAt,
                                 lastCouponId = it.couponResDtos.lastOrNull()?.couponId
                             )

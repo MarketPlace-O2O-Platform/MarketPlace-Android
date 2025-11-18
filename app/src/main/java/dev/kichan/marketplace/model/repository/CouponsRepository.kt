@@ -31,11 +31,11 @@ class CouponsRepository @Inject constructor(
         return service.getClosingCoupon(pageSize)
     }
 
-    suspend fun getPopularCouponAll(@Query("lastIssuedCount") lastIssuedCount: Long? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes> {
-        return service.getPopularCouponAll(lastIssuedCount, lastCouponId, pageSize)
+    suspend fun getPopularCouponAll(@Query("lastIssuedCount") lastIssuedCount: Long? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null, @Query("couponType") couponType: String? = null): Response<CommonResponseCouponPageResCouponRes> {
+        return service.getPopularCouponAll(lastIssuedCount, lastCouponId, pageSize, couponType)
     }
 
-    suspend fun getLatestCouponAll(@Query("lastCreatedAt") lastCreatedAt: String? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null): Response<CommonResponseCouponPageResCouponRes> {
-        return service.getLatestCouponAll(lastCreatedAt, lastCouponId, pageSize)
+    suspend fun getLatestCouponAll(@Query("lastCreatedAt") lastCreatedAt: String? = null, @Query("lastCouponId") lastCouponId: Long? = null, @Query("pageSize") pageSize: Int? = null, @Query("couponType") couponType: String? = null): Response<CommonResponseCouponPageResCouponRes> {
+        return service.getLatestCouponAll(lastCreatedAt, lastCouponId, pageSize, couponType)
     }
 }

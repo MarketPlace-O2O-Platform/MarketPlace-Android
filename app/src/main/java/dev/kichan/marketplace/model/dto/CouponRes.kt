@@ -15,5 +15,6 @@ data class CouponRes(
     val address: String,
     val thumbnail: String,
     val couponCreatedAt: String,
-    val issuedCount: Long
+    val issuedCount: Long,
+    val orderNo: Long?
 )

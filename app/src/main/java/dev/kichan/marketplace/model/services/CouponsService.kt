@@ -29,13 +29,15 @@ interface CouponsService {
     suspend fun getPopularCouponAll(
         @Query("lastIssuedCount") lastIssuedCount: Long? = null,
         @Query("lastCouponId") lastCouponId: Long? = null,
-        @Query("pageSize") pageSize: Int? = null
+        @Query("pageSize") pageSize: Int? = null,
+        @Query("couponType") couponType: String? = null
     ): Response<CommonResponseCouponPageResCouponRes>
 
     @GET("/api/coupons/latest")
     suspend fun getLatestCouponAll(
         @Query("lastCreatedAt") lastCreatedAt: String? = null,
         @Query("lastCouponId") lastCouponId: Long? = null,
-        @Query("pageSize") pageSize: Int? = null
+        @Query("pageSize") pageSize: Int? = null,
+        @Query("couponType") couponType: String? = null
     ): Response<CommonResponseCouponPageResCouponRes>
 }
