@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +43,7 @@ fun CustomButton(
     shape: Shape = RoundedCornerShape(4.dp),
     border: BorderStroke? = null,
     isDisable: Boolean = false,
-    icon: ImageVector? = null,
+    icon: Any? = null,
     contentPadding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 12.dp),
     onClick: () -> Unit,
 ) {
@@ -66,7 +67,20 @@ fun CustomButton(
         horizontalArrangement = Arrangement.Center
     ) {
         if (icon != null) {
-            Icon(imageVector = icon, contentDescription = null, tint = textColor, modifier = Modifier.size(18.dp))
+            when (icon) {
+                is ImageVector -> Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = textColor,
+                    modifier = Modifier.size(18.dp)
+                )
+                is Painter -> Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    tint = textColor,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(4.dp))
         }
         Text(

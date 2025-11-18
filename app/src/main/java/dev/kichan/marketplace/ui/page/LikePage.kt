@@ -25,6 +25,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,7 +63,8 @@ import dev.kichan.marketplace.ui.component.atoms.CategorySelector
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.LikeMarketSearchBar
-import dev.kichan.marketplace.ui.component.molecules.RequestCard
+import dev.kichan.marketplace.ui.component.molecules.CheerRequestCard
+import dev.kichan.marketplace.ui.component.molecules.TempMarketCard
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
@@ -73,6 +76,13 @@ fun LikePage(
 ) {
     val uiState by likeViewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        likeViewModel.snackbarMessage.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
 
     LaunchedEffect(Unit) {
         likeViewModel.getMemberInfo()
@@ -108,6 +118,9 @@ fun LikePage(
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
         }
     ) { paddingValues ->
         LazyColumn(
@@ -145,17 +158,14 @@ fun LikePage(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             items(items = uiState.cheerTempMarkets) { tempMarket ->
-                                RequestCard(
+                                CheerRequestCard(
                                     modifier = Modifier.width(284.dp),
                                     marketName = tempMarket.marketName,
-                                    likeCount = tempMarket.cheerCount,
                                     thumbnail = NetworkModule.getImage(
                                         tempMarket.thumbnail,
                                         isTempMarket = true
                                     ),
-                                    isMyDone = tempMarket.isCheer,
-                                    isRequestDone = tempMarket.dueDate == 0,
-                                    duDate = tempMarket.dueDate,
+                                    dueDate = tempMarket.dueDate,
                                     onCheer = { likeViewModel.cheer(tempMarket.marketId) }
                                 )
                             }
@@ -187,35 +197,33 @@ fun LikePage(
                             horizontalArrangement = Arrangement.spacedBy(11.dp)
                         ) {
                             val market1 = uiState.tempMarkets[index * 2]
-                            RequestCard(
+                            TempMarketCard(
                                 modifier = Modifier
                                     .weight(1f),
                                 marketName = market1.marketName,
-                                likeCount = market1.cheerCount,
+                                cheerCount = market1.cheerCount,
                                 thumbnail = NetworkModule.getImage(
                                     market1.thumbnail,
                                     isTempMarket = true
                                 ),
-                                isMyDone = market1.isCheer,
-                                isRequestDone = market1.dueDate == 0,
-                                duDate = market1.dueDate,
+                                isCheer = market1.isCheer,
+                                dueDate = market1.dueDate,
                                 onCheer = { likeViewModel.cheer(market1.marketId) }
                             )
 
                             if (index * 2 + 1 < uiState.tempMarkets.size) {
                                 val market2 = uiState.tempMarkets[index * 2 + 1]
-                                RequestCard(
+                                TempMarketCard(
                                     modifier = Modifier
                                         .weight(1f),
                                     marketName = market2.marketName,
-                                    likeCount = market2.cheerCount,
+                                    cheerCount = market2.cheerCount,
                                     thumbnail = NetworkModule.getImage(
                                         market2.thumbnail,
                                         isTempMarket = true
                                     ),
-                                    isMyDone = market2.isCheer,
-                                    isRequestDone = market2.dueDate == 0,
-                                    duDate = market2.dueDate,
+                                    isCheer = market2.isCheer,
+                                    dueDate = market2.dueDate,
                                     onCheer = { likeViewModel.cheer(market2.marketId) }
                                 )
                             } else {
@@ -230,7 +238,7 @@ fun LikePage(
                 }
             } else {
                 if (uiState.searchTempMarket.isEmpty()) {
-                    item { SearchEmptyContent() { navController.navigate(Page.RequestPage.name) } }
+                    item { SearchEmptyContent { navController.navigate(Page.RequestPage.name) } }
                 } else {
                     items(uiState.searchTempMarket) { tempMarket ->
                         MarketCard(
@@ -244,7 +252,7 @@ fun LikePage(
 }
 
 @Composable
-fun SpaceTitle(modifier: Modifier = Modifier, title: String, badgeTitle: String) {
+fun SpaceTitle(title: String, badgeTitle: String) {
     Row(
         modifier = Modifier.padding(
             horizontal = PAGE_HORIZONTAL_PADDING,
@@ -328,7 +336,7 @@ fun MarketCard(
     market: TempMarketRes,
     onCheerClick: (Long) -> Unit
 ) {
-    val context = LocalContext.current;
+    val context = LocalContext.current
 
     Row(
         modifier = Modifier.padding(12.dp),
@@ -418,6 +426,6 @@ fun SearchEmptyContent(
 @Composable
 private fun SearchEmptyContentPreview() {
     MarketPlaceTheme {
-        SearchEmptyContent() {}
+        SearchEmptyContent {}
     }
 }

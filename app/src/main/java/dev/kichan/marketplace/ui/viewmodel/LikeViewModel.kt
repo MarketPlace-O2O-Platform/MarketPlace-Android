@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.TempMarketRes
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -20,7 +22,7 @@ data class LikeUiState(
     val searchKey: String = "",
     val selectedCategory: LargeCategory = LargeCategory.All,
     val page: Int = 0,
-    val hasNext: Boolean = true,
+    val hasNext: Boolean = true
 )
 
 class LikeViewModel(application: Application) : AndroidViewModel(application) {
@@ -31,6 +33,9 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(LikeUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _snackbarMessage = MutableSharedFlow<String>()
+    val snackbarMessage = _snackbarMessage.asSharedFlow()
 
     fun getMemberInfo() {
         viewModelScope.launch {
@@ -89,7 +94,7 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val lastMarketId = _uiState.value.tempMarkets.lastOrNull()?.marketId
                 val response = tempmarketsRepository.getTempMarket(
-                    lastPageIndex = lastMarketId?.toLong(),
+                    lastPageIndex = lastMarketId,
                     category = _uiState.value.selectedCategory.backendLabel,
                     count = 10
                 )
@@ -149,13 +154,20 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
                     getMemberInfo()
                     getTempMarkets()
                     getCheerTempMarkets()
+                } else {
+                    _snackbarMessage.emit(
+                        if (response.code() == 409)
+                            "공감권이 소진되었습니다"
+                        else
+                            "공감 처리에 실패했습니다"
+                    )
                 }
             } catch (e: Exception) {
-                // Handle error
+                _snackbarMessage.emit("네트워크 오류가 발생했습니다")
             }
         }
     }
-    
+
     fun onSearchKeyChanged(searchKey: String) {
         _uiState.value = _uiState.value.copy(searchKey = searchKey)
         if (searchKey.isNotEmpty()) {
