@@ -166,6 +166,7 @@ fun LikePage(
                                         isTempMarket = true
                                     ),
                                     dueDate = tempMarket.dueDate,
+                                    cheerCount = tempMarket.cheerCount,
                                     isCheer = tempMarket.isCheer,
                                     onCheer = { likeViewModel.cheer(tempMarket.marketId) }
                                 )

@@ -44,14 +44,22 @@ fun CustomButton(
     border: BorderStroke? = null,
     isDisable: Boolean = false,
     icon: Any? = null,
-    contentPadding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 12.dp),
+    contentPadding: PaddingValues = PaddingValues(vertical = 10.dp, horizontal = 12.dp),
     onClick: () -> Unit,
 ) {
     val bgc = animateColorAsState(
         targetValue = if (!isDisable) {
             backgroundColor
         } else {
-            Color(0xFFBDBDBD)
+            Color(0xFFE0E0E0)
+        }
+    )
+
+    val txtColor = animateColorAsState(
+        targetValue = if (!isDisable) {
+            textColor
+        } else {
+            Color(0xFFB0B0B0)
         }
     )
 
@@ -71,13 +79,13 @@ fun CustomButton(
                 is ImageVector -> Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = textColor,
+                    tint = txtColor.value,
                     modifier = Modifier.size(18.dp)
                 )
                 is Painter -> Icon(
                     painter = icon,
                     contentDescription = null,
-                    tint = textColor,
+                    tint = txtColor.value,
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -86,10 +94,11 @@ fun CustomButton(
         Text(
             text = text,
             style = TextStyle(
-                color = textColor,
+                color = txtColor.value,
                 fontFamily = PretendardFamily,
-                fontWeight = FontWeight(700),
-                fontSize = 14.sp,
+                fontWeight = FontWeight(500),
+                fontSize = 12.sp,
+                lineHeight = 16.8.sp
             )
         )
     }

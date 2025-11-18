@@ -3,6 +3,7 @@ package dev.kichan.marketplace.ui.component.molecules
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -77,10 +78,7 @@ fun TempMarketCard(
                     Text(text = cheerCount.toString(), fontSize = 12.sp)
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        painter = painterResource(
-                            if (isCheer) R.drawable.fill_heart
-                            else R.drawable.empty_heart
-                        ),
+                        painter = painterResource(R.drawable.fill_heart),
                         contentDescription = "Heart",
                         tint = Color.Unspecified
                     )
@@ -104,12 +102,14 @@ fun TempMarketCard(
                 CustomButton(
                     text = "공감 완료",
                     isDisable = true,
+                    contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
                     modifier = buttonModifier
                 ) { }
             } else {
                 CustomButton(
                     text = "공감하기",
                     icon = painterResource(R.drawable.empty_heart),
+                    contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
                     modifier = buttonModifier
                 ) {
                     onCheer()

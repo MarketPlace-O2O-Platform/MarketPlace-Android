@@ -30,6 +30,7 @@ fun CheerRequestCard(
     marketName: String,
     thumbnail: String,
     dueDate: Int,
+    cheerCount: Int,
     isCheer: Boolean,
     onCheer: () -> Unit,
     modifier: Modifier = Modifier
@@ -58,7 +59,7 @@ fun CheerRequestCard(
 
             // 상태 텍스트 (하트 없음!)
             Row(modifier = Modifier.fillMaxWidth()) {
-                if (dueDate == 0) {
+                if (cheerCount >= 20) {
                     Text(text = "공감 마감", fontSize = 12.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.padding(horizontal = 2.dp))
                     Text(
@@ -90,16 +91,16 @@ fun CheerRequestCard(
             val buttonModifier = Modifier.fillMaxWidth()
 
             when {
-                isCheer -> {
+                cheerCount >= 20 -> {
                     CustomButton(
-                        text = "공감 완료",
+                        text = "제휴 컨택 중",
                         isDisable = true,
                         modifier = buttonModifier
                     ) { }
                 }
-                dueDate == 0 -> {
+                isCheer -> {
                     CustomButton(
-                        text = "제휴 컨택 중",
+                        text = "공감 완료",
                         isDisable = true,
                         modifier = buttonModifier
                     ) { }
