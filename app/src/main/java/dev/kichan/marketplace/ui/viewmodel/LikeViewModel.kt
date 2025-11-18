@@ -148,6 +148,12 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun cheer(tempMarketId: Long) {
         viewModelScope.launch {
+            // 티켓 체크 (API 호출 전)
+            if (_uiState.value.cheerTicket <= 0) {
+                _snackbarMessage.emit("공감권이 소진되었습니다")
+                return@launch
+            }
+
             try {
                 val response = cheerRepository.createCheer(tempMarketId)
                 if (response.isSuccessful) {
@@ -155,12 +161,7 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
                     getTempMarkets()
                     getCheerTempMarkets()
                 } else {
-                    _snackbarMessage.emit(
-                        if (response.code() == 409)
-                            "공감권이 소진되었습니다"
-                        else
-                            "공감 처리에 실패했습니다"
-                    )
+                    _snackbarMessage.emit("공감 처리에 실패했습니다")
                 }
             } catch (e: Exception) {
                 _snackbarMessage.emit("네트워크 오류가 발생했습니다")

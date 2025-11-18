@@ -30,6 +30,7 @@ fun CheerRequestCard(
     marketName: String,
     thumbnail: String,
     dueDate: Int,
+    isCheer: Boolean,
     onCheer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -88,19 +89,29 @@ fun CheerRequestCard(
 
             val buttonModifier = Modifier.fillMaxWidth()
 
-            if (dueDate == 0) {
-                CustomButton(
-                    text = "제휴 컨택 중",
-                    isDisable = true,
-                    modifier = buttonModifier
-                ) { }
-            } else {
-                CustomButton(
-                    text = "공감하기",
-                    icon = painterResource(R.drawable.empty_heart),
-                    modifier = buttonModifier
-                ) {
-                    onCheer()
+            when {
+                isCheer -> {
+                    CustomButton(
+                        text = "공감 완료",
+                        isDisable = true,
+                        modifier = buttonModifier
+                    ) { }
+                }
+                dueDate == 0 -> {
+                    CustomButton(
+                        text = "제휴 컨택 중",
+                        isDisable = true,
+                        modifier = buttonModifier
+                    ) { }
+                }
+                else -> {
+                    CustomButton(
+                        text = "공감하기",
+                        icon = painterResource(R.drawable.empty_heart),
+                        modifier = buttonModifier
+                    ) {
+                        onCheer()
+                    }
                 }
             }
         }
