@@ -69,6 +69,11 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         getRecentKeywords()
     }
 
+    fun clearRecentKeywords() {
+        recentKeywordRepository.clearRecentKeywords()
+        getRecentKeywords()
+    }
+
     fun getPopularCoupons() {
         viewModelScope.launch {
             try {

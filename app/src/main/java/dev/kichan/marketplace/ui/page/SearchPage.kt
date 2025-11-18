@@ -61,7 +61,6 @@ import dev.kichan.marketplace.ui.viewmodel.SearchViewModel
 @Composable
 fun SearchPage(
     navController: NavController,
-    modifier: Modifier = Modifier,
     viewModel: SearchViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -104,10 +103,16 @@ fun SearchPage(
                     }
                 }
             } else if (uiState.searchKey.isBlank() || uiState.isFirstSearch) {
-                RecentKeyword(uiState.recentKeywords) {
-                    viewModel.onSearchKeyChanged(it)
-                    viewModel.search()
-                }
+                RecentKeyword(
+                    keywords = uiState.recentKeywords,
+                    onKeywordClick = {
+                        viewModel.onSearchKeyChanged(it)
+                        viewModel.search()
+                    },
+                    onClearClick = {
+                        viewModel.clearRecentKeywords()
+                    }
+                )
                 PopularBenefitsList(uiState.popularCoupons, onFavoriteClick = {
                     if (it.isFavorite)
                         viewModel.unfavorite(it.marketId)
@@ -148,16 +153,36 @@ private fun PopularBenefitsList(
 @Composable
 private fun RecentKeyword(
     keywords: List<String>,
-    onKeywordClick: (String) -> Unit
+    onKeywordClick: (String) -> Unit,
+    onClearClick: () -> Unit
 ) {
-    Text(
-        text = "최근 검색어",
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(start = 20.dp, bottom = 8.dp)
-    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, bottom = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "최근 검색어",
+            style = TextStyle(
+                fontSize = 15.sp,
+                lineHeight = 26.sp,
+                fontFamily = PretendardFamily,
+                fontWeight = FontWeight(600),
+                color = Color(0xFF121212),
+            )
+        )
+        Text(
+            text = "지우기",
+            fontSize = 14.sp,
+            color = Color(0xFF5E5E5E),
+            modifier = Modifier.clickable { onClearClick() }
+        )
+    }
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
+        contentPadding = androidx.compose.foundation.layout.PaddingValues(start = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items = keywords) { keyword ->
@@ -262,7 +287,7 @@ fun Chip(text: String, onClick: () -> Unit) {
         shape = RoundedCornerShape(50.dp),
         border = BorderStroke(1.dp, Color(0xFFC6C6C6)),
         modifier = Modifier
-            .padding(start = 12.dp, top = 6.dp, bottom = 6.dp)
+            .padding(top = 6.dp, bottom = 6.dp)
             .clickable { onClick() }
     ) {
         Text(
@@ -335,7 +360,7 @@ fun SearchResultEmpty() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xffeeeee)),
+            .background(color = Color(0xFFEEEEEE)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(40.dp))

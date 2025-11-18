@@ -22,4 +22,8 @@ class RecentKeywordRepository(context: Context) {
         }
         prefs.edit().putStringSet("keywords", keywords.toSet()).apply()
     }
+
+    fun clearRecentKeywords() {
+        prefs.edit().remove("keywords").apply()
+    }
 }
