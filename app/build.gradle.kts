@@ -71,7 +71,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -106,8 +106,6 @@ dependencies {
     implementation("com.google.maps.android:maps-compose-utils:$mapsComposeVersion")
     // Google Maps Compose widgets library
     implementation("com.google.maps.android:maps-compose-widgets:$mapsComposeVersion")
-
-    implementation("io.coil-kt:coil-compose:2.2.2") // 최신 버전 확인 후 업데이트
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)

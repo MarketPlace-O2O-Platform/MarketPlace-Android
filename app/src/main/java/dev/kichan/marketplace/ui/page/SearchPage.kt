@@ -49,7 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
