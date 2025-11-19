@@ -75,7 +75,7 @@ fun RefundCouponCard(
                         contentDescription = null,
                         modifier = Modifier
                             .size(64.dp)
-                            .clip(RoundedCornerShape(4.dp)),
+                            .clip(RoundedCornerShape(12.dp)),
                         contentScale = ContentScale.Crop
                     )
                     Spacer(Modifier.width(12.dp))

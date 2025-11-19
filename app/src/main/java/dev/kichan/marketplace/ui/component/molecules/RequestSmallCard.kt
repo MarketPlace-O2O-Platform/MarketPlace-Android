@@ -45,7 +45,9 @@ fun RequestSmallCard(
         modifier = modifier
     ) {
         AsyncImage(
-            modifier = Modifier.fillMaxSize(),//.aspectRatio(1f),
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp)),//.aspectRatio(1f),
             model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Adsda",
         )

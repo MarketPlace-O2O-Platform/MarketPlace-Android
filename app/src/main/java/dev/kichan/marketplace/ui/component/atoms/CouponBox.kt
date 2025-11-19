@@ -41,7 +41,7 @@ fun CouponBox(
                 .build(),
             contentDescription = "Event Thumnail",
             contentScale = ContentScale.Crop,
-            modifier = modifier
+            modifier = modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
         )
 
         Box(

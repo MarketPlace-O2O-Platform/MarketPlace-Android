@@ -44,7 +44,8 @@ fun TempMarketCard(
         AsyncImage(
             modifier = Modifier
                 .fillMaxSize()
-                .aspectRatio(1f),
+                .aspectRatio(1f)
+                .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp)),
             model = NetworkModule.getImageModel(LocalContext.current, thumbnail),
             contentDescription = "Banner Image",
             contentScale = ContentScale.Crop,

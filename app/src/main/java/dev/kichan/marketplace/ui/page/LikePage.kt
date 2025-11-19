@@ -352,7 +352,7 @@ fun MarketCard(
             contentDescription = market.marketName,
             modifier = Modifier
                 .size(80.dp)
-                .clip(RoundedCornerShape(8.dp)),
+                .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop
         )
 

@@ -65,7 +65,7 @@ fun CouponListItem(
                 contentDescription = null,
                 modifier = Modifier
                     .size(110.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                    .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
             )
 

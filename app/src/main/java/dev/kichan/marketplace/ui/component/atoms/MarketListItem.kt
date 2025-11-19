@@ -61,7 +61,7 @@ fun MarketListItem(
             modifier = Modifier
                 .width(110.dp)
                 .height(110.dp)
-                .clip(RoundedCornerShape(4.dp)),
+                .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop
         )
 
