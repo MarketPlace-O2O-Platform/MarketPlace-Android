@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -32,7 +34,7 @@ fun CouponBox(
     couponBoxProps: CouponBoxProps,
 ) {
     Box(
-        modifier = modifier
+        modifier = modifier.clip(RoundedCornerShape(8.dp))
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -41,7 +43,7 @@ fun CouponBox(
                 .build(),
             contentDescription = "Event Thumnail",
             contentScale = ContentScale.Crop,
-            modifier = modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+            modifier = Modifier.fillMaxSize()
         )
 
         Box(

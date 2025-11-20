@@ -308,8 +308,7 @@ fun ImageSlider(imageList: List<String>) {
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(280.dp)
-                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp)),
+                    .height(280.dp),
                 model = url,
                 contentDescription = "이미지",
                 contentScale = ContentScale.Crop,
