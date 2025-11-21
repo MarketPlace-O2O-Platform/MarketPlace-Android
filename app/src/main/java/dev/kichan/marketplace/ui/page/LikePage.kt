@@ -1,7 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,7 +32,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +53,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.dto.TempMarketRes
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
@@ -97,6 +98,28 @@ fun LikePage(
     LaunchedEffect(uiState.searchKey) {
         if (uiState.searchKey.isNotEmpty()) {
             likeViewModel.searchTempMarket(uiState.searchKey)
+        }
+    }
+
+    // 카테고리 변경 시 매장 리스트로 스크롤 (초기 로드 제외)
+    var previousCategory by remember { mutableStateOf<LargeCategory?>(null) }
+    var shouldScrollOnNextLoad by remember { mutableStateOf(false) }
+
+    // 카테고리 변경 감지
+    LaunchedEffect(uiState.selectedCategory) {
+        if (previousCategory != null && previousCategory != uiState.selectedCategory) {
+            shouldScrollOnNextLoad = true
+        }
+        previousCategory = uiState.selectedCategory
+    }
+
+    // 데이터 로드 완료 시 스크롤
+    LaunchedEffect(uiState.tempMarkets.size, shouldScrollOnNextLoad) {
+        if (shouldScrollOnNextLoad &&
+            uiState.searchKey.isEmpty() &&
+            uiState.tempMarkets.isNotEmpty()) {
+            listState.animateScrollToItem(5)
+            shouldScrollOnNextLoad = false
         }
     }
 
@@ -185,7 +208,7 @@ fun LikePage(
                     Spacer(modifier = Modifier.height(20.dp))
                 }
                 if (uiState.tempMarkets.isNotEmpty()) {
-                    items(uiState.tempMarkets.size / 2) { index ->
+                    items((uiState.tempMarkets.size + 1) / 2) { index ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
