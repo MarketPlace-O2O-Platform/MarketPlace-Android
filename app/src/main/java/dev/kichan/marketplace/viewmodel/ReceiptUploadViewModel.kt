@@ -83,7 +83,8 @@ class ReceiptUploadViewModel : ViewModel() {
                         _state.update { state ->
                             state.copy(
                                 bankName = it.account,
-                                accountNumber = it.accountNumber
+                                accountNumber = it.accountNumber,
+                                isSaveAccount = true
                             )
                         }
                     }
