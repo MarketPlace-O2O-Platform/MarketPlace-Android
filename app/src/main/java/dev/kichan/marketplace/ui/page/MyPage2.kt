@@ -268,7 +268,8 @@ fun MyPage2(
                             imageUrl = NetworkModule.getImage(it.thumbnail),
                             onClick = { selectedCouponId = it.memberCouponId },
                             modifier = Modifier.padding(horizontal = 18.dp),
-                            isUsable = true
+                            isUsable = true,
+                            buttonText = "사용하러 가기"
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }
@@ -293,25 +294,31 @@ fun MyPage2(
                     items(uiState.endedCouponList) { endedCoupon ->
                         when (endedCoupon) {
                             is EndedCoupon.EndedPayback -> {
+                                val buttonText = if (endedCoupon.coupon.used) "사용 완료" else "기간 만료"
+
                                 RefundCouponCard(
                                     storeName = endedCoupon.coupon.marketName,
                                     discountTitle = endedCoupon.coupon.couponName,
                                     imageUrl = NetworkModule.getImage(endedCoupon.coupon.thumbnail),
                                     onClick = { },
                                     modifier = Modifier.padding(horizontal = 18.dp),
-                                    isUsable = false
+                                    isUsable = false,
+                                    buttonText = buttonText
                                 )
                                 Spacer(modifier = Modifier.height(20.dp))
                             }
 
                             is EndedCoupon.EndedGift -> {
+                                val buttonText = if (endedCoupon.coupon.used) "사용 완료" else "기간 만료"
+
                                 RefundCouponCard(
                                     storeName = endedCoupon.coupon.marketName,
                                     discountTitle = endedCoupon.coupon.couponName,
                                     imageUrl = NetworkModule.getImage(endedCoupon.coupon.thumbnail),
                                     onClick = { },
                                     modifier = Modifier.padding(horizontal = 18.dp),
-                                    isUsable = false
+                                    isUsable = false,
+                                    buttonText = buttonText
                                 )
                                 Spacer(modifier = Modifier.height(20.dp))
                             }
