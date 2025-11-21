@@ -1,10 +1,8 @@
 package dev.kichan.marketplace.ui.page
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,11 +16,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
@@ -35,7 +31,6 @@ import dev.kichan.marketplace.ui.component.organisms.BannerItem
 import dev.kichan.marketplace.ui.component.organisms.CategorySelector
 import dev.kichan.marketplace.ui.component.organisms.CouponBanner
 import dev.kichan.marketplace.ui.data.CouponBoxProps
-import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.viewmodel.HomeNavigationEvent
 import dev.kichan.marketplace.ui.viewmodel.HomeViewModel
 import java.time.LocalDate

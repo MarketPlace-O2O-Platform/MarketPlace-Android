@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
-import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.PagerCounter
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 

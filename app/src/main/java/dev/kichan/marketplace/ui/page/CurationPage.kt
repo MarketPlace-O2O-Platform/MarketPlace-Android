@@ -30,7 +30,6 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
-import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.viewmodel.CurationPageViewModel
 
 @Composable

@@ -22,7 +22,6 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CouponBox
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.MoreViewTitle
-import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
 import dev.kichan.marketplace.ui.data.CouponBoxProps
 
 @Composable

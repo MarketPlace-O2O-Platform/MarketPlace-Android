@@ -80,7 +80,6 @@ import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.EmptyMessage
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.dev.kichan.marketplace.ui.component.atoms.IconChip
-import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.viewmodel.MapViewModel
 import kotlinx.coroutines.CoroutineScope
