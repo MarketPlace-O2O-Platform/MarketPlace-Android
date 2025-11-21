@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,6 +67,12 @@ fun Input(
             maxLines = maxLines,
             minLines = minLines,
             readOnly = readOnly,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = when (inputType) {
+                    InputType.Number -> KeyboardType.Number
+                    else -> KeyboardType.Text
+                }
+            ),
         ) { innerTextField ->
             Row(
                 Modifier
@@ -86,10 +94,10 @@ fun Input(
                         )
                     }
 
-                    if (inputType == InputType.Text || isContentShow.value || value.isEmpty()) {
-                        innerTextField()
-                    } else {
+                    if (inputType == InputType.Password && !isContentShow.value && value.isNotEmpty()) {
                         Text(text = "*".repeat(value.length), color = contentColor)
+                    } else {
+                        innerTextField()
                     }
 
                     if (inputType == InputType.Password) {
@@ -172,5 +180,5 @@ fun InputErrorPreview() {
 }
 
 enum class InputType {
-    Text, Password
+    Text, Password, Number
 }

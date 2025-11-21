@@ -41,6 +41,7 @@ import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
+import dev.kichan.marketplace.ui.component.atoms.InputType
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
@@ -145,8 +146,9 @@ fun ReceiptUploadPage(
                 Input(
                     value = uiState.accountNumber,
                     onChange = { viewModel.setAccountNumber(it) },
-                    placeholder = "계좌번호 입력",
-                    modifier = Modifier.weight(1f)
+                    placeholder = "계좌번호 입력(숫자만 입력)",
+                    modifier = Modifier.weight(1f),
+                    inputType = InputType.Number
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
