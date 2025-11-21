@@ -61,7 +61,10 @@ class AlertViewModel : ViewModel() {
     fun allRead() {
         viewModelScope.launch {
             try {
-                notificationRepository.readNotificationALl()
+                val response = notificationRepository.readNotificationALl()
+                if (response.isSuccessful) {
+                    loadNotifications()  // 성공 시 알림 목록 새로고침
+                }
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     Log.e("AlertViewModel", "전체 알림 읽음 처리 실패", e)
