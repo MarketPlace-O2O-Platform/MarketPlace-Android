@@ -24,6 +24,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +65,11 @@ fun ReceiptUploadPage(
         contract = ActivityResultContracts.PickVisualMedia(),
     ) { uri ->
         viewModel.setImage(uri)
+    }
+
+    // 페이지 열릴 때 저장된 계좌 정보 불러오기
+    LaunchedEffect(Unit) {
+        viewModel.loadSavedAccount()
     }
 
     Scaffold(
@@ -160,19 +166,36 @@ fun ReceiptUploadPage(
                 modifier = Modifier.fillMaxWidth(),
                 isDisable = uiState.imageUri == null
             ) {
-                viewModel.upload(
-                    memberCouponId = couponId,
-                    context = context,
-                    onSuccess = {
-                        // MyPage 데이터 갱신 (Activity 스코프 ViewModel 공유)
-                        myPageViewModel?.refreshCoupons()
-                        Toast.makeText(context, "영수증 제출 완료", Toast.LENGTH_SHORT).show()
-                        navController.popBackStack()
-                    },
-                    onError = { message ->
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    }
-                )
+                val uploadReceipt = {
+                    viewModel.upload(
+                        memberCouponId = couponId,
+                        context = context,
+                        onSuccess = {
+                            // MyPage 데이터 갱신 (Activity 스코프 ViewModel 공유)
+                            myPageViewModel?.refreshCoupons()
+                            Toast.makeText(context, "영수증 제출 완료", Toast.LENGTH_SHORT).show()
+                            navController.popBackStack()
+                        },
+                        onError = { message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+
+                // 계좌번호 저장이 체크되어 있고 계좌 정보가 입력되어 있으면 먼저 저장
+                if (uiState.isSaveAccount && uiState.bankName.isNotEmpty() && uiState.accountNumber.isNotEmpty()) {
+                    viewModel.saveAccount(
+                        onSuccess = {
+                            uploadReceipt()
+                        },
+                        onError = { message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            uploadReceipt()  // 계좌 저장 실패해도 영수증은 제출
+                        }
+                    )
+                } else {
+                    uploadReceipt()
+                }
             }
         }
     }

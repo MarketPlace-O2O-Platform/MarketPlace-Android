@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
+import dev.kichan.marketplace.model.dto.MemberAccountReq
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -70,6 +71,57 @@ class ReceiptUploadViewModel : ViewModel() {
 
     fun setSaveAccount(isSave: Boolean) {
         _state.update { it.copy(isSaveAccount = isSave) }
+    }
+
+    fun loadSavedAccount() {
+        viewModelScope.launch {
+            try {
+                val response = membersRepository.getMember()
+                if (response.isSuccessful) {
+                    val member = response.body()?.response
+                    member?.let {
+                        _state.update { state ->
+                            state.copy(
+                                bankName = it.account,
+                                accountNumber = it.accountNumber
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("ReceiptUploadViewModel", "계좌 정보 조회 실패", e)
+                }
+            }
+        }
+    }
+
+    fun saveAccount(onSuccess: (() -> Unit)? = null, onError: ((String) -> Unit)? = null) {
+        viewModelScope.launch {
+            try {
+                val accountReq = MemberAccountReq(
+                    account = _state.value.bankName,
+                    accountNumber = _state.value.accountNumber
+                )
+                val response = membersRepository.permitAccount(accountReq)
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        onSuccess?.invoke()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke("계좌 정보 저장 실패")
+                    }
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("ReceiptUploadViewModel", "계좌 정보 저장 실패", e)
+                }
+                withContext(Dispatchers.Main) {
+                    onError?.invoke("계좌 정보 저장 중 오류 발생")
+                }
+            }
+        }
     }
 
     fun upload(memberCouponId: Long, context: Context, onSuccess: () -> Unit, onError: ((String) -> Unit)? = null) {
