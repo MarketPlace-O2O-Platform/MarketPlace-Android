@@ -72,9 +72,13 @@ import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
 
 @Composable
 fun LikePage(
-    navController: NavController,
-    likeViewModel: LikeViewModel = viewModel()
+    navController: NavController
 ) {
+    val backStackEntry = remember(navController) {
+        navController.getBackStackEntry(Page.Like.name)
+    }
+    val likeViewModel: LikeViewModel = viewModel(viewModelStoreOwner = backStackEntry)
+
     val uiState by likeViewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -83,16 +87,6 @@ fun LikePage(
         likeViewModel.snackbarMessage.collect { message ->
             snackbarHostState.showSnackbar(message)
         }
-    }
-
-    LaunchedEffect(Unit) {
-        likeViewModel.getMemberInfo()
-        likeViewModel.getCheerTempMarkets()
-        likeViewModel.getTempMarkets()
-    }
-
-    LaunchedEffect(uiState.selectedCategory) {
-        likeViewModel.getTempMarkets()
     }
 
     LaunchedEffect(uiState.searchKey) {
@@ -133,7 +127,7 @@ fun LikePage(
     }
 
     LaunchedEffect(loadMore) {
-        if (loadMore) {
+        if (loadMore && uiState.searchKey.isEmpty() && !uiState.isLoading) {
             likeViewModel.loadMoreTempMarkets()
         }
     }
@@ -389,7 +383,7 @@ fun MarketCard(
             )
 
             Text(
-                text = market.marketDescription,
+                text = market.marketDescription ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

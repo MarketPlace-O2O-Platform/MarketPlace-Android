@@ -37,6 +37,12 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
 
+    init {
+        getMemberInfo()
+        getCheerTempMarkets()
+        getTempMarkets()
+    }
+
     fun getMemberInfo() {
         viewModelScope.launch {
             try {
@@ -148,22 +154,71 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun cheer(tempMarketId: Long) {
         viewModelScope.launch {
-            // 티켓 체크 (API 호출 전)
-            if (_uiState.value.cheerTicket <= 0) {
-                _snackbarMessage.emit("공감권이 소진되었습니다")
-                return@launch
-            }
-
             try {
+                Log.d("CheerDebug", "=== 공감 시작 - marketId: $tempMarketId ===")
                 val response = cheerRepository.createCheer(tempMarketId)
+
+                Log.d("CheerDebug", "응답 수신 - code: ${response.code()}, isSuccessful: ${response.isSuccessful}")
+                Log.d("CheerDebug", "응답 body: ${response.body()}")
+                Log.d("CheerDebug", "응답 errorBody: ${response.errorBody()?.string()}")
+
                 if (response.isSuccessful) {
+                    Log.d("CheerDebug", "✓ Success 블록 진입")
+                    val newCheerCount = response.body()?.response?.cheerCount ?: 0
+                    Log.d("CheerDebug", "새로운 공감 수: $newCheerCount")
+
+                    // 1. tempMarkets에서 해당 매장만 업데이트 (스크롤 위치 유지)
+                    Log.d("CheerDebug", "1. tempMarkets 업데이트 시작 (현재 개수: ${_uiState.value.tempMarkets.size})")
+                    _uiState.value = _uiState.value.copy(
+                        tempMarkets = _uiState.value.tempMarkets.map { market ->
+                            if (market.marketId == tempMarketId) {
+                                market.copy(cheerCount = newCheerCount, isCheer = true)
+                            } else market
+                        }
+                    )
+                    Log.d("CheerDebug", "✓ tempMarkets 업데이트 완료")
+
+                    // 2. 14개 이상이면 달성 임박에 추가
+                    if (newCheerCount >= 14) {
+                        Log.d("CheerDebug", "2. 달성 임박 추가 시작 (cheerCount >= 14)")
+                        val targetMarket = _uiState.value.tempMarkets.find { it.marketId == tempMarketId }
+                        Log.d("CheerDebug", "타겟 매장 찾기: ${targetMarket != null}")
+
+                        targetMarket?.let { market ->
+                            val updatedMarket = market.copy(cheerCount = newCheerCount, isCheer = true)
+                            // 중복 방지: 이미 있는지 확인
+                            val alreadyExists = _uiState.value.cheerTempMarkets.any { it.marketId == tempMarketId }
+                            Log.d("CheerDebug", "cheerTempMarkets에 이미 존재: $alreadyExists")
+
+                            if (!alreadyExists) {
+                                _uiState.value = _uiState.value.copy(
+                                    cheerTempMarkets = _uiState.value.cheerTempMarkets + updatedMarket
+                                )
+                                Log.d("CheerDebug", "✓ cheerTempMarkets에 추가 완료")
+                            } else {
+                                // 이미 있으면 업데이트
+                                _uiState.value = _uiState.value.copy(
+                                    cheerTempMarkets = _uiState.value.cheerTempMarkets.map {
+                                        if (it.marketId == tempMarketId) updatedMarket else it
+                                    }
+                                )
+                                Log.d("CheerDebug", "✓ cheerTempMarkets 업데이트 완료")
+                            }
+                        }
+                    }
+
+                    // 3. 공감권만 업데이트 (API 1번만)
+                    Log.d("CheerDebug", "3. getMemberInfo() 호출")
                     getMemberInfo()
-                    getTempMarkets()
-                    getCheerTempMarkets()
+                    Log.d("CheerDebug", "=== 공감 완료 ===")
                 } else {
-                    _snackbarMessage.emit("공감 처리에 실패했습니다")
+                    Log.d("CheerDebug", "✗ Success 블록 진입 실패 - isSuccessful: false")
+                    _snackbarMessage.emit("공감권이 소진되었습니다")
                 }
             } catch (e: Exception) {
+                Log.e("CheerDebug", "✗✗✗ Exception 발생: ${e.javaClass.simpleName}", e)
+                Log.e("CheerDebug", "Exception 메시지: ${e.message}")
+                Log.e("CheerDebug", "Stack trace:", e)
                 _snackbarMessage.emit("네트워크 오류가 발생했습니다")
             }
         }

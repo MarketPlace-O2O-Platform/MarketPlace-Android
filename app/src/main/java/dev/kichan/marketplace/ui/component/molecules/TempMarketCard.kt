@@ -70,11 +70,24 @@ fun TempMarketCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = "마감까지 ${dueDate}일 남음",
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
+                if (cheerCount >= 20) {
+                    Row {
+                        Text(text = "공감 마감", fontSize = 12.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "제휴 컨택 중",
+                            fontSize = 12.sp,
+                            color = Color(0xff383838),
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "마감까지 ${dueDate}일 남음",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = cheerCount.toString(), fontSize = 12.sp)
@@ -100,21 +113,32 @@ fun TempMarketCard(
 
             val buttonModifier = Modifier.fillMaxWidth()
 
-            if (isCheer) {
-                CustomButton(
-                    text = "공감 완료",
-                    isDisable = true,
-                    contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
-                    modifier = buttonModifier
-                ) { }
-            } else {
-                CustomButton(
-                    text = "공감하기",
-                    icon = painterResource(R.drawable.empty_heart),
-                    contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
-                    modifier = buttonModifier
-                ) {
-                    onCheer()
+            when {
+                cheerCount >= 20 -> {
+                    CustomButton(
+                        text = "제휴 컨택 중",
+                        isDisable = true,
+                        contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
+                        modifier = buttonModifier
+                    ) { }
+                }
+                isCheer -> {
+                    CustomButton(
+                        text = "공감 완료",
+                        isDisable = true,
+                        contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
+                        modifier = buttonModifier
+                    ) { }
+                }
+                else -> {
+                    CustomButton(
+                        text = "공감하기",
+                        icon = painterResource(R.drawable.empty_heart),
+                        contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
+                        modifier = buttonModifier
+                    ) {
+                        onCheer()
+                    }
                 }
             }
         }
