@@ -22,7 +22,15 @@ data class LikeUiState(
     val searchKey: String = "",
     val selectedCategory: LargeCategory = LargeCategory.All,
     val page: Int = 0,
-    val hasNext: Boolean = true
+    val hasNext: Boolean = true,
+    // 카테고리별 캐싱
+    val categoryCache: Map<LargeCategory, CategoryData> = emptyMap()
+)
+
+data class CategoryData(
+    val markets: List<TempMarketRes>,
+    val page: Int,
+    val hasNext: Boolean
 )
 
 class LikeViewModel(application: Application) : AndroidViewModel(application) {
@@ -74,11 +82,22 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
                 if (response.isSuccessful) {
                     val markets = response.body()?.response?.marketResDtos ?: emptyList()
+                    val hasNext = response.body()?.response?.hasNext ?: false
                     Log.d("TempMarkets", "받은 매장 수: ${markets.size}")
+
+                    // 캐시에 저장
+                    val currentCategory = _uiState.value.selectedCategory
+                    val updatedCache = _uiState.value.categoryCache.toMutableMap()
+                    updatedCache[currentCategory] = CategoryData(
+                        markets = markets,
+                        page = 0,
+                        hasNext = hasNext
+                    )
 
                     _uiState.value = _uiState.value.copy(
                         tempMarkets = markets,
-                        hasNext = response.body()?.response?.hasNext ?: false
+                        hasNext = hasNext,
+                        categoryCache = updatedCache
                     )
                 } else {
                     Log.e("TempMarkets", "API 실패 - 코드: ${response.code()}, 메시지: ${response.message()}")
@@ -106,10 +125,24 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
                 )
                 if (response.isSuccessful) {
                     val newMarkets = response.body()?.response?.marketResDtos ?: emptyList()
+                    val updatedMarkets = _uiState.value.tempMarkets + newMarkets
+                    val newPage = _uiState.value.page + 1
+                    val hasNext = response.body()?.response?.hasNext ?: false
+
+                    // 캐시 업데이트
+                    val currentCategory = _uiState.value.selectedCategory
+                    val updatedCache = _uiState.value.categoryCache.toMutableMap()
+                    updatedCache[currentCategory] = CategoryData(
+                        markets = updatedMarkets,
+                        page = newPage,
+                        hasNext = hasNext
+                    )
+
                     _uiState.value = _uiState.value.copy(
-                        tempMarkets = _uiState.value.tempMarkets + newMarkets,
-                        page = _uiState.value.page + 1,
-                        hasNext = response.body()?.response?.hasNext ?: false
+                        tempMarkets = updatedMarkets,
+                        page = newPage,
+                        hasNext = hasNext,
+                        categoryCache = updatedCache
                     )
                 }
             } catch (e: Exception) {
@@ -169,14 +202,25 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
                     // 1. tempMarkets에서 해당 매장만 업데이트 (스크롤 위치 유지)
                     Log.d("CheerDebug", "1. tempMarkets 업데이트 시작 (현재 개수: ${_uiState.value.tempMarkets.size})")
+                    val updatedMarkets = _uiState.value.tempMarkets.map { market ->
+                        if (market.marketId == tempMarketId) {
+                            market.copy(cheerCount = newCheerCount, isCheer = true)
+                        } else market
+                    }
+
+                    // 캐시도 업데이트
+                    val currentCategory = _uiState.value.selectedCategory
+                    val updatedCache = _uiState.value.categoryCache.toMutableMap()
+                    val cachedData = updatedCache[currentCategory]
+                    if (cachedData != null) {
+                        updatedCache[currentCategory] = cachedData.copy(markets = updatedMarkets)
+                    }
+
                     _uiState.value = _uiState.value.copy(
-                        tempMarkets = _uiState.value.tempMarkets.map { market ->
-                            if (market.marketId == tempMarketId) {
-                                market.copy(cheerCount = newCheerCount, isCheer = true)
-                            } else market
-                        }
+                        tempMarkets = updatedMarkets,
+                        categoryCache = updatedCache
                     )
-                    Log.d("CheerDebug", "✓ tempMarkets 업데이트 완료")
+                    Log.d("CheerDebug", "✓ tempMarkets 및 캐시 업데이트 완료")
 
                     // 2. 14개 이상이면 달성 임박에 추가
                     if (newCheerCount >= 14) {
@@ -233,6 +277,17 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onCategoryChanged(category: LargeCategory) {
         _uiState.value = _uiState.value.copy(selectedCategory = category)
-        getTempMarkets()
+
+        // 캐시된 데이터가 있으면 복원, 없으면 새로 로드
+        val cachedData = _uiState.value.categoryCache[category]
+        if (cachedData != null) {
+            _uiState.value = _uiState.value.copy(
+                tempMarkets = cachedData.markets,
+                page = cachedData.page,
+                hasNext = cachedData.hasNext
+            )
+        } else {
+            getTempMarkets()
+        }
     }
 }

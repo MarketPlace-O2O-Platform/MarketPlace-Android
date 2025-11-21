@@ -5,6 +5,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -25,6 +26,7 @@ import dev.kichan.marketplace.ui.page.RequestPage
 import dev.kichan.marketplace.ui.page.SearchPage
 import dev.kichan.marketplace.ui.page.SplashPage
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
 
 @Composable
 fun MyApp() {
@@ -50,9 +52,11 @@ fun MyApp() {
                     navController = navController,
                 )
             }
-            composable(Page.Like.name) {
+            composable(Page.Like.name) { backStackEntry ->
+                val likeViewModel: LikeViewModel = viewModel(viewModelStoreOwner = backStackEntry)
                 LikePage(
                     navController = navController,
+                    likeViewModel = likeViewModel
                 )
             }
             composable(Page.Map.name) {

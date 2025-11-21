@@ -72,12 +72,9 @@ import dev.kichan.marketplace.ui.viewmodel.LikeViewModel
 
 @Composable
 fun LikePage(
-    navController: NavController
+    navController: NavController,
+    likeViewModel: LikeViewModel = viewModel()
 ) {
-    val backStackEntry = remember(navController) {
-        navController.getBackStackEntry(Page.Like.name)
-    }
-    val likeViewModel: LikeViewModel = viewModel(viewModelStoreOwner = backStackEntry)
 
     val uiState by likeViewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
