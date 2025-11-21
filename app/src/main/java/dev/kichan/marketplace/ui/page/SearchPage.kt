@@ -8,13 +8,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -53,6 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
 import dev.kichan.marketplace.model.NetworkModule
+import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.SearchResultItem
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -114,12 +115,12 @@ fun SearchPage(
                         viewModel.clearRecentKeywords()
                     }
                 )
-                PopularBenefitsList(uiState.popularCoupons, onFavoriteClick = {
-                    if (it.isFavorite)
-                        viewModel.unfavorite(it.marketId)
-                    else
-                        viewModel.favorite(it.marketId)
-                })
+                PopularBenefitsList(
+                    coupons = uiState.popularCoupons,
+                    onCardClick = { marketId ->
+                        navController.navigate("${Page.EventDetail.name}/${marketId}")
+                    }
+                )
             } else {
                 SearchResultEmpty()
             }
@@ -130,7 +131,7 @@ fun SearchPage(
 @Composable
 private fun PopularBenefitsList(
     coupons: List<PopularCoupon>,
-    onFavoriteClick: (PopularCoupon) -> Unit
+    onCardClick: (Long) -> Unit
 ) {
     Text(
         text = "인기 혜택",
@@ -143,10 +144,14 @@ private fun PopularBenefitsList(
     )
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(start = 20.dp, end = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(coupons) { coupon ->
-            BenefitCard(coupon, onFavoriteClick)
+            BenefitCard(
+                coupon = coupon,
+                onClick = { onCardClick(coupon.marketId) }
+            )
         }
     }
 }
@@ -183,7 +188,7 @@ private fun RecentKeyword(
     }
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
-        contentPadding = androidx.compose.foundation.layout.PaddingValues(start = 20.dp),
+        contentPadding = PaddingValues(start = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items = keywords) { keyword ->
@@ -304,39 +309,24 @@ fun Chip(text: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun BenefitCard(coupon: PopularCoupon, onFavoriteClick: (PopularCoupon) -> Unit) {
+fun BenefitCard(coupon: PopularCoupon, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .width(200.dp)
-            .padding(start = 20.dp, end = 8.dp),
+            .clickable { onClick() }
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = NetworkModule.getImageModel(
-                    LocalContext.current,
-                    NetworkModule.getImage(coupon.thumbnail)
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(172.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-            )
-            IconButton(
-                onClick = {
-                    onFavoriteClick(coupon)
-                },
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    painter = painterResource(id = if (coupon.isFavorite) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = Color(0xffffffff)
-                )
-            }
-        }
+        AsyncImage(
+            model = NetworkModule.getImageModel(
+                LocalContext.current,
+                NetworkModule.getImage(coupon.thumbnail)
+            ),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .height(172.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(4.dp))
+        )
         Text(
             text = coupon.marketName,
             fontSize = 10.sp,
