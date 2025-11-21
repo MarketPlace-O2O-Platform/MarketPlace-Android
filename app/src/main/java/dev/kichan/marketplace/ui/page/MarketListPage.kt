@@ -24,8 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -35,7 +35,6 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CategoryTap
 import dev.kichan.marketplace.ui.component.atoms.MarketListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
-import dev.kichan.marketplace.ui.component.molecules.MarketListLoadingItem
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
 import dev.kichan.marketplace.ui.viewmodel.MarketListViewModel
 import dev.kichan.marketplace.ui.viewmodel.MarketListViewModelFactory
@@ -58,8 +57,8 @@ fun MarketListPage(
         }
     }
 
-    LaunchedEffect(isScrolledToEnd) {
-        if (isScrolledToEnd) {
+    LaunchedEffect(isScrolledToEnd, uiState.isLoading, uiState.hasNext) {
+        if (isScrolledToEnd && !uiState.isLoading && uiState.hasNext) {
             marketListViewModel.getMarkets(false)
         }
     }

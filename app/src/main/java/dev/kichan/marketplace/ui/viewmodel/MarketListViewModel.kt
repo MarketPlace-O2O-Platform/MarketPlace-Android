@@ -33,29 +33,51 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
     }
 
     fun getMarkets(isNewCategory: Boolean = false) {
-        if (_uiState.value.isLoading || !_uiState.value.hasNext) return
+        if (_uiState.value.isLoading || !_uiState.value.hasNext) {
+            if (BuildConfig.DEBUG) {
+                Log.d("MarketListViewModel", "getMarkets 차단됨 - isLoading: ${_uiState.value.isLoading}, hasNext: ${_uiState.value.hasNext}")
+            }
+            return
+        }
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
                 val lastPageIndex = if (isNewCategory) null else _uiState.value.lastPageIndex
+                if (BuildConfig.DEBUG) {
+                    Log.d("MarketListViewModel", "API 호출 - lastPageIndex: $lastPageIndex, category: ${_uiState.value.selectedCategory.backendLabel}, isNewCategory: $isNewCategory")
+                }
                 val response = marketsRepository.getMarket(
                     lastPageIndex = lastPageIndex,
-                    category = _uiState.value.selectedCategory.backendLabel
+                    category = _uiState.value.selectedCategory.backendLabel,
+                    pageSize = 60  // 임시: 백엔드 API 버그로 인해 큰 값 사용
                 )
                 if (response.isSuccessful) {
                     val marketPage = response.body()?.response
                     if (marketPage != null) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d("MarketListViewModel", "API 응답 성공 - 받은 매장 수: ${marketPage.marketResDtos.size}, hasNext: ${marketPage.hasNext}")
+                            Log.d("MarketListViewModel", "첫 매장 ID: ${marketPage.marketResDtos.firstOrNull()?.marketId}, 마지막 매장 ID: ${marketPage.marketResDtos.lastOrNull()?.marketId}")
+                        }
                         val currentMarkets = if (isNewCategory) emptyList() else _uiState.value.markets
                         _uiState.value = _uiState.value.copy(
                             markets = currentMarkets + marketPage.marketResDtos,
                             hasNext = marketPage.hasNext,
                             lastPageIndex = marketPage.marketResDtos.lastOrNull()?.marketId
                         )
+                        if (BuildConfig.DEBUG) {
+                            Log.d("MarketListViewModel", "상태 업데이트 완료 - 전체 매장 수: ${_uiState.value.markets.size}, 새 lastPageIndex: ${_uiState.value.lastPageIndex}")
+                        }
+                    }
+                } else {
+                    if (BuildConfig.DEBUG) {
+                        Log.e("MarketListViewModel", "API 응답 실패 - code: ${response.code()}, message: ${response.message()}")
                     }
                 }
             } catch (e: Exception) {
-                // Handle error
+                if (BuildConfig.DEBUG) {
+                    Log.e("MarketListViewModel", "API 호출 예외 발생", e)
+                }
             } finally {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
