@@ -139,7 +139,7 @@ fun LikePage(
                     MyHeartCount(uiState.cheerTicket)
                 }
                 item {
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     HorizontalDivider(color = Color(0xffeeeeee), thickness = 4.dp)
                     Spacer(modifier = Modifier.height(20.dp))
                 }
