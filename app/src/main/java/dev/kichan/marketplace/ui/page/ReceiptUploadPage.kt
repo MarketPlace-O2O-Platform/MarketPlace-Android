@@ -71,10 +71,10 @@ fun ReceiptUploadPage(
             NavAppBar("환급하기") { navController.popBackStack() }
         },
         containerColor = Color.White
-    ) {
+    ) { innerPadding ->
         Column(
             modifier = modifier
-                .padding(it)
+                .padding(innerPadding)
                 .padding(20.dp)
                 .windowInsetsPadding(WindowInsets.navigationBars)
         ) {

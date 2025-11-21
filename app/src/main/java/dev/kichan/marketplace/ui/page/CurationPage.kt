@@ -74,9 +74,9 @@ fun CurationPage(
             NavAppBar("찜한 매장") { nacController.popBackStack() }
         },
         containerColor = Color.White
-    ) {
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(innerPadding)
         ) {
             LazyColumn(
                 state = listState

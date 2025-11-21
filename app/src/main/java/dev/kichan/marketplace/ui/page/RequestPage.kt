@@ -82,10 +82,10 @@ fun RequestPage(
             SnackbarHost(snackbarHostState)
         },
         containerColor = Color.White
-    ) {
+    ) { innerPadding ->
         LazyColumn(
             modifier = modifier
-                .padding(it)
+                .padding(innerPadding)
                 .padding(
                     top = 52.dp,
                     start = 20.dp,

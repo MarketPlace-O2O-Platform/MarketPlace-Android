@@ -78,9 +78,9 @@ fun CouponListPage(
             NavAppBar("$title | 멤버십 혜택") { navController.popBackStack() }
         },
         containerColor = Color.White
-    ) {
+    ) { innerPadding ->
         LazyColumn (
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(innerPadding),
             state = listState
         ) {
             items(uiState.couponList) { coupon ->

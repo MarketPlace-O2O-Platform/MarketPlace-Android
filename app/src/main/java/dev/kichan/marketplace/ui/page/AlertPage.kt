@@ -54,8 +54,10 @@ fun AlertPage(
             NavAppBar("알림") { navController.popBackStack() }
         },
         containerColor = Color.White
-    ) {
-        Column {
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.padding(innerPadding)
+        ) {
             NotificationFilterBar(
                 selectedFilter = NotificationType.fromServerType(uiState.filterType),
                 onFilterSelected = { viewModel.setFilterType(it.serverType) },
@@ -64,7 +66,6 @@ fun AlertPage(
             if (uiState.isLoading && uiState.notifications.isEmpty()) {
                 Box(
                     modifier = Modifier
-                        .padding(it)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -73,7 +74,6 @@ fun AlertPage(
             } else if (uiState.error != null) {
                 Box(
                     modifier = Modifier
-                        .padding(it)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -82,7 +82,6 @@ fun AlertPage(
             } else if (uiState.notifications.isEmpty()) {
                 Box(
                     modifier = Modifier
-                        .padding(it)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -91,7 +90,6 @@ fun AlertPage(
             } else {
                 LazyColumn(
                     modifier = Modifier
-                        .padding(it)
                         .fillMaxSize(),
                 ) {
                     items(uiState.notifications) {

@@ -99,7 +99,7 @@ fun MyPage2(
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
         },
         containerColor = Color.White
-    ) {
+    ) { innerPadding ->
         if (selectedCouponId != null) {
             Dialog({ selectedCouponId = null }) {
                 Surface(
@@ -137,7 +137,7 @@ fun MyPage2(
 
         LazyColumn(
             modifier = Modifier
-                .padding(it)
+                .padding(innerPadding)
                 .background(Color.White)
         ) {
             item { Spacer(modifier = Modifier.height(21.dp)) }

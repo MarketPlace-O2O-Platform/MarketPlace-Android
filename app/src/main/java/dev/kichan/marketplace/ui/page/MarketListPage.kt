@@ -84,9 +84,9 @@ fun MarketListPage(
             NavAppBar("카테고리") { nacController.popBackStack() }
         },
         containerColor = Color.White
-    ) {
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(innerPadding)
         ) {
             CategoryTap(selectedCategory = uiState.selectedCategory) {
                 marketListViewModel.onCategoryChanged(it)
