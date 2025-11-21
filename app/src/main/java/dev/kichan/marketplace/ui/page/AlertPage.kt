@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -59,7 +60,16 @@ fun AlertPage(
                 onFilterSelected = { viewModel.setFilterType(it.serverType) },
                 onMarkAllRead = { viewModel.allRead() }
             )
-            if (uiState.error != null) {
+            if (uiState.isLoading && uiState.notifications.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else if (uiState.error != null) {
                 Box(
                     modifier = Modifier
                         .padding(it)
@@ -87,12 +97,6 @@ fun AlertPage(
                         NotificationItem(
                             notification = it,
                         )
-                    }
-
-                    if (uiState.isLoading) {
-                        items(10) {
-                            NotificationItemSkeleton()
-                        }
                     }
                 }
             }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,14 +47,15 @@ fun CouponBanner(
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { bannerList.size })
 
     if (isLoading) {
-        return SkeletonItem(
+        return Box(
             Modifier
                 .padding(horizontal = PAGE_HORIZONTAL_PADDING)
-                .clip(shape = RoundedCornerShape(12.dp))
                 .fillMaxWidth()
-                .aspectRatio(335.0f / 360)
-                .background(Color.Gray)
-        )
+                .aspectRatio(335.0f / 360),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     }
 
     Box(
