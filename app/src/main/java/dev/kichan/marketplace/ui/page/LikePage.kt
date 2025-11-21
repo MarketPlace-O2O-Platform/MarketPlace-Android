@@ -17,8 +17,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -316,10 +314,10 @@ private fun MyHeartCount(tiekctCount: Int) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                // todo: 아이콘 변경
-                imageVector = Icons.Default.Star,
+                painter = painterResource(R.drawable.fill_heart),
                 contentDescription = null,
-                tint = Color(0xff303030)
+                tint = Color(0xff303030),
+                modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(11.dp))
             Text(
