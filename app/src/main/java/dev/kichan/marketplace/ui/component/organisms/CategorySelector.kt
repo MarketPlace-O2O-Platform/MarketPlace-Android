@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.component.organisms
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -28,12 +30,15 @@ fun CategorySelector(navController: NavController) {
     Column(
         Modifier
             .fillMaxWidth()
+            .background(Color.White)
             .padding(horizontal = PAGE_HORIZONTAL_PADDING),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         categories.chunked(4).forEach { rowItems ->
             Row(
-                Modifier.fillMaxWidth().padding(7.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(7.dp),
                 horizontalArrangement = Arrangement.SpaceBetween // 각 항목 간 간격을 균등하게 설정
             ) {
                 rowItems.forEach { category ->

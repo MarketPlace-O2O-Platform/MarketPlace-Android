@@ -97,7 +97,8 @@ fun MyPage2(
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
-        }
+        },
+        containerColor = Color.White
     ) {
         if (selectedCouponId != null) {
             Dialog({ selectedCouponId = null }) {

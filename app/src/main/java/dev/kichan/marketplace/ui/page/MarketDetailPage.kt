@@ -182,6 +182,7 @@ fun MarketDetailPage(
         topBar = {
             NavAppBar("", Color.White) { navController.popBackStack() }
         },
+        containerColor = Color.White
     ) {
         if (downLoadCoupon != null) {
             CouponDownloadCheckDialog(

@@ -151,7 +151,8 @@ fun MapPage(
                 navController = navController,
                 pageList = bottomNavItem
             )
-        }
+        },
+        containerColor = Color.White
     ) { paddingValues ->
         Box(
             modifier = Modifier

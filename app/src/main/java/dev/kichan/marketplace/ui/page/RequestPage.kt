@@ -10,14 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,7 +51,7 @@ fun RequestPage(
     val searchQuery = viewModel.searchQuery
     val searchResults = viewModel.searchResults
     val selectedPlace = viewModel.selectedPlace
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     val cameraPositionState = rememberCameraPositionState {
@@ -67,16 +69,19 @@ fun RequestPage(
         viewModel.requestResult.collectLatest { success ->
             val message = if (success) "요청에 성공했습니다." else "요청에 실패했습니다."
             scope.launch {
-                scaffoldState.snackbarHostState.showSnackbar(message)
+                snackbarHostState.showSnackbar(message)
             }
         }
     }
 
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = {
             NavAppBar("요청하기") { navController.popBackStack() }
-        }
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
+        containerColor = Color.White
     ) {
         LazyColumn(
             modifier = modifier
@@ -162,12 +167,12 @@ fun StoreSearchUi(
                 .fillMaxWidth(),
             singleLine = true,
             shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,      // 포커스 시에도 회색
-                unfocusedBorderColor = Color.Gray,    // 비포커스 시 회색
-                focusedLabelColor = Color.Gray,       // 포커스 라벨 색
-                unfocusedLabelColor = Color.Gray,     // 비포커스 라벨 색
-                cursorColor = Color.Black             // 커서 색만 필요시 지정
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray,
+                focusedLabelColor = Color.Gray,
+                unfocusedLabelColor = Color.Gray,
+                cursorColor = Color.Black
             )
         )
     }
@@ -209,6 +214,6 @@ fun PlaceListItem(
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
-        Divider(color = Color.LightGray, thickness = 1.dp)
+        HorizontalDivider(color = Color.LightGray, thickness = 1.dp)
     }
 }

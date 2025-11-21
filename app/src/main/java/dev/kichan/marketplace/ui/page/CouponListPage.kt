@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,8 @@ fun CouponListPage(
     Scaffold(
         topBar = {
             NavAppBar("$title | 멤버십 혜택") { navController.popBackStack() }
-        }
+        },
+        containerColor = Color.White
     ) {
         LazyColumn (
             modifier = Modifier.padding(it),

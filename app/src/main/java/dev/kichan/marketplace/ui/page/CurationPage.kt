@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -71,7 +72,8 @@ fun CurationPage(
     Scaffold(
         topBar = {
             NavAppBar("찜한 매장") { nacController.popBackStack() }
-        }
+        },
+        containerColor = Color.White
     ) {
         Column(
             modifier = Modifier.padding(it)

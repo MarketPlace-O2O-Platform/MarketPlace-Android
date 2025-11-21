@@ -1,8 +1,10 @@
 package dev.kichan.marketplace.ui.page
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -73,7 +75,8 @@ fun HomePage(
         },
         bottomBar = {
             BottomNavigationBar(navController = navController, pageList = bottomNavItem)
-        }
+        },
+        containerColor = Color.White
     ) { innerPadding ->
         Column(
             Modifier

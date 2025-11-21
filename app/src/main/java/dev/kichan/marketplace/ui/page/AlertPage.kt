@@ -18,10 +18,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -52,7 +52,8 @@ fun AlertPage(
     Scaffold(
         topBar = {
             NavAppBar("알림") { navController.popBackStack() }
-        }
+        },
+        containerColor = Color.White
     ) {
         Column {
             NotificationFilterBar(

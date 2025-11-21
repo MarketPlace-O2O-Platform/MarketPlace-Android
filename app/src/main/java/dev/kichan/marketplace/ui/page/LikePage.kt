@@ -121,7 +121,8 @@ fun LikePage(
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
-        }
+        },
+        containerColor = Color.White
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(paddingValues),
