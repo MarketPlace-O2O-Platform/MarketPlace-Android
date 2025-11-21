@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +15,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.activity.ComponentActivity
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,7 +29,9 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CouponListItem
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.MarketPlaceTheme
+import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
 import dev.kichan.marketplace.viewmodel.CouponViewModel
+import dev.kichan.marketplace.viewmodel.DownloadResult
 import java.time.LocalDate
 
 @Composable
@@ -39,6 +44,12 @@ fun CouponListPage(
     val uiState by couponViewModel.couponListUiState.collectAsStateWithLifecycle()
     val title = if(type == "popular") "인기 쿠폰" else "${now.monthValue}월 신규"
     val listState = rememberLazyListState()
+    val context = LocalContext.current
+
+    // Activity 스코프의 MyPage2ViewModel을 가져와서 쿠폰 다운로드 시 갱신
+    val myPageViewModel: MyPage2ViewModel? = (context as? ComponentActivity)?.let {
+        viewModel(viewModelStoreOwner = it)
+    }
 
     val isScrolledToEnd by remember {
         derivedStateOf {
@@ -54,6 +65,20 @@ fun CouponListPage(
 
     LaunchedEffect(Unit) {
         couponViewModel.getCouponList(type)
+
+        // 다운로드 결과 관찰
+        couponViewModel.downloadResult.collect { result ->
+            when (result) {
+                is DownloadResult.Success -> {
+                    Toast.makeText(context, "${result.couponName} 발급 완료", Toast.LENGTH_SHORT).show()
+                    // MyPage 데이터 갱신 (Activity 스코프 ViewModel 공유 - Android 공식 권장)
+                    myPageViewModel?.refreshCoupons()
+                }
+                is DownloadResult.Error -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     Scaffold(

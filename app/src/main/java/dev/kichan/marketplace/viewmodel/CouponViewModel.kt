@@ -8,7 +8,9 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.repository.CouponsRepository
 import dev.kichan.marketplace.ui.component.atoms.CouponListItemProps
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,11 +25,19 @@ data class CouponListUiState(
     val lastCouponId: Long? = null,
 )
 
+sealed class DownloadResult {
+    data class Success(val couponName: String) : DownloadResult()
+    data class Error(val message: String) : DownloadResult()
+}
+
 class CouponViewModel() : ViewModel() {
     private val couponsRepository: CouponsRepository = RepositoryProvider.provideCouponsRepository();
     private val mamberRepository = RepositoryProvider   .provideMembersRepository();
     private val _couponListUiState = MutableStateFlow(CouponListUiState())
     val couponListUiState = _couponListUiState.asStateFlow()
+
+    private val _downloadResult = MutableSharedFlow<DownloadResult>()
+    val downloadResult = _downloadResult.asSharedFlow()
 
     fun getCouponList(type: String) {
         _couponListUiState.value = CouponListUiState()
@@ -109,27 +119,38 @@ class CouponViewModel() : ViewModel() {
 
     fun downloadCoupon(id: Long) {
         val coupon = _couponListUiState.value.couponList.find { it.id == id }
-        if(coupon == null)
+        if(coupon == null) {
+            viewModelScope.launch {
+                _downloadResult.emit(DownloadResult.Error("쿠폰 정보를 찾을 수 없습니다"))
+            }
             return
+        }
 
         viewModelScope.launch {
             try {
-                if(coupon.couponType == "PAYBACKA") {
+                val response = if(coupon.couponType == "PAYBACK") {
                     mamberRepository.downloadPaybackCoupon(id)
-                }
-                else {
+                } else {
                     mamberRepository.downloadGiftCoupon(id)
                 }
 
-                _couponListUiState.update { it.copy(
-                    couponList = it.couponList.map { coupon ->
-                        if(coupon.id == id) coupon.copy(isMemberIssued = true) else coupon
+                if (response.isSuccessful) {
+                    _couponListUiState.update { state ->
+                        state.copy(
+                            couponList = state.couponList.map { c ->
+                                if(c.id == id) c.copy(isMemberIssued = true) else c
+                            }
+                        )
                     }
-                ) }
+                    _downloadResult.emit(DownloadResult.Success(coupon.name))
+                } else {
+                    _downloadResult.emit(DownloadResult.Error("쿠폰 발급 실패"))
+                }
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     Log.e("CouponViewModel", "쿠폰 다운로드 실패: id=$id", e)
                 }
+                _downloadResult.emit(DownloadResult.Error(e.message ?: "네트워크 오류"))
             }
         }
     }

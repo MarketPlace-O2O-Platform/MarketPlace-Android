@@ -1,5 +1,7 @@
 package dev.kichan.marketplace.ui.page
 
+import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,6 +42,7 @@ import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.Input
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
 import dev.kichan.marketplace.viewmodel.ReceiptUploadViewModel
 
 @Composable
@@ -51,6 +54,11 @@ fun ReceiptUploadPage(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.state.collectAsStateWithLifecycle()
+
+    // Activity 스코프의 MyPage2ViewModel을 가져와서 영수증 업로드 시 갱신
+    val myPageViewModel: MyPage2ViewModel? = (context as? ComponentActivity)?.let {
+        viewModel(viewModelStoreOwner = it)
+    }
 
     val picker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -156,7 +164,13 @@ fun ReceiptUploadPage(
                     memberCouponId = couponId,
                     context = context,
                     onSuccess = {
+                        // MyPage 데이터 갱신 (Activity 스코프 ViewModel 공유)
+                        myPageViewModel?.refreshCoupons()
+                        Toast.makeText(context, "영수증 제출 완료", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
+                    },
+                    onError = { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                     }
                 )
             }

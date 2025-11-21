@@ -91,9 +91,15 @@ class ReceiptUploadViewModel : ViewModel() {
                     return@launch
                 }
 
-                membersRepository.uploadReceipt(memberCouponId, body)
-                withContext(Dispatchers.Main) {
-                    onSuccess()
+                val response = membersRepository.uploadReceipt(memberCouponId, body)
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        onSuccess()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke("영수증 업로드 실패: ${response.code()}")
+                    }
                 }
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {

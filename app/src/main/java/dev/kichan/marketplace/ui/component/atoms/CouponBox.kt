@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -19,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -73,16 +70,4 @@ fun CouponBox(
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewEventBox() {
-    val couponBoxProps = CouponBoxProps(id = "ㅇ난영", title = "50% 할인권", subTitle = "싸다싸다", url = "image.kichan.dev/test.png", marketId = 1, onDownloadClick = {})
-    CouponBox(
-        modifier = Modifier
-            .fillMaxWidth(0.7f)
-            .aspectRatio(1f / 1),
-        couponBoxProps = couponBoxProps,
-    )
 }

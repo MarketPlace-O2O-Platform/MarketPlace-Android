@@ -136,7 +136,6 @@ fun HomePage(
                                 subTitle = it.marketName,
                                 url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
-                                onDownloadClick = { /* TODO */ },
                             )
                         },
                         isLoading = uiState.isPopularLoading,
@@ -157,7 +156,6 @@ fun HomePage(
                                 title = it.couponName,
                                 url = NetworkModule.getImage(it.thumbnail),
                                 marketId = it.marketId,
-                                onDownloadClick = { /* TODO */ },
                             )
                         },
                         isLoading = uiState.isLatestLoading,
@@ -170,13 +168,5 @@ fun HomePage(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomePagePreview() {
-    MarketPlaceTheme {
-        HomePage(rememberNavController())
     }
 }

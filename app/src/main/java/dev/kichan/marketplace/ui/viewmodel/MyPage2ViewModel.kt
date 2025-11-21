@@ -119,14 +119,28 @@ class MyPage2ViewModel() : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
+                val usedCoupon = _uiState.value.giftCouponList.find { it.memberCouponId == memberCouponId }
                 membersRepository.useCoupon(memberCouponId)
-                _uiState.value = _uiState.value.copy(giftCouponList = _uiState.value.giftCouponList.filter { it.memberCouponId != memberCouponId })
+
+                // 사용한 쿠폰을 증정형 목록에서 제거하고 끝난 쿠폰 목록에 추가
+                if (usedCoupon != null) {
+                    _uiState.value = _uiState.value.copy(
+                        giftCouponList = _uiState.value.giftCouponList.filter { it.memberCouponId != memberCouponId },
+                        endedCouponList = _uiState.value.endedCouponList + EndedCoupon.EndedGift(usedCoupon)
+                    )
+                }
             } catch (e: Exception) {
                 // Handle error
             } finally {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
         }
+    }
+
+    fun refreshCoupons() {
+        getPaybackCoupons()
+        getGiftCoupons()
+        getEndedCoupons()  // 끝난 쿠폰도 갱신
     }
 
     fun logout(context : Context, onSuccess: () -> Unit) {
