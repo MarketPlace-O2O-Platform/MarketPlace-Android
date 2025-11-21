@@ -100,7 +100,10 @@ fun SearchPage(
                         SearchResultItem(
                             title = it.marketName,
                             description = it.marketDescription,
-                            imageUrl = NetworkModule.getImage(it.thumbnail)
+                            imageUrl = NetworkModule.getImage(it.thumbnail),
+                            onClick = {
+                                navController.navigate("${Page.EventDetail.name}/${it.marketId}")
+                            }
                         )
                     }
                 }

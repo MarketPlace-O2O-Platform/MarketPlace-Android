@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.component.atoms
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,10 +28,11 @@ import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
-fun SearchResultItem(title: String, description: String, imageUrl:String) {
+fun SearchResultItem(title: String, description: String, imageUrl:String, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(20.dp)
     ) {
         AsyncImage(
