@@ -50,7 +50,8 @@ fun RefundCouponCard(
     imageUrl: String = "https://placehold.co/600x600",
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
-    isUsable: Boolean = true
+    isUsable: Boolean = true,
+    buttonText: String = "환급하러 가기"
 ) {
     val density = LocalDensity.current
 //    val CouponShape = couponShape(density)
@@ -99,7 +100,7 @@ fun RefundCouponCard(
                 /* 버튼 ----------------------------------------------------------------- */
                 Spacer(Modifier.height(16.dp))
                 CustomButton(
-                    text = if (isUsable) "환급하러 가기" else "사용 불가",
+                    text = buttonText,
                     modifier = Modifier.fillMaxWidth(),
                     isDisable = !isUsable,
                     onClick = onClick

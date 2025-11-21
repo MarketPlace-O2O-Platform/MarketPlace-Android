@@ -9,6 +9,7 @@ data class IssuedCouponRes(
     val description: String,
     val used: Boolean,
     val couponType: String,
-    val deadLine: String,
+    val isSubmit: Boolean = false,
+    val deadLine: String?,
     val expired: Boolean
 )

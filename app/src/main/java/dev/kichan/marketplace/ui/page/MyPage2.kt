@@ -36,6 +36,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -46,10 +47,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.model.NetworkModule
@@ -70,7 +74,21 @@ fun MyPage2(
     myPage2ViewModel: MyPage2ViewModel = viewModel(),
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by myPage2ViewModel.uiState.collectAsState()
+
+    // 페이지가 보일 때마다 데이터 갱신 (onResume)
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                myPage2ViewModel.refreshCoupons()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     val tabs = listOf("환급형 쿠폰", "증정형 쿠폰", "끝난 쿠폰")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -206,13 +224,21 @@ fun MyPage2(
                     }
                 } else {
                     items(uiState.paybackCouponList) {
+                        val buttonText = if (it.isSubmit && !it.used) {
+                            "환급 진행 중"
+                        } else {
+                            "환급하러 가기"
+                        }
+                        val isUsable = !(it.isSubmit && !it.used)
+
                         RefundCouponCard(
                             storeName = it.marketName,
                             discountTitle = it.couponName,
                             imageUrl = NetworkModule.getImage(it.thumbnail),
                             onClick = { navController.navigate(Page.ReceptUploadPage.name + "/${it.memberCouponId}") },
                             modifier = Modifier.padding(horizontal = 18.dp),
-                            isUsable = true
+                            isUsable = isUsable,
+                            buttonText = buttonText
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }
