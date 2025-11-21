@@ -139,12 +139,9 @@ fun LikePage(
                     MyHeartCount(uiState.cheerTicket)
                 }
                 item {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(Color(0xFFEEEEEE))
-                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    HorizontalDivider(color = Color(0xffeeeeee), thickness = 4.dp)
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
                 item {
                     SpaceTitle(title = "달성 임박", badgeTitle = "HOT 🔥")
