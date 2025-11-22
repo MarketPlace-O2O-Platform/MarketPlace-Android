@@ -1,7 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -23,16 +22,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,11 +46,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -74,7 +73,7 @@ fun MyPage2(
     myPage2ViewModel: MyPage2ViewModel = viewModel(),
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val uiState by myPage2ViewModel.uiState.collectAsState()
 
     // 페이지가 보일 때마다 데이터 갱신 (onResume)
@@ -144,24 +143,24 @@ fun MyPage2(
             item {
                 if (uiState.member == null) {
                     TopBarUI(
-                        고객센터_가기 = {
+                        onCustomerCenterClick = {
                             val url = "http://pf.kakao.com/_XkZnn"
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                             context.startActivity(intent)
                         },
-                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) },
-                        로그아웃_하기 = {}
+                        onCurationClick = { navController.navigate(Page.CurationPage.name) },
+                        onLogoutClick = {}
                     )
                 } else {
                     TopBar(
                         member = uiState.member!!,
-                        고객센터_가기 = {
+                        onCustomerCenterClick = {
                             val url = "http://pf.kakao.com/_XkZnn"
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                             context.startActivity(intent)
                         },
-                        큐레이션_가기 = { navController.navigate(Page.CurationPage.name) },
-                        로그아웃_하기 = {
+                        onCurationClick = { navController.navigate(Page.CurationPage.name) },
+                        onLogoutClick = {
                             myPage2ViewModel.logout(context) {
                                 navController.popBackStack()
                                 navController.navigate(Page.Login.name)
@@ -171,10 +170,10 @@ fun MyPage2(
                 }
             }
             item {
-                Divider(
-                    color = Color(0xFFF4F4F4),
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
                     thickness = 8.dp,
-                    modifier = Modifier.fillMaxWidth()
+                    color = Color(0xFFF4F4F4)
                 )
             }
             item {
@@ -182,7 +181,7 @@ fun MyPage2(
                     selectedTabIndex = selectedTabIndex,
                     modifier = Modifier.fillMaxWidth(),
                     indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
+                        SecondaryIndicator(
                             Modifier
                                 .tabIndicatorOffset(tabPositions[selectedTabIndex])
                                 .height(2.dp),
@@ -333,9 +332,9 @@ fun MyPage2(
 @Composable
 fun TopBar(
     member: MemberRes,
-    큐레이션_가기: () -> Unit,
-    고객센터_가기: () -> Unit,
-    로그아웃_하기: () -> Unit,
+    onCurationClick: () -> Unit,
+    onCustomerCenterClick: () -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     var isShowLogoutMemu by remember { mutableStateOf(false) }
     Row(
@@ -379,7 +378,7 @@ fun TopBar(
             DropdownMenuItem(
                 text = { Text("로그아웃") },
                 onClick = {
-                    로그아웃_하기()
+                    onLogoutClick()
                 }
             )
         }
@@ -401,21 +400,21 @@ fun TopBar(
                     text = "큐레이션",
                     fontSize = 14.sp,
                     color = Color.Gray,
-                    modifier = Modifier.clickable { 큐레이션_가기() }
+                    modifier = Modifier.clickable { onCurationClick() }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Divider(
-                    color = Color.LightGray,
+                HorizontalDivider(
                     modifier = Modifier
                         .height(14.dp)
-                        .width(1.dp)
+                        .width(1.dp),
+                    color = Color.LightGray
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "고객센터",
                     fontSize = 14.sp,
                     color = Color.Gray,
-                    modifier = Modifier.clickable { 고객센터_가기() }
+                    modifier = Modifier.clickable { onCustomerCenterClick() }
                 )
             }
         }
@@ -424,9 +423,9 @@ fun TopBar(
 
 @Composable
 fun TopBarUI(
-    큐레이션_가기: () -> Unit,
-    고객센터_가기: () -> Unit,
-    로그아웃_하기: () -> Unit,
+    onCurationClick: () -> Unit,
+    onCustomerCenterClick: () -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -475,21 +474,21 @@ fun TopBarUI(
                     text = "큐레이션",
                     fontSize = 14.sp,
                     color = Color.Gray,
-                    modifier = Modifier.clickable { 큐레이션_가기() }
+                    modifier = Modifier.clickable { onCurationClick() }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Divider(
-                    color = Color.LightGray,
+                HorizontalDivider(
                     modifier = Modifier
                         .height(14.dp)
-                        .width(1.dp)
+                        .width(1.dp),
+                    color = Color.LightGray
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "고객센터",
                     fontSize = 14.sp,
                     color = Color.Gray,
-                    modifier = Modifier.clickable { 고객센터_가기() }
+                    modifier = Modifier.clickable { onCustomerCenterClick() }
                 )
             }
         }

@@ -16,7 +16,7 @@ import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +28,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
@@ -45,17 +44,14 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 @Composable
 fun RefundCouponCard(
+    modifier: Modifier = Modifier,
     storeName: String = "하노이키친 인천대점",
     discountTitle: String = "결제 금액 10% 환급",
     imageUrl: String = "https://placehold.co/600x600",
     onClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
     isUsable: Boolean = true,
     buttonText: String = "환급하러 가기"
 ) {
-    val density = LocalDensity.current
-//    val CouponShape = couponShape(density)
-
     Surface(
         modifier = Modifier.padding(bottom = 16.dp)
     ) {
@@ -178,7 +174,6 @@ fun CouponDivider() {
     ) {
         val y = size.height / 2
         val dash = 5.dp.toPx()
-        val gap = dash
         val stroke = 1.dp.toPx()
         var x = 0f
         while (x < size.width) {
@@ -188,7 +183,7 @@ fun CouponDivider() {
                 end = Offset(x + dash, y),
                 strokeWidth = stroke
             )
-            x += dash + gap
+            x += dash + dash
         }
 //        // 좌-우 타공
 //        val r = 4.dp.toPx()
@@ -199,7 +194,7 @@ fun CouponDivider() {
 
 @Preview
 @Composable
-private fun RefunCouponCardPreview() {
+private fun RefundCouponCardPreview() {
     MarketPlaceTheme {
         RefundCouponCard()
     }
@@ -256,7 +251,7 @@ fun RefundCouponCardSkeleton(modifier: Modifier = Modifier) {
 
             // 절취선 위치
             Spacer(Modifier.height(21.dp))
-            Divider(color = Color(0xFFE0E0E0), thickness = 1.dp)
+            HorizontalDivider(thickness = 1.dp, color = Color(0xFFE0E0E0))
             Spacer(Modifier.height(9.dp))
 
             // 하단 메모
