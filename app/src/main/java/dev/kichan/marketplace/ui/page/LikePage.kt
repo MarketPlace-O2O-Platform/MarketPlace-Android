@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -350,6 +351,9 @@ fun MarketCard(
 ) {
     val context = LocalContext.current
 
+    // 디버깅용 로그
+    Log.d("MarketCard", "매장: ${market.marketName}, cheerCount: ${market.cheerCount}, isCheer: ${market.isCheer}")
+
     Row(
         modifier = Modifier.padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -388,6 +392,13 @@ fun MarketCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             when {
+                market.cheerCount >= 20 -> {
+                    CustomButton(
+                        text = "제휴 컨택 중",
+                        isDisable = true,
+                        modifier = Modifier.fillMaxWidth()
+                    ) { }
+                }
                 market.isCheer -> {
                     CustomButton(
                         text = "공감 완료",
