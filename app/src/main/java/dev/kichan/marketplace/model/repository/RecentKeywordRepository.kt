@@ -18,7 +18,7 @@ class RecentKeywordRepository(context: Context) {
         }
         keywords.add(0, keyword)
         if (keywords.size > 10) {
-            keywords.removeLast()
+            keywords.removeAt(keywords.lastIndex)
         }
         prefs.edit().putStringSet("keywords", keywords.toSet()).apply()
     }
