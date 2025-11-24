@@ -50,8 +50,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            versionNameSuffix = "-DEBUG"
+            resValue("string", "app_name", "쿠러미 (디버그)")
+        }
         release {
             signingConfig = signingConfigs.getByName("release")
+            resValue("string", "app_name", "쿠러미")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
