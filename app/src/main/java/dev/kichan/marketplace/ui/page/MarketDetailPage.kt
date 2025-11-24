@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui.page
 
 import android.app.Application
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -504,7 +505,16 @@ fun KakaoMapSearchBox(marketName: String) {
 
     val onClick = {
         val intent = Intent(Intent.ACTION_VIEW, "kakaomap://search?q=${marketName}".toUri())
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            // 카카오맵 앱 미설치 시 웹 버전으로 대체
+            val webIntent = Intent(
+                Intent.ACTION_VIEW,
+                "https://map.kakao.com/?q=${marketName}".toUri()
+            )
+            context.startActivity(webIntent)
+        }
     }
 
     Row(

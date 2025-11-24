@@ -1,5 +1,6 @@
 package dev.kichan.marketplace.ui.page
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -146,7 +147,11 @@ fun MyPage2(
                         onCustomerCenterClick = {
                             val url = "http://pf.kakao.com/_XkZnn"
                             val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                            context.startActivity(intent)
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                Toast.makeText(context, "브라우저를 찾을 수 없습니다", Toast.LENGTH_SHORT).show()
+                            }
                         },
                         onCurationClick = { navController.navigate(Page.CurationPage.name) },
                         onLogoutClick = {}
@@ -157,7 +162,11 @@ fun MyPage2(
                         onCustomerCenterClick = {
                             val url = "http://pf.kakao.com/_XkZnn"
                             val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                            context.startActivity(intent)
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                Toast.makeText(context, "브라우저를 찾을 수 없습니다", Toast.LENGTH_SHORT).show()
+                            }
                         },
                         onCurationClick = { navController.navigate(Page.CurationPage.name) },
                         onLogoutClick = {
