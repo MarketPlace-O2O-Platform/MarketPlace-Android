@@ -220,17 +220,15 @@ fun MarketDetailPage(
                     onFavorite = { marketDetailViewModel.favorite(id) })
             }
             item {
-                Column{
-                    Surface(
-                        modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING)
-                    ) {
-                        Text(
-                            text = "이벤트 쿠폰",
-                            fontFamily = PretendardFamily,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 14.sp
-                        )
-                    }
+                Column(
+                    modifier = Modifier.padding(horizontal = PAGE_HORIZONTAL_PADDING)
+                ) {
+                    Text(
+                        text = "이벤트 쿠폰",
+                        fontFamily = PretendardFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
+                    )
                     Spacer(modifier = Modifier.height(20.dp))
 
                     if (availableCouponList.isNotEmpty()) {
