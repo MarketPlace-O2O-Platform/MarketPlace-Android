@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -165,7 +166,9 @@ fun LoginPage(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = "학번을 입력해주세요(숫자만)"
+                placeholder = "학번을 입력해주세요(숫자만)",
+                singleLine = true,
+                imeAction = ImeAction.Next
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -191,7 +194,10 @@ fun LoginPage(
                 onChange = { loginViewModel.setPassword(it) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "비밀번호를 입력해주세요",
-                inputType = InputType.Password
+                inputType = InputType.Password,
+                singleLine = true,
+                imeAction = ImeAction.Done,
+                onImeAction = onLogin
             )
 
             Spacer(modifier = Modifier.height(8.dp))

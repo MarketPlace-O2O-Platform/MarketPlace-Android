@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +51,8 @@ fun Input(
     minLines: Int = 1,
     inputType: InputType = InputType.Text,
     readOnly: Boolean = false,
+    imeAction: ImeAction = ImeAction.Default,
+    onImeAction: () -> Unit = {},
 ) {
     val shape = RoundedCornerShape(2.dp)
     val contentColor = Gray_9
@@ -71,7 +75,12 @@ fun Input(
                 keyboardType = when (inputType) {
                     InputType.Number -> KeyboardType.Number
                     else -> KeyboardType.Text
-                }
+                },
+                imeAction = imeAction
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onImeAction() },
+                onNext = { onImeAction() }
             ),
         ) { innerTextField ->
             Row(
