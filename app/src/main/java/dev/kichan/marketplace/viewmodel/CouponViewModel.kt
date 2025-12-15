@@ -84,11 +84,11 @@ class CouponViewModel() : ViewModel() {
                             CouponListItemProps(
                                 id = it.couponId,
                                 name = it.couponName,
-                                marketName = it.marketName,
-                                marketId = it.marketId,
-                                imageUrl = NetworkModule.getImage(it.thumbnail),
+                                marketName = it.marketName ?: "",
+                                marketId = it.marketId ?: 0L,
+                                imageUrl = NetworkModule.getImage(it.thumbnail ?: ""),
                                 isMemberIssued = it.isMemberIssued,
-                                address = it.address,
+                                address = it.address ?: "",
                                 isAvailable = it.isAvailable,
                                 couponType = it.couponType
                             )

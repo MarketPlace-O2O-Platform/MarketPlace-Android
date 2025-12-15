@@ -138,8 +138,9 @@ fun MarketDetailPage(
             Log.d("MarketDetailPage", "쿠폰 필터링 체크 ${coupon.couponId}: type=${coupon.couponType}, hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}")
         }
 
-        // 공통 조건: 숨김 아님, 이미 발급받지 않음
-        !coupon.isMemberIssued && !coupon.isHidden &&
+        // 공통 조건: 숨김 아님
+        // 환급 쿠폰은 발급 여부와 관계없이 표시 (재발급 가능), 일반 쿠폰은 발급받지 않은 것만 표시
+        (coupon.couponType == "PAYBACK" || !coupon.isMemberIssued) && !coupon.isHidden &&
 
         // 타입별 조건
         when (coupon.couponType) {

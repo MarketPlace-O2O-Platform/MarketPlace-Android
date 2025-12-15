@@ -32,8 +32,9 @@ data class DisplayCoupon(
 
 /**
  * CouponRes → DisplayCoupon 변환
+ * 서버가 매장 정보를 보내지 않는 경우 MarketDetailsRes에서 가져옴
  */
-fun CouponRes.toDisplayCoupon() = DisplayCoupon(
+fun CouponRes.toDisplayCoupon(marketData: MarketDetailsRes) = DisplayCoupon(
     couponId = couponId,
     couponName = couponName,
     couponDescription = couponDescription,
@@ -43,10 +44,10 @@ fun CouponRes.toDisplayCoupon() = DisplayCoupon(
     deadLine = deadLine,
     isAvailable = isAvailable,
     stock = stock,
-    marketId = marketId,
-    marketName = marketName,
-    thumbnail = thumbnail,
-    address = address,
+    marketId = marketId ?: marketData.marketId,
+    marketName = marketName ?: marketData.name,
+    thumbnail = thumbnail ?: (marketData.imageResList.firstOrNull()?.name ?: ""),
+    address = address ?: marketData.address,
     couponCreatedAt = couponCreatedAt,
     issuedCount = issuedCount
 )

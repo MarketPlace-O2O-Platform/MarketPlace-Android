@@ -28,7 +28,8 @@ sealed class MarketDetailNavigationEvent {
     object NavigateToMyPage : MarketDetailNavigationEvent()
 }
 
-class MarketDetailViewModel(application: Application, private val marketId: Long) : AndroidViewModel(application) {
+class MarketDetailViewModel(application: Application, private val marketId: Long) :
+    AndroidViewModel(application) {
 
     private val marketsRepository = RepositoryProvider.provideMarketsRepository()
     private val couponsRepository = RepositoryProvider.provideCouponsRepository()
@@ -45,7 +46,6 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
     init {
         getMarketDetails()
         getMarketCoupons()
-        checkFavoriteStatus()
     }
 
     fun checkFavoriteStatus() {
@@ -53,8 +53,10 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
             try {
                 val response = marketsRepository.getMemberFavoriteMarketList()
                 if (response.isSuccessful) {
-                    val favoriteMarkets = response.body()?.response?.marketResDtos?.map { it.marketId } ?: emptyList()
-                    _uiState.value = _uiState.value.copy(isFavorite = favoriteMarkets.contains(marketId))
+                    val favoriteMarkets =
+                        response.body()?.response?.marketResDtos?.map { it.marketId } ?: emptyList()
+                    _uiState.value =
+                        _uiState.value.copy(isFavorite = favoriteMarkets.contains(marketId))
                 }
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
@@ -89,7 +91,11 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
                     couponsRepository.getCouponList_4(marketId = marketId)
                 }
                 val paybackCouponsDeferred = async {
-                    paybackCouponsRepository.getCouponList(marketId = marketId, couponId = null, size = 100)
+                    paybackCouponsRepository.getCouponList(
+                        marketId = marketId,
+                        couponId = null,
+                        size = 100
+                    )
                 }
 
                 // 결과 대기
@@ -104,31 +110,34 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
 
                     // 각 쿠폰 상태 로깅
                     giftResponse.body()?.response?.couponResDtos?.forEach { coupon ->
-                        Log.d("MarketDetail", "일반 쿠폰 ${coupon.couponId}: hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}, available=${coupon.isAvailable}")
+                        Log.d(
+                            "MarketDetail",
+                            "일반 쿠폰 ${coupon.couponId}: hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}, available=${coupon.isAvailable}"
+                        )
                     }
                     paybackResponse.body()?.response?.couponResDtos?.forEach { coupon ->
-                        Log.d("MarketDetail", "환급 쿠폰 ${coupon.couponId}: hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}")
+                        Log.d(
+                            "MarketDetail",
+                            "환급 쿠폰 ${coupon.couponId}: hidden=${coupon.isHidden}, issued=${coupon.isMemberIssued}"
+                        )
                     }
                 }
 
                 // DisplayCoupon으로 변환
-                val giftCoupons = if (giftResponse.isSuccessful) {
+                val marketData = _uiState.value.marketData
+
+                val giftCoupons = if (giftResponse.isSuccessful && marketData != null) {
                     giftResponse.body()?.response?.couponResDtos?.map {
-                        it.toDisplayCoupon()
+                        it.toDisplayCoupon(marketData)
                     } ?: emptyList()
                 } else {
                     emptyList()
                 }
 
-                val paybackCoupons = if (paybackResponse.isSuccessful) {
-                    val marketData = _uiState.value.marketData
-                    if (marketData != null) {
-                        paybackResponse.body()?.response?.couponResDtos?.map {
-                            it.toDisplayCoupon(marketData)
-                        } ?: emptyList()
-                    } else {
-                        emptyList()
-                    }
+                val paybackCoupons = if (paybackResponse.isSuccessful && marketData != null) {
+                    paybackResponse.body()?.response?.couponResDtos?.map {
+                        it.toDisplayCoupon(marketData)
+                    } ?: emptyList()
                 } else {
                     emptyList()
                 }
