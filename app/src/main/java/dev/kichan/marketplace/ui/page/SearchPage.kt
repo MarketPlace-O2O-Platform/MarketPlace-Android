@@ -43,15 +43,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import dev.kichan.marketplace.R
+import dev.kichan.marketplace.common.noRippleClickable
 import dev.kichan.marketplace.model.NetworkModule
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
@@ -71,7 +70,9 @@ fun SearchPage(
         viewModel.getPopularCoupons()
     }
 
-    Scaffold {
+    Scaffold(
+        containerColor = Color.White
+    ) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -186,7 +187,7 @@ private fun RecentKeyword(
             text = "지우기",
             fontSize = 14.sp,
             color = Color(0xFF5E5E5E),
-            modifier = Modifier.clickable { onClearClick() }
+            modifier = Modifier.noRippleClickable { onClearClick() }
         )
     }
     LazyRow(
@@ -355,7 +356,7 @@ fun SearchResultEmpty() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFEEEEEE)),
+            .background(color = Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -387,10 +388,4 @@ fun SearchResultEmpty() {
         Spacer(modifier = Modifier.height(31.dp))
         CustomButton("요청하기", modifier = Modifier.width(240.dp)) { }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SearchPagePrev() {
-    SearchPage(rememberNavController())
 }
