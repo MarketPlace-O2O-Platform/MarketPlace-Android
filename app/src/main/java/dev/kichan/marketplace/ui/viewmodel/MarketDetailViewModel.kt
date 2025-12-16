@@ -28,6 +28,11 @@ sealed class MarketDetailNavigationEvent {
     object NavigateToMyPage : MarketDetailNavigationEvent()
 }
 
+sealed class DownloadResult {
+    data class Success(val couponName: String) : DownloadResult()
+    data class Error(val message: String) : DownloadResult()
+}
+
 class MarketDetailViewModel(application: Application, private val marketId: Long) :
     AndroidViewModel(application) {
 
@@ -42,6 +47,9 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
 
     private val _navigationEvent = MutableSharedFlow<MarketDetailNavigationEvent>()
     val navigationEvent = _navigationEvent.asSharedFlow()
+
+    private val _downloadResult = MutableSharedFlow<DownloadResult>()
+    val downloadResult = _downloadResult.asSharedFlow()
 
     init {
         getMarketDetails()
@@ -169,10 +177,20 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
             try {
                 val response = membersRepository.downloadGiftCoupon(couponId)
                 if (response.isSuccessful) {
+                    val coupon = _uiState.value.couponList.find { it.couponId == couponId }
+                    _downloadResult.emit(DownloadResult.Success(coupon?.couponName ?: "쿠폰"))
                     _navigationEvent.emit(MarketDetailNavigationEvent.NavigateToMyPage)
+                } else {
+                    when (response.code()) {
+                        409 -> _downloadResult.emit(DownloadResult.Error("이미 발급받은 쿠폰입니다"))
+                        else -> _downloadResult.emit(DownloadResult.Error("쿠폰 발급 실패"))
+                    }
                 }
             } catch (e: Exception) {
-                // Handle error
+                if (BuildConfig.DEBUG) {
+                    Log.e("MarketDetailViewModel", "일반 쿠폰 다운로드 실패: couponId=$couponId", e)
+                }
+                _downloadResult.emit(DownloadResult.Error(e.message ?: "네트워크 오류"))
             }
         }
     }
@@ -182,10 +200,20 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
             try {
                 val response = membersRepository.downloadPaybackCoupon(couponId)
                 if (response.isSuccessful) {
+                    val coupon = _uiState.value.couponList.find { it.couponId == couponId }
+                    _downloadResult.emit(DownloadResult.Success(coupon?.couponName ?: "쿠폰"))
                     _navigationEvent.emit(MarketDetailNavigationEvent.NavigateToMyPage)
+                } else {
+                    when (response.code()) {
+                        409 -> _downloadResult.emit(DownloadResult.Error("이미 발급받은 쿠폰입니다"))
+                        else -> _downloadResult.emit(DownloadResult.Error("쿠폰 발급 실패"))
+                    }
                 }
             } catch (e: Exception) {
-                // Handle error
+                if (BuildConfig.DEBUG) {
+                    Log.e("MarketDetailViewModel", "환급 쿠폰 다운로드 실패: couponId=$couponId", e)
+                }
+                _downloadResult.emit(DownloadResult.Error(e.message ?: "네트워크 오류"))
             }
         }
     }

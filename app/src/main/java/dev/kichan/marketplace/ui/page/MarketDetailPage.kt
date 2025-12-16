@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -83,6 +84,7 @@ import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.component.atoms.PagerIndicator
 import dev.kichan.marketplace.ui.theme.PretendardFamily
+import dev.kichan.marketplace.ui.viewmodel.DownloadResult
 import dev.kichan.marketplace.ui.viewmodel.MarketDetailNavigationEvent
 import dev.kichan.marketplace.ui.viewmodel.MarketDetailViewModel
 import dev.kichan.marketplace.ui.viewmodel.MarketDetailViewModelFactory
@@ -104,12 +106,26 @@ fun MarketDetailPage(
 ) {
     val uiState by marketDetailViewModel.uiState.collectAsState()
     var downLoadCoupon by remember { mutableStateOf<DisplayCoupon?>(null) }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         marketDetailViewModel.navigationEvent.collect { event ->
             when (event) {
                 is MarketDetailNavigationEvent.NavigateToMyPage -> {
                     navController.navigate(Page.My.name)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        marketDetailViewModel.downloadResult.collect { result ->
+            when (result) {
+                is DownloadResult.Success -> {
+                    Toast.makeText(context, "${result.couponName} 발급 완료", Toast.LENGTH_SHORT).show()
+                }
+                is DownloadResult.Error -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
