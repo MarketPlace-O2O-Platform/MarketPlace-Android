@@ -80,7 +80,6 @@ fun HomePage(
             LazyColumn {
                 // 쿠폰 배너 바로 상단바 아래에 위치
                 item {
-                    Spacer(modifier = Modifier.height(20.dp))
                     CouponBanner(
                         isLoading = uiState.isClosingLoading || uiState.closingCoupons.isEmpty(),
                         bannerList = uiState.closingCoupons.mapNotNull { coupon ->

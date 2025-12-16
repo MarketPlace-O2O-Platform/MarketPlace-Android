@@ -32,7 +32,7 @@ import dev.kichan.marketplace.ui.theme.PretendardFamily
 
 val appBarModifier = Modifier
     .fillMaxWidth()
-    .padding(top = 32.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+    .padding(top = 32.dp, bottom = 9.dp, start = 20.dp, end = 20.dp)
 
 val titleStyle = TextStyle(
     fontSize = 18.sp,
