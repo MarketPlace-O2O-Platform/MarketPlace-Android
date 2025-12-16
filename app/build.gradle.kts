@@ -30,8 +30,8 @@ android {
         applicationId = "dev.kichan.marketplace"
         minSdk = 26
         targetSdk = 35
-        versionCode = 7
-        versionName = "2.0.1"
+        versionCode = 8
+        versionName = "2.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
