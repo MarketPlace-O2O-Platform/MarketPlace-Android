@@ -24,12 +24,12 @@ secrets {
 
 android {
     namespace = "dev.kichan.marketplace"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "dev.kichan.marketplace"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 8
         versionName = "2.0.2"
 
@@ -37,7 +37,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        // buildConfigField 제거: Secrets Gradle Plugin이 자동으로 처리
     }
 
     signingConfigs {
