@@ -52,18 +52,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // 상태바 아이콘을 항상 검정색으로 고정
+        // 시스템 바 아이콘을 항상 검정색으로 고정 (라이트 테마에 맞춤)
         WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = true  // 검정 아이콘 (라이트 모드)
+            isAppearanceLightStatusBars = true       // 상태바: 검정 아이콘
+            isAppearanceLightNavigationBars = true   // 네비게이션바: 검정 아이콘
         }
 
         // Key Hash 가져오는 코드
         val keyHash = Utility.getKeyHash(this)
         Log.i("GlobalApplication", keyHash)
         KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_API_KEY)
-
-//        val intent = Intent(this, MyFirebaseMessagingService::class.java)
-//        startService(intent)
 
         getFCMToken()
 
