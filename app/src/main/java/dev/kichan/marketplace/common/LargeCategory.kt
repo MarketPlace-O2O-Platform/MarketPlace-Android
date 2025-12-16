@@ -26,7 +26,7 @@ enum class LargeCategory(
     Sports(
         "스포츠",
         "SPORT",
-        R.drawable.ic_category_sports
+        R.drawable.ic_category_training
     ),
     Beauty(
         "뷰티&헤어",
@@ -41,16 +41,11 @@ enum class LargeCategory(
     Education(
         "에듀",
         "EDUCATION",
-        R.drawable.ic_category_education
+        R.drawable.ic_category_edu
     ),
     Rest(
         "더 다양한",
         "ETC",
-        R.drawable.ic_category_etc
+        R.drawable.ic_category_more
     );
-
-    companion object {
-        fun findByNameKo(key: String): LargeCategory =
-            runCatching { valueOf(key) }.getOrElse { Rest }
-    }
 }
