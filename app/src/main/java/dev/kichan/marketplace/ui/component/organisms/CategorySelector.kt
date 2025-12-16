@@ -43,10 +43,12 @@ fun CategorySelector(navController: NavController) {
             ) {
                 rowItems.forEach { category ->
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally, // 버튼과 텍스트를 가운데 정렬
-                        modifier = Modifier.noRippleClickable {
-                            navController.navigate("${Page.MarketListPage.name}/${category.name}")
-                        }
+                        modifier = Modifier
+                            .weight(1f)  // 균등 너비 분배
+                            .noRippleClickable {
+                                navController.navigate("${Page.MarketListPage.name}/${category.name}")
+                            },
+                        horizontalAlignment = Alignment.CenterHorizontally // 버튼과 텍스트를 가운데 정렬
                     ) {
                         Image(
                             painter = painterResource(id = category.icon),
