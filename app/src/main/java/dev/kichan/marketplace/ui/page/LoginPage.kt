@@ -24,7 +24,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +61,8 @@ fun LoginPage(
     val coroutineScope = rememberCoroutineScope()
 
     val loginInputState by loginViewModel.loginInputState.collectAsStateWithLifecycle()
+
+    val focusManager = LocalFocusManager.current
 
     val onLogin: () -> Unit = {
         loginViewModel.login()
@@ -168,7 +172,8 @@ fun LoginPage(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "학번을 입력해주세요(숫자만)",
                 singleLine = true,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
