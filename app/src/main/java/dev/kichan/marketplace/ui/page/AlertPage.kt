@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dev.kichan.marketplace.BuildConfig
+import dev.kichan.marketplace.common.noRippleClickable
 import dev.kichan.marketplace.model.dto.NotificationRes
 import dev.kichan.marketplace.ui.component.atoms.NavAppBar
 import dev.kichan.marketplace.ui.theme.PretendardFamily
@@ -167,7 +168,7 @@ fun NotificationFilterBar(
                 color = Color.Black,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
-                    .clickable { onMarkAllRead() }
+                    .noRippleClickable { onMarkAllRead() }
                     .padding(start = 8.dp)
             )
         }
