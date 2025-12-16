@@ -2,7 +2,6 @@ package dev.kichan.marketplace.ui.component.organisms
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.kichan.marketplace.common.LargeCategory
+import dev.kichan.marketplace.common.noRippleClickable
 import dev.kichan.marketplace.ui.PAGE_HORIZONTAL_PADDING
 import dev.kichan.marketplace.ui.Page
 
@@ -44,7 +44,7 @@ fun CategorySelector(navController: NavController) {
                 rowItems.forEach { category ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally, // 버튼과 텍스트를 가운데 정렬
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.noRippleClickable {
                             navController.navigate("${Page.MarketListPage.name}/${category.name}")
                         }
                     ) {
