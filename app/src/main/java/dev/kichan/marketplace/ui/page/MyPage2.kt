@@ -171,8 +171,9 @@ fun MyPage2(
                         onCurationClick = { navController.navigate(Page.CurationPage.name) },
                         onLogoutClick = {
                             myPage2ViewModel.logout(context) {
-                                navController.popBackStack()
-                                navController.navigate(Page.Login.name)
+                                navController.navigate(Page.Login.name) {
+                                    popUpTo(0)
+                                }
                             }
                         }
                     )
