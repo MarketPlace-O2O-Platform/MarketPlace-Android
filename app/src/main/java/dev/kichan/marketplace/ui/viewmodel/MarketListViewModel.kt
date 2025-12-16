@@ -50,7 +50,7 @@ class MarketListViewModel(application: Application, initialCategory: LargeCatego
                 val response = marketsRepository.getMarket(
                     lastPageIndex = lastPageIndex,
                     category = _uiState.value.selectedCategory.backendLabel,
-                    pageSize = 999  // 임시: 백엔드 API 버그로 인해 큰 값 사용
+                    pageSize = 10
                 )
                 if (response.isSuccessful) {
                     val marketPage = response.body()?.response
