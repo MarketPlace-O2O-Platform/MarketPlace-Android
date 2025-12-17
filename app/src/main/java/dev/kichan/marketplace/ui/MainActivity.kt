@@ -5,10 +5,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.graphics.Color
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.core.view.WindowCompat
 import com.github.javafaker.Faker
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility
@@ -50,13 +51,18 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
-        // 시스템 바 아이콘을 항상 검정색으로 고정 (라이트 테마에 맞춤)
-        WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = true       // 상태바: 검정 아이콘
-            isAppearanceLightNavigationBars = true   // 네비게이션바: 검정 아이콘
-        }
+        // 시스템 바(상태바, 네비게이션 바)를 라이트 모드로 고정
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT,  // Light 모드 색상
+                Color.TRANSPARENT   // Dark 모드 색상 (앱이 라이트 모드 고정이므로 동일)
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT,  // Light 모드 색상
+                Color.TRANSPARENT   // Dark 모드 색상 (앱이 라이트 모드 고정이므로 동일)
+            )
+        )
 
         // Key Hash 가져오는 코드
         val keyHash = Utility.getKeyHash(this)
