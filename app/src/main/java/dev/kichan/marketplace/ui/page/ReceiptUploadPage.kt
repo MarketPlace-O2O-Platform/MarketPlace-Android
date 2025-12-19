@@ -160,7 +160,9 @@ fun ReceiptUploadPage(
             CustomButton(
                 "저장하기",
                 modifier = Modifier.fillMaxWidth(),
-                isDisable = uiState.imageUri == null
+                isDisable = uiState.imageUri == null ||
+                    uiState.bankName.isEmpty() ||
+                    uiState.accountNumber.isEmpty()
             ) {
                 val uploadReceipt = {
                     viewModel.upload(
