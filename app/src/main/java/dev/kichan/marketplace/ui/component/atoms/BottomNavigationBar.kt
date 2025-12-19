@@ -41,6 +41,7 @@ fun BottomNavigationBar(navController: NavController, pageList: List<Pair<Page, 
         BottomNavigation(
             backgroundColor = Color.White,
             contentColor = Color.Gray,
+            elevation = 0.dp,
             modifier = Modifier
                 .fillMaxWidth()
                 .windowInsetsPadding(WindowInsets.navigationBars)
