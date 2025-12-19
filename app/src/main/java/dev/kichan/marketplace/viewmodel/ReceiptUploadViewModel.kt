@@ -125,6 +125,30 @@ class ReceiptUploadViewModel : ViewModel() {
         }
     }
 
+    fun denyAccount(onSuccess: (() -> Unit)? = null, onError: ((String) -> Unit)? = null) {
+        viewModelScope.launch {
+            try {
+                val response = membersRepository.denyAccount()
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        onSuccess?.invoke()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        onError?.invoke("계좌 정보 해제 실패")
+                    }
+                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    Log.e("ReceiptUploadViewModel", "계좌 정보 해제 실패", e)
+                }
+                withContext(Dispatchers.Main) {
+                    onError?.invoke("계좌 정보 해제 중 오류 발생")
+                }
+            }
+        }
+    }
+
     fun upload(memberCouponId: Long, context: Context, onSuccess: () -> Unit, onError: ((String) -> Unit)? = null) {
         viewModelScope.launch {
             try {

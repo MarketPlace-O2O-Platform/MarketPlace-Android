@@ -151,7 +151,33 @@ fun ReceiptUploadPage(
             ) {
                 Checkbox(
                     checked = uiState.isSaveAccount,
-                    onCheckedChange = { viewModel.setSaveAccount(it) },
+                    onCheckedChange = { isChecked ->
+                        if (!isChecked) {
+                            // 체크 해제 시 계좌 정보 삭제 API 호출
+                            viewModel.denyAccount(
+                                onSuccess = {
+                                    viewModel.setSaveAccount(false)
+                                },
+                                onError = { message ->
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        } else {
+                            // 체크 시 계좌 정보 저장 API 호출
+                            if (uiState.bankName.isNotEmpty() && uiState.accountNumber.isNotEmpty()) {
+                                viewModel.saveAccount(
+                                    onSuccess = {
+                                        viewModel.setSaveAccount(true)
+                                    },
+                                    onError = { message ->
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                    }
+                                )
+                            } else {
+                                Toast.makeText(context, "은행과 계좌번호를 먼저 입력해주세요", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
                 )
 
                 Text("계좌번호 저장")
@@ -164,34 +190,17 @@ fun ReceiptUploadPage(
                     uiState.bankName.isEmpty() ||
                     uiState.accountNumber.isEmpty()
             ) {
-                val uploadReceipt = {
-                    viewModel.upload(
-                        memberCouponId = couponId,
-                        context = context,
-                        onSuccess = {
-                            Toast.makeText(context, "영수증 제출 완료", Toast.LENGTH_SHORT).show()
-                            navController.popBackStack()
-                        },
-                        onError = { message ->
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                }
-
-                // 계좌번호 저장이 체크되어 있고 계좌 정보가 입력되어 있으면 먼저 저장
-                if (uiState.isSaveAccount && uiState.bankName.isNotEmpty() && uiState.accountNumber.isNotEmpty()) {
-                    viewModel.saveAccount(
-                        onSuccess = {
-                            uploadReceipt()
-                        },
-                        onError = { message ->
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                            uploadReceipt()  // 계좌 저장 실패해도 영수증은 제출
-                        }
-                    )
-                } else {
-                    uploadReceipt()
-                }
+                viewModel.upload(
+                    memberCouponId = couponId,
+                    context = context,
+                    onSuccess = {
+                        Toast.makeText(context, "영수증 제출 완료", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    },
+                    onError = { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    }
+                )
             }
         }
     }
