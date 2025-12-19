@@ -160,6 +160,25 @@ class ReceiptUploadViewModel : ViewModel() {
                     return@launch
                 }
 
+                // 계좌 정보가 입력되어 있으면 먼저 저장
+                val bankName = _state.value.bankName
+                val accountNumber = _state.value.accountNumber
+                val isSaveAccount = _state.value.isSaveAccount
+
+                if (bankName.isNotEmpty() && accountNumber.isNotEmpty()) {
+                    val accountReq = MemberAccountReq(
+                        account = bankName,
+                        accountNumber = accountNumber
+                    )
+                    val accountResponse = membersRepository.permitAccount(accountReq)
+                    if (!accountResponse.isSuccessful) {
+                        withContext(Dispatchers.Main) {
+                            onError?.invoke("계좌 정보 저장 실패: ${accountResponse.code()}")
+                        }
+                        return@launch
+                    }
+                }
+
                 val body = uriToMultipartBody(context, imageUri, "image")
                 if (body == null) {
                     withContext(Dispatchers.Main) {
@@ -170,6 +189,11 @@ class ReceiptUploadViewModel : ViewModel() {
 
                 val response = membersRepository.uploadReceipt(memberCouponId, body)
                 if (response.isSuccessful) {
+                    // 체크박스가 체크되지 않았으면 계좌 정보 삭제
+                    if (!isSaveAccount && bankName.isNotEmpty() && accountNumber.isNotEmpty()) {
+                        membersRepository.denyAccount()
+                    }
+
                     withContext(Dispatchers.Main) {
                         onSuccess()
                     }

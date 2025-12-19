@@ -163,16 +163,9 @@ fun ReceiptUploadPage(
                                 }
                             )
                         } else {
-                            // 체크 시 계좌 정보 저장 API 호출
+                            // 체크 시 UI 상태만 변경 (실제 저장은 "저장하기" 클릭 시)
                             if (uiState.bankName.isNotEmpty() && uiState.accountNumber.isNotEmpty()) {
-                                viewModel.saveAccount(
-                                    onSuccess = {
-                                        viewModel.setSaveAccount(true)
-                                    },
-                                    onError = { message ->
-                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                    }
-                                )
+                                viewModel.setSaveAccount(true)
                             } else {
                                 Toast.makeText(context, "은행과 계좌번호를 먼저 입력해주세요", Toast.LENGTH_SHORT).show()
                             }
