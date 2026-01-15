@@ -50,7 +50,7 @@ android {
 
     buildTypes {
         debug {
-//            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             resValue("string", "app_name", "쿠러미 (디버그)")
         }
