@@ -38,7 +38,7 @@ class AlertViewModel : ViewModel() {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 val currentType = _uiState.value.filterType
-                val response = notificationRepository.getNotificationList(currentType)
+                val response = notificationRepository.getNotificationList(type = currentType)
 
                 if (response.isSuccessful && response.body() != null) {
                     _uiState.update {
@@ -61,7 +61,7 @@ class AlertViewModel : ViewModel() {
     fun allRead() {
         viewModelScope.launch {
             try {
-                val response = notificationRepository.readNotificationALl()
+                val response = notificationRepository.readNotificationAll()
                 if (response.isSuccessful) {
                     loadNotifications()  // 성공 시 알림 목록 새로고침
                 }
