@@ -3,6 +3,7 @@ package dev.kichan.marketplace.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.common.AnalyticsManager
 import dev.kichan.marketplace.model.TokenManager
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.MemberLoginReq
@@ -74,6 +75,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     val token = response.body()?.response
                     if (token != null) {
                         TokenManager.saveToken(token)
+                        AnalyticsManager.logLogin()
                         _loginState.value = LoginUiState.Authenticated
                     } else {
                         _loginState.value = LoginUiState.Error("토큰이 없습니다.")

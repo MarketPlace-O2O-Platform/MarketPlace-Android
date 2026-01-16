@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.common.AnalyticsManager
 import dev.kichan.marketplace.common.LargeCategory
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.TempMarketRes
@@ -197,6 +198,7 @@ class LikeViewModel(application: Application) : AndroidViewModel(application) {
 
                 if (response.isSuccessful) {
                     Log.d("CheerDebug", "✓ Success 블록 진입")
+                    AnalyticsManager.logCheer(tempMarketId)
                     val newCheerCount = response.body()?.response?.cheerCount ?: 0
                     Log.d("CheerDebug", "새로운 공감 수: $newCheerCount")
 

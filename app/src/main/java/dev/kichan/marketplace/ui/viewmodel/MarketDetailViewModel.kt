@@ -3,6 +3,7 @@ package dev.kichan.marketplace.ui.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import dev.kichan.marketplace.common.AnalyticsManager
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
@@ -175,6 +176,11 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
             try {
                 val response = membersRepository.downloadGiftCoupon(couponId)
                 if (response.isSuccessful) {
+                    AnalyticsManager.logCouponDownload(
+                        couponId = couponId,
+                        couponType = "GIFT",
+                        marketId = marketId
+                    )
                     val coupon = _uiState.value.couponList.find { it.couponId == couponId }
                     _downloadResult.emit(DownloadResult.Success(coupon?.couponName ?: "쿠폰"))
                     _navigationEvent.emit(MarketDetailNavigationEvent.NavigateToMyPage)
@@ -198,6 +204,11 @@ class MarketDetailViewModel(application: Application, private val marketId: Long
             try {
                 val response = membersRepository.downloadPaybackCoupon(couponId)
                 if (response.isSuccessful) {
+                    AnalyticsManager.logCouponDownload(
+                        couponId = couponId,
+                        couponType = "PAYBACK",
+                        marketId = marketId
+                    )
                     val coupon = _uiState.value.couponList.find { it.couponId == couponId }
                     _downloadResult.emit(DownloadResult.Success(coupon?.couponName ?: "쿠폰"))
                     _navigationEvent.emit(MarketDetailNavigationEvent.NavigateToMyPage)

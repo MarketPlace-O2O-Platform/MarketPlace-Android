@@ -3,6 +3,7 @@ package dev.kichan.marketplace.ui.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.kichan.marketplace.common.AnalyticsManager
 import dev.kichan.marketplace.model.TokenManager
 import dev.kichan.marketplace.model.data.remote.RepositoryProvider
 import dev.kichan.marketplace.model.dto.IssuedCouponRes
@@ -124,6 +125,10 @@ class MyPage2ViewModel() : ViewModel() {
 
                 // 사용한 쿠폰을 증정형 목록에서 제거하고 끝난 쿠폰 목록에 추가
                 if (usedCoupon != null) {
+                    AnalyticsManager.logCouponUse(
+                        couponId = usedCoupon.couponId,
+                        couponType = usedCoupon.couponType
+                    )
                     _uiState.value = _uiState.value.copy(
                         giftCouponList = _uiState.value.giftCouponList.filter { it.memberCouponId != memberCouponId },
                         endedCouponList = _uiState.value.endedCouponList + EndedCoupon.EndedGift(usedCoupon)

@@ -2,6 +2,7 @@ package dev.kichan.marketplace.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import dev.kichan.marketplace.common.AnalyticsManager
 import androidx.lifecycle.viewModelScope
 import dev.kichan.marketplace.BuildConfig
 import dev.kichan.marketplace.model.NetworkModule
@@ -135,6 +136,11 @@ class CouponViewModel() : ViewModel() {
                 }
 
                 if (response.isSuccessful) {
+                    AnalyticsManager.logCouponDownload(
+                        couponId = id,
+                        couponType = coupon.couponType,
+                        marketId = coupon.marketId
+                    )
                     _couponListUiState.update { state ->
                         state.copy(
                             couponList = state.couponList.map { c ->
