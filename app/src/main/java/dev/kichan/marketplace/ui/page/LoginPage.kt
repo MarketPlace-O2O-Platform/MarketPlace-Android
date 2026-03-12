@@ -89,7 +89,7 @@ fun LoginPage(
 
     
 
-    Scaffold {
+    Scaffold(containerColor = Color.White) {
         Column(
             modifier = Modifier
                 .padding(it)
