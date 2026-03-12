@@ -70,16 +70,12 @@ class MainActivity : ComponentActivity() {
         KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_API_KEY)
 
         getFCMToken()
+        requestNotificationPermission()
 
         setContent {
             MarketPlaceTheme {
                 MyApp()
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requestNotificationPermission()
     }
 }
