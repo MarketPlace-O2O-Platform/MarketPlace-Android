@@ -8,14 +8,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import dev.kichan.marketplace.common.MaintenanceChecker
-import dev.kichan.marketplace.common.MaintenanceStatus
-import dev.kichan.marketplace.ui.MaintenanceDialog
+import dev.kichan.marketplace.common.AnnouncementData
+import dev.kichan.marketplace.common.RemoteConfigManager
+import dev.kichan.marketplace.ui.AnnouncementDialog
 import dev.kichan.marketplace.ui.Page
 import dev.kichan.marketplace.viewmodel.SplashUiState
 import dev.kichan.marketplace.viewmodel.SplashViewModel
@@ -27,15 +28,25 @@ fun SplashPage(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // 점검 상태 체크
-    val maintenanceStatus = remember { MaintenanceChecker.getMaintenanceStatus() }
-    val showMaintenanceDialog = remember {
-        mutableStateOf(maintenanceStatus != MaintenanceStatus.Normal)
+    var announcement by remember { mutableStateOf<AnnouncementData?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
+    var configLoaded by remember { mutableStateOf(false) }
+
+    // Remote Config fetch
+    LaunchedEffect(Unit) {
+        RemoteConfigManager.fetchAndActivate()
+        val data = RemoteConfigManager.getAnnouncement()
+        if (data.shouldShow()) {
+            announcement = data
+            showDialog = true
+        }
+        configLoaded = true
     }
 
-    LaunchedEffect(uiState, showMaintenanceDialog.value) {
-        // Dialog가 닫혔고, 점검 중이 아닐 때만 네비게이션
-        if (!showMaintenanceDialog.value && maintenanceStatus != MaintenanceStatus.InMaintenance) {
+    // 네비게이션 로직
+    LaunchedEffect(uiState, showDialog, configLoaded) {
+        // Config 로딩 완료 + Dialog 닫힌 상태에서만 네비게이션
+        if (configLoaded && !showDialog) {
             when (uiState) {
                 is SplashUiState.Authenticated -> {
                     navController.navigate(Page.Home.name) {
@@ -56,19 +67,18 @@ fun SplashPage(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        // 점검 중이 아닐 때만 로딩 표시
-        if (maintenanceStatus != MaintenanceStatus.InMaintenance) {
+        // 공지가 닫기 불가능(dismissible=false)이 아닐 때만 로딩 표시
+        if (announcement?.dismissible != false) {
             CircularProgressIndicator()
         }
 
-        // 점검 공지 Dialog
-        if (showMaintenanceDialog.value) {
-            MaintenanceDialog(
-                status = maintenanceStatus,
+        // 공지 Dialog
+        if (showDialog && announcement != null) {
+            AnnouncementDialog(
+                data = announcement!!,
                 onDismiss = {
-                    // 사전 공지 기간에만 닫기 가능
-                    if (maintenanceStatus == MaintenanceStatus.PreNotification) {
-                        showMaintenanceDialog.value = false
+                    if (announcement!!.dismissible) {
+                        showDialog = false
                     }
                 }
             )

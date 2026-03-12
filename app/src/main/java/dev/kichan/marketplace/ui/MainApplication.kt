@@ -2,6 +2,7 @@ package dev.kichan.marketplace.ui
 
 import android.app.Application
 import dev.kichan.marketplace.common.AnalyticsManager
+import dev.kichan.marketplace.common.RemoteConfigManager
 import dev.kichan.marketplace.model.TokenManager
 
 class MainApplication : Application() {
@@ -9,5 +10,6 @@ class MainApplication : Application() {
         super.onCreate()
         TokenManager.init(applicationContext)
         AnalyticsManager.init(applicationContext)
+        RemoteConfigManager.init(applicationContext)
     }
 }
