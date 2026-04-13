@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,6 +66,7 @@ fun SearchPage(
     viewModel: SearchViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(Unit) {
         viewModel.getPopularCoupons()
@@ -112,6 +114,7 @@ fun SearchPage(
                 RecentKeyword(
                     keywords = uiState.recentKeywords,
                     onKeywordClick = {
+                        focusManager.clearFocus()
                         viewModel.onSearchKeyChanged(it)
                         viewModel.search()
                     },
