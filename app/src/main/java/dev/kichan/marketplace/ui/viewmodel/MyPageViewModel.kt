@@ -23,6 +23,7 @@ data class MyPageUiState(
     val giftCouponList: List<IssuedCouponRes> = emptyList(),
     val endedCouponList: List<EndedCoupon> = emptyList(),
     val isLoading: Boolean = false,
+    val isCouponsLoaded: Boolean = false,
 )
 
 class MyPageViewModel() : ViewModel() {
@@ -30,6 +31,18 @@ class MyPageViewModel() : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyPageUiState())
     val uiState = _uiState.asStateFlow()
+
+    private var loadingCount = 0
+
+    private fun startLoading() {
+        loadingCount++
+        if (loadingCount == 1) _uiState.value = _uiState.value.copy(isLoading = true)
+    }
+
+    private fun stopLoading() {
+        loadingCount = (loadingCount - 1).coerceAtLeast(0)
+        if (loadingCount == 0) _uiState.value = _uiState.value.copy(isLoading = false)
+    }
 
     init {
         getMemberInfo()
@@ -40,7 +53,7 @@ class MyPageViewModel() : ViewModel() {
 
     fun getMemberInfo() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            startLoading()
             try {
                 val response = membersRepository.getMember()
                 if (response.isSuccessful) {
@@ -49,46 +62,52 @@ class MyPageViewModel() : ViewModel() {
             } catch (e: Exception) {
                 // Handle error
             } finally {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                stopLoading()
             }
         }
     }
 
     fun getPaybackCoupons() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            startLoading()
             try {
                 val response = membersRepository.getPaybackCoupon(type = "ISSUED")
                 if (response.isSuccessful) {
-                    _uiState.value = _uiState.value.copy(paybackCouponList = response.body()?.response?.couponResDtos ?: emptyList())
+                    _uiState.value = _uiState.value.copy(
+                        paybackCouponList = response.body()?.response?.couponResDtos ?: emptyList(),
+                        isCouponsLoaded = true
+                    )
                 }
             } catch (e: Exception) {
                 // Handle error
             } finally {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                stopLoading()
             }
         }
     }
 
     fun getGiftCoupons() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            startLoading()
             try {
                 val response = membersRepository.getCoupons(type = "ISSUED")
                 if (response.isSuccessful) {
-                    _uiState.value = _uiState.value.copy(giftCouponList = response.body()?.response?.couponResDtos ?: emptyList())
+                    _uiState.value = _uiState.value.copy(
+                        giftCouponList = response.body()?.response?.couponResDtos ?: emptyList(),
+                        isCouponsLoaded = true
+                    )
                 }
             } catch (e: Exception) {
                 // Handle error
             } finally {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                stopLoading()
             }
         }
     }
 
     fun getEndedCoupons() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            startLoading()
             try {
                 val endedPaybackResponse = membersRepository.getPaybackCoupon(type = "ENDED")
                 val endedGiftResponse = membersRepository.getCoupons(type = "ENDED")
@@ -106,19 +125,22 @@ class MyPageViewModel() : ViewModel() {
                         endedCoupons.add(EndedCoupon.EndedGift(it))
                     }
                 }
-                _uiState.value = _uiState.value.copy(endedCouponList = endedCoupons)
+                _uiState.value = _uiState.value.copy(
+                    endedCouponList = endedCoupons,
+                    isCouponsLoaded = true
+                )
 
             } catch (e: Exception) {
                 // Handle error
             } finally {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                stopLoading()
             }
         }
     }
 
     fun useGiftCoupon(memberCouponId: Long) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            startLoading()
             try {
                 val usedCoupon = _uiState.value.giftCouponList.find { it.memberCouponId == memberCouponId }
                 membersRepository.useCoupon(memberCouponId)
@@ -137,7 +159,7 @@ class MyPageViewModel() : ViewModel() {
             } catch (e: Exception) {
                 // Handle error
             } finally {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                stopLoading()
             }
         }
     }

@@ -218,7 +218,7 @@ fun MyPage(
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             if (selectedTabIndex == 0) {
-                if (uiState.isLoading) {
+                if (uiState.isLoading && !uiState.isCouponsLoaded) {
                     items(20) {
                         RefundCouponCardSkeleton()
                         Spacer(modifier = Modifier.height(20.dp))
@@ -255,7 +255,7 @@ fun MyPage(
                 }
             }
             if (selectedTabIndex == 1) {
-                if (uiState.isLoading) {
+                if (uiState.isLoading && !uiState.isCouponsLoaded) {
                     items(20) {
                         RefundCouponCardSkeleton()
                         Spacer(modifier = Modifier.height(20.dp))
@@ -285,7 +285,7 @@ fun MyPage(
                 }
             }
             if (selectedTabIndex == 2) {
-                if (uiState.isLoading) {
+                if (uiState.isLoading && !uiState.isCouponsLoaded) {
                     items(20) {
                         RefundCouponCardSkeleton()
                         Spacer(modifier = Modifier.height(20.dp))
