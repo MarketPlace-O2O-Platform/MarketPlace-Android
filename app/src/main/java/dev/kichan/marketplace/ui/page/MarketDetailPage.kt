@@ -112,7 +112,10 @@ fun MarketDetailPage(
         marketDetailViewModel.navigationEvent.collect { event ->
             when (event) {
                 is MarketDetailNavigationEvent.NavigateToMyPage -> {
-                    navController.navigate(Page.My.name)
+                    navController.navigate(Page.My.name) {
+                        popUpTo(Page.Home.name)
+                        launchSingleTop = true
+                    }
                 }
             }
         }

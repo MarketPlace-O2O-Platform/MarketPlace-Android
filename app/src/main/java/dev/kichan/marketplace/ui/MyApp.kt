@@ -64,6 +64,11 @@ fun MyApp() {
                     navController = navController,
                 )
             }
+            composable(Page.My.name) {
+                MyPage(
+                    navController = navController,
+                )
+            }
             composable(Page.Search.name) { SearchPage(navController) }
 
             composable("${Page.EventDetail.name}/{id}") {
@@ -98,12 +103,6 @@ fun MyApp() {
                 )
             }
         }
-        composable(route = Page.My.name) {
-            MyPage(
-                navController = navController,
-            )
-        }
-
         composable(Page.ReceptUploadPage.name + "/{couponId}") {
             it.arguments?.getString("couponId")?.let {
                 ReceiptUploadPage(
