@@ -1,7 +1,7 @@
 import java.util.Properties
 
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
+val localProperties = Properties()
+localProperties.load(project.rootProject.file("local.properties").inputStream())
 
 plugins {
     alias(libs.plugins.android.application)
@@ -41,10 +41,10 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(properties["KEYSTORE_FILE"] as String)
-            storePassword = properties["KEYSTORE_PASSWORD"] as String
-            keyAlias = properties["KEY_ALIAS"] as String
-            keyPassword = properties["KEY_PASSWORD"] as String
+            storeFile = file(localProperties["KEYSTORE_FILE"] as String)
+            storePassword = localProperties["KEYSTORE_PASSWORD"] as String
+            keyAlias = localProperties["KEY_ALIAS"] as String
+            keyPassword = localProperties["KEY_PASSWORD"] as String
         }
     }
 
