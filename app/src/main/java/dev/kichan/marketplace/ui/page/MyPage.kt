@@ -66,22 +66,22 @@ import dev.kichan.marketplace.ui.component.atoms.BottomNavigationBar
 import dev.kichan.marketplace.ui.component.atoms.CustomButton
 import dev.kichan.marketplace.ui.component.atoms.SkeletonItem
 import dev.kichan.marketplace.ui.viewmodel.EndedCoupon
-import dev.kichan.marketplace.ui.viewmodel.MyPage2ViewModel
+import dev.kichan.marketplace.ui.viewmodel.MyPageViewModel
 
 @Composable
-fun MyPage2(
+fun MyPage(
     navController: NavController,
-    myPage2ViewModel: MyPage2ViewModel = viewModel(),
+    myPageViewModel: MyPageViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-    val uiState by myPage2ViewModel.uiState.collectAsState()
+    val uiState by myPageViewModel.uiState.collectAsState()
 
     // 페이지가 보일 때마다 데이터 갱신 (onResume)
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                myPage2ViewModel.refreshCoupons()
+                myPageViewModel.refreshCoupons()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -118,7 +118,7 @@ fun MyPage2(
                         )
                         Spacer(modifier = Modifier.height(24.dp))
                         CustomButton("Yes", modifier = Modifier.fillMaxWidth()) {
-                            myPage2ViewModel.useGiftCoupon(selectedCouponId!!)
+                            myPageViewModel.useGiftCoupon(selectedCouponId!!)
                             selectedCouponId = null
                             Toast.makeText(context, "쿠폰 사용 완료", Toast.LENGTH_SHORT).show()
                         }
@@ -170,7 +170,7 @@ fun MyPage2(
                         },
                         onCurationClick = { navController.navigate(Page.CurationPage.name) },
                         onLogoutClick = {
-                            myPage2ViewModel.logout(context) {
+                            myPageViewModel.logout(context) {
                                 navController.navigate(Page.Login.name) {
                                     popUpTo(0)
                                 }

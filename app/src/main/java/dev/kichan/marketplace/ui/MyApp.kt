@@ -20,7 +20,7 @@ import dev.kichan.marketplace.ui.page.LoginPage
 import dev.kichan.marketplace.ui.page.MapPage
 import dev.kichan.marketplace.ui.page.MarketDetailPage
 import dev.kichan.marketplace.ui.page.MarketListPage
-import dev.kichan.marketplace.ui.page.MyPage2
+import dev.kichan.marketplace.ui.page.MyPage
 import dev.kichan.marketplace.ui.page.ReceiptUploadPage
 import dev.kichan.marketplace.ui.page.RequestPage
 import dev.kichan.marketplace.ui.page.SearchPage
@@ -64,11 +64,6 @@ fun MyApp() {
                     navController = navController,
                 )
             }
-            composable(Page.My.name) {
-                MyPage2(
-                    navController = navController,
-                )
-            }
             composable(Page.Search.name) { SearchPage(navController) }
 
             composable("${Page.EventDetail.name}/{id}") {
@@ -103,8 +98,8 @@ fun MyApp() {
                 )
             }
         }
-        composable(route = Page.My2.name) {
-            MyPage2(
+        composable(route = Page.My.name) {
+            MyPage(
                 navController = navController,
             )
         }

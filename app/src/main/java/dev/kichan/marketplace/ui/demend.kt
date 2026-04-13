@@ -9,5 +9,5 @@ val bottomNavItem = listOf(
     Page.Home to R.drawable.ic_bototm_navi_home,
     Page.Map to R.drawable.ic_bototm_navi_map,
     Page.Like to R.drawable.ic_bototm_navi_heart,
-    Page.My2 to R.drawable.ic_bototm_navi_my,
+    Page.My to R.drawable.ic_bototm_navi_my,
 )

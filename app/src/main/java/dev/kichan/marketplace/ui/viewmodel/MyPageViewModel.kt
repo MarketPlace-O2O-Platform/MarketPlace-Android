@@ -17,7 +17,7 @@ sealed class EndedCoupon {
     data class EndedGift(val coupon: IssuedCouponRes) : EndedCoupon()
 }
 
-data class MyPage2UiState(
+data class MyPageUiState(
     val member: MemberRes? = null,
     val paybackCouponList: List<IssuedCouponRes> = emptyList(),
     val giftCouponList: List<IssuedCouponRes> = emptyList(),
@@ -25,10 +25,10 @@ data class MyPage2UiState(
     val isLoading: Boolean = false,
 )
 
-class MyPage2ViewModel() : ViewModel() {
+class MyPageViewModel() : ViewModel() {
     private val membersRepository = RepositoryProvider.provideMembersRepository()
 
-    private val _uiState = MutableStateFlow(MyPage2UiState())
+    private val _uiState = MutableStateFlow(MyPageUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
