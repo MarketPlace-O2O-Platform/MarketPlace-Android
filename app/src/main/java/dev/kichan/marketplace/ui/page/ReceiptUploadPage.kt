@@ -18,8 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.Image
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -104,16 +104,15 @@ fun ReceiptUploadPage(
                             .height(220.dp)
                     )
                 } else {
-                    Column {
-                        Icon(
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Image(
                             painter = painterResource(R.drawable.ic_recepit_add),
                             contentDescription = null,
-                            tint = Color(0xffE0E0E0),
                             modifier = Modifier
                                 .size(64.dp)
                         )
                         Text(
-                            "24시간 내로 환급이 이루어지지 않을 시\n고객센터(쿠러미 카카오채널)로 문의주세요!",
+                            "7일 내로 환급이 이루어지지 않을 시\n고객센터(쿠러미 카카오채널)로 문의주세요!",
                             fontSize = 14.sp,
                             fontWeight = FontWeight(400),
                             fontFamily = PretendardFamily
