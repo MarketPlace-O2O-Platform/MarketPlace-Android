@@ -1,6 +1,7 @@
 package dev.kichan.marketplace.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -41,6 +42,9 @@ class MainActivity : ComponentActivity() {
     ) { }
 
     private fun requestRequiredPermissions() {
+        val prefs = getSharedPreferences("marketplace_prefs", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("permission_requested", false)) return
+
         val permissionsToRequest = mutableListOf<String>().apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -53,6 +57,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         if (permissionsToRequest.isNotEmpty()) {
+            prefs.edit().putBoolean("permission_requested", true).apply()
             permissionLauncher.launch(permissionsToRequest.toTypedArray())
         }
     }
