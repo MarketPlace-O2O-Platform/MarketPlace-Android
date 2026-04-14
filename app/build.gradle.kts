@@ -101,6 +101,7 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appcompat)
+    implementation(libs.material.components)
 
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-messaging")
@@ -118,7 +119,7 @@ dependencies {
     implementation(libs.androidx.material)
     implementation(libs.accompanist.pager.indicators)
     implementation(libs.kakao.map)
-    implementation(libs.kakao.sdk.all)
+    implementation(libs.kakao.sdk.common)
 
     // Retorift
     implementation(libs.okhttp3)
