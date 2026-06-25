@@ -76,7 +76,15 @@ dev.kichan.marketplace/
 
 ## 개발 과정 & 문제 해결
 
-> Implemented by [@junhee8649](https://github.com/junhee8649) (v2.0.0 ~ )
+> Implemented by [@Junhee8649](https://github.com/Junhee8649) (v2.0.0 ~ )
+
+### 앱 실행 차단 크래시 · 권한 처리 안정화
+
+인수인계 직후 가장 시급했던 작업은 앱 실행 자체를 막는 크래시 해결이었습니다.
+
+- **알림 권한 무한 재요청 크래시**: 알림 권한 요청을 `onResume()`에서 호출하고 있었습니다. 권한 다이얼로그가 뜨면 Activity가 일시정지되고, 다이얼로그가 닫히면서 `onResume()`이 다시 호출되어 권한을 또 요청 → 무한 반복으로 앱 진입이 불가능했습니다. 생명주기 동안 1회만 실행되도록 요청 시점을 `onCreate()`로 옮겨 해결했습니다.
+- **권한 처리 전반 개선(연쇄)**: 이후 `requestPermissions()`를 두 번 호출할 때 두 번째 요청이 무시되던 문제를 `ActivityResultContracts.RequestMultiplePermissions`로 전환해 해결했고(위치 권한 `ACCESS_COARSE_LOCATION` 포함), 권한 거절 후 재실행 시 팝업이 반복 노출되던 문제도 차단했습니다.
+- **합류 직후 크래시 정리**: 홈 마감임박 배너에서 `deadline`이 `null`일 때 `DateTimeFormatter.parse`가 `NullPointerException`을 던지던 문제를 `mapNotNull` + `try/catch` 방어 파싱으로 수정했습니다. 또한 예외 처리가 비어 있던 6개 ViewModel의 코루틴 스코프에 예외 처리를 도입해 잠재적 크래시를 차단했습니다.
 
 ### 지도 기능 전면 개선
 
